@@ -1,4 +1,4 @@
-"""Cartas avanzadas para una variable: media móvil, Z-MR, I-MR-R/S, G y T.
+"""Cartas avanzadas para una variable: media móvil, Z-MR, I-MR-R/S, zona, G y T.
 
 Las fórmulas siguen la documentación de métodos de Minitab.
 """
@@ -399,4 +399,100 @@ def t_chart(
 
     chart = build_chart("T", x.size, stages, stage_fn, tests_n, test_params)
     chart.test1_text = f"1 punto fuera de los percentiles de la distribución {distribution}"
+    return chart
+
+
+# ------------------------------------------------------------------------ carta de zona
+def _zone_scores(z: np.ndarray, weights, reset: bool):
+    """Puntaje acumulado de zona y puntos que señalan (puntaje >= peso de la zona 4).
+
+    Cada punto aporta el peso de su zona (0-1σ, 1-2σ, 2-3σ, más de 3σ) y los pesos
+    se suman mientras los puntos permanezcan del mismo lado de la línea central; al
+    cruzarla (o caer justo sobre ella) el puntaje vuelve a 0 y el punto que cruza
+    inicia la nueva suma.
+    """
+    zone = np.digitize(np.abs(z), [1.0, 2.0, 3.0])
+    side = np.sign(z)
+    score = np.zeros(z.size)
+    flagged, cum, prev = [], 0.0, 0.0
+    for i in range(z.size):
+        if side[i] == 0:
+            cum = 0.0
+        else:
+            if side[i] != prev:
+                cum = 0.0
+            cum += weights[zone[i]]
+        score[i] = cum
+        prev = side[i]
+        if cum >= weights[3]:
+            flagged.append(i)
+            if reset:
+                cum = 0.0
+    return score, np.array(flagged, dtype=int)
+
+
+def zone_chart(
+    data,
+    *,
+    subgroup_size: Optional[int] = None,
+    subgroup=None,
+    sigma_method: Optional[str] = None,
+    mu: Optional[float] = None,
+    sigma: Optional[float] = None,
+    weights=(0, 2, 4, 8),
+    reset: bool = False,
+    stages=None,
+) -> ControlChart:
+    """Carta de zona (Stat > Control Charts > Variables Charts for Subgroups > Zone).
+
+    Sustituye las pruebas de causas especiales por un puntaje acumulado (Davis, Homer
+    y Woodall, 1990): la zona 1 (0-1σ) pesa 0, la 2 (1-2σ) pesa 2, la 3 (2-3σ) pesa 4
+    y la 4 (más de 3σ) pesa 8. Los pesos se suman mientras los puntos sigan del mismo
+    lado de la línea central y se reinician al cruzarla; hay señal cuando el puntaje
+    llega al peso de la zona 4 (8 por defecto). Un punto justo en la frontera entre dos
+    zonas se asigna a la zona más lejana.
+
+    ``data``: observaciones individuales (vector) o subgrupos (matriz 2-D, o vector con
+    ``subgroup_size`` / ``subgroup``). ``sigma_method``: ``'mr'`` (por defecto),
+    ``'median_mr'`` o ``'mssd'`` para individuales; ``'rbar'`` (por defecto) o
+    ``'pooled'`` para subgrupos. ``reset=True`` reinicia el puntaje tras cada señal.
+
+    El resultado tiene el panel ``"Zona"`` (medias y límites) y el panel ``"Puntaje"``
+    (puntaje acumulado y su umbral). Las señales se marcan en ``"Zona"``.
+    """
+    w = tuple(float(v) for v in weights)
+    if len(w) != 4 or min(w) < 0 or any(b < a for a, b in zip(w, w[1:])) or w[3] <= 0:
+        raise ValueError("'weights' debe tener 4 pesos no negativos, no decrecientes y con el último > 0.")
+    arr = np.asarray(data, dtype=float)
+    individuals = arr.ndim == 1 and subgroup_size is None and subgroup is None
+    g = to_subgroups(arr, 1) if individuals else to_subgroups(data, subgroup_size, subgroup)
+    if individuals or (g.shape[1] == 1 and not np.isnan(g).any()):
+        individuals = True
+        check_method(sigma_method or "mr", ("mr", "median_mr", "mssd"))
+    else:
+        check_method(sigma_method or "rbar", ("rbar", "pooled"))
+
+    def stage_fn(idx):
+        gs = g[idx]
+        n_i, means, _, _ = subgroup_stats(gs)
+        k = len(idx)
+        m = float(np.nansum(gs) / n_i.sum()) if mu is None else float(mu)
+        if sigma is not None:
+            sg = float(sigma)
+        elif individuals:
+            sg = sigma_individuals(means, sigma_method or "mr", 2)
+        else:
+            sg = sigma_subgroups(gs, sigma_method or "rbar")
+        sig_x = sg / np.sqrt(n_i)
+        score, flagged = _zone_scores((means - m) / sig_x, w, reset)
+        z_panel = StagePanel("Zona", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
+                             "Media de la muestra" if not individuals else "Valor individual",
+                             "only1", violations={1: flagged})
+        s_panel = StagePanel("Puntaje", score, full(0.0, k), full(w[3], k), full(np.nan, k),
+                             full(np.nan, k), "Puntaje acumulado", "only1", symmetric=False,
+                             violations={})
+        return [z_panel, s_panel], {"media": m, "sigma": sg, "pesos": w, "reinicio": reset, "n": k}
+
+    chart = build_chart("Zona", g.shape[0], stages, stage_fn, (1,), None)
+    chart.test1_text = f"puntaje acumulado de zona >= {w[3]:g}"
     return chart

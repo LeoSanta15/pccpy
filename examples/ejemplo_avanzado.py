@@ -39,6 +39,13 @@ tiempos = rng.weibull(1.4, 40) * 30
 tiempos[12] = 250
 print(spyc.t_chart(tiempos).summary(), "\n")
 
+# 3b) Carta de zona: puntaje acumulado en lugar de pruebas de causas especiales
+deriva = rng.normal(0, 1, 50)
+deriva[30:] += 1.2                             # desplazamiento sostenido de 1.2 sigmas
+zona = spyc.zone_chart(deriva, mu=0.0, sigma=1.0, reset=True)
+print(zona.summary(), "\n")
+zona.plot(zones=True).savefig(salida / "zona.png")
+
 # 4) Multivariadas: Fase I con el histórico y Fase II con datos nuevos
 Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
 hist = rng.multivariate_normal([0, 0, 0], Sigma, 100)
@@ -54,6 +61,9 @@ t2.plot().savefig(salida / "t2.png")
 me = spyc.mewma_chart(nuevos, mu=mu, cov=cov)
 print("MEWMA primera señal en el punto", int(me["MEWMA"].flagged[0]) + 1)
 me.plot().savefig(salida / "mewma.png")
+mc = spyc.mcusum_chart(nuevos, mu=mu, cov=cov)
+print("MCUSUM primera señal en el punto", int(mc["MCUSUM"].flagged[0]) + 1, f"(h = {mc.params[0]['LCS']:.2f})")
+mc.plot().savefig(salida / "mcusum.png")
 subs = rng.multivariate_normal([0, 0, 0], Sigma, 120)
 subs[60:] *= 2.5                               # aumenta la dispersión
 spyc.generalized_variance_chart(subs, subgroup_size=6).plot().savefig(salida / "gv.png")

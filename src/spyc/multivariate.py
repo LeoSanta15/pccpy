@@ -1,4 +1,4 @@
-"""Cartas de control multivariadas: T² de Hotelling, varianza generalizada y MEWMA.
+"""Cartas de control multivariadas: T² de Hotelling, varianza generalizada, MEWMA y MCUSUM.
 
 Formulas según la documentación de métodos de Minitab y Montgomery (Introduction to
 Statistical Quality Control, cap. 11). Los datos pueden ser observaciones
@@ -316,6 +316,92 @@ def mewma_chart(
                          "variables": p, "puntos": m, "tamaño": n}
 
     base = build_chart("MEWMA", m, None, stage_fn, (1,), None)
+    return MultivariateChart(kind=base.kind, panels=base.panels, params=base.params,
+                             tests=base.tests, test_params=base.test_params,
+                             test1_text=_OUT_OF_LIMIT, variables=names, points=None, mean=mean,
+                             cov=S, scale=float(n))
+
+
+# ------------------------------------------------------------------------- MCUSUM
+def _mcusum_arl(h: float, p: int, k: float, cells: int = 300) -> float:
+    """ARL en control de la MCUSUM de Crosier con límite h.
+
+    Con datos N(0, I), r = ||S|| es una cadena de Markov exacta: r' = máx(0, C - k) con
+    C² chi-cuadrado no central (p gl, parámetro r²). Se discretiza (0, h] en ``cells``
+    celdas más el estado r = 0, que tiene masa propia.
+    """
+    edges = np.linspace(0.0, h, cells + 1)
+    states = np.r_[0.0, 0.5 * (edges[:-1] + edges[1:])]
+    cdf = np.empty((cells + 1, cells + 1))
+    cdf[0] = stats.chi2.cdf((edges + k) ** 2, p)  # desde r = 0 (centralidad 0)
+    cdf[1:] = stats.ncx2.cdf((edges[None, :] + k) ** 2, p, states[1:, None] ** 2)
+    trans = np.empty((cells + 1, cells + 1))
+    trans[:, 0] = cdf[:, 0]  # P(C <= k): S vuelve a 0
+    trans[:, 1:] = np.diff(cdf, axis=1)
+    return float(np.linalg.solve(np.eye(cells + 1) - trans, np.ones(cells + 1))[0])
+
+
+@lru_cache(maxsize=64)
+def mcusum_limit(p: int, k: float = 0.5, arl: float = 200.0) -> float:
+    """Límite de control h de la MCUSUM de Crosier para un ARL en control dado."""
+    if arl <= 1:
+        raise ValueError("'arl' debe ser > 1.")
+    if k < 0:
+        raise ValueError("'k' debe ser >= 0.")
+    f = lambda h: np.log(_mcusum_arl(h, p, k)) - np.log(arl)
+    lo, hi = 1e-3, 2.0 * p
+    while f(hi) < 0:
+        hi *= 2.0
+    return float(optimize.brentq(f, lo, hi, xtol=1e-6))
+
+
+def mcusum_chart(
+    data,
+    *,
+    subgroup_size: Optional[int] = None,
+    k: float = 0.5,
+    h: Optional[float] = None,
+    arl: float = 200.0,
+    mu=None,
+    cov=None,
+) -> MultivariateChart:
+    """Carta CUSUM multivariada de Crosier (1988).
+
+    Con ``d_t = x_t - mu`` y ``C_t = sqrt((S_(t-1) + d_t)' Sigma^-1 (S_(t-1) + d_t))``:
+    ``S_t = 0`` si ``C_t <= k`` y ``S_t = (S_(t-1) + d_t)(1 - k/C_t)`` en otro caso. Se
+    grafica ``Y_t = sqrt(S_t' Sigma^-1 S_t)`` y hay señal si ``Y_t > h``. ``k`` es la
+    holgura (0.5 por defecto) y ``h`` se calcula para el ``arl`` en control pedido
+    (200 por defecto) o se fija con ``h``. ``mu`` y ``cov`` se estiman si no se dan
+    (deben darse juntos). Con subgrupos se usan las medias y Sigma/n.
+    """
+    if k < 0:
+        raise ValueError("'k' debe ser >= 0.")
+    pts, n, s_est, grand, names, m = _prepare(data, subgroup_size)
+    p = pts.shape[1]
+    mean, S, _ = _resolve_params(mu, cov, grand, s_est, p, None)
+    _check_cov(S)
+    if h is not None and h <= 0:
+        raise ValueError("'h' debe ser > 0.")
+    lim = float(h) if h is not None else mcusum_limit(p, float(k), float(arl))
+
+    sig_inv = np.linalg.inv(S / n)
+    s_vec = np.zeros(p)
+    y = np.empty(m)
+    for i in range(m):
+        v = s_vec + (pts[i] - mean)
+        c = float(np.sqrt(v @ sig_inv @ v))
+        s_vec = v * (1.0 - k / c) if c > k else np.zeros(p)
+        y[i] = np.sqrt(s_vec @ sig_inv @ s_vec)
+    flagged = np.flatnonzero(y > lim)
+
+    def stage_fn(idx):
+        panel = StagePanel("MCUSUM", y, full(0.0, m), full(lim, m), full(np.nan, m),
+                           full(np.nan, m), "MCUSUM (Y)", "only1", symmetric=False,
+                           violations={1: flagged})
+        return [panel], {"k": k, "LCS": lim, "ARL": None if h is not None else arl,
+                         "variables": p, "puntos": m, "tamaño": n}
+
+    base = build_chart("MCUSUM", m, None, stage_fn, (1,), None)
     return MultivariateChart(kind=base.kind, panels=base.panels, params=base.params,
                              tests=base.tests, test_params=base.test_params,
                              test1_text=_OUT_OF_LIMIT, variables=names, points=None, mean=mean,
