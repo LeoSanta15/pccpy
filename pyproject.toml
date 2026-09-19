@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spyc"
-version = "0.1.0"
+version = "0.2.0"
 description = "Control Estadístico de Procesos (SPC) en Python: cartas de control, capacidad y pruebas al estilo Minitab"
 readme = "README.md"
 license = "MIT"

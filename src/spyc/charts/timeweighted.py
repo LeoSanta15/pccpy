@@ -64,7 +64,7 @@ def ewma_chart(
                            violations={1: flagged})
         return [panel], {"objetivo": t0, "sigma": s, "peso": weight, "k": k, "n_subgrupo": n}
 
-    return build_chart("EWMA", len(means), None, stage_fn, (1,), None)
+    return build_chart("EWMA", len(means), None, stage_fn, (1,), {1: k})
 
 
 def cusum_chart(

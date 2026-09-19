@@ -5,6 +5,7 @@ from typing import Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
+from matplotlib.ticker import MaxNLocator
 from scipy import stats
 from scipy.special import boxcox as _boxcox
 
@@ -12,6 +13,8 @@ from ._data import as_1d, to_subgroups
 from .normality import anderson_darling_pvalue, anderson_darling_statistic
 from .results import ControlChart, Panel
 
+#: Cartas cuyo eje x son observaciones individuales (no subgrupos).
+_POINT_KINDS = ("I-MR", "EWMA", "CUSUM", "MA", "Z-MR", "G", "T")
 BLUE, RED, GREEN, GRAY, ORANGE = "#1f4e9c", "#d62728", "#2e8b57", "#8c8c8c", "#e08a00"
 
 
@@ -73,7 +76,8 @@ def plot_control_chart(chart: ControlChart, *, zones: bool = False, figsize=None
     fig, axes = plt.subplots(k, 1, sharex=True, figsize=figsize or (11, 3.6 * k), squeeze=False)
     for ax, panel in zip(axes[:, 0], chart.panels):
         _draw_panel(ax, panel, zones)
-    axes[-1, 0].set_xlabel("Observación" if chart.kind in ("I-MR", "EWMA", "CUSUM") else "Muestra")
+    axes[-1, 0].xaxis.set_major_locator(MaxNLocator(integer=True))
+    axes[-1, 0].set_xlabel("Observación" if chart.kind in _POINT_KINDS else "Muestra")
     fig.suptitle(title or f"Carta de control {chart.kind}", fontweight="bold")
     fig.tight_layout(rect=(0, 0, 0.9, 0.97))
     return fig

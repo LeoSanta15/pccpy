@@ -64,6 +64,7 @@ class ControlChart:
     params: List[dict]
     tests: tuple = ()
     test_params: Dict[int, float] = field(default_factory=dict)
+    test1_text: Optional[str] = None  # descripción propia de la prueba 1 (p. ej. límites no normales)
 
     def __getitem__(self, name: str) -> Panel:
         for p in self.panels:
@@ -87,7 +88,8 @@ class ControlChart:
         rows = []
         for p in self.panels:
             for t, idx in sorted(p.violations.items()):
-                desc = describe(t, self.test_params.get(t, DEFAULT_K[t]))
+                desc = (self.test1_text if t == 1 and self.test1_text
+                        else describe(t, self.test_params.get(t, DEFAULT_K[t])))
                 for i in idx:
                     rows.append(
                         {"panel": p.name, "punto": int(i) + 1, "prueba": t,
@@ -134,3 +136,37 @@ class ControlChart:
         from .plotting import plot_control_chart
 
         return plot_control_chart(self, **kwargs)
+
+
+@dataclass
+class MultivariateChart(ControlChart):
+    """Carta multivariada: agrega los datos necesarios para diagnosticar una señal."""
+
+    variables: List[str] = field(default_factory=list)
+    points: Optional[np.ndarray] = None  # vector graficado en cada punto (m x p)
+    mean: Optional[np.ndarray] = None  # vector de medias usado
+    cov: Optional[np.ndarray] = None  # matriz de covarianzas usada
+    scale: float = 1.0  # tamaño de subgrupo n (T2 = n * d' S^-1 d)
+
+    def contributions(self, point: int) -> pd.Series:
+        """Contribución de cada variable al T² de un punto (``point`` en base 1).
+
+        Para cada variable j se calcula ``d_j = T² - T²_(-j)``, donde ``T²_(-j)`` es el
+        T² del mismo punto sin la variable j (Runger, Alt y Montgomery, 1996). Un
+        valor grande señala la variable que más aporta a la señal; las
+        contribuciones no suman T².
+        """
+        if self.points is None or self.kind != "T²":
+            raise ValueError("Las contribuciones solo están disponibles para la carta T².")
+        m = self.points.shape[0]
+        if not 1 <= point <= m:
+            raise ValueError(f"'point' debe estar entre 1 y {m}.")
+        d = self.points[point - 1] - self.mean
+        p = d.size
+        t2 = self.scale * d @ np.linalg.solve(self.cov, d)
+        out = np.empty(p)
+        for j in range(p):
+            keep = [i for i in range(p) if i != j]
+            dj = d[keep]
+            out[j] = t2 - self.scale * dj @ np.linalg.solve(self.cov[np.ix_(keep, keep)], dj)
+        return pd.Series(out, index=self.variables, name=f"contribución (punto {point})")

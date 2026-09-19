@@ -58,6 +58,14 @@ carta.plot()                                  # figura de matplotlib
 | Laney P' / U' | `laney_p_chart`, `laney_u_chart` | corrige sobredispersión |
 | EWMA | `ewma_chart(datos, weight=0.2, k=3)` | límites exactos (se ensanchan al inicio) |
 | CUSUM | `cusum_chart(datos, h=4, k=0.5)` | tabular, sumas superior e inferior |
+| Media móvil | `ma_chart(datos, length=3)` | límites más anchos en los primeros `length-1` puntos |
+| Z-MR | `zmr_chart(x, partes)` | corridas cortas; ver más abajo |
+| I-MR-R/S (entre/dentro) | `imr_rs_chart(datos, within='r')` | variación entre y dentro de subgrupos |
+| G | `g_chart(entre_eventos)` | eventos raros, geométrica |
+| T | `t_chart(tiempos)` | eventos raros, Weibull o exponencial |
+| T² de Hotelling | `t2_chart(matriz)` | Fase I / Fase II, con diagnóstico por variable |
+| Varianza generalizada | `generalized_variance_chart(matriz, subgroup_size=n)` | dispersión multivariada, `\|S\|` |
+| MEWMA | `mewma_chart(matriz)` | límite por ARL (por defecto 200) |
 
 Los datos de variables aceptan una matriz 2D (filas = subgrupos), un vector con
 `subgroup_size=5`, o un vector con `subgroup=identificadores` (subgrupos de tamaño desigual).
@@ -87,6 +95,62 @@ spyc.p_chart(defectuosos, n=200)
 spyc.laney_p_chart(defectuosos, n=200)
 ```
 
+## Cartas avanzadas
+
+```python
+# Z-MR: partes con medias y variaciones distintas en una sola carta (corridas cortas)
+partes = ["A"] * 10 + ["B"] * 10 + ["A"] * 10
+medidas = np.r_[rng.normal(50, 1, 10), rng.normal(80, 2, 10), rng.normal(50, 1, 10)]
+spyc.zmr_chart(medidas, partes, sigma_method="by_part")   # 'constant', 'relative', 'by_part', 'by_run'
+
+# I-MR-R/S: la variación entre subgrupos no genera falsas alarmas como en Xbar-R
+sub = rng.normal(20, 1, (25, 5)) + rng.normal(0, 1.5, (25, 1))
+c = spyc.imr_rs_chart(sub, within="s")
+c.params[0]     # sigma_dentro, sigma_entre, sigma_entre_dentro
+
+# Eventos raros
+spyc.g_chart(rng.geometric(0.02, 40) - 1)                 # casos entre eventos
+spyc.t_chart(rng.weibull(1.5, 40) * 30)                   # tiempo entre eventos
+
+# Media móvil
+spyc.ma_chart(x, length=5)
+```
+
+`zmr_chart` estandariza cada observación con la media de su parte y una sigma estimada
+con el rango móvil *dentro de cada corrida* (bloque consecutivo de la misma parte);
+`mu={parte: valor}` y `sigma=` aceptan valores históricos o nominales.
+
+## Cartas multivariadas
+
+```python
+Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
+historico = rng.multivariate_normal([0, 0, 0], Sigma, 100)
+nuevos = rng.multivariate_normal([0, 0, 0], Sigma, 40)
+nuevos[25:, 2] += 4                                       # la variable 3 se desplaza
+
+# Fase I: parámetros estimados de los mismos datos
+spyc.t2_chart(historico).summary()
+
+# Fase II: parámetros históricos (n_hist = observaciones con que se estimaron)
+c = spyc.t2_chart(nuevos, mu=historico.mean(axis=0), cov=np.cov(historico, rowvar=False),
+                  n_hist=100)
+c.violations()
+c.contributions(31)                                       # ¿qué variable explica la señal?
+
+# Subgrupos: matriz N x p con subgroup_size, o array 3-D (subgrupos x n x p)
+spyc.t2_chart(nuevos[:40], subgroup_size=4)
+spyc.generalized_variance_chart(nuevos[:40], subgroup_size=8)
+
+# MEWMA: cambios pequeños y sostenidos
+spyc.mewma_chart(nuevos, mu=historico.mean(axis=0), cov=np.cov(historico, rowvar=False))
+spyc.mewma_limit(p=2, weight=0.1, arl=200)                # límite H para un ARL dado (≈ 8.64)
+```
+
+Los datos pueden ser un `DataFrame` (los nombres de columna se usan en `contributions`).
+El límite de T² usa por defecto α = 0.00135 (cola de 3 sigmas, como Minitab). Sin `mu`/`cov`
+se usan límites de **Fase I** (Beta para individuales, F para subgrupos); con `mu`/`cov` y
+`n_hist`, de **Fase II**; con `mu`/`cov` sin `n_hist` los parámetros se toman como conocidos (χ²).
+
 ## Pruebas de causas especiales
 
 Las 8 pruebas de Minitab (1 a 8) con sus parámetros por defecto
@@ -96,8 +160,9 @@ Las 8 pruebas de Minitab (1 a 8) con sus parámetros por defecto
 spyc.imr_chart(x, tests=(1, 2, 5), test_params={2: 7})   # prueba 2 con 7 puntos
 ```
 
-Cada tipo de carta aplica el subconjunto que corresponde (completo en I y Xbar;
-básicas en MR, R, S y cartas de atributos; solo la 1 en EWMA y CUSUM).
+Cada tipo de carta aplica el subconjunto que corresponde (completo en I, Xbar y Z;
+básicas 1-4 en MR, R, S, G, T y cartas de atributos; solo la 1 en EWMA, CUSUM, MA y las
+multivariadas). En G y T la prueba 1 usa los percentiles de su distribución.
 Las funciones individuales están en `spyc.rules`.
 
 ## Capacidad del proceso
@@ -141,13 +206,20 @@ Las constantes se calculan por integración numérica para **cualquier** `n ≥ 
 
 ## Validación
 
-93 pruebas automatizadas. Las referencias son independientes de spyc:
+142 pruebas automatizadas. Las referencias son independientes de spyc:
 
 - Constantes d2, d3, c4 frente a las tablas publicadas (Montgomery).
 - Límites I-MR, Xbar-R y Xbar-S frente al cálculo manual con A2, D3, D4, A3, B3, B4.
 - Anderson-Darling frente a `statsmodels.stats.diagnostic.normal_ad` (coincide a 9 decimales).
 - EWMA y CUSUM frente a la recursión manual.
 - Las 8 pruebas de causas especiales frente a casos construidos a mano, incluidos los casos límite.
+- T²: valores frente a `scipy.spatial.distance.mahalanobis`; los límites de Fase I y II
+  (Beta y F) por simulación Monte Carlo (tasa de falsa alarma y valor esperado).
+- Varianza generalizada: constantes b1 y b2 por simulación de matrices de covarianza.
+- MEWMA: el límite para p=2, λ=0.1, ARL=200 da 8.63 (publicado: 8.64, Prabhu y Runger 1997)
+  y el ARL se comprueba por simulación.
+- G y T: cuantiles frente a `scipy.stats`, y máxima verosimilitud Weibull por su ecuación de score.
+- Constantes de Z-MR (1.128 y 3.686) frente a las que documenta Minitab.
 
 > **Importante:** spyc no se ha comparado corrida a corrida contra el software Minitab
 > (no hay licencia disponible en el desarrollo). Sigue las fórmulas y convenciones que
