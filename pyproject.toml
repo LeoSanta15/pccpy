@@ -1,0 +1,40 @@
+[build-system]
+requires = ["setuptools>=77", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "spyc"
+version = "0.1.0"
+description = "Control Estadístico de Procesos (SPC) en Python: cartas de control, capacidad y pruebas al estilo Minitab"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.9"
+authors = [{ name = "Autores de spyc" }]
+keywords = ["spc", "control estadístico de procesos", "cartas de control", "capacidad", "minitab", "six sigma"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = [
+    "numpy>=1.22",
+    "scipy>=1.9",
+    "pandas>=1.4",
+    "matplotlib>=3.5",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7"]
+
+[project.urls]
+Homepage = "https://github.com/TU_USUARIO/spyc"
+Issues = "https://github.com/TU_USUARIO/spyc/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

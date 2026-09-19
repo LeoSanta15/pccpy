@@ -1,0 +1,163 @@
+# spyc
+
+**Control Estadístico de Procesos (SPC) en Python, al estilo Minitab.**
+
+Cartas de control, pruebas de causas especiales, análisis de capacidad, prueba de
+normalidad y Pareto, con salidas y convenciones (LCS/LCI, LEI/LES, Cp/Cpk/Pp/Ppk,
+Z.Bench, PPM, Anderson-Darling) pensadas para quien viene de Minitab.
+
+Todo en español: nombres de columnas, mensajes, descripciones de pruebas y gráficos.
+
+## Instalación
+
+Desde GitHub:
+
+```bash
+pip install git+https://github.com/TU_USUARIO/spyc.git
+```
+
+Desarrollo local:
+
+```bash
+git clone https://github.com/TU_USUARIO/spyc.git
+cd spyc
+pip install -e ".[dev]"
+pytest
+```
+
+Requiere Python ≥ 3.9 (numpy, scipy, pandas, matplotlib).
+
+## Inicio rápido
+
+```python
+import numpy as np
+import spyc
+
+rng = np.random.default_rng(1)
+x = rng.normal(100, 2, 60)
+x[40:] += 3                                   # el proceso se desplaza
+
+carta = spyc.imr_chart(x, tests=(1, 2, 3, 4, 5, 6, 7, 8))
+print(carta.summary())                        # resumen tipo sesión de Minitab
+carta.violations()                            # DataFrame: panel, punto, prueba, descripción
+carta.to_frame()                              # todos los valores, límites y pruebas fallidas
+carta.plot()                                  # figura de matplotlib
+```
+
+## Cartas de control
+
+| Minitab | Función | Notas |
+|---|---|---|
+| I-MR | `imr_chart(x)` | `sigma_method`: `'mr'`, `'median_mr'`, `'mssd'`; `span` configurable |
+| Xbar-R | `xbar_r_chart(datos)` | `sigma_method`: `'rbar'`, `'pooled'` |
+| Xbar-S | `xbar_s_chart(datos)` | `sigma_method`: `'sbar'`, `'pooled'` |
+| P | `p_chart(defectuosos, n)` | límites variables con `n` variable |
+| NP | `np_chart(defectuosos, n)` | |
+| C | `c_chart(defectos)` | |
+| U | `u_chart(defectos, n)` | |
+| Laney P' / U' | `laney_p_chart`, `laney_u_chart` | corrige sobredispersión |
+| EWMA | `ewma_chart(datos, weight=0.2, k=3)` | límites exactos (se ensanchan al inicio) |
+| CUSUM | `cusum_chart(datos, h=4, k=0.5)` | tabular, sumas superior e inferior |
+
+Los datos de variables aceptan una matriz 2D (filas = subgrupos), un vector con
+`subgroup_size=5`, o un vector con `subgroup=identificadores` (subgrupos de tamaño desigual).
+
+```python
+datos = rng.normal(50, 1, size=(25, 5))
+spyc.xbar_r_chart(datos, tests=(1, 2, 3, 4)).summary()
+
+vector = datos.ravel()                         # mismos datos en un solo vector
+ids = np.repeat(np.arange(25), 5)              # identificador de subgrupo de cada dato
+spyc.xbar_r_chart(vector, subgroup_size=5)
+spyc.xbar_s_chart(vector, subgroup=ids)
+```
+
+**Parámetros históricos y etapas** (equivalentes a *Opciones de estimación* y *Etapas* de Minitab):
+
+```python
+spyc.imr_chart(x, mu=100, sigma=2)                      # parámetros conocidos
+spyc.imr_chart(x, stages=["antes"] * 40 + ["después"] * 20)   # límites por etapa
+```
+
+**Atributos:**
+
+```python
+defectuosos = rng.binomial(200, 0.05, 30)
+spyc.p_chart(defectuosos, n=200)
+spyc.laney_p_chart(defectuosos, n=200)
+```
+
+## Pruebas de causas especiales
+
+Las 8 pruebas de Minitab (1 a 8) con sus parámetros por defecto
+(`K` = 3, 9, 6, 14, 2, 4, 15, 8). Se piden con `tests=(...)` y se ajustan con `test_params`:
+
+```python
+spyc.imr_chart(x, tests=(1, 2, 5), test_params={2: 7})   # prueba 2 con 7 puntos
+```
+
+Cada tipo de carta aplica el subconjunto que corresponde (completo en I y Xbar;
+básicas en MR, R, S y cartas de atributos; solo la 1 en EWMA y CUSUM).
+Las funciones individuales están en `spyc.rules`.
+
+## Capacidad del proceso
+
+```python
+datos = rng.normal(10, 0.1, 100)
+res = spyc.capability_analysis(datos, lsl=9.7, usl=10.3, subgroup_size=5)
+print(res.summary())      # Cp, CPL, CPU, Cpk, Pp, PPL, PPU, Ppk, Cpm, Z.Bench, PPM, IC
+res.to_frame()
+res.plot()
+```
+
+Como en Minitab, **Cp/Cpk usan la desviación estándar dentro de subgrupos** y
+**Pp/Ppk la desviación general**; por eso Cpk ≠ Ppk cuando el proceso se desplaza o hay variación entre subgrupos.
+
+Datos no normales:
+
+```python
+spyc.capability_nonnormal(x, lsl=1, usl=20, distribution="weibull")
+spyc.capability_boxcox(x, lsl=1, usl=20)
+```
+
+Distribuciones: `normal`, `lognormal`, `weibull`, `gamma`, `exponential`,
+`loglogistic`, `logistic`, `largest_extreme`, `smallest_extreme` (método de percentiles).
+
+`spyc.capability_sixpack(datos, lsl, usl, subgroup_size=5)` genera el **Capability Sixpack**.
+
+## Normalidad, Pareto y constantes
+
+```python
+spyc.normality_test(x)                    # Anderson-Darling (por defecto), 'shapiro', 'dagostino'
+spyc.probability_plot(x)
+
+tabla = spyc.pareto(["rayón", "abolladura", "rayón", "otro"])
+spyc.plot_pareto(tabla)
+
+spyc.control_chart_constants(5)           # d2, d3, c4, c5, A2, A3, D3, D4, B3, B4
+```
+
+Las constantes se calculan por integración numérica para **cualquier** `n ≥ 2` (no solo tablas hasta 25).
+
+## Validación
+
+93 pruebas automatizadas. Las referencias son independientes de spyc:
+
+- Constantes d2, d3, c4 frente a las tablas publicadas (Montgomery).
+- Límites I-MR, Xbar-R y Xbar-S frente al cálculo manual con A2, D3, D4, A3, B3, B4.
+- Anderson-Darling frente a `statsmodels.stats.diagnostic.normal_ad` (coincide a 9 decimales).
+- EWMA y CUSUM frente a la recursión manual.
+- Las 8 pruebas de causas especiales frente a casos construidos a mano, incluidos los casos límite.
+
+> **Importante:** spyc no se ha comparado corrida a corrida contra el software Minitab
+> (no hay licencia disponible en el desarrollo). Sigue las fórmulas y convenciones que
+> Minitab documenta. Si encuentras una diferencia, abre un issue (ver `CONTRIBUTING.md`).
+
+## Fuera de alcance (por ahora)
+
+Cartas multivariadas (T² de Hotelling), cartas de corridas cortas, Z-MR, I-MR-R/S
+(entre/dentro), transformación de Johnson, MSA/Gage R&R.
+
+## Licencia
+
+MIT.
