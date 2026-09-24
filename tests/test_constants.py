@@ -2,7 +2,7 @@ import math
 
 import pytest
 
-from spyc import c4, c5, control_chart_constants, d2, d3
+from pccpy import c4, c5, control_chart_constants, d2, d3
 
 # Tablas publicadas (Montgomery, Introduction to Statistical Quality Control, Apéndice VI)
 N = list(range(2, 11))
