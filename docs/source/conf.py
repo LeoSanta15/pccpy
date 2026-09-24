@@ -1,4 +1,4 @@
-"""Configuración de Sphinx para la documentación de spyc."""
+"""Configuración de Sphinx para la documentación de pccpy."""
 from __future__ import annotations
 
 import sys
@@ -10,9 +10,9 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
 import spyc  # noqa: E402
 
-project = "spyc"
-author = "Autores de spyc"
-copyright = "2026, Autores de spyc"
+project = "pccpy"
+author = "LeoSanta15"
+copyright = "2026, LeoSanta15"
 release = spyc.__version__
 version = spyc.__version__
 
@@ -48,7 +48,7 @@ napoleon_use_rtype = False
 # -- HTML ---------------------------------------------------------------
 html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
-html_title = f"spyc {version}"
+html_title = f"pccpy {version}"
 
 # spyc importa numpy/scipy/pandas/matplotlib; si alguna no estuviera instalada
 # al construir la documentación (p. ej. en un entorno mínimo), se simulan aquí
