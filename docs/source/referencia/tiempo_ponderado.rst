@@ -1,5 +1,5 @@
 Cartas de tiempo ponderado
 ============================
 
-.. autofunction:: spyc.ewma_chart
-.. autofunction:: spyc.cusum_chart
+.. autofunction:: pccpy.ewma_chart
+.. autofunction:: pccpy.cusum_chart

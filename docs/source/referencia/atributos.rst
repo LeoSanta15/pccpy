@@ -1,9 +1,9 @@
 Cartas de atributos
 =====================
 
-.. autofunction:: spyc.p_chart
-.. autofunction:: spyc.np_chart
-.. autofunction:: spyc.c_chart
-.. autofunction:: spyc.u_chart
-.. autofunction:: spyc.laney_p_chart
-.. autofunction:: spyc.laney_u_chart
+.. autofunction:: pccpy.p_chart
+.. autofunction:: pccpy.np_chart
+.. autofunction:: pccpy.c_chart
+.. autofunction:: pccpy.u_chart
+.. autofunction:: pccpy.laney_p_chart
+.. autofunction:: pccpy.laney_u_chart

@@ -1,7 +1,7 @@
 Normalidad y herramientas de calidad
 =======================================
 
-.. autofunction:: spyc.normality_test
-.. autofunction:: spyc.probability_plot
-.. autofunction:: spyc.pareto
-.. autofunction:: spyc.plot_pareto
+.. autofunction:: pccpy.normality_test
+.. autofunction:: pccpy.probability_plot
+.. autofunction:: pccpy.pareto
+.. autofunction:: pccpy.plot_pareto

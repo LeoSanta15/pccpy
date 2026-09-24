@@ -1,6 +1,6 @@
 Cartas de variables
 ====================
 
-.. autofunction:: spyc.imr_chart
-.. autofunction:: spyc.xbar_r_chart
-.. autofunction:: spyc.xbar_s_chart
+.. autofunction:: pccpy.imr_chart
+.. autofunction:: pccpy.xbar_r_chart
+.. autofunction:: pccpy.xbar_s_chart

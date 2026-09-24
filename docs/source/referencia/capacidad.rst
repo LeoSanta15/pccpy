@@ -1,7 +1,7 @@
 Capacidad del proceso
 ========================
 
-.. autofunction:: spyc.capability_analysis
-.. autofunction:: spyc.capability_nonnormal
-.. autofunction:: spyc.capability_boxcox
-.. autofunction:: spyc.capability_sixpack
+.. autofunction:: pccpy.capability_analysis
+.. autofunction:: pccpy.capability_nonnormal
+.. autofunction:: pccpy.capability_boxcox
+.. autofunction:: pccpy.capability_sixpack
