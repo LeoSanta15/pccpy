@@ -2,13 +2,13 @@
 
 ```python
 import numpy as np
-import spyc
+import pccpy as pp
 
 rng = np.random.default_rng(1)
 x = rng.normal(100, 2, 60)
 x[40:] += 3                                   # el proceso se desplaza
 
-carta = spyc.imr_chart(x, tests=(1, 2, 3, 4, 5, 6, 7, 8))
+carta = pp.imr_chart(x, tests=(1, 2, 3, 4, 5, 6, 7, 8))
 print(carta.summary())                        # resumen tipo sesión de Minitab
 carta.violations()                            # DataFrame: panel, punto, prueba, descripción
 carta.to_frame()                              # todos los valores, límites y pruebas fallidas

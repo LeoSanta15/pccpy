@@ -1,28 +1,28 @@
 Objetos de resultado
 =======================
 
-Toda carta de control devuelve un :class:`~spyc.ControlChart` (las
-multivariadas devuelven la subclase :class:`~spyc.MultivariateChart`), con un
-:class:`~spyc.Panel` por cada gráfico que la compone (por ejemplo, el panel
+Toda carta de control devuelve un :class:`~pccpy.ControlChart` (las
+multivariadas devuelven la subclase :class:`~pccpy.MultivariateChart`), con un
+:class:`~pccpy.Panel` por cada gráfico que la compone (por ejemplo, el panel
 ``"I"`` y el panel ``"MR"`` de una carta I-MR).
 
-.. autoclass:: spyc.ControlChart
+.. autoclass:: pccpy.ControlChart
    :members:
 
-.. autoclass:: spyc.MultivariateChart
+.. autoclass:: pccpy.MultivariateChart
    :members:
    :show-inheritance:
 
-.. autoclass:: spyc.Panel
+.. autoclass:: pccpy.Panel
    :members:
 
 Capacidad y normalidad devuelven, respectivamente:
 
-.. autoclass:: spyc.CapabilityResult
+.. autoclass:: pccpy.CapabilityResult
    :members:
 
-.. autoclass:: spyc.NonNormalCapabilityResult
+.. autoclass:: pccpy.NonNormalCapabilityResult
    :members:
 
-.. autoclass:: spyc.NormalityResult
+.. autoclass:: pccpy.NormalityResult
    :members:
