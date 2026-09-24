@@ -1,16 +1,22 @@
 # Instalación
 
+Desde PyPI (recomendado):
+
+```bash
+pip install pccpy
+```
+
 Desde GitHub:
 
 ```bash
-pip install git+https://github.com/TU_USUARIO/spyc.git
+pip install git+https://github.com/LeoSanta15/pccpy.git
 ```
 
 Desarrollo local (incluye las pruebas y las herramientas de calidad):
 
 ```bash
-git clone https://github.com/TU_USUARIO/spyc.git
-cd spyc
+git clone https://github.com/LeoSanta15/pccpy.git
+cd pccpy
 pip install -e ".[dev]"
 pytest --cov=spyc
 ruff check src/
