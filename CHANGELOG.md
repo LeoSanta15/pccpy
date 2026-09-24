@@ -4,6 +4,13 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 pccpy usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
 
+## [0.4.7] - zonas sigma visibles por defecto
+
+### Cambiado
+- `plot_control_chart` y `_draw_panel`: el parámetro `zones` ahora es `True` por
+  defecto. Las líneas de ±1σ y ±2σ se muestran automáticamente en todas las cartas
+  simétricas, igual que Minitab. Para ocultar las zonas usa `zones=False`.
+
 ## [0.4.4] - correcciones de documentación y empaquetado
 
 ### Corregido

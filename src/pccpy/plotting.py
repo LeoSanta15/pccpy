@@ -17,7 +17,7 @@ BLUE, RED, GREEN, GRAY, ORANGE = "#1f4e9c", "#d62728", "#2e8b57", "#8c8c8c", "#e
 
 
 # ------------------------------------------------------------------ cartas de control
-def _draw_panel(ax, panel: Panel, zones: bool = False) -> None:
+def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
     x = np.arange(1, len(panel.values) + 1)
     labels = list(dict.fromkeys(panel.stage.tolist()))
     for lab in labels:
@@ -63,11 +63,12 @@ def _draw_panel(ax, panel: Panel, zones: bool = False) -> None:
     ax.grid(alpha=0.25)
 
 
-def plot_control_chart(chart: ControlChart, *, zones: bool = False, figsize=None,
+def plot_control_chart(chart: ControlChart, *, zones: bool = True, figsize=None,
                        title: str | None = None):
     """Dibuja todos los paneles de la carta, apilados. Devuelve la figura.
 
-    ``zones=True`` agrega las líneas de 1 y 2 sigma (solo en gráficos simétricos).
+    ``zones=True`` (por defecto) agrega las líneas de 1 y 2 sigma (solo en gráficos simétricos),
+    igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI.
     Los puntos que fallan una prueba se marcan en rojo con el número de la prueba.
     """
     k = len(chart.panels)
