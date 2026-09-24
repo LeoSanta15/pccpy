@@ -1,4 +1,4 @@
-# spyc
+# pccpy
 
 **Control Estadístico de Procesos (SPC) en Python, al estilo Minitab.**
 
@@ -10,17 +10,23 @@ Todo en español: nombres de columnas, mensajes, descripciones de pruebas y grá
 
 ## Instalación
 
+Desde PyPI (recomendado):
+
+```bash
+pip install pccpy
+```
+
 Desde GitHub:
 
 ```bash
-pip install git+https://github.com/TU_USUARIO/spyc.git
+pip install git+https://github.com/LeoSanta15/pccpy.git
 ```
 
 Desarrollo local:
 
 ```bash
-git clone https://github.com/TU_USUARIO/spyc.git
-cd spyc
+git clone https://github.com/LeoSanta15/pccpy.git
+cd pccpy
 pip install -e ".[dev]"
 pytest --cov=spyc              # pruebas + cobertura (97% al momento de escribir esto)
 ruff check src/                # estilo y errores comunes
@@ -40,8 +46,8 @@ pip install -e ".[docs]"
 sphinx-build -b html docs/source docs/build
 ```
 
-Abre `docs/build/index.html`. Una vez el repositorio esté en GitHub, puedes conectarlo
-en [readthedocs.org](https://readthedocs.org) para tenerla publicada automáticamente
+Abre `docs/build/index.html`. Puedes conectar el repositorio en
+[readthedocs.org](https://readthedocs.org) para tenerla publicada automáticamente
 en cada push; el archivo `.readthedocs.yaml` ya está listo para eso.
 
 Requiere Python ≥ 3.9 (numpy, scipy, pandas, matplotlib).
@@ -253,7 +259,7 @@ Las constantes se calculan por integración numérica para **cualquier** `n ≥ 
 
 ## Validación
 
- pruebas automatizadas. Las referencias son independientes de spyc:
+186 pruebas automatizadas. Las referencias son independientes de spyc:
 
 - Constantes d2, d3, c4 frente a las tablas publicadas (Montgomery).
 - Límites I-MR, Xbar-R y Xbar-S frente al cálculo manual con A2, D3, D4, A3, B3, B4.
@@ -268,14 +274,9 @@ Las constantes se calculan por integración numérica para **cualquier** `n ≥ 
 - G y T: cuantiles frente a `scipy.stats`, y máxima verosimilitud Weibull por su ecuación de score.
 - Constantes de Z-MR (1.128 y 3.686) frente a las que documenta Minitab.
 
-> **Importante:** spyc no se ha comparado corrida a corrida contra el software Minitab
+> **Importante:** pccpy no se ha comparado corrida a corrida contra el software Minitab
 > (no hay licencia disponible en el desarrollo). Sigue las fórmulas y convenciones que
-> Minitab documenta. Si encuentras una diferencia, abre un issue (ver `CONTRIBUTING.md`).
-
-## Fuera de alcance (por ahora)
-
-Cartas multivariadas (T² de Hotelling), cartas de corridas cortas, Z-MR, I-MR-R/S
-(entre/dentro), transformación de Johnson, MSA/Gage R&R.
+> Minitab documenta. Si encuentras una diferencia, abre un [issue](https://github.com/LeoSanta15/pccpy/issues).
 
 ## Licencia
 
