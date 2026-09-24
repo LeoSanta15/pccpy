@@ -4,6 +4,15 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 pccpy usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
 
+## [0.4.8] - zonas sigma en cartas asimétricas
+
+### Corregido
+- `_draw_panel`: se eliminó la condición `panel.symmetric` que impedía dibujar
+  las líneas de ±1σ y ±2σ en cartas asimétricas (MR, R, S, atributos). Ahora
+  todos los paneles muestran las zonas cuando `zones=True`, igual que Minitab.
+  Las líneas que quedan por debajo de cero no son visibles (matplotlib las
+  recorta al rango de los datos).
+
 ## [0.4.7] - zonas sigma visibles por defecto
 
 ### Cambiado

@@ -27,7 +27,7 @@ def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
         ax.plot(xs, panel.center[m], color=GREEN, lw=1.3, **kw)
         ax.plot(xs, panel.ucl[m], color=RED, lw=1.3, **kw)
         ax.plot(xs, panel.lcl[m], color=RED, lw=1.3, **kw)
-        if zones and panel.symmetric:
+        if zones:
             for k in (1, 2):
                 for sgn in (1, -1):
                     ax.plot(xs, panel.center[m] + sgn * k * panel.sigma[m],
@@ -67,8 +67,8 @@ def plot_control_chart(chart: ControlChart, *, zones: bool = True, figsize=None,
                        title: str | None = None):
     """Dibuja todos los paneles de la carta, apilados. Devuelve la figura.
 
-    ``zones=True`` (por defecto) agrega las líneas de 1 y 2 sigma (solo en gráficos simétricos),
-    igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI.
+    ``zones=True`` (por defecto) agrega las líneas de 1 y 2 sigma en todos los
+    paneles, igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI.
     Los puntos que fallan una prueba se marcan en rojo con el número de la prueba.
     """
     k = len(chart.panels)
