@@ -1,8 +1,19 @@
 # Registro de cambios
 
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
-spyc usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
+pccpy usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
+
+## [0.4.4] - correcciones de documentación y empaquetado
+
+### Corregido
+- Eliminado classifier de licencia duplicado (`License :: OSI Approved :: MIT License`)
+  incompatible con PEP 639 en setuptools ≥ 77.
+- Corregidas todas las URLs y referencias de `TU_USUARIO/spyc` a `LeoSanta15/pccpy`
+  en README.md, docs/ y CONTRIBUTING.md.
+- Nombre del proyecto actualizado de `spyc` a `pccpy` en pyproject.toml, conf.py
+  e index.md.
+- Modernizadas anotaciones de tipo con ruff (UP006, UP035, UP045).
 
 ## [0.4.3] - contexto para Claude Code
 
