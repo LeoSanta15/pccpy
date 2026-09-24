@@ -4,6 +4,16 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 spyc usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
 
+## [0.4.3] - contexto para Claude Code
+
+### Añadido
+- `CLAUDE.md`: contexto de arranque para continuar el desarrollo desde Claude
+  Code (reglas de trabajo, mapa del código, cómo verificar cambios, pendientes
+  conocidos y pasos para subir el repositorio a GitHub).
+
+### Corregido
+- Faltaba la etiqueta de git `v0.1.0` en el primer commit; se agregó.
+
 ## [0.4.2] - documentación con Sphinx
 
 ### Añadido
