@@ -10,3 +10,6 @@ salida/
 *.png
 !docs/*.png
 .DS_Store
+
+.mypy_cache/
+.ruff_cache/

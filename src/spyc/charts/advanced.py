@@ -4,7 +4,7 @@ Las fórmulas siguen la documentación de métodos de Minitab.
 """
 from __future__ import annotations
 
-from typing import Dict, Optional
+from typing import Dict, List, Optional
 
 import numpy as np
 from scipy import optimize, stats
@@ -142,7 +142,7 @@ def zmr_chart(
                              "se necesitan al menos 2 observaciones consecutivas de la misma parte.")
         return float(mr.mean() / d2(2))
 
-    run_sigma = [None] * len(runs)
+    run_sigma: List[Optional[float]] = [None] * len(runs)
     part_sigma: Dict = {}
     if sigma is not None:
         for j, (lab, _, _) in enumerate(runs):
@@ -159,10 +159,11 @@ def zmr_chart(
         for j, (lab, a, b) in enumerate(runs):
             run_sigma[j] = est(_mr_values(y[a:b]), f"corrida {j + 1} (parte {lab!r})")
 
-    if any(s <= 0 for s in run_sigma):
+    if any(s is None or s <= 0 for s in run_sigma):
         raise ValueError("Se obtuvo una sigma igual a cero (datos sin variación).")
+    sigmas: List[float] = run_sigma  # type: ignore[assignment]  # ya se validó que no queda ningún None
     z = np.empty(y.size)
-    for (lab, a, b), s in zip(runs, run_sigma):
+    for (lab, a, b), s in zip(runs, sigmas):
         z[a:b] = (y[a:b] - mu_of[lab]) / s
 
     dd2, dd3 = d2(2), d3(2)

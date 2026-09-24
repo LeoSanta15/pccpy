@@ -4,6 +4,8 @@ from __future__ import annotations
 from typing import Optional
 
 import matplotlib.pyplot as plt
+from typing import Dict
+
 import numpy as np
 from matplotlib.ticker import MaxNLocator
 from scipy import stats
@@ -38,7 +40,7 @@ def _draw_panel(ax, panel: Panel, zones: bool = False) -> None:
     if panel.secondary is not None:
         ax.plot(x, panel.secondary, marker="o", ms=4, lw=1, color=ORANGE, zorder=3)
 
-    tests_at = {}
+    tests_at: Dict[int, list] = {}
     for t, idx in panel.violations.items():
         for i in idx:
             tests_at.setdefault(int(i), []).append(t)

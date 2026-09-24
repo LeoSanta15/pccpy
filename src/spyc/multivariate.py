@@ -23,7 +23,7 @@ import pandas as pd
 from scipy import optimize, stats
 
 from .charts._engine import StagePanel, build_chart, full
-from .results import ControlChart, MultivariateChart
+from .results import MultivariateChart
 
 #: Probabilidad de cola superior que usa Minitab en los límites de T²: 1 - Phi(3).
 ALPHA = 0.00134989803156746

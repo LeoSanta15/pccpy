@@ -22,8 +22,12 @@ Desarrollo local:
 git clone https://github.com/TU_USUARIO/spyc.git
 cd spyc
 pip install -e ".[dev]"
-pytest
+pytest --cov=spyc              # pruebas + cobertura (97% al momento de escribir esto)
+ruff check src/                # estilo y errores comunes
+mypy src/spyc                  # tipos
 ```
+
+Ver [`CHANGELOG.md`](CHANGELOG.md) para el historial de versiones.
 
 Requiere Python ≥ 3.9 (numpy, scipy, pandas, matplotlib).
 

@@ -169,6 +169,8 @@ class MultivariateChart(ControlChart):
         mean = self.stage_mean.get(label, self.mean)
         cov = self.stage_cov.get(label, self.cov)
         scale = self.stage_scale.get(label, self.scale)
+        if mean is None or cov is None:
+            raise ValueError("La carta no tiene media/covarianza calculadas para este punto.")
         d = self.points[point - 1] - mean
         p = d.size
         t2 = scale * d @ np.linalg.solve(cov, d)

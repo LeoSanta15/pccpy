@@ -21,5 +21,21 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -e ".[dev]"
-      - name: Pruebas
-        run: pytest
+      - name: Pruebas (con cobertura)
+        run: pytest --cov=spyc --cov-report=term-missing
+
+  calidad:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Instalar
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+      - name: ruff
+        run: ruff check src/
+      - name: mypy
+        run: mypy src/spyc
