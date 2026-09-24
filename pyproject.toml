@@ -36,9 +36,9 @@ dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.6", "mypy>=1.10"]
 docs = ["sphinx>=7", "sphinx-rtd-theme>=2", "myst-parser>=2"]
 
 [project.urls]
-Homepage = "https://github.com/LeoSanta15/spyc"
-Issues = "https://github.com/LeoSanta15/spyc/issues"
-Changelog = "https://github.com/LeoSanta15/spyc/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/LeoSanta15/pccpy"
+Issues = "https://github.com/LeoSanta15/pccpy/issues"
+Changelog = "https://github.com/LeoSanta15/pccpy/blob/main/CHANGELOG.md"
 
 [tool.setuptools.packages.find]
 where = ["src"]
