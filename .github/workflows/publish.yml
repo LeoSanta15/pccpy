@@ -48,23 +48,3 @@ jobs:
       - name: Publicar en PyPI
         uses: pypa/gh-action-pypi-publish@release/v1
         # Sin tokens: usa Trusted Publisher (OIDC) configurado en pypi.org
-
-  publish-testpypi:
-    name: Publicar en TestPyPI (verificación)
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/project/pccpy/
-    steps:
-      - name: Descargar artefactos
-        uses: actions/download-artifact@v4
-        with:
-          name: dist
-          path: dist/
-
-      - name: Publicar en TestPyPI
-        uses: pypa/gh-action-pypi-publish@release/v1
-        with:
-          repository-url: https://test.pypi.org/legacy/
-          skip-existing: true
