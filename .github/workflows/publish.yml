@@ -1,0 +1,70 @@
+name: Publicar en PyPI
+
+on:
+  release:
+    types: [published]
+
+permissions:
+  contents: read
+  id-token: write   # necesario para Trusted Publisher (OIDC)
+
+jobs:
+  build:
+    name: Construir distribución
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Instalar build
+        run: pip install build
+
+      - name: Construir wheel y sdist
+        run: python -m build
+
+      - name: Guardar artefactos
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  publish-pypi:
+    name: Publicar en PyPI
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: pypi
+      url: https://pypi.org/project/spyc/
+    steps:
+      - name: Descargar artefactos
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publicar en PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        # Sin tokens: usa Trusted Publisher (OIDC) configurado en pypi.org
+
+  publish-testpypi:
+    name: Publicar en TestPyPI (verificación)
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/project/spyc/
+    steps:
+      - name: Descargar artefactos
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publicar en TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          repository-url: https://test.pypi.org/legacy/
+          skip-existing: true
