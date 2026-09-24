@@ -1,11 +1,11 @@
-# spyc — contexto para Claude Code
+# pccpy — contexto para Claude Code
 
 Este archivo es el punto de partida para retomar el trabajo en spyc desde Claude
 Code. Léelo completo antes de tocar código: resume las convenciones, el estado
 actual y lo que falta, para no repetir decisiones ya tomadas ni romper algo que
 ya funciona.
 
-## Qué es spyc
+## Qué es pccpy
 
 Librería Python de Control Estadístico de Procesos (SPC) que replica la
 funcionalidad de Minitab: cartas de control (univariadas y multivariadas),
@@ -14,7 +14,7 @@ docstrings, mensajes de error y salidas están **en español**.
 
 ## Estado actual
 
-- Versión **0.4.2**, en `src/spyc/__init__.py` (`__version__`) y `pyproject.toml`.
+- Versión **0.4.5**, en `src/spyc/__init__.py` (`__version__`) y `pyproject.toml`.
 - **186 pruebas**, todas pasando, ~97% de cobertura.
 - 6 commits en `main`, etiquetados `v0.1.0` a `v0.4.2` (uno por versión).
 - **No está en GitHub todavía** — el repositorio solo existe en este `.tar.gz`.
