@@ -28,9 +28,9 @@ Desarrollo local:
 git clone https://github.com/LeoSanta15/pccpy.git
 cd pccpy
 pip install -e ".[dev]"
-pytest --cov=spyc              # pruebas + cobertura (97% al momento de escribir esto)
+pytest --cov=pccpy              # pruebas + cobertura (97% al momento de escribir esto)
 ruff check src/                # estilo y errores comunes
-mypy src/spyc                  # tipos
+mypy src/pccpy                  # tipos
 ```
 
 Ver [`CHANGELOG.md`](CHANGELOG.md) para el historial de versiones.
@@ -56,7 +56,7 @@ Requiere Python ≥ 3.9 (numpy, scipy, pandas, matplotlib).
 
 ```python
 import numpy as np
-import spyc as pp
+import pccpy as pp
 
 rng = np.random.default_rng(1)
 x = rng.normal(100, 2, 60)
@@ -216,7 +216,7 @@ pp.imr_chart(x, tests=(1, 2, 5), test_params={2: 7})   # prueba 2 con 7 puntos
 Cada tipo de carta aplica el subconjunto que corresponde (completo en I, Xbar y Z;
 básicas 1-4 en MR, R, S, G, T y cartas de atributos; solo la 1 en EWMA, CUSUM, MA y las
 multivariadas). En G y T la prueba 1 usa los percentiles de su distribución.
-Las funciones individuales están en `spyc.rules`.
+Las funciones individuales están en `pccpy.rules`.
 
 ## Capacidad del proceso
 
@@ -259,7 +259,7 @@ Las constantes se calculan por integración numérica para **cualquier** `n ≥ 
 
 ## Validación
 
-186 pruebas automatizadas. Las referencias son independientes de spyc:
+186 pruebas automatizadas. Las referencias son independientes de pccpy:
 
 - Constantes d2, d3, c4 frente a las tablas publicadas (Montgomery).
 - Límites I-MR, Xbar-R y Xbar-S frente al cálculo manual con A2, D3, D4, A3, B3, B4.
