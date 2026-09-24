@@ -13,11 +13,11 @@ Convenciones (las mismas que Minitab):
 """
 from __future__ import annotations
 
-from typing import Dict, Iterable, Optional
+from collections.abc import Iterable
 
 import numpy as np
 
-TEST_DESCRIPTIONS: Dict[int, str] = {
+TEST_DESCRIPTIONS: dict[int, str] = {
     1: "1 punto a más de {k} desviaciones estándar de la línea central",
     2: "{k} puntos consecutivos del mismo lado de la línea central",
     3: "{k} puntos consecutivos, todos ascendentes o todos descendentes",
@@ -35,10 +35,10 @@ def describe(test: int, k=None) -> str:
     return TEST_DESCRIPTIONS[test].format(k=f"{k:g}", k1=f"{k + 1:g}")
 
 #: Parámetro K por defecto de cada prueba (valores por defecto de Minitab).
-DEFAULT_K: Dict[int, float] = {1: 3, 2: 9, 3: 6, 4: 14, 5: 2, 6: 4, 7: 15, 8: 8}
+DEFAULT_K: dict[int, float] = {1: 3, 2: 9, 3: 6, 4: 14, 5: 2, 6: 4, 7: 15, 8: 8}
 
 #: Pruebas disponibles según la familia de gráfico.
-FAMILIES: Dict[str, tuple] = {
+FAMILIES: dict[str, tuple] = {
     "full": (1, 2, 3, 4, 5, 6, 7, 8),  # I, X-barra
     "basic": (1, 2, 3, 4),  # MR, R, S, P, NP, C, U, Laney
     "only1": (1,),  # EWMA, CUSUM
@@ -107,9 +107,7 @@ def _k_of_n(z: np.ndarray, k: int, zone: float) -> np.ndarray:
     flagged = np.zeros(z.size, dtype=bool)
     for i in range(n - 1, z.size):
         w = z[i - n + 1 : i + 1]
-        if z[i] > zone and np.sum(w > zone) >= k:
-            flagged[i] = True
-        elif z[i] < -zone and np.sum(w < -zone) >= k:
+        if z[i] > zone and np.sum(w > zone) >= k or z[i] < -zone and np.sum(w < -zone) >= k:
             flagged[i] = True
     return np.flatnonzero(flagged)
 
@@ -135,8 +133,8 @@ def apply_tests(
     center: np.ndarray,
     sigma: np.ndarray,
     tests: Iterable[int],
-    params: Optional[Dict[int, float]] = None,
-) -> Dict[int, np.ndarray]:
+    params: dict[int, float] | None = None,
+) -> dict[int, np.ndarray]:
     """Aplica las pruebas ``tests`` y devuelve ``{prueba: índices marcados}``.
 
     ``values``, ``center`` y ``sigma`` son arrays de la misma longitud (sigma es la
@@ -163,7 +161,7 @@ def apply_tests(
         7: lambda k: test7(zz, int(k)),
         8: lambda k: test8(zz, int(k)),
     }
-    out: Dict[int, np.ndarray] = {}
+    out: dict[int, np.ndarray] = {}
     for t in tests:
         k = params.get(t, DEFAULT_K[t])
         idx = fns[t](k)

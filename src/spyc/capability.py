@@ -15,7 +15,6 @@ from __future__ import annotations
 
 import math
 from dataclasses import dataclass, field
-from typing import Dict, Optional, Tuple
 
 import numpy as np
 import pandas as pd
@@ -39,7 +38,7 @@ def _check_specs(lsl, usl):
         raise ValueError("El límite inferior (lsl) debe ser menor que el superior (usl).")
 
 
-def _indices(mean: float, sigma: float, lsl, usl) -> Tuple[float, float, float, float]:
+def _indices(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float, float]:
     if not sigma > 0:
         raise ValueError("La variación del proceso es cero; no se pueden calcular índices.")
     cpl = (mean - lsl) / (3 * sigma) if lsl is not None else NAN
@@ -49,7 +48,7 @@ def _indices(mean: float, sigma: float, lsl, usl) -> Tuple[float, float, float, 
     return cp, cpl, cpu, cpk
 
 
-def _expected_ppm(mean: float, sigma: float, lsl, usl) -> Tuple[float, float, float]:
+def _expected_ppm(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float]:
     lo = 1e6 * stats.norm.cdf((lsl - mean) / sigma) if lsl is not None else NAN
     hi = 1e6 * stats.norm.sf((usl - mean) / sigma) if usl is not None else NAN
     return lo, hi, float(np.nansum([lo, hi]))
@@ -60,7 +59,7 @@ def _z_bench(total_ppm: float) -> float:
     return float(stats.norm.isf(p)) if p > 0 else math.inf
 
 
-def _observed_ppm(x: np.ndarray, lsl, usl) -> Tuple[float, float, float]:
+def _observed_ppm(x: np.ndarray, lsl, usl) -> tuple[float, float, float]:
     lo = 1e6 * float(np.mean(x < lsl)) if lsl is not None else NAN
     hi = 1e6 * float(np.mean(x > usl)) if usl is not None else NAN
     return lo, hi, float(np.nansum([lo, hi]))
@@ -75,9 +74,9 @@ class CapabilityResult:
     sigma_within: float
     sigma_overall: float
     within_method: str
-    lsl: Optional[float]
-    usl: Optional[float]
-    target: Optional[float]
+    lsl: float | None
+    usl: float | None
+    target: float | None
     cp: float
     cpl: float
     cpu: float
@@ -91,13 +90,13 @@ class CapabilityResult:
     z_bench_overall: float
     z_lsl_overall: float
     z_usl_overall: float
-    ppm_obs: Tuple[float, float, float]  # (< LEI, > LES, total)
-    ppm_within: Tuple[float, float, float]
-    ppm_overall: Tuple[float, float, float]
-    pp_ci: Tuple[float, float]
-    ppk_ci: Tuple[float, float]
+    ppm_obs: tuple[float, float, float]  # (< LEI, > LES, total)
+    ppm_within: tuple[float, float, float]
+    ppm_overall: tuple[float, float, float]
+    pp_ci: tuple[float, float]
+    ppk_ci: tuple[float, float]
     ci_level: float
-    transform: Optional[Dict[str, float]] = None
+    transform: dict[str, float] | None = None
     data: np.ndarray = field(default_factory=lambda: np.array([]), repr=False)
 
     def to_frame(self) -> pd.DataFrame:
@@ -118,13 +117,13 @@ class CapabilityResult:
 
     def summary(self) -> str:
         o = self
-        ci = int(round(o.ci_level * 100))
+        ci = round(o.ci_level * 100)
         L = [
             "Análisis de capacidad del proceso (distribución normal)",
             f"  LEI={_fmt(o.lsl, 4)}  Objetivo={_fmt(o.target, 4)}  LES={_fmt(o.usl, 4)}",
-            f"  N={o.n}  Media={o.mean:.5f}  "
+            (f"  N={o.n}  Media={o.mean:.5f}  "
             f"Desv.Est.(dentro)={o.sigma_within:.5f} [{o.within_method}]  "
-            f"Desv.Est.(general)={o.sigma_overall:.5f}",
+            f"Desv.Est.(general)={o.sigma_overall:.5f}"),
         ]
         if o.transform:
             L.append(
@@ -138,8 +137,8 @@ class CapabilityResult:
             f"    Z.Bench={_fmt(o.z_bench_within)}",
             "  Desempeño general:",
             f"    Pp={_fmt(o.pp)}  PPL={_fmt(o.ppl)}  PPU={_fmt(o.ppu)}  Ppk={_fmt(o.ppk)}  Cpm={_fmt(o.cpm)}",
-            f"    IC {ci}% Pp: ({_fmt(o.pp_ci[0])}, {_fmt(o.pp_ci[1])})   "
-            f"IC {ci}% Ppk: ({_fmt(o.ppk_ci[0])}, {_fmt(o.ppk_ci[1])})",
+            (f"    IC {ci}% Pp: ({_fmt(o.pp_ci[0])}, {_fmt(o.pp_ci[1])})   "
+            f"IC {ci}% Ppk: ({_fmt(o.ppk_ci[0])}, {_fmt(o.ppk_ci[1])})"),
             f"    Z.Bench={_fmt(o.z_bench_overall)}  Z.LEI={_fmt(o.z_lsl_overall)}  Z.LES={_fmt(o.z_usl_overall)}",
             "  Desempeño (PPM):            < LEI       > LES      Total",
         ]
@@ -160,14 +159,14 @@ class CapabilityResult:
 
 def capability_analysis(
     data,
-    lsl: Optional[float] = None,
-    usl: Optional[float] = None,
-    target: Optional[float] = None,
+    lsl: float | None = None,
+    usl: float | None = None,
+    target: float | None = None,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
-    within_method: Optional[str] = None,
-    sigma_within: Optional[float] = None,
+    within_method: str | None = None,
+    sigma_within: float | None = None,
     ci_level: float = 0.95,
 ) -> CapabilityResult:
     """Capacidad del proceso para datos con distribución normal.
@@ -247,11 +246,11 @@ def capability_analysis(
 
 def capability_boxcox(
     data,
-    lsl: Optional[float] = None,
-    usl: Optional[float] = None,
-    target: Optional[float] = None,
+    lsl: float | None = None,
+    usl: float | None = None,
+    target: float | None = None,
     *,
-    lam: Optional[float] = None,
+    lam: float | None = None,
     round_lambda: bool = False,
     **kwargs,
 ) -> CapabilityResult:
@@ -301,13 +300,13 @@ class NonNormalCapabilityResult:
     """Capacidad por el método de percentiles (Minitab, distribuciones no normales)."""
 
     distribution: str
-    params: Tuple[float, ...]
+    params: tuple[float, ...]
     loglik: float
     aic: float
     n: int
-    lsl: Optional[float]
-    usl: Optional[float]
-    target: Optional[float]
+    lsl: float | None
+    usl: float | None
+    target: float | None
     x_low: float  # percentil 0.135 %
     x_median: float
     x_high: float  # percentil 99.865 %
@@ -315,8 +314,8 @@ class NonNormalCapabilityResult:
     ppl: float
     ppu: float
     ppk: float
-    ppm_obs: Tuple[float, float, float]
-    ppm_expected: Tuple[float, float, float]
+    ppm_obs: tuple[float, float, float]
+    ppm_expected: tuple[float, float, float]
     data: np.ndarray = field(default_factory=lambda: np.array([]), repr=False)
 
     @property
@@ -346,9 +345,9 @@ class NonNormalCapabilityResult:
 
 def capability_nonnormal(
     data,
-    lsl: Optional[float] = None,
-    usl: Optional[float] = None,
-    target: Optional[float] = None,
+    lsl: float | None = None,
+    usl: float | None = None,
+    target: float | None = None,
     *,
     distribution: str = "weibull",
 ) -> NonNormalCapabilityResult:

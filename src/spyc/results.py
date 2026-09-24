@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Dict, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -22,8 +21,8 @@ class Panel:
     sigma: np.ndarray
     stage: np.ndarray
     ylabel: str = ""
-    violations: Dict[int, np.ndarray] = field(default_factory=dict)
-    secondary: Optional[np.ndarray] = None  # 2ª serie (CUSUM inferior)
+    violations: dict[int, np.ndarray] = field(default_factory=dict)
+    secondary: np.ndarray | None = None  # 2ª serie (CUSUM inferior)
     symmetric: bool = True  # ¿tiene sentido dibujar zonas de 1 y 2 sigma?
 
     @property
@@ -45,7 +44,7 @@ class Panel:
         if self.secondary is not None:
             data["valor_inferior"] = self.secondary
         df = pd.DataFrame(data)
-        tests_at: Dict[int, List[str]] = {}
+        tests_at: dict[int, list[str]] = {}
         for t, idx in self.violations.items():
             for i in idx:
                 tests_at.setdefault(int(i), []).append(str(t))
@@ -60,11 +59,11 @@ class ControlChart:
     """Resultado de una carta de control: paneles, parámetros por etapa y pruebas."""
 
     kind: str
-    panels: List[Panel]
-    params: List[dict]
+    panels: list[Panel]
+    params: list[dict]
     tests: tuple = ()
-    test_params: Dict[int, float] = field(default_factory=dict)
-    test1_text: Optional[str] = None  # descripción propia de la prueba 1 (p. ej. límites no normales)
+    test_params: dict[int, float] = field(default_factory=dict)
+    test1_text: str | None = None  # descripción propia de la prueba 1 (p. ej. límites no normales)
 
     def __getitem__(self, name: str) -> Panel:
         for p in self.panels:
@@ -142,14 +141,14 @@ class ControlChart:
 class MultivariateChart(ControlChart):
     """Carta multivariada: agrega los datos necesarios para diagnosticar una señal."""
 
-    variables: List[str] = field(default_factory=list)
-    points: Optional[np.ndarray] = None  # vector graficado en cada punto (m x p)
-    mean: Optional[np.ndarray] = None  # media usada (la de la 1ª etapa si hay varias)
-    cov: Optional[np.ndarray] = None  # covarianza usada (la de la 1ª etapa si hay varias)
+    variables: list[str] = field(default_factory=list)
+    points: np.ndarray | None = None  # vector graficado en cada punto (m x p)
+    mean: np.ndarray | None = None  # media usada (la de la 1ª etapa si hay varias)
+    cov: np.ndarray | None = None  # covarianza usada (la de la 1ª etapa si hay varias)
     scale: float = 1.0  # tamaño de subgrupo n (T2 = n * d' S^-1 d)
-    stage_mean: Dict = field(default_factory=dict)  # media por etapa (T², con 'stages')
-    stage_cov: Dict = field(default_factory=dict)  # covarianza por etapa
-    stage_scale: Dict = field(default_factory=dict)  # tamaño de subgrupo por etapa
+    stage_mean: dict = field(default_factory=dict)  # media por etapa (T², con 'stages')
+    stage_cov: dict = field(default_factory=dict)  # covarianza por etapa
+    stage_scale: dict = field(default_factory=dict)  # tamaño de subgrupo por etapa
 
     def contributions(self, point: int) -> pd.Series:
         """Contribución de cada variable al T² de un punto (``point`` en base 1).

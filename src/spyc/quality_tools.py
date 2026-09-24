@@ -1,14 +1,12 @@
 """Herramientas de calidad complementarias: diagrama de Pareto."""
 from __future__ import annotations
 
-from typing import Optional
-
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 
-def pareto(categories, counts=None, *, other_below: Optional[float] = None) -> pd.DataFrame:
+def pareto(categories, counts=None, *, other_below: float | None = None) -> pd.DataFrame:
     """Tabla de Pareto ordenada de mayor a menor frecuencia.
 
     * ``categories`` con ``counts``: una categoría por elemento con su frecuencia.

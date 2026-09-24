@@ -1,8 +1,6 @@
 """Cartas de control de peso temporal: EWMA y CUSUM (tabular)."""
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
 
 from .._data import as_1d, to_subgroups
@@ -28,12 +26,12 @@ def _series(data, subgroup_size, subgroup):
 def ewma_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
     weight: float = 0.2,
     k: float = 3.0,
-    target: Optional[float] = None,
-    sigma: Optional[float] = None,
+    target: float | None = None,
+    sigma: float | None = None,
 ) -> ControlChart:
     """Carta de media móvil exponencialmente ponderada (EWMA).
 
@@ -70,10 +68,10 @@ def ewma_chart(
 def cusum_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
-    target: Optional[float] = None,
-    sigma: Optional[float] = None,
+    target: float | None = None,
+    sigma: float | None = None,
     h: float = 4.0,
     k: float = 0.5,
 ) -> ControlChart:

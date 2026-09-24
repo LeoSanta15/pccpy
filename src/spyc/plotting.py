@@ -1,11 +1,7 @@
 """Gráficos con matplotlib: cartas de control, capacidad, probabilidad normal y sixpack."""
 from __future__ import annotations
 
-from typing import Optional
-
 import matplotlib.pyplot as plt
-from typing import Dict
-
 import numpy as np
 from matplotlib.ticker import MaxNLocator
 from scipy import stats
@@ -27,7 +23,7 @@ def _draw_panel(ax, panel: Panel, zones: bool = False) -> None:
     for lab in labels:
         m = panel.stage == lab
         xs = x[m]
-        kw = dict(drawstyle="steps-mid")
+        kw = {"drawstyle": "steps-mid"}
         ax.plot(xs, panel.center[m], color=GREEN, lw=1.3, **kw)
         ax.plot(xs, panel.ucl[m], color=RED, lw=1.3, **kw)
         ax.plot(xs, panel.lcl[m], color=RED, lw=1.3, **kw)
@@ -40,7 +36,7 @@ def _draw_panel(ax, panel: Panel, zones: bool = False) -> None:
     if panel.secondary is not None:
         ax.plot(x, panel.secondary, marker="o", ms=4, lw=1, color=ORANGE, zorder=3)
 
-    tests_at: Dict[int, list] = {}
+    tests_at: dict[int, list] = {}
     for t, idx in panel.violations.items():
         for i in idx:
             tests_at.setdefault(int(i), []).append(t)
@@ -68,7 +64,7 @@ def _draw_panel(ax, panel: Panel, zones: bool = False) -> None:
 
 
 def plot_control_chart(chart: ControlChart, *, zones: bool = False, figsize=None,
-                       title: Optional[str] = None):
+                       title: str | None = None):
     """Dibuja todos los paneles de la carta, apilados. Devuelve la figura.
 
     ``zones=True`` agrega las líneas de 1 y 2 sigma (solo en gráficos simétricos).
@@ -147,7 +143,7 @@ def probability_plot(data, *, ax=None):
     pv = anderson_darling_pvalue(a2, n)
     ptxt = "< 0.005" if pv < 0.005 else f"= {pv:.3f}"
     ax.text(0.03, 0.97, f"AD = {a2:.3f}\nValor p {ptxt}\nN = {n}", transform=ax.transAxes,
-            va="top", fontsize=8, bbox=dict(fc="white", ec=GRAY, alpha=0.9))
+            va="top", fontsize=8, bbox={"fc": "white", "ec": GRAY, "alpha": 0.9})
     ax.set_xlabel("Valor")
     ax.set_ylabel("Porcentaje")
     ax.set_title("Gráfico de probabilidad normal")

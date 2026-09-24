@@ -1,8 +1,9 @@
 """Motor común: calcula cada etapa por separado y ensambla el resultado."""
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Callable, Dict, List, Optional, Sequence, Tuple
+from typing import Callable
 
 import numpy as np
 
@@ -23,9 +24,9 @@ class StagePanel:
     sigma: np.ndarray
     ylabel: str
     family: str = "full"  # 'full' | 'basic' | 'only1' (ver rules.FAMILIES)
-    secondary: Optional[np.ndarray] = None
+    secondary: np.ndarray | None = None
     symmetric: bool = True
-    violations: Optional[Dict[int, np.ndarray]] = None  # si viene dado, se omiten las pruebas
+    violations: dict[int, np.ndarray] | None = None  # si viene dado, se omiten las pruebas
 
 
 def full(value, n: int) -> np.ndarray:
@@ -36,15 +37,15 @@ def build_chart(
     kind: str,
     n_points: int,
     stages,
-    stage_fn: Callable[[np.ndarray], Tuple[List[StagePanel], dict]],
+    stage_fn: Callable[[np.ndarray], tuple[list[StagePanel], dict]],
     tests,
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Ejecuta ``stage_fn`` en cada etapa, aplica las pruebas y concatena."""
     tests = rules.normalize_tests(tests)
     test_params = dict(test_params or {})
-    acc: Dict[str, dict] = {}
-    params_list: List[dict] = []
+    acc: dict[str, dict] = {}
+    params_list: list[dict] = []
 
     for label, idx in stage_slices(n_points, stages):
         panels, params = stage_fn(idx)
@@ -70,7 +71,7 @@ def build_chart(
             for t, ii in found.items():
                 a["viol"].setdefault(t, []).append(np.asarray(ii, dtype=int) + int(idx[0]))
 
-    panels_out: List[Panel] = []
+    panels_out: list[Panel] = []
     for name, a in acc.items():
         sp = a["sp"]
         viol = {

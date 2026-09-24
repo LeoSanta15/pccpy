@@ -7,8 +7,7 @@ publicadas (p. ej. Montgomery, Apéndice VI) a los decimales publicados.
 from __future__ import annotations
 
 import math
-from functools import lru_cache
-from typing import Dict
+from functools import cache
 
 import numpy as np
 from scipy import integrate
@@ -32,7 +31,7 @@ def _check_n(n: int) -> int:
     return n
 
 
-@lru_cache(maxsize=None)
+@cache
 def d2(n: int) -> float:
     """Media del rango relativo W = R/sigma para n observaciones normales."""
     n = _check_n(n)
@@ -45,7 +44,7 @@ def d2(n: int) -> float:
     return float(val)
 
 
-@lru_cache(maxsize=None)
+@cache
 def d3(n: int) -> float:
     """Desviación estándar del rango relativo W = R/sigma."""
     n = _check_n(n)
@@ -68,20 +67,20 @@ def d3(n: int) -> float:
     return math.sqrt(max(ex2 - d2(n) ** 2, 0.0))
 
 
-@lru_cache(maxsize=None)
+@cache
 def c4(n: int) -> float:
     """Factor de corrección de sesgo de la desviación estándar muestral."""
     n = _check_n(n)
     return math.sqrt(2.0 / (n - 1)) * math.exp(gammaln(n / 2.0) - gammaln((n - 1) / 2.0))
 
 
-@lru_cache(maxsize=None)
+@cache
 def c5(n: int) -> float:
     """Desviación estándar de s / sigma: sqrt(1 - c4^2)."""
     return math.sqrt(1.0 - c4(n) ** 2)
 
 
-def control_chart_constants(n: int) -> Dict[str, float]:
+def control_chart_constants(n: int) -> dict[str, float]:
     """Devuelve todas las constantes para un tamaño de subgrupo ``n``.
 
     Claves: d2, d3, c4, c5, A2, A3, D3, D4, B3, B4.

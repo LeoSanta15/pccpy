@@ -1,8 +1,6 @@
 """Conversión y validación de datos de entrada."""
 from __future__ import annotations
 
-from typing import Optional
-
 import numpy as np
 import pandas as pd
 
@@ -23,7 +21,7 @@ def as_1d(x, name: str = "x", allow_nan: bool = False) -> np.ndarray:
 
 def to_subgroups(
     data,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
 ) -> np.ndarray:
     """Devuelve una matriz (k subgrupos x m columnas) rellena con NaN.

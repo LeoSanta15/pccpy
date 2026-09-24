@@ -16,7 +16,6 @@ parámetros históricos).
 from __future__ import annotations
 
 from functools import lru_cache
-from typing import Optional
 
 import numpy as np
 import pandas as pd
@@ -169,10 +168,10 @@ def _t2_reference(p, m, n, alpha, phase):
 def t2_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     mu=None,
     cov=None,
-    n_hist: Optional[int] = None,
+    n_hist: int | None = None,
     alpha: float = ALPHA,
     stages=None,
     boxcox: bool = False,
@@ -270,7 +269,7 @@ def _gv_constants(p: int, n: int):
 def generalized_variance_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     cov=None,
     k: float = 3.0,
     stages=None,
@@ -372,10 +371,10 @@ def mewma_limit(p: int, weight: float = 0.1, arl: float = 200.0) -> float:
 def mewma_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     weight: float = 0.1,
     arl: float = 200.0,
-    ucl: Optional[float] = None,
+    ucl: float | None = None,
     mu=None,
     cov=None,
     stages=None,
@@ -474,9 +473,9 @@ def mcusum_limit(p: int, k: float = 0.5, arl: float = 200.0) -> float:
 def mcusum_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     k: float = 0.5,
-    h: Optional[float] = None,
+    h: float | None = None,
     arl: float = 200.0,
     mu=None,
     cov=None,

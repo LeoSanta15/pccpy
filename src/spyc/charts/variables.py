@@ -1,8 +1,6 @@
 """Cartas de control para datos continuos: I-MR, X-barra-R y X-barra-S."""
 from __future__ import annotations
 
-from typing import Dict, Optional
-
 import numpy as np
 
 from .._constants import c4, c5, d2, d3
@@ -17,11 +15,11 @@ def imr_chart(
     *,
     span: int = 2,
     sigma_method: str = "mr",
-    mu: Optional[float] = None,
-    sigma: Optional[float] = None,
+    mu: float | None = None,
+    sigma: float | None = None,
     stages=None,
     tests=(1,),
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Carta de valores individuales y rango móvil (Stat > Control Charts > I-MR).
 
@@ -105,14 +103,14 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
 def xbar_r_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
     sigma_method: str = "rbar",
-    mu: Optional[float] = None,
-    sigma: Optional[float] = None,
+    mu: float | None = None,
+    sigma: float | None = None,
     stages=None,
     tests=(1,),
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Carta X-barra y R (Stat > Control Charts > Xbar-R).
 
@@ -131,14 +129,14 @@ def xbar_r_chart(
 def xbar_s_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
     sigma_method: str = "sbar",
-    mu: Optional[float] = None,
-    sigma: Optional[float] = None,
+    mu: float | None = None,
+    sigma: float | None = None,
     stages=None,
     tests=(1,),
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Carta X-barra y S (Stat > Control Charts > Xbar-S).
 

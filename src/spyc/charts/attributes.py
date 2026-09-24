@@ -1,8 +1,6 @@
 """Cartas de control para atributos: P, NP, C, U y Laney P' / U'."""
 from __future__ import annotations
 
-from typing import Dict, Optional
-
 import numpy as np
 
 from .._constants import d2
@@ -78,36 +76,36 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
     return build_chart(kind, c.size, stages, stage_fn, tests, test_params)
 
 
-def p_chart(defectives, n, *, p: Optional[float] = None, stages=None, tests=(1,),
-            test_params: Optional[Dict[int, float]] = None) -> ControlChart:
+def p_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
+            test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta P: proporción de unidades defectuosas (n constante o variable)."""
     return _attribute_chart("p", "P", "Proporción", defectives, n, stages, tests,
                             test_params, p, laney=False)
 
 
-def np_chart(defectives, n, *, p: Optional[float] = None, stages=None, tests=(1,),
-             test_params: Optional[Dict[int, float]] = None) -> ControlChart:
+def np_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
+             test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta NP: número de defectuosos (n constante)."""
     return _attribute_chart("np", "NP", "Conteo", defectives, n, stages, tests,
                             test_params, p, laney=False)
 
 
-def c_chart(defects, *, c: Optional[float] = None, stages=None, tests=(1,),
-            test_params: Optional[Dict[int, float]] = None) -> ControlChart:
+def c_chart(defects, *, c: float | None = None, stages=None, tests=(1,),
+            test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta C: número de defectos por unidad de inspección (tamaño constante)."""
     return _attribute_chart("c", "C", "Conteo", defects, None, stages, tests,
                             test_params, c, laney=False)
 
 
-def u_chart(defects, n, *, u: Optional[float] = None, stages=None, tests=(1,),
-            test_params: Optional[Dict[int, float]] = None) -> ControlChart:
+def u_chart(defects, n, *, u: float | None = None, stages=None, tests=(1,),
+            test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta U: defectos por unidad (tamaño de muestra constante o variable)."""
     return _attribute_chart("u", "U", "Conteo por unidad", defects, n, stages, tests,
                             test_params, u, laney=False)
 
 
 def laney_p_chart(defectives, n, *, stages=None, tests=(1,),
-                  test_params: Optional[Dict[int, float]] = None) -> ControlChart:
+                  test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta P' de Laney: corrige la sobredispersión/subdispersión de la carta P.
 
     Los límites se multiplican por sigma_z, estimada con el rango móvil promedio de
@@ -118,7 +116,7 @@ def laney_p_chart(defectives, n, *, stages=None, tests=(1,),
 
 
 def laney_u_chart(defects, n, *, stages=None, tests=(1,),
-                  test_params: Optional[Dict[int, float]] = None) -> ControlChart:
+                  test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta U' de Laney: corrige la sobredispersión/subdispersión de la carta U."""
     return _attribute_chart("u", "Laney U'", "Conteo por unidad", defects, n, stages, tests,
                             test_params, None, laney=True)

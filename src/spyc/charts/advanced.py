@@ -4,8 +4,6 @@ Las fórmulas siguen la documentación de métodos de Minitab.
 """
 from __future__ import annotations
 
-from typing import Dict, List, Optional
-
 import numpy as np
 from scipy import optimize, stats
 
@@ -23,10 +21,10 @@ def ma_chart(
     data,
     *,
     length: int = 3,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
-    mu: Optional[float] = None,
-    sigma: Optional[float] = None,
+    mu: float | None = None,
+    sigma: float | None = None,
     k: float = 3.0,
 ) -> ControlChart:
     """Carta de media móvil (Stat > Control Charts > Time-Weighted > Moving Average).
@@ -81,10 +79,10 @@ def zmr_chart(
     parts,
     *,
     sigma_method: str = "constant",
-    mu: Optional[Dict] = None,
+    mu: dict | None = None,
     sigma=None,
     tests=(1,),
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Carta Z-MR para producción de corridas cortas (Variables Charts for Individuals > Z-MR).
 
@@ -142,8 +140,8 @@ def zmr_chart(
                              "se necesitan al menos 2 observaciones consecutivas de la misma parte.")
         return float(mr.mean() / d2(2))
 
-    run_sigma: List[Optional[float]] = [None] * len(runs)
-    part_sigma: Dict = {}
+    run_sigma: list[float | None] = [None] * len(runs)
+    part_sigma: dict = {}
     if sigma is not None:
         for j, (lab, _, _) in enumerate(runs):
             run_sigma[j] = float(sigma[lab]) if isinstance(sigma, dict) else float(sigma)
@@ -161,7 +159,7 @@ def zmr_chart(
 
     if any(s is None or s <= 0 for s in run_sigma):
         raise ValueError("Se obtuvo una sigma igual a cero (datos sin variación).")
-    sigmas: List[float] = run_sigma  # type: ignore[assignment]  # ya se validó que no queda ningún None
+    sigmas: list[float] = run_sigma  # type: ignore[assignment]  # ya se validó que no queda ningún None
     z = np.empty(y.size)
     for (lab, a, b), s in zip(runs, sigmas):
         z[a:b] = (y[a:b] - mu_of[lab]) / s
@@ -191,16 +189,16 @@ def zmr_chart(
 def imr_rs_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
     within: str = "r",
-    sigma_method: Optional[str] = None,
-    mu: Optional[float] = None,
-    sigma_within: Optional[float] = None,
-    sigma_between: Optional[float] = None,
+    sigma_method: str | None = None,
+    mu: float | None = None,
+    sigma_within: float | None = None,
+    sigma_between: float | None = None,
     stages=None,
     tests=(1,),
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Carta I-MR-R/S (Between/Within): variación entre y dentro de subgrupos.
 
@@ -296,11 +294,11 @@ def _geom_quantile(p: float, q: float) -> float:
 def g_chart(
     x,
     *,
-    p: Optional[float] = None,
+    p: float | None = None,
     k: float = 3.0,
     stages=None,
     tests=(1,),
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Carta G para eventos raros: número de casos (u oportunidades) entre eventos.
 
@@ -355,12 +353,12 @@ def t_chart(
     x,
     *,
     distribution: str = "weibull",
-    shape: Optional[float] = None,
-    scale: Optional[float] = None,
+    shape: float | None = None,
+    scale: float | None = None,
     k: float = 3.0,
     stages=None,
     tests=(1,),
-    test_params: Optional[Dict[int, float]] = None,
+    test_params: dict[int, float] | None = None,
 ) -> ControlChart:
     """Carta T para eventos raros: tiempo entre eventos (Weibull o exponencial).
 
@@ -435,11 +433,11 @@ def _zone_scores(z: np.ndarray, weights, reset: bool):
 def zone_chart(
     data,
     *,
-    subgroup_size: Optional[int] = None,
+    subgroup_size: int | None = None,
     subgroup=None,
-    sigma_method: Optional[str] = None,
-    mu: Optional[float] = None,
-    sigma: Optional[float] = None,
+    sigma_method: str | None = None,
+    mu: float | None = None,
+    sigma: float | None = None,
     weights=(0, 2, 4, 8),
     reset: bool = False,
     stages=None,
