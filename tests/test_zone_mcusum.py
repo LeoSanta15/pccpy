@@ -3,9 +3,9 @@ import numpy as np
 import pytest
 from scipy import stats
 
-import spyc
-from spyc.charts.advanced import _zone_scores
-from spyc.multivariate import _mcusum_arl
+import pccpy
+from pccpy.charts.advanced import _zone_scores
+from pccpy.multivariate import _mcusum_arl
 
 W = (0, 2, 4, 8)
 
@@ -80,7 +80,7 @@ def test_zona_carta_extremo_a_extremo_tiene_el_arl_exacto(rng):
     exacto = _arl_exacto_zona()
     largos = []
     for _ in range(400):
-        f = spyc.zone_chart(rng.standard_normal(800), mu=0.0, sigma=1.0)["Zona"].flagged
+        f = pccpy.zone_chart(rng.standard_normal(800), mu=0.0, sigma=1.0)["Zona"].flagged
         largos.append(f[0] + 1 if f.size else 800)
     assert np.mean(largos) == pytest.approx(exacto, rel=0.2)
 
@@ -88,7 +88,7 @@ def test_zona_carta_extremo_a_extremo_tiene_el_arl_exacto(rng):
 # ---------------------------------------------------------------------- zona: la carta
 def test_zona_individuales_limites_y_puntaje(rng):
     x = rng.normal(10, 2, 50)
-    ch = spyc.zone_chart(x)
+    ch = pccpy.zone_chart(x)
     sigma = np.mean(np.abs(np.diff(x))) / 1.1283791671
     pan = ch["Zona"]
     assert pan.center[0] == pytest.approx(x.mean())
@@ -103,49 +103,49 @@ def test_zona_individuales_limites_y_puntaje(rng):
 def test_zona_puntos_fuera_de_3_sigmas_siempre_senalan(rng):
     x = rng.normal(0, 1, 60)
     x[30] = 12
-    ch = spyc.zone_chart(x, mu=0.0, sigma=1.0)
+    ch = pccpy.zone_chart(x, mu=0.0, sigma=1.0)
     assert 30 in ch["Zona"].flagged
     assert "puntaje" in ch.violations()["descripcion"].iloc[0]
 
 
 def test_zona_subgrupos_usan_sigma_sobre_raiz_n(rng):
     d = rng.normal(50, 1, (25, 4))
-    ch = spyc.zone_chart(d, sigma=1.0, mu=50.0)
+    ch = pccpy.zone_chart(d, sigma=1.0, mu=50.0)
     assert ch["Zona"].ucl[0] == pytest.approx(50 + 3 / 2)
     assert ch["Zona"].sigma[0] == pytest.approx(0.5)
     # sigma estimada = Rbar/d2 igual que la Xbar-R
-    a = spyc.zone_chart(d)["Zona"].ucl[0]
-    b = spyc.xbar_r_chart(d)["Xbar"].ucl[0]
+    a = pccpy.zone_chart(d)["Zona"].ucl[0]
+    b = pccpy.xbar_r_chart(d)["Xbar"].ucl[0]
     assert a == pytest.approx(b)
 
 
 def test_zona_etapas_reinician_el_puntaje(rng):
     x = np.r_[np.full(3, 0.6), np.full(3, 0.6)]  # con sigma=0.3 -> 2σ: zona 3 (peso 4)
-    ch = spyc.zone_chart(x, mu=0.0, sigma=0.3, stages=[1, 1, 1, 2, 2, 2])
+    ch = pccpy.zone_chart(x, mu=0.0, sigma=0.3, stages=[1, 1, 1, 2, 2, 2])
     assert ch["Puntaje"].values.tolist() == [4, 8, 12, 4, 8, 12]
-    ch2 = spyc.zone_chart(x, mu=0.0, sigma=0.3)
+    ch2 = pccpy.zone_chart(x, mu=0.0, sigma=0.3)
     assert ch2["Puntaje"].values.tolist() == [4, 8, 12, 16, 20, 24]
 
 
 def test_zona_pesos_personalizados_y_errores(rng):
     x = np.full(4, 1.5)
-    ch = spyc.zone_chart(x, mu=0.0, sigma=1.0, weights=(0, 1, 2, 4))
+    ch = pccpy.zone_chart(x, mu=0.0, sigma=1.0, weights=(0, 1, 2, 4))
     assert ch["Puntaje"].values.tolist() == [1, 2, 3, 4]
     assert list(ch["Zona"].flagged) == [3]
     with pytest.raises(ValueError, match="pesos"):
-        spyc.zone_chart(x, weights=(0, 2, 4))
+        pccpy.zone_chart(x, weights=(0, 2, 4))
     with pytest.raises(ValueError, match="pesos"):
-        spyc.zone_chart(x, weights=(0, 4, 2, 8))
+        pccpy.zone_chart(x, weights=(0, 4, 2, 8))
     with pytest.raises(ValueError):
-        spyc.zone_chart(rng.normal(0, 1, (10, 3)), sigma_method="mr")
+        pccpy.zone_chart(rng.normal(0, 1, (10, 3)), sigma_method="mr")
     with pytest.raises(ValueError):
-        spyc.zone_chart(rng.normal(0, 1, 10), sigma_method="rbar")
+        pccpy.zone_chart(rng.normal(0, 1, 10), sigma_method="rbar")
 
 
 # -------------------------------------------------------------------------- MCUSUM
 def test_mcusum_paso_manual_exacto():
     # d = (3, 4), k = 0.5, Sigma = I -> C = 5, S = d (1 - 0.1) = (2.7, 3.6), Y = 4.5
-    ch = spyc.mcusum_chart(np.array([[3.0, 4.0], [0.0, 0.0], [0.1, 0.1]]),
+    ch = pccpy.mcusum_chart(np.array([[3.0, 4.0], [0.0, 0.0], [0.1, 0.1]]),
                            mu=np.zeros(2), cov=np.eye(2), h=100)
     y = ch["MCUSUM"].values
     assert y[0] == pytest.approx(4.5)
@@ -159,7 +159,7 @@ def test_mcusum_paso_manual_exacto():
 def test_mcusum_valores_iguales_a_la_recursion_manual(rng):
     X = rng.multivariate_normal([0, 0, 0], [[1, .5, 0], [.5, 1, 0], [0, 0, 1]], 60)
     S = np.array([[1, .5, 0], [.5, 1, 0], [0, 0, 1]])
-    ch = spyc.mcusum_chart(X, mu=np.zeros(3), cov=S, k=0.7, h=50)
+    ch = pccpy.mcusum_chart(X, mu=np.zeros(3), cov=S, k=0.7, h=50)
     Si, s, esperado = np.linalg.inv(S), np.zeros(3), []
     for x in X:
         v = s + x
@@ -178,7 +178,7 @@ def test_mcusum_cadena_converge():
 @pytest.mark.parametrize("p", [1, 2, 4])
 def test_mcusum_arl_por_simulacion_vectorial(rng, p):
     k = 0.5
-    h = spyc.mcusum_limit(p, k, 100)
+    h = pccpy.mcusum_limit(p, k, 100)
     runs = 4000
     s = np.zeros((runs, p))
     alive = np.ones(runs, dtype=bool)
@@ -197,28 +197,28 @@ def test_mcusum_arl_por_simulacion_vectorial(rng, p):
 def test_mcusum_detecta_desplazamiento_pequeno_y_sostenido(rng):
     X = rng.multivariate_normal([0, 0], np.eye(2), 80)
     X[40:] += 0.8
-    ch = spyc.mcusum_chart(X, mu=np.zeros(2), cov=np.eye(2))
+    ch = pccpy.mcusum_chart(X, mu=np.zeros(2), cov=np.eye(2))
     assert (ch["MCUSUM"].flagged >= 40).any()  # señala tras el cambio
 
 
 def test_mcusum_subgrupos_errores_y_limite_monotono(rng):
     X = rng.multivariate_normal([0, 0], np.eye(2), 60)
-    ch = spyc.mcusum_chart(X, subgroup_size=3)
+    ch = pccpy.mcusum_chart(X, subgroup_size=3)
     assert ch.params[0]["puntos"] == 20 and ch.params[0]["tamaño"] == 3
     with pytest.raises(ValueError):
-        spyc.mcusum_chart(X, k=-1)
+        pccpy.mcusum_chart(X, k=-1)
     with pytest.raises(ValueError):
-        spyc.mcusum_chart(X, h=0)
+        pccpy.mcusum_chart(X, h=0)
     with pytest.raises(ValueError, match="juntos"):
-        spyc.mcusum_chart(X, mu=np.zeros(2))
+        pccpy.mcusum_chart(X, mu=np.zeros(2))
     with pytest.raises(ValueError):
-        spyc.mcusum_limit(2, 0.5, 1.0)
-    assert spyc.mcusum_limit(2, 0.5, 100) < spyc.mcusum_limit(2, 0.5, 200) < spyc.mcusum_limit(2, 0.5, 500)
+        pccpy.mcusum_limit(2, 0.5, 1.0)
+    assert pccpy.mcusum_limit(2, 0.5, 100) < pccpy.mcusum_limit(2, 0.5, 200) < pccpy.mcusum_limit(2, 0.5, 500)
 
 
 def test_graficos_zona_y_mcusum(rng):
-    ch1 = spyc.zone_chart(rng.normal(0, 1, 40))
-    ch2 = spyc.mcusum_chart(rng.multivariate_normal([0, 0], np.eye(2), 40))
+    ch1 = pccpy.zone_chart(rng.normal(0, 1, 40))
+    ch2 = pccpy.mcusum_chart(rng.multivariate_normal([0, 0], np.eye(2), 40))
     for ch in (ch1, ch2):
         fig = ch.plot()
         assert len(fig.axes) == len(ch.panels)

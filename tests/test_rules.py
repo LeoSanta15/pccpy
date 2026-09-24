@@ -1,7 +1,7 @@
 import numpy as np
 import pytest
 
-from spyc import rules
+from pccpy import rules
 
 
 def idx(a):
