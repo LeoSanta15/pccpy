@@ -56,7 +56,7 @@ Requiere Python ≥ 3.9 (numpy, scipy, pandas, matplotlib).
 
 ```python
 import numpy as np
-import pccpy as pp
+import spyc as pp
 
 rng = np.random.default_rng(1)
 x = rng.normal(100, 2, 60)
@@ -97,27 +97,27 @@ Los datos de variables aceptan una matriz 2D (filas = subgrupos), un vector con
 
 ```python
 datos = rng.normal(50, 1, size=(25, 5))
-pccpy.xbar_r_chart(datos, tests=(1, 2, 3, 4)).summary()
+pp.xbar_r_chart(datos, tests=(1, 2, 3, 4)).summary()
 
 vector = datos.ravel()                         # mismos datos en un solo vector
 ids = np.repeat(np.arange(25), 5)              # identificador de subgrupo de cada dato
-pccpy.xbar_r_chart(vector, subgroup_size=5)
-pccpy.xbar_s_chart(vector, subgroup=ids)
+pp.xbar_r_chart(vector, subgroup_size=5)
+pp.xbar_s_chart(vector, subgroup=ids)
 ```
 
 **Parámetros históricos y etapas** (equivalentes a *Opciones de estimación* y *Etapas* de Minitab):
 
 ```python
-pccpy.imr_chart(x, mu=100, sigma=2)                      # parámetros conocidos
-pccpy.imr_chart(x, stages=["antes"] * 40 + ["después"] * 20)   # límites por etapa
+pp.imr_chart(x, mu=100, sigma=2)                      # parámetros conocidos
+pp.imr_chart(x, stages=["antes"] * 40 + ["después"] * 20)   # límites por etapa
 ```
 
 **Atributos:**
 
 ```python
 defectuosos = rng.binomial(200, 0.05, 30)
-pccpy.p_chart(defectuosos, n=200)
-pccpy.laney_p_chart(defectuosos, n=200)
+pp.p_chart(defectuosos, n=200)
+pp.laney_p_chart(defectuosos, n=200)
 ```
 
 ## Cartas avanzadas
@@ -126,19 +126,19 @@ pccpy.laney_p_chart(defectuosos, n=200)
 # Z-MR: partes con medias y variaciones distintas en una sola carta (corridas cortas)
 partes = ["A"] * 10 + ["B"] * 10 + ["A"] * 10
 medidas = np.r_[rng.normal(50, 1, 10), rng.normal(80, 2, 10), rng.normal(50, 1, 10)]
-pccpy.zmr_chart(medidas, partes, sigma_method="by_part")   # 'constant', 'relative', 'by_part', 'by_run'
+pp.zmr_chart(medidas, partes, sigma_method="by_part")   # 'constant', 'relative', 'by_part', 'by_run'
 
 # I-MR-R/S: la variación entre subgrupos no genera falsas alarmas como en Xbar-R
 sub = rng.normal(20, 1, (25, 5)) + rng.normal(0, 1.5, (25, 1))
-c = pccpy.imr_rs_chart(sub, within="s")
+c = pp.imr_rs_chart(sub, within="s")
 c.params[0]     # sigma_dentro, sigma_entre, sigma_entre_dentro
 
 # Eventos raros
-pccpy.g_chart(rng.geometric(0.02, 40) - 1)                 # casos entre eventos
-pccpy.t_chart(rng.weibull(1.5, 40) * 30)                   # tiempo entre eventos
+pp.g_chart(rng.geometric(0.02, 40) - 1)                 # casos entre eventos
+pp.t_chart(rng.weibull(1.5, 40) * 30)                   # tiempo entre eventos
 
 # Media móvil
-pccpy.ma_chart(x, length=5)
+pp.ma_chart(x, length=5)
 ```
 
 `zmr_chart` estandariza cada observación con la media de su parte y una sigma estimada
@@ -154,21 +154,21 @@ nuevos = rng.multivariate_normal([0, 0, 0], Sigma, 40)
 nuevos[25:, 2] += 4                                       # la variable 3 se desplaza
 
 # Fase I: parámetros estimados de los mismos datos
-pccpy.t2_chart(historico).summary()
+pp.t2_chart(historico).summary()
 
 # Fase II: parámetros históricos (n_hist = observaciones con que se estimaron)
-c = pccpy.t2_chart(nuevos, mu=historico.mean(axis=0), cov=np.cov(historico, rowvar=False),
+c = pp.t2_chart(nuevos, mu=historico.mean(axis=0), cov=np.cov(historico, rowvar=False),
                   n_hist=100)
 c.violations()
 c.contributions(31)                                       # ¿qué variable explica la señal?
 
 # Subgrupos: matriz N x p con subgroup_size, o array 3-D (subgrupos x n x p)
-pccpy.t2_chart(nuevos[:40], subgroup_size=4)
-pccpy.generalized_variance_chart(nuevos[:40], subgroup_size=8)
+pp.t2_chart(nuevos[:40], subgroup_size=4)
+pp.generalized_variance_chart(nuevos[:40], subgroup_size=8)
 
 # MEWMA: cambios pequeños y sostenidos
-pccpy.mewma_chart(nuevos, mu=historico.mean(axis=0), cov=np.cov(historico, rowvar=False))
-pccpy.mewma_limit(p=2, weight=0.1, arl=200)                # límite H para un ARL dado (≈ 8.64)
+pp.mewma_chart(nuevos, mu=historico.mean(axis=0), cov=np.cov(historico, rowvar=False))
+pp.mewma_limit(p=2, weight=0.1, arl=200)                # límite H para un ARL dado (≈ 8.64)
 ```
 
 Los datos pueden ser un `DataFrame` (los nombres de columna se usan en `contributions`).
@@ -185,23 +185,23 @@ y `boxcox`, igual que las cartas univariadas:
 etapas = [1] * 40 + [2] * 40                              # p. ej. antes/después de un ajuste
 
 # Sin mu/cov: la media y la covarianza se vuelven a estimar dentro de cada etapa
-c = pccpy.t2_chart(nuevos_con_dos_etapas, stages=etapas)
+c = pp.t2_chart(nuevos_con_dos_etapas, stages=etapas)
 c.stage_mean[1], c.stage_mean[2]                          # medias distintas por etapa
 c.contributions(45)                                       # usa la media/cov de la etapa del punto 45
 
 # Con mu/cov históricos: los mismos parámetros en todas las etapas
-pccpy.t2_chart(nuevos_con_dos_etapas, mu=mu, cov=cov, n_hist=100, stages=etapas)
+pp.t2_chart(nuevos_con_dos_etapas, mu=mu, cov=cov, n_hist=100, stages=etapas)
 
 # MEWMA y MCUSUM: el acumulador reinicia al empezar cada etapa
-pccpy.mewma_chart(nuevos_con_dos_etapas, stages=etapas)
-pccpy.mcusum_chart(nuevos_con_dos_etapas, stages=etapas)
+pp.mewma_chart(nuevos_con_dos_etapas, stages=etapas)
+pp.mcusum_chart(nuevos_con_dos_etapas, stages=etapas)
 
 # Box-Cox: una lambda por variable (no se puede combinar con mu/cov históricos)
-c = pccpy.t2_chart(datos_positivos, boxcox=True)
+c = pp.t2_chart(datos_positivos, boxcox=True)
 c.params[0]["lambda_boxcox"]                              # {'X1': ..., 'X2': ..., 'X3': ...}
-pccpy.generalized_variance_chart(datos_positivos, subgroup_size=6, boxcox=True)
-pccpy.mewma_chart(datos_positivos, boxcox=True)
-pccpy.mcusum_chart(datos_positivos, boxcox=True)
+pp.generalized_variance_chart(datos_positivos, subgroup_size=6, boxcox=True)
+pp.mewma_chart(datos_positivos, boxcox=True)
+pp.mcusum_chart(datos_positivos, boxcox=True)
 ```
 
 ## Pruebas de causas especiales
@@ -210,7 +210,7 @@ Las 8 pruebas de Minitab (1 a 8) con sus parámetros por defecto
 (`K` = 3, 9, 6, 14, 2, 4, 15, 8). Se piden con `tests=(...)` y se ajustan con `test_params`:
 
 ```python
-pccpy.imr_chart(x, tests=(1, 2, 5), test_params={2: 7})   # prueba 2 con 7 puntos
+pp.imr_chart(x, tests=(1, 2, 5), test_params={2: 7})   # prueba 2 con 7 puntos
 ```
 
 Cada tipo de carta aplica el subconjunto que corresponde (completo en I, Xbar y Z;
@@ -222,7 +222,7 @@ Las funciones individuales están en `spyc.rules`.
 
 ```python
 datos = rng.normal(10, 0.1, 100)
-res = pccpy.capability_analysis(datos, lsl=9.7, usl=10.3, subgroup_size=5)
+res = pp.capability_analysis(datos, lsl=9.7, usl=10.3, subgroup_size=5)
 print(res.summary())      # Cp, CPL, CPU, Cpk, Pp, PPL, PPU, Ppk, Cpm, Z.Bench, PPM, IC
 res.to_frame()
 res.plot()
@@ -234,25 +234,25 @@ Como en Minitab, **Cp/Cpk usan la desviación estándar dentro de subgrupos** y
 Datos no normales:
 
 ```python
-pccpy.capability_nonnormal(x, lsl=1, usl=20, distribution="weibull")
-pccpy.capability_boxcox(x, lsl=1, usl=20)
+pp.capability_nonnormal(x, lsl=1, usl=20, distribution="weibull")
+pp.capability_boxcox(x, lsl=1, usl=20)
 ```
 
 Distribuciones: `normal`, `lognormal`, `weibull`, `gamma`, `exponential`,
 `loglogistic`, `logistic`, `largest_extreme`, `smallest_extreme` (método de percentiles).
 
-`pccpy.capability_sixpack(datos, lsl, usl, subgroup_size=5)` genera el **Capability Sixpack**.
+`pp.capability_sixpack(datos, lsl, usl, subgroup_size=5)` genera el **Capability Sixpack**.
 
 ## Normalidad, Pareto y constantes
 
 ```python
-pccpy.normality_test(x)                    # Anderson-Darling (por defecto), 'shapiro', 'dagostino'
-pccpy.probability_plot(x)
+pp.normality_test(x)                    # Anderson-Darling (por defecto), 'shapiro', 'dagostino'
+pp.probability_plot(x)
 
-tabla = spyc.pareto(["rayón", "abolladura", "rayón", "otro"])
-pccpy.plot_pareto(tabla)
+tabla = pp.pareto(["rayón", "abolladura", "rayón", "otro"])
+pp.plot_pareto(tabla)
 
-pccpy.control_chart_constants(5)           # d2, d3, c4, c5, A2, A3, D3, D4, B3, B4
+pp.control_chart_constants(5)           # d2, d3, c4, c5, A2, A3, D3, D4, B3, B4
 ```
 
 Las constantes se calculan por integración numérica para **cualquier** `n ≥ 2` (no solo tablas hasta 25).
