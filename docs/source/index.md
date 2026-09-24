@@ -1,4 +1,4 @@
-# spyc
+# pccpy
 
 **Control Estadístico de Procesos (SPC) en Python, al estilo Minitab.**
 
@@ -20,5 +20,6 @@ changelog
 
 ## Enlaces
 
-- [Repositorio en GitHub](https://github.com/TU_USUARIO/spyc)
-- [Reportar un problema](https://github.com/TU_USUARIO/spyc/issues)
+- [Repositorio en GitHub](https://github.com/LeoSanta15/pccpy)
+- [Reportar un problema](https://github.com/LeoSanta15/pccpy/issues)
+- [PyPI](https://pypi.org/project/pccpy/)
