@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=77", "wheel"]
+requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,10 +7,14 @@ name = "pccpy"
 version = "0.4.3"
 description = "Control Estadístico de Procesos (SPC) en Python: cartas de control, capacidad y pruebas al estilo Minitab"
 readme = "README.md"
+requires-python = ">=3.9"
+
 license = "MIT"
 license-files = ["LICENSE"]
-requires-python = ">=3.9"
-authors = [{ name = "LeoSanta15", email = "angelsanta1@gmail.com" }]
+
+authors = [
+    { name = "LeoSanta15", email = "angelsanta1@gmail.com" }
+]
 keywords = ["spc", "control estadístico de procesos", "cartas de control", "capacidad", "minitab", "six sigma"]
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -22,7 +26,6 @@ classifiers = [
     "Operating System :: OS Independent",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Information Analysis",
-    "License :: OSI Approved :: MIT License",
 ]
 dependencies = [
     "numpy>=1.22",
