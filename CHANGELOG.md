@@ -4,6 +4,24 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 spyc usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
 
+## [0.4.2] - documentación con Sphinx
+
+### Añadido
+- Documentación en `docs/`, construida con Sphinx (tema `sphinx-rtd-theme`,
+  `napoleon` para los docstrings estilo NumPy, `myst-parser` para las páginas en
+  Markdown): portada, instalación, inicio rápido, una página de referencia por
+  grupo de cartas (generada con `autofunction`/`autoclass` a partir del código,
+  no copiada a mano) y el changelog embebido.
+- `docs = [...]` en `pyproject.toml` con las dependencias para construirla.
+- `.readthedocs.yaml`, listo para conectar el repositorio en readthedocs.org una
+  vez esté en GitHub.
+- Job `documentacion` en el CI: construye la documentación con `-W` (cualquier
+  advertencia de Sphinx hace fallar el build).
+
+### Corregido
+- Docstring de `generalized_variance_chart` (usaba `|S|` sin escapar, que RST
+  interpreta como una referencia de sustitución y rompía la documentación).
+
 ## [0.4.1] - herramientas de calidad y changelog
 
 ### Añadido

@@ -29,6 +29,21 @@ mypy src/spyc                  # tipos
 
 Ver [`CHANGELOG.md`](CHANGELOG.md) para el historial de versiones.
 
+## Documentación
+
+Hay documentación construida con Sphinx en `docs/`, con una página por cada grupo
+de cartas (generadas a partir de los docstrings, así que siempre coinciden con el
+código instalado). Para generarla y abrirla en tu máquina:
+
+```bash
+pip install -e ".[docs]"
+sphinx-build -b html docs/source docs/build
+```
+
+Abre `docs/build/index.html`. Una vez el repositorio esté en GitHub, puedes conectarlo
+en [readthedocs.org](https://readthedocs.org) para tenerla publicada automáticamente
+en cada push; el archivo `.readthedocs.yaml` ya está listo para eso.
+
 Requiere Python ≥ 3.9 (numpy, scipy, pandas, matplotlib).
 
 ## Inicio rápido

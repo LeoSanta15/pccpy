@@ -276,12 +276,12 @@ def generalized_variance_chart(
     stages=None,
     boxcox: bool = False,
 ) -> MultivariateChart:
-    """Carta de varianza generalizada |S| (dispersión multivariada).
+    """Carta de varianza generalizada ``|S|`` (dispersión multivariada).
 
     Grafica el determinante de la matriz de covarianzas de cada subgrupo, con
-    LC = b1|S̄|, límites |S̄|(b1 ± k·√b2) (LCI no menor que 0) y S̄ el promedio de las
+    LC = ``b1|S̄|``, límites ``|S̄|(b1 ± k·√b2)`` (LCI no menor que 0) y S̄ el promedio de las
     matrices de covarianza de los subgrupos. Con ``cov`` (Sigma conocida) se usa
-    |Sigma| en lugar de |S̄|. Requiere subgrupos de tamaño n > p.
+    ``|Sigma|`` en lugar de ``|S̄|``. Requiere subgrupos de tamaño n > p.
 
     ``stages``: sin ``cov``, S̄ (y por tanto el centro y los límites) se recalcula
     dentro de cada etapa; con ``cov`` se usa la misma Sigma en todas. ``boxcox``:
