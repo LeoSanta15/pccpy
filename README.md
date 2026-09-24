@@ -151,6 +151,34 @@ El límite de T² usa por defecto α = 0.00135 (cola de 3 sigmas, como Minitab).
 se usan límites de **Fase I** (Beta para individuales, F para subgrupos); con `mu`/`cov` y
 `n_hist`, de **Fase II**; con `mu`/`cov` sin `n_hist` los parámetros se toman como conocidos (χ²).
 
+### Etapas y Box-Cox
+
+Las 4 cartas multivariadas (T², varianza generalizada, MEWMA y MCUSUM) aceptan `stages`
+y `boxcox`, igual que las cartas univariadas:
+
+```python
+etapas = [1] * 40 + [2] * 40                              # p. ej. antes/después de un ajuste
+
+# Sin mu/cov: la media y la covarianza se vuelven a estimar dentro de cada etapa
+c = spyc.t2_chart(nuevos_con_dos_etapas, stages=etapas)
+c.stage_mean[1], c.stage_mean[2]                          # medias distintas por etapa
+c.contributions(45)                                       # usa la media/cov de la etapa del punto 45
+
+# Con mu/cov históricos: los mismos parámetros en todas las etapas
+spyc.t2_chart(nuevos_con_dos_etapas, mu=mu, cov=cov, n_hist=100, stages=etapas)
+
+# MEWMA y MCUSUM: el acumulador reinicia al empezar cada etapa
+spyc.mewma_chart(nuevos_con_dos_etapas, stages=etapas)
+spyc.mcusum_chart(nuevos_con_dos_etapas, stages=etapas)
+
+# Box-Cox: una lambda por variable (no se puede combinar con mu/cov históricos)
+c = spyc.t2_chart(datos_positivos, boxcox=True)
+c.params[0]["lambda_boxcox"]                              # {'X1': ..., 'X2': ..., 'X3': ...}
+spyc.generalized_variance_chart(datos_positivos, subgroup_size=6, boxcox=True)
+spyc.mewma_chart(datos_positivos, boxcox=True)
+spyc.mcusum_chart(datos_positivos, boxcox=True)
+```
+
 ## Pruebas de causas especiales
 
 Las 8 pruebas de Minitab (1 a 8) con sus parámetros por defecto
@@ -206,7 +234,7 @@ Las constantes se calculan por integración numérica para **cualquier** `n ≥ 
 
 ## Validación
 
-142 pruebas automatizadas. Las referencias son independientes de spyc:
+ pruebas automatizadas. Las referencias son independientes de spyc:
 
 - Constantes d2, d3, c4 frente a las tablas publicadas (Montgomery).
 - Límites I-MR, Xbar-R y Xbar-S frente al cálculo manual con A2, D3, D4, A3, B3, B4.

@@ -144,9 +144,12 @@ class MultivariateChart(ControlChart):
 
     variables: List[str] = field(default_factory=list)
     points: Optional[np.ndarray] = None  # vector graficado en cada punto (m x p)
-    mean: Optional[np.ndarray] = None  # vector de medias usado
-    cov: Optional[np.ndarray] = None  # matriz de covarianzas usada
+    mean: Optional[np.ndarray] = None  # media usada (la de la 1ª etapa si hay varias)
+    cov: Optional[np.ndarray] = None  # covarianza usada (la de la 1ª etapa si hay varias)
     scale: float = 1.0  # tamaño de subgrupo n (T2 = n * d' S^-1 d)
+    stage_mean: Dict = field(default_factory=dict)  # media por etapa (T², con 'stages')
+    stage_cov: Dict = field(default_factory=dict)  # covarianza por etapa
+    stage_scale: Dict = field(default_factory=dict)  # tamaño de subgrupo por etapa
 
     def contributions(self, point: int) -> pd.Series:
         """Contribución de cada variable al T² de un punto (``point`` en base 1).
@@ -154,19 +157,24 @@ class MultivariateChart(ControlChart):
         Para cada variable j se calcula ``d_j = T² - T²_(-j)``, donde ``T²_(-j)`` es el
         T² del mismo punto sin la variable j (Runger, Alt y Montgomery, 1996). Un
         valor grande señala la variable que más aporta a la señal; las
-        contribuciones no suman T².
+        contribuciones no suman T². Si la carta se calculó con ``stages``, usa la
+        media y la covarianza de la etapa a la que pertenece ese punto.
         """
         if self.points is None or self.kind != "T²":
             raise ValueError("Las contribuciones solo están disponibles para la carta T².")
         m = self.points.shape[0]
         if not 1 <= point <= m:
             raise ValueError(f"'point' debe estar entre 1 y {m}.")
-        d = self.points[point - 1] - self.mean
+        label = self.panels[0].stage[point - 1]
+        mean = self.stage_mean.get(label, self.mean)
+        cov = self.stage_cov.get(label, self.cov)
+        scale = self.stage_scale.get(label, self.scale)
+        d = self.points[point - 1] - mean
         p = d.size
-        t2 = self.scale * d @ np.linalg.solve(self.cov, d)
+        t2 = scale * d @ np.linalg.solve(cov, d)
         out = np.empty(p)
         for j in range(p):
             keep = [i for i in range(p) if i != j]
             dj = d[keep]
-            out[j] = t2 - self.scale * dj @ np.linalg.solve(self.cov[np.ix_(keep, keep)], dj)
+            out[j] = t2 - scale * dj @ np.linalg.solve(cov[np.ix_(keep, keep)], dj)
         return pd.Series(out, index=self.variables, name=f"contribución (punto {point})")

@@ -64,6 +64,19 @@ me.plot().savefig(salida / "mewma.png")
 mc = spyc.mcusum_chart(nuevos, mu=mu, cov=cov)
 print("MCUSUM primera señal en el punto", int(mc["MCUSUM"].flagged[0]) + 1, f"(h = {mc.params[0]['LCS']:.2f})")
 mc.plot().savefig(salida / "mcusum.png")
+
+# 4b) Etapas: dos periodos con medias distintas, cada uno reestima sus propios límites
+dos_etapas = np.vstack([nuevos[:40], nuevos[:40] + [0, 0, 3]])
+etiquetas = [1] * 40 + [2] * 40
+t2_et = spyc.t2_chart(dos_etapas, stages=etiquetas)
+print("T2 por etapas -> centros:", [round(p["fase"] == "I" and c, 2)
+      for p, c in zip(t2_et.params, (t2_et["T2"].center[0], t2_et["T2"].center[-1]))])
+print("medias por etapa:", t2_et.stage_mean[1].round(2), t2_et.stage_mean[2].round(2), "\n")
+
+# 4c) Box-Cox multivariado (datos positivos y sesgados)
+sesgados = rng.lognormal(0, 0.4, (60, 3))
+t2_bc = spyc.t2_chart(sesgados, boxcox=True)
+print("lambda de Box-Cox por variable:", t2_bc.params[0]["lambda_boxcox"], "\n")
 subs = rng.multivariate_normal([0, 0, 0], Sigma, 120)
 subs[60:] *= 2.5                               # aumenta la dispersión
 spyc.generalized_variance_chart(subs, subgroup_size=6).plot().savefig(salida / "gv.png")

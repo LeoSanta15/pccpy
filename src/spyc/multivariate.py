@@ -4,6 +4,14 @@ Formulas según la documentación de métodos de Minitab y Montgomery (Introduct
 Statistical Quality Control, cap. 11). Los datos pueden ser observaciones
 individuales (matriz N x p) o subgrupos (matriz 3-D m x n x p, o matriz N x p con
 ``subgroup_size``).
+
+Todas las cartas aceptan ``stages`` (etiqueta de etapa por punto graficado): sin
+parámetros históricos, la media y la covarianza (o Sigma de referencia) se vuelven a
+estimar dentro de cada etapa, igual que en las cartas univariadas; con parámetros
+históricos se usan los mismos en todas las etapas, pero MEWMA y MCUSUM reinician su
+acumulador al principio de cada una. También aceptan ``boxcox=True`` para transformar
+cada variable por separado antes de calcular la carta (no se puede combinar con
+parámetros históricos).
 """
 from __future__ import annotations
 
@@ -25,7 +33,7 @@ _OUT_OF_LIMIT = "1 punto fuera de los límites de control"
 
 # ------------------------------------------------------------------------- datos
 def _prepare(data, subgroup_size):
-    """Devuelve (puntos m x p, n, S promedio, media global, nombres, m)."""
+    """Devuelve (puntos m x p, n, S promedio, media global, nombres, m, grupos)."""
     names = None
     if isinstance(data, pd.DataFrame):
         names = [str(c) for c in data.columns]
@@ -63,7 +71,16 @@ def _prepare(data, subgroup_size):
         pts = grp.mean(axis=1)
         cov = np.mean([np.cov(g, rowvar=False) for g in grp], axis=0)
         grand = pts.mean(axis=0)
-    return pts, n, cov, grand, names, pts.shape[0]
+    return pts, n, cov, grand, names, pts.shape[0], grp
+
+
+def _stage_ref(pts: np.ndarray, grp, idx: np.ndarray):
+    """Media y covarianza estimadas solo con los puntos de una etapa (``idx``)."""
+    sub = pts[idx]
+    if grp is None:
+        return sub.mean(axis=0), np.cov(sub, rowvar=False)
+    g = grp[idx]
+    return sub.mean(axis=0), np.mean([np.cov(x, rowvar=False) for x in g], axis=0)
 
 
 def _check_cov(cov: np.ndarray) -> None:
@@ -72,7 +89,8 @@ def _check_cov(cov: np.ndarray) -> None:
     if np.linalg.cond(cov) > 1e12:
         raise ValueError(
             "La matriz de covarianzas es singular o casi singular: hay variables "
-            "(casi) linealmente dependientes o muy pocas observaciones."
+            "(casi) linealmente dependientes o muy pocas observaciones (revise, si usa "
+            "'stages', que cada etapa tenga suficientes puntos)."
         )
 
 
@@ -88,6 +106,39 @@ def _resolve_params(mu, cov, est_mu, est_cov, p, n_hist):
     if mu.size != p or cov.shape != (p, p):
         raise ValueError(f"'mu' debe tener {p} elementos y 'cov' ser {p} x {p}.")
     return mu, cov, ("known" if n_hist is None else "phase2")
+
+
+# --------------------------------------------------------------------------- Box-Cox
+def _boxcox_transform(arr: np.ndarray):
+    """Transforma cada variable (última dimensión) con su propio lambda de Box-Cox
+    (máxima verosimilitud, ``scipy.stats.boxcox``), estimado con todas las
+    observaciones individuales disponibles (sin promediar por subgrupo)."""
+    if np.any(arr <= 0):
+        raise ValueError("'boxcox' requiere datos positivos en todas las variables.")
+    shape = arr.shape
+    flat = arr.reshape(-1, shape[-1])
+    out = np.empty_like(flat)
+    lambdas = np.empty(shape[-1])
+    for j in range(shape[-1]):
+        out[:, j], lambdas[j] = stats.boxcox(flat[:, j])
+    return out.reshape(shape), lambdas
+
+
+def _maybe_boxcox(data, mu, cov, boxcox: bool):
+    """Sin ``boxcox``, devuelve ``data`` tal cual. Con ``boxcox``, la transforma y
+    devuelve también los nombres de columna (si los había) y los lambda estimados."""
+    if not boxcox:
+        return data, None, None
+    if mu is not None or cov is not None:
+        raise ValueError("'boxcox' no se puede combinar con parámetros históricos ('mu'/'cov').")
+    names = [str(c) for c in data.columns] if isinstance(data, pd.DataFrame) else None
+    arr, lambdas = _boxcox_transform(np.asarray(data, dtype=float))
+    return arr, names, lambdas
+
+
+def _lambda_param(names, lambdas) -> dict:
+    return {} if lambdas is None else {"lambda_boxcox": {nm: round(float(lam), 4)
+                                                          for nm, lam in zip(names, lambdas)}}
 
 
 # --------------------------------------------------------------------- T² Hotelling
@@ -123,6 +174,8 @@ def t2_chart(
     cov=None,
     n_hist: Optional[int] = None,
     alpha: float = ALPHA,
+    stages=None,
+    boxcox: bool = False,
 ) -> MultivariateChart:
     """Carta T² de Hotelling (Stat > Control Charts > Multivariate > T-Squared).
 
@@ -141,34 +194,66 @@ def t2_chart(
         parámetros se toman como conocidos (límite chi-cuadrado).
     alpha : float
         Probabilidad de cola superior del límite (por defecto 0.00135, como Minitab).
+    stages : array-like, opcional
+        Etiqueta de etapa por punto graficado. Sin ``mu``/``cov``, la media y la
+        covarianza (y por tanto los límites de Fase I) se vuelven a estimar dentro
+        de cada etapa; con parámetros históricos, se usan los mismos en todas las
+        etapas.
+    boxcox : bool
+        Transforma cada variable con su propio Box-Cox antes de calcular la carta
+        (no se puede combinar con ``mu``/``cov``).
 
     El resultado tiene un panel ``"T2"`` con LC = valor esperado de T² y LCS; no hay
-    LCI. Use ``chart.contributions(punto)`` para ver qué variables explican una señal.
+    LCI. Use ``chart.contributions(punto)`` para ver qué variables explican una señal
+    (usa la media y covarianza de la etapa de ese punto).
     """
-    pts, n, s_est, grand, names, m = _prepare(data, subgroup_size)
+    data, names_bc, lambdas = _maybe_boxcox(data, mu, cov, boxcox)
+    pts, n, s_est, grand, names, m, grp = _prepare(data, subgroup_size)
+    if names_bc is not None:
+        names = names_bc
     p = pts.shape[1]
-    mean, S, phase = _resolve_params(mu, cov, grand, s_est, p, n_hist)
-    _check_cov(S)
-    m_ref = m if phase == "phase1" else (n_hist or m)
-    center, ucl = _t2_reference(p, m_ref, n, alpha, phase)
+    hist_mean, hist_S, phase0 = _resolve_params(mu, cov, grand, s_est, p, n_hist)
+    if phase0 != "phase1":
+        _check_cov(hist_S)
 
-    d = pts - mean
-    t2 = n * np.einsum("ij,ij->i", d @ np.linalg.inv(S), d)
-    flagged = np.flatnonzero(t2 > ucl)
+    stage_means, stage_covs, stage_scales = [], [], []
 
     def stage_fn(idx):
+        npts = len(idx)
+        if phase0 == "phase1":
+            mean_i, S_i = _stage_ref(pts, grp, idx)
+            _check_cov(S_i)
+            phase, m_ref = "phase1", npts
+        else:
+            mean_i, S_i, phase = hist_mean, hist_S, phase0
+            m_ref = n_hist if phase == "phase2" else 0
+        center, ucl = _t2_reference(p, m_ref, n, alpha, phase)
+        d = pts[idx] - mean_i
+        t2 = n * np.einsum("ij,ij->i", d @ np.linalg.inv(S_i), d)
+        flagged = np.flatnonzero(t2 > ucl)
         panel = StagePanel(
-            "T2", t2, full(center, m), full(ucl, m), full(np.nan, m), full(np.nan, m),
+            "T2", t2, full(center, npts), full(ucl, npts), full(np.nan, npts), full(np.nan, npts),
             "T² de Hotelling", "only1", symmetric=False, violations={1: flagged},
         )
-        return [panel], {"fase": {"phase1": "I", "phase2": "II", "known": "parámetros conocidos"}[phase],
-                         "variables": p, "puntos": m, "tamaño": n, "alfa": alpha}
+        stage_means.append(mean_i)
+        stage_covs.append(S_i)
+        stage_scales.append(float(n))
+        prm = {"fase": {"phase1": "I", "phase2": "II", "known": "parámetros conocidos"}[phase],
+              "variables": p, "puntos": npts, "tamaño": n, "alfa": alpha}
+        prm.update(_lambda_param(names, lambdas))
+        return [panel], prm
 
-    base = build_chart("T²", m, None, stage_fn, (1,), None)
+    base = build_chart("T²", m, stages, stage_fn, (1,), None)
+    labels = [prm["stage"] for prm in base.params]
+    stage_mean = dict(zip(labels, stage_means))
+    stage_cov = dict(zip(labels, stage_covs))
+    stage_scale = dict(zip(labels, stage_scales))
+    first = labels[0]
     return MultivariateChart(kind=base.kind, panels=base.panels, params=base.params,
                              tests=base.tests, test_params=base.test_params,
-                             test1_text=_OUT_OF_LIMIT, variables=names, points=pts, mean=mean,
-                             cov=S, scale=float(n))
+                             test1_text=_OUT_OF_LIMIT, variables=names, points=pts,
+                             mean=stage_mean[first], cov=stage_cov[first], scale=stage_scale[first],
+                             stage_mean=stage_mean, stage_cov=stage_cov, stage_scale=stage_scale)
 
 
 # -------------------------------------------------------------- varianza generalizada
@@ -188,6 +273,8 @@ def generalized_variance_chart(
     subgroup_size: Optional[int] = None,
     cov=None,
     k: float = 3.0,
+    stages=None,
+    boxcox: bool = False,
 ) -> MultivariateChart:
     """Carta de varianza generalizada |S| (dispersión multivariada).
 
@@ -195,44 +282,54 @@ def generalized_variance_chart(
     LC = b1|S̄|, límites |S̄|(b1 ± k·√b2) (LCI no menor que 0) y S̄ el promedio de las
     matrices de covarianza de los subgrupos. Con ``cov`` (Sigma conocida) se usa
     |Sigma| en lugar de |S̄|. Requiere subgrupos de tamaño n > p.
+
+    ``stages``: sin ``cov``, S̄ (y por tanto el centro y los límites) se recalcula
+    dentro de cada etapa; con ``cov`` se usa la misma Sigma en todas. ``boxcox``:
+    transforma cada variable antes de calcular la carta.
     """
     if subgroup_size is None and np.asarray(data).ndim != 3:
         raise ValueError("La varianza generalizada requiere subgrupos: indique 'subgroup_size' o pase datos 3-D.")
-    pts, n, s_est, _, names, m = _prepare(data, subgroup_size)
+    data, names_bc, lambdas = _maybe_boxcox(data, None, cov, boxcox)
+    pts, n, s_est, _, names, m, grp = _prepare(data, subgroup_size)
+    if names_bc is not None:
+        names = names_bc
     p = pts.shape[1]
     if n <= p:
         raise ValueError(f"El tamaño de subgrupo ({n}) debe ser mayor que el número de variables ({p}).")
-    arr = np.asarray(data.to_numpy() if isinstance(data, pd.DataFrame) else data, dtype=float)
-    grp = arr if arr.ndim == 3 else arr.reshape(-1, n, p)
     dets = np.array([np.linalg.det(np.cov(g, rowvar=False)) for g in grp])
-    if cov is None:
-        sig = s_est
-        known = False
-    else:
-        sig = np.asarray(cov, dtype=float)
-        if sig.shape != (p, p):
+    if cov is not None:
+        fixed_sig = np.asarray(cov, dtype=float)
+        if fixed_sig.shape != (p, p):
             raise ValueError(f"'cov' debe ser {p} x {p}.")
-        known = True
-    _check_cov(sig)
+        _check_cov(fixed_sig)
     b1, b2 = _gv_constants(p, n)
-    det_s = float(np.linalg.det(sig))
-    center = b1 * det_s
-    ucl = det_s * (b1 + k * np.sqrt(b2))
-    lcl = max(0.0, det_s * (b1 - k * np.sqrt(b2)))
-    flagged = np.flatnonzero((dets > ucl) | (dets < lcl))
 
     def stage_fn(idx):
-        panel = StagePanel("|S|", dets, full(center, m), full(ucl, m), full(lcl, m),
-                           full(np.nan, m), "Varianza generalizada", "only1",
+        npts = len(idx)
+        if cov is None:
+            _, sig = _stage_ref(pts, grp, idx)
+            _check_cov(sig)
+            known = False
+        else:
+            sig, known = fixed_sig, True
+        det_s = float(np.linalg.det(sig))
+        center = b1 * det_s
+        ucl = det_s * (b1 + k * np.sqrt(b2))
+        lcl = max(0.0, det_s * (b1 - k * np.sqrt(b2)))
+        sub_dets = dets[idx]
+        flagged = np.flatnonzero((sub_dets > ucl) | (sub_dets < lcl))
+        panel = StagePanel("|S|", sub_dets, full(center, npts), full(ucl, npts), full(lcl, npts),
+                           full(np.nan, npts), "Varianza generalizada", "only1",
                            symmetric=False, violations={1: flagged})
-        return [panel], {"|S|": det_s, "variables": p, "subgrupos": m, "tamaño": n,
-                         "sigma_conocida": known}
+        prm = {"|S|": det_s, "variables": p, "subgrupos": npts, "tamaño": n, "sigma_conocida": known}
+        prm.update(_lambda_param(names, lambdas))
+        return [panel], prm
 
-    base = build_chart("Varianza generalizada", m, None, stage_fn, (1,), None)
+    base = build_chart("Varianza generalizada", m, stages, stage_fn, (1,), None)
     return MultivariateChart(kind=base.kind, panels=base.panels, params=base.params,
                              tests=base.tests, test_params=base.test_params,
                              test1_text=_OUT_OF_LIMIT, variables=names, points=None, mean=None,
-                             cov=sig, scale=float(n))
+                             cov=(fixed_sig if cov is not None else s_est), scale=float(n))
 
 
 # ------------------------------------------------------------------------- MEWMA
@@ -281,6 +378,8 @@ def mewma_chart(
     ucl: Optional[float] = None,
     mu=None,
     cov=None,
+    stages=None,
+    boxcox: bool = False,
 ) -> MultivariateChart:
     """Carta MEWMA (EWMA multivariada, Stat > Control Charts > Multivariate > MEWMA).
 
@@ -291,35 +390,52 @@ def mewma_chart(
     fija con ``ucl``. Sirve para detectar cambios pequeños y
     sostenidos en el vector de medias. ``mu`` y ``cov`` se estiman si no se dan
     (deben darse juntos).
+
+    ``stages``: la recursión reinicia (``Z_0 = 0``) al principio de cada etapa; sin
+    ``mu``/``cov`` también se vuelve a estimar la media y Sigma dentro de cada una.
+    ``boxcox``: transforma cada variable antes de calcular la carta.
     """
     if not 0 < weight <= 1:
         raise ValueError("'weight' debe estar en (0, 1].")
-    pts, n, s_est, grand, names, m = _prepare(data, subgroup_size)
+    data, names_bc, lambdas = _maybe_boxcox(data, mu, cov, boxcox)
+    pts, n, s_est, grand, names, m, grp = _prepare(data, subgroup_size)
+    if names_bc is not None:
+        names = names_bc
     p = pts.shape[1]
-    mean, S, _ = _resolve_params(mu, cov, grand, s_est, p, None)
-    _check_cov(S)
+    hist_mean, hist_S, _ = _resolve_params(mu, cov, grand, s_est, p, None)
+    use_hist = mu is not None
+    if use_hist:
+        _check_cov(hist_S)
     h = float(ucl) if ucl is not None else mewma_limit(p, float(weight), float(arl))
 
-    sig_inv = np.linalg.inv(weight / (2.0 - weight) * S / n)  # covarianza asintótica de Z
-    z = np.zeros(p)
-    t2 = np.empty(m)
-    for i in range(m):
-        z = weight * (pts[i] - mean) + (1.0 - weight) * z
-        t2[i] = z @ sig_inv @ z
-    flagged = np.flatnonzero(t2 > h)
-
     def stage_fn(idx):
-        panel = StagePanel("MEWMA", t2, full(np.nan, m), full(h, m), full(np.nan, m),
-                           full(np.nan, m), "MEWMA (T²)", "only1", symmetric=False,
+        npts = len(idx)
+        if use_hist:
+            mean_i, S_i = hist_mean, hist_S
+        else:
+            mean_i, S_i = _stage_ref(pts, grp, idx)
+            _check_cov(S_i)
+        sig_inv = np.linalg.inv(weight / (2.0 - weight) * S_i / n)  # covarianza asintótica de Z
+        z = np.zeros(p)
+        t2 = np.empty(npts)
+        for i, x in enumerate(pts[idx]):
+            z = weight * (x - mean_i) + (1.0 - weight) * z
+            t2[i] = z @ sig_inv @ z
+        flagged = np.flatnonzero(t2 > h)
+        panel = StagePanel("MEWMA", t2, full(np.nan, npts), full(h, npts), full(np.nan, npts),
+                           full(np.nan, npts), "MEWMA (T²)", "only1", symmetric=False,
                            violations={1: flagged})
-        return [panel], {"peso": weight, "LCS": h, "ARL": None if ucl is not None else arl,
-                         "variables": p, "puntos": m, "tamaño": n}
+        prm = {"peso": weight, "LCS": h, "ARL": None if ucl is not None else arl,
+              "variables": p, "puntos": npts, "tamaño": n}
+        prm.update(_lambda_param(names, lambdas))
+        return [panel], prm
 
-    base = build_chart("MEWMA", m, None, stage_fn, (1,), None)
+    base = build_chart("MEWMA", m, stages, stage_fn, (1,), None)
     return MultivariateChart(kind=base.kind, panels=base.panels, params=base.params,
                              tests=base.tests, test_params=base.test_params,
-                             test1_text=_OUT_OF_LIMIT, variables=names, points=None, mean=mean,
-                             cov=S, scale=float(n))
+                             test1_text=_OUT_OF_LIMIT, variables=names, points=None,
+                             mean=(hist_mean if use_hist else grand),
+                             cov=(hist_S if use_hist else s_est), scale=float(n))
 
 
 # ------------------------------------------------------------------------- MCUSUM
@@ -364,6 +480,8 @@ def mcusum_chart(
     arl: float = 200.0,
     mu=None,
     cov=None,
+    stages=None,
+    boxcox: bool = False,
 ) -> MultivariateChart:
     """Carta CUSUM multivariada de Crosier (1988).
 
@@ -373,36 +491,53 @@ def mcusum_chart(
     holgura (0.5 por defecto) y ``h`` se calcula para el ``arl`` en control pedido
     (200 por defecto) o se fija con ``h``. ``mu`` y ``cov`` se estiman si no se dan
     (deben darse juntos). Con subgrupos se usan las medias y Sigma/n.
+
+    ``stages``: el acumulador ``S`` reinicia en 0 al principio de cada etapa; sin
+    ``mu``/``cov`` también se vuelve a estimar la media y Sigma dentro de cada una.
+    ``boxcox``: transforma cada variable antes de calcular la carta.
     """
     if k < 0:
         raise ValueError("'k' debe ser >= 0.")
-    pts, n, s_est, grand, names, m = _prepare(data, subgroup_size)
+    data, names_bc, lambdas = _maybe_boxcox(data, mu, cov, boxcox)
+    pts, n, s_est, grand, names, m, grp = _prepare(data, subgroup_size)
+    if names_bc is not None:
+        names = names_bc
     p = pts.shape[1]
-    mean, S, _ = _resolve_params(mu, cov, grand, s_est, p, None)
-    _check_cov(S)
+    hist_mean, hist_S, _ = _resolve_params(mu, cov, grand, s_est, p, None)
+    use_hist = mu is not None
+    if use_hist:
+        _check_cov(hist_S)
     if h is not None and h <= 0:
         raise ValueError("'h' debe ser > 0.")
     lim = float(h) if h is not None else mcusum_limit(p, float(k), float(arl))
 
-    sig_inv = np.linalg.inv(S / n)
-    s_vec = np.zeros(p)
-    y = np.empty(m)
-    for i in range(m):
-        v = s_vec + (pts[i] - mean)
-        c = float(np.sqrt(v @ sig_inv @ v))
-        s_vec = v * (1.0 - k / c) if c > k else np.zeros(p)
-        y[i] = np.sqrt(s_vec @ sig_inv @ s_vec)
-    flagged = np.flatnonzero(y > lim)
-
     def stage_fn(idx):
-        panel = StagePanel("MCUSUM", y, full(0.0, m), full(lim, m), full(np.nan, m),
-                           full(np.nan, m), "MCUSUM (Y)", "only1", symmetric=False,
+        npts = len(idx)
+        if use_hist:
+            mean_i, S_i = hist_mean, hist_S
+        else:
+            mean_i, S_i = _stage_ref(pts, grp, idx)
+            _check_cov(S_i)
+        sig_inv = np.linalg.inv(S_i / n)
+        s_vec = np.zeros(p)
+        y = np.empty(npts)
+        for i, x in enumerate(pts[idx]):
+            v = s_vec + (x - mean_i)
+            c = float(np.sqrt(v @ sig_inv @ v))
+            s_vec = v * (1.0 - k / c) if c > k else np.zeros(p)
+            y[i] = np.sqrt(s_vec @ sig_inv @ s_vec)
+        flagged = np.flatnonzero(y > lim)
+        panel = StagePanel("MCUSUM", y, full(0.0, npts), full(lim, npts), full(np.nan, npts),
+                           full(np.nan, npts), "MCUSUM (Y)", "only1", symmetric=False,
                            violations={1: flagged})
-        return [panel], {"k": k, "LCS": lim, "ARL": None if h is not None else arl,
-                         "variables": p, "puntos": m, "tamaño": n}
+        prm = {"k": k, "LCS": lim, "ARL": None if h is not None else arl,
+              "variables": p, "puntos": npts, "tamaño": n}
+        prm.update(_lambda_param(names, lambdas))
+        return [panel], prm
 
-    base = build_chart("MCUSUM", m, None, stage_fn, (1,), None)
+    base = build_chart("MCUSUM", m, stages, stage_fn, (1,), None)
     return MultivariateChart(kind=base.kind, panels=base.panels, params=base.params,
                              tests=base.tests, test_params=base.test_params,
-                             test1_text=_OUT_OF_LIMIT, variables=names, points=None, mean=mean,
-                             cov=S, scale=float(n))
+                             test1_text=_OUT_OF_LIMIT, variables=names, points=None,
+                             mean=(hist_mean if use_hist else grand),
+                             cov=(hist_S if use_hist else s_est), scale=float(n))
