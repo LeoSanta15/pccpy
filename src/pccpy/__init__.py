@@ -39,7 +39,7 @@ from .plotting import capability_sixpack, plot_capability, plot_control_chart, p
 from .quality_tools import pareto, plot_pareto
 from .results import ControlChart, MultivariateChart, Panel
 
-__version__ = "0.4.8"
+__version__ = "0.4.9"
 
 __all__ = [
     "CapabilityResult",

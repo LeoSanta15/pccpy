@@ -4,6 +4,14 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 pccpy usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
 
+## [0.4.9] - README exhaustivo
+
+### Cambiado
+- `README.md`: reescrito con explicaciones detalladas de todas las cartas de
+  control, parámetros, ejemplos de uso, tablas de Cp/Cpk vs Pp/Ppk, las 8
+  pruebas de causas especiales, acceso a datos del resultado e instrucciones
+  de desarrollo.
+
 ## [0.4.8] - zonas sigma en cartas asimétricas
 
 ### Corregido
