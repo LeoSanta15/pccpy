@@ -1,9 +1,11 @@
 from .advanced import g_chart, imr_rs_chart, ma_chart, t_chart, zmr_chart, zone_chart
 from .attributes import c_chart, laney_p_chart, laney_u_chart, np_chart, p_chart, u_chart
+from .run_chart import RunChartResult, run_chart
 from .timeweighted import cusum_chart, ewma_chart
 from .variables import imr_chart, xbar_r_chart, xbar_s_chart
 
 __all__ = [
+    "RunChartResult",
     "c_chart",
     "cusum_chart",
     "ewma_chart",
@@ -15,6 +17,7 @@ __all__ = [
     "ma_chart",
     "np_chart",
     "p_chart",
+    "run_chart",
     "t_chart",
     "u_chart",
     "xbar_r_chart",

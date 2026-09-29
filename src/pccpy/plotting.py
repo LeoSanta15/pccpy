@@ -228,3 +228,106 @@ def capability_sixpack(data, lsl=None, usl=None, target=None, *, subgroup_size=N
     _capability_plot(fig.add_subplot(gs[2, 1]), res)
     fig.suptitle("Sixpack de capacidad", fontweight="bold")
     return fig, res, chart
+
+
+# ----------------------------------------------------------------------- run chart
+def plot_run_chart(result, *, figsize=None, title: str | None = None):
+    """Gráfico de la carta de corridas con la mediana y anotaciones de p-valores.
+
+    Devuelve la figura de matplotlib.
+    """
+    from .charts.run_chart import RunChartResult
+
+    x = result.values
+    n = len(x)
+    obs = np.arange(1, n + 1)
+    fig, ax = plt.subplots(figsize=figsize or (max(8, n * 0.35), 4.5))
+    ax.plot(obs, x, "o-", ms=4, lw=1, color=BLUE, zorder=3)
+    ax.axhline(result.median, color=GREEN, lw=1.3, ls="--", label=f"Mediana={result.median:.4g}")
+
+    # Color above/below
+    above = x > result.median
+    below = x < result.median
+    ax.fill_between(obs, x, result.median, where=above, alpha=0.12, color=BLUE, step=None)
+    ax.fill_between(obs, x, result.median, where=below, alpha=0.12, color=ORANGE, step=None)
+
+    ax.annotate(f"Mediana={result.median:.4g}", xy=(1.0, result.median),
+                xycoords=("axes fraction", "data"), xytext=(4, 0),
+                textcoords="offset points", va="center", fontsize=8, color=GREEN,
+                annotation_clip=False)
+
+    alpha = result.alpha
+    tests = [
+        ("Agrupamiento", result.p_clustering),
+        ("Mezclas", result.p_mixtures),
+        ("Tendencias", result.p_trends),
+        ("Oscilación", result.p_oscillation),
+    ]
+    lines = [f"p {name}={p:.4f}{'*' if p < alpha else ''}" for name, p in tests]
+    ax.text(0.02, 0.97, "\n".join(lines), transform=ax.transAxes, va="top",
+            fontsize=7.5, bbox={"fc": "white", "ec": GRAY, "alpha": 0.85})
+
+    ax.set_xlabel("Observación")
+    ax.set_ylabel("Valor")
+    ax.set_title(title or "Carta de corridas")
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+    return fig
+
+
+# ---------------------------------------------------------------------- pre-control
+def plot_precontrol(result, *, figsize=None, title: str | None = None):
+    """Gráfico de pre-control con zonas verde/amarillo/rojo.
+
+    Devuelve la figura de matplotlib.
+    """
+    x = result.values
+    n = len(x)
+    obs = np.arange(1, n + 1)
+
+    ZONE_COLORS = {"G": "#2e8b57", "Y-": "#e08a00", "Y+": "#e08a00", "R-": "#d62728", "R+": "#d62728"}
+    fig, ax = plt.subplots(figsize=figsize or (max(8, n * 0.35), 5))
+
+    # Zones background
+    lo, hi = min(x.min(), result.lsl) * 0.98, max(x.max(), result.usl) * 1.02
+    ax.axhspan(result.lsl, result.usl, alpha=0.06, color=GREEN, zorder=0)
+    ax.axhspan(result.green_lo, result.green_hi, alpha=0.12, color=GREEN, zorder=0)
+
+    # Spec and zone lines
+    for val, col, ls, lbl in (
+        (result.usl, RED, "-", f"LES={result.usl:.4g}"),
+        (result.lsl, RED, "-", f"LEI={result.lsl:.4g}"),
+        (result.green_hi, GREEN, "--", f"Verde hi={result.green_hi:.4g}"),
+        (result.green_lo, GREEN, "--", f"Verde lo={result.green_lo:.4g}"),
+        (result.center, GREEN, ":", f"Centro={result.center:.4g}"),
+    ):
+        ax.axhline(val, color=col, lw=1.2, ls=ls)
+        ax.annotate(lbl, xy=(1.0, val), xycoords=("axes fraction", "data"),
+                    xytext=(4, 0), textcoords="offset points", va="center",
+                    fontsize=7.5, color=col, annotation_clip=False)
+
+    # Points colored by zone
+    sig_idx = {i for i, _ in result.signals}
+    for i, (v, z) in enumerate(zip(x, result.zones)):
+        col = ZONE_COLORS.get(z, BLUE)
+        marker = "s" if i in sig_idx else "o"
+        ax.plot(obs[i], v, marker, ms=6 if i in sig_idx else 4, color=col, zorder=4)
+    ax.plot(obs, x, "-", lw=0.8, color=GRAY, zorder=2)
+
+    # Signal annotations
+    for i, code in result.signals:
+        short = {"red": "R", "two_yellow_same": "YY", "two_yellow_opp": "YY↕"}.get(code, code)
+        ax.annotate(short, (obs[i], x[i]), textcoords="offset points", xytext=(0, 8),
+                    ha="center", fontsize=8, color=RED)
+
+    stats_txt = (f"N={n}  Verde={result.n_green}  "
+                 f"Amarillo={result.n_yellow}  Rojo={result.n_red}  "
+                 f"Señales={len(result.signals)}")
+    ax.text(0.02, 0.97, stats_txt, transform=ax.transAxes, va="top",
+            fontsize=8, bbox={"fc": "white", "ec": GRAY, "alpha": 0.85})
+    ax.set_xlabel("Observación")
+    ax.set_ylabel("Valor")
+    ax.set_title(title or "Carta de pre-control")
+    ax.grid(alpha=0.2)
+    fig.tight_layout(rect=(0, 0, 0.88, 1))
+    return fig

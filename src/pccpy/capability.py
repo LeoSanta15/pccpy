@@ -99,6 +99,16 @@ class CapabilityResult:
     transform: dict[str, float] | None = None
     data: np.ndarray = field(default_factory=lambda: np.array([]), repr=False)
 
+    @property
+    def dpmo(self) -> float:
+        """Defectos por millón de oportunidades (PPM esperado general)."""
+        return self.ppm_overall[2]
+
+    @property
+    def sigma_level(self) -> float:
+        """Nivel sigma del proceso: Z.bench general = Φ⁻¹(1 − P(defecto total))."""
+        return self.z_bench_overall
+
     def to_frame(self) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico)."""
         rows = [
@@ -108,6 +118,7 @@ class CapabilityResult:
             ("Pp", self.pp), ("PPL", self.ppl), ("PPU", self.ppu), ("Ppk", self.ppk),
             ("Cpm", self.cpm),
             ("Z.Bench (dentro)", self.z_bench_within), ("Z.Bench (general)", self.z_bench_overall),
+            ("Nivel Sigma", self.sigma_level), ("DPMO", self.dpmo),
             ("PPM obs < LEI", self.ppm_obs[0]), ("PPM obs > LES", self.ppm_obs[1]),
             ("PPM obs total", self.ppm_obs[2]),
             ("PPM esp. dentro total", self.ppm_within[2]),
@@ -139,7 +150,8 @@ class CapabilityResult:
             f"    Pp={_fmt(o.pp)}  PPL={_fmt(o.ppl)}  PPU={_fmt(o.ppu)}  Ppk={_fmt(o.ppk)}  Cpm={_fmt(o.cpm)}",
             (f"    IC {ci}% Pp: ({_fmt(o.pp_ci[0])}, {_fmt(o.pp_ci[1])})   "
             f"IC {ci}% Ppk: ({_fmt(o.ppk_ci[0])}, {_fmt(o.ppk_ci[1])})"),
-            f"    Z.Bench={_fmt(o.z_bench_overall)}  Z.LEI={_fmt(o.z_lsl_overall)}  Z.LES={_fmt(o.z_usl_overall)}",
+            (f"    Z.Bench={_fmt(o.z_bench_overall)}  Z.LEI={_fmt(o.z_lsl_overall)}  Z.LES={_fmt(o.z_usl_overall)}"
+             f"  Nivel Sigma={_fmt(o.sigma_level)}  DPMO={o.dpmo:,.0f}"),
             "  Desempeño (PPM):            < LEI       > LES      Total",
         ]
         for label, t in (("Observado", o.ppm_obs), ("Esperado dentro", o.ppm_within),

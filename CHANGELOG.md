@@ -1,5 +1,22 @@
 # Registro de cambios
 
+## [0.6.0] - run chart, pre-control y DPMO en capacidad
+
+### Añadido
+- `run_chart`: carta de corridas con las 4 pruebas de aleatoriedad de Minitab
+  (agrupamiento, mezclas, tendencias y oscilación; p-valor con aproximación normal
+  de Wald-Wolfowitz). Devuelve `RunChartResult` con `.summary()`, `.to_frame()` y
+  `.plot()`.
+- `precontrol`: análisis de pre-control (semáforo de Shainin). Divide la tolerancia
+  en zonas verde/amarillo/rojo y detecta señales (punto rojo, dos amarillas en el
+  mismo lado, dos amarillas en lados opuestos). Devuelve `PreControlResult` con
+  `.summary()`, `.to_frame()` y `.plot()`.
+- `plot_run_chart`, `plot_precontrol`: funciones de graficación disponibles también
+  como métodos `.plot()` de los resultados correspondientes.
+- `CapabilityResult.dpmo`: propiedad que devuelve el DPMO esperado (= PPM general).
+- `CapabilityResult.sigma_level`: propiedad que devuelve el nivel sigma del proceso
+  (= Z.bench general). Ambos aparecen ahora en `.to_frame()` y `.summary()`.
+
 Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 pccpy usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.

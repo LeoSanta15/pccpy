@@ -8,6 +8,7 @@ from .capability import (
     capability_nonnormal,
 )
 from .charts import (
+    RunChartResult,
     c_chart,
     cusum_chart,
     ewma_chart,
@@ -19,6 +20,7 @@ from .charts import (
     ma_chart,
     np_chart,
     p_chart,
+    run_chart,
     t_chart,
     u_chart,
     xbar_r_chart,
@@ -35,11 +37,19 @@ from .multivariate import (
     t2_chart,
 )
 from .normality import NormalityResult, normality_test
-from .plotting import capability_sixpack, plot_capability, plot_control_chart, probability_plot
+from .plotting import (
+    capability_sixpack,
+    plot_capability,
+    plot_control_chart,
+    plot_precontrol,
+    plot_run_chart,
+    probability_plot,
+)
+from .precontrol import PreControlResult, precontrol
 from .quality_tools import pareto, plot_pareto
 from .results import ControlChart, MultivariateChart, Panel
 
-__version__ = "0.5.1"
+__version__ = "0.6.0"
 
 __all__ = [
     "CapabilityResult",
@@ -48,6 +58,8 @@ __all__ = [
     "NonNormalCapabilityResult",
     "NormalityResult",
     "Panel",
+    "PreControlResult",
+    "RunChartResult",
     "c4",
     "c5",
     "c_chart",
@@ -78,7 +90,11 @@ __all__ = [
     "plot_capability",
     "plot_control_chart",
     "plot_pareto",
+    "plot_precontrol",
+    "plot_run_chart",
+    "precontrol",
     "probability_plot",
+    "run_chart",
     "t2_chart",
     "t_chart",
     "u_chart",
