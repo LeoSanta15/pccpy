@@ -85,7 +85,7 @@ from .tolerance import ToleranceResult, tolerance_interval, tolerance_interval_s
 from .results import ControlChart, MultivariateChart, Panel
 from ._wizard import WizardResult, wizard
 
-__version__ = "0.10.4"
+__version__ = "0.10.5"
 
 __all__ = [
     "CapabilityResult",

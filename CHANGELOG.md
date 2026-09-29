@@ -1,5 +1,14 @@
 # Registro de cambios
 
+## [0.10.5] - correcciones de CI y bump de versión
+
+### Corregido
+- CI `publish.yml`: job `publish-pypi` faltaban `checkout` y `setup-python`;
+  la acción `pypa/gh-action-pypi-publish` los requiere en el mismo job.
+- CI: todas las acciones actualizadas a v6 (`checkout`, `setup-python`,
+  `upload-artifact`, `download-artifact`) para eliminar advertencias de Node 20.
+- Bump de versión `0.10.4` → `0.10.5`.
+
 ## [0.10.4] - wizard de selección de análisis SPC
 
 ### Añadido
