@@ -603,6 +603,69 @@ def gage_type1(
     )
 
 
+def gage_type1_summary(
+    mean: float,
+    std: float,
+    n: int,
+    reference: float,
+    *,
+    tolerance: float | None = None,
+    study_variation: float = 6.0,
+) -> Type1Result:
+    """Estudio Tipo 1 a partir de estadísticos resumen.
+
+    Equivalente a :func:`gage_type1` pero acepta media, desviación estándar y
+    tamaño de muestra en lugar de datos crudos.
+
+    Parameters
+    ----------
+    mean : float
+        Media de las mediciones repetidas.
+    std : float
+        Desviación estándar muestral (ddof=1).
+    n : int
+        Número de mediciones.
+    reference : float
+        Valor verdadero (de referencia) de la pieza.
+    tolerance : float, opcional
+        LES − LEI. Si se proporciona, Cg y Cgk se calculan en base a ella.
+    study_variation : float
+        Multiplicador K (por defecto 6).
+
+    Returns
+    -------
+    Type1Result
+    """
+    if n < 2:
+        raise ValueError("'n' debe ser ≥ 2.")
+    if std <= 0:
+        raise ValueError("'std' debe ser positivo.")
+
+    xbar, s = float(mean), float(std)
+    bias = xbar - reference
+    sv = study_variation * s
+
+    t_stat = bias * math.sqrt(n) / s
+    p_value = float(2 * stats.t.sf(abs(t_stat), n - 1))
+
+    if tolerance is not None and tolerance > 0:
+        cg = 0.1 * tolerance / (study_variation * s)
+        cgk = (0.1 * tolerance - abs(bias)) / (study_variation / 2 * s)
+        bias_pct = bias / sv * 100
+    else:
+        cg = NAN
+        cgk = NAN
+        bias_pct = bias / sv * 100 if sv > 0 else NAN
+
+    return Type1Result(
+        reference=reference, n=n, mean=xbar, std=s,
+        bias=bias, bias_pct=bias_pct,
+        t_stat=t_stat, p_value=p_value,
+        cg=cg, cgk=cgk,
+        study_variation=sv, tolerance=tolerance,
+    )
+
+
 # ─────────────────────────────────────────────── Linearity & Bias ─────────────
 @dataclass
 class LinearityResult:

@@ -267,3 +267,72 @@ def tolerance_interval(
         sides=sides, method=method, lower=lower, upper=upper,
         achieved_confidence=ach, data=x,
     )
+
+
+def tolerance_interval_summary(
+    mean: float,
+    std: float,
+    n: int,
+    coverage: float = 0.95,
+    confidence: float = 0.95,
+    *,
+    sides: str = "two",
+) -> ToleranceResult:
+    """Intervalo de tolerancia normal a partir de estadísticos resumen.
+
+    Equivalente a :func:`tolerance_interval` con ``method='normal'``, pero
+    acepta la media, desviación estándar y tamaño de muestra directamente
+    en lugar de datos crudos.
+
+    Parameters
+    ----------
+    mean : float
+        Media muestral.
+    std : float
+        Desviación estándar muestral (ddof=1).
+    n : int
+        Número de observaciones.
+    coverage : float
+        Fracción mínima de la población a cubrir (p). Por defecto 0.95.
+    confidence : float
+        Nivel de confianza 1−α. Por defecto 0.95.
+    sides : str
+        ``'two'``, ``'lower'`` o ``'upper'``. Por defecto ``'two'``.
+
+    Returns
+    -------
+    ToleranceResult
+
+    Examples
+    --------
+    >>> import pccpy as pp
+    >>> res = pp.tolerance_interval_summary(mean=100.0, std=2.0, n=50)
+    >>> print(res.summary())
+    """
+    if std <= 0:
+        raise ValueError("'std' debe ser positivo.")
+    if n < 2:
+        raise ValueError("'n' debe ser ≥ 2.")
+    if not 0 < coverage < 1:
+        raise ValueError("'coverage' debe estar en (0, 1).")
+    if not 0 < confidence < 1:
+        raise ValueError("'confidence' debe estar en (0, 1).")
+    if sides not in ("two", "lower", "upper"):
+        raise ValueError("'sides' debe ser 'two', 'lower' o 'upper'.")
+
+    xbar, s = float(mean), float(std)
+    if sides == "two":
+        k = _k_normal_two(n, coverage, confidence)
+        lower, upper = xbar - k * s, xbar + k * s
+    elif sides == "lower":
+        k = _k_normal_one(n, coverage, confidence)
+        lower, upper = xbar - k * s, None
+    else:
+        k = _k_normal_one(n, coverage, confidence)
+        lower, upper = None, xbar + k * s
+
+    return ToleranceResult(
+        n=n, mean=xbar, std=s, coverage=coverage, confidence=confidence,
+        sides=sides, method="normal", lower=lower, upper=upper,
+        k_factor=k, data=np.array([]),
+    )

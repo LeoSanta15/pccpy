@@ -71,6 +71,7 @@ from .msa import (
     gage_rr,
     gage_rr_nested,
     gage_type1,
+    gage_type1_summary,
 )
 from .acceptance import (
     DodgeRomigPlan,
@@ -80,7 +81,7 @@ from .acceptance import (
     acceptance_sampling_variables,
     dodge_romig,
 )
-from .tolerance import ToleranceResult, tolerance_interval
+from .tolerance import ToleranceResult, tolerance_interval, tolerance_interval_summary
 from .results import ControlChart, MultivariateChart, Panel
 
 __version__ = "0.10.0"
@@ -141,6 +142,7 @@ __all__ = [
     "gage_rr",
     "gage_rr_nested",
     "gage_type1",
+    "gage_type1_summary",
     "plot_attribute_agreement",
     "plot_gage_rr",
     "plot_linearity",
@@ -158,6 +160,7 @@ __all__ = [
     "precontrol",
     "probability_plot",
     "tolerance_interval",
+    "tolerance_interval_summary",
     "ToleranceResult",
     "run_chart",
     "t2_chart",
