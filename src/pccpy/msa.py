@@ -625,7 +625,7 @@ class LinearityResult:
     p_intercept : float
         p-valor H₀: intercept = 0.
     linearity : float
-        |slope| × rango de referencias (variación de linealidad).
+        abs(slope) × rango de referencias (variación de linealidad).
     linearity_pct : float
         Linealidad como % de la variación de estudio (si se da tolerancia).
     avg_bias : float

@@ -4,17 +4,17 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
-# Si spyc no está instalado (pip install -e ".[docs]"), autodoc no podrá importarlo;
+# Si pccpy no está instalado (pip install -e ".[docs]"), autodoc no podrá importarlo;
 # esto solo ayuda a encontrarlo si alguien corre sphinx-build sin instalar el paquete.
 sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "src"))
 
-import spyc  # noqa: E402
+import pccpy  # noqa: E402
 
 project = "pccpy"
 author = "LeoSanta15"
 copyright = "2026, LeoSanta15"
-release = spyc.__version__
-version = spyc.__version__
+release = pccpy.__version__
+version = pccpy.__version__
 
 language = "es"
 
@@ -50,7 +50,7 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 html_title = f"pccpy {version}"
 
-# spyc importa numpy/scipy/pandas/matplotlib; si alguna no estuviera instalada
+# pccpy importa numpy/scipy/pandas/matplotlib; si alguna no estuviera instalada
 # al construir la documentación (p. ej. en un entorno mínimo), se simulan aquí
 # para que autodoc no falle por completo. En un entorno con "pip install -e .[docs]"
 # esto no hace nada porque los módulos reales ya están disponibles.

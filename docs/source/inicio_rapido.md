@@ -52,16 +52,135 @@ v2 = rng.normal(100, 2, 82)             # 82 no es múltiplo de 4
 carta = pp.xbar_r_chart(v2, subgroup_size=4)
 ```
 
+## Carta de corridas y pre-control
+
+```python
+# Carta de corridas con 4 pruebas de aleatoriedad
+rc = pp.run_chart(x)
+print(rc.summary())   # p-valores de agrupamiento, mezclas, tendencias, oscilación
+rc.plot()
+
+# Pre-control (Shainin): semáforo verde/amarillo/rojo
+pc = pp.precontrol(x, lsl=94, usl=106)
+print(pc.summary())   # señales detectadas y conteo de zonas
+pc.plot()
+```
+
+## EWMA y CUSUM para cartas de atributos
+
+```python
+defects = [3, 1, 4, 2, 0, 5, 2, 3, 1, 2]
+
+# EWMA carta P
+carta = pp.ewma_p_chart(defects, n=100)        # límites exactos transitorios
+
+# CUSUM carta C
+carta = pp.cusum_c_chart(defects)              # h=4, k=0.5 en unidades σ
+
+# Con tamaños de muestra variables (P y U)
+n_var = [100, 120, 95, 110, 105, 100, 115, 98, 107, 102]
+carta = pp.ewma_p_chart(defects, n=n_var)
+```
+
+## Intervalos de tolerancia
+
+```python
+rng = np.random.default_rng(1)
+x50 = rng.normal(100, 2, 50)
+
+# Normal bilateral: con 95% de confianza, ≥95% de la población cae en (LI, LS)
+res = pp.tolerance_interval(x50, coverage=0.95, confidence=0.95)
+print(res.summary())   # LI, LS, factor k
+res.plot()
+
+# Unilateral (cota superior)
+res_u = pp.tolerance_interval(x50, sides='upper')
+
+# No paramétrico (requiere n mayor, p.ej. ≥300 para 95/95)
+x300 = rng.normal(100, 2, 300)
+res_np = pp.tolerance_interval(x300, method='nonparametric')
+```
+
+## Muestreo de aceptación
+
+```python
+# Z1.4 por atributos: lote N=1000, AQL=1%
+plan = pp.acceptance_sampling_attributes(N=1000, aql=1.0)
+print(plan.summary())   # n, Ac, Re, LTPD, AOQL
+plan.plot()             # curva OC + curva AOQ
+
+# Z1.9 por variables: lote N=500, AQL=1%, especificación unilateral
+plan_v = pp.acceptance_sampling_variables(N=500, aql=1.0, spec_type='one')
+# Evaluar una muestra real
+muestra = rng.normal(10.5, 0.2, plan_v.n)
+decision = plan_v.evaluate(muestra, usl=11.0)
+print(decision)   # {'xbar': ..., 's': ..., 'Q_usl': ..., 'accept': True/False}
+
+# Dodge-Romig: LTPD=5%, promedio de proceso=1%
+plan_dr = pp.dodge_romig(N=500, ltpd=0.05, process_avg=0.01)
+print(plan_dr.summary())
+```
+
+## MSA / Gage R&R
+
+```python
+import numpy as np, pccpy as pp
+rng = np.random.default_rng(0)
+
+# Datos: 10 partes × 3 operadores × 2 réplicas
+data = rng.normal(0, 1, 10 * 3 * 2)
+
+# Crossed Gage R&R (ANOVA)
+grr = pp.gage_rr(data, parts=10, operators=3, replicates=2)
+print(grr.summary())   # %Contribución, %Var. estudio, NDC
+print(grr.anova_table)
+grr.plot()
+
+# Método Xbar-R (clásico AIAG)
+grr_xr = pp.gage_rr(data, parts=10, operators=3, replicates=2, method='xbar_r')
+
+# Estudio Tipo 1: sesgo y repetibilidad (25 mediciones de pieza de referencia)
+ref_meas = rng.normal(10.02, 0.05, 25)
+t1 = pp.gage_type1(ref_meas, reference=10.0, tolerance=0.5)
+print(t1.summary())   # Sesgo, t-test, Cg, Cgk
+
+# Linealidad y sesgo
+refs       = np.repeat([2, 4, 6, 8, 10], 5)
+mediciones = refs + rng.normal(0.05, 0.1, len(refs))
+lin = pp.gage_linearity(mediciones, refs, tolerance=10.0)
+print(lin.summary())  # Pendiente, R², Linealidad (%)
+
+# Concordancia por atributos (Kappa)
+import pandas as pd
+clasificaciones = pd.DataFrame({
+    'Op1': ['G', 'D', 'G', 'G', 'D'] * 4,
+    'Op2': ['G', 'D', 'G', 'D', 'D'] * 4,
+    'Op3': ['G', 'G', 'G', 'G', 'D'] * 4,
+})
+referencia = np.array(['G', 'D', 'G', 'G', 'D'] * 2)
+atr = pp.attribute_agreement(clasificaciones, reference=referencia, replicates=2)
+print(atr.summary())  # Kappa de Cohen por operador + Kappa de Fleiss
+```
+
 ## Un vistazo por tema
 
 - **Variables** (I-MR, Xbar-R, Xbar-S, media móvil, Z-MR, I-MR-R/S, Zona):
   {doc}`referencia/variables` y {doc}`referencia/avanzadas`.
 - **Atributos** (P, NP, C, U, Laney P′/U′): {doc}`referencia/atributos`.
 - **Tiempo ponderado** (EWMA, CUSUM): {doc}`referencia/tiempo_ponderado`.
+- **Carta de corridas, pre-control, EWMA/CUSUM atributos**:
+  {doc}`referencia/run_chart_y_precontrol`.
 - **Multivariadas** (T², varianza generalizada, MEWMA, MCUSUM, con etapas y
   Box-Cox): {doc}`referencia/multivariadas`.
-- **Capacidad del proceso**: {doc}`referencia/capacidad`.
+- **Capacidad del proceso** (incluyendo DPMO y nivel sigma):
+  {doc}`referencia/capacidad`.
+- **Intervalos de tolerancia**: {doc}`referencia/tolerancia`.
+- **Muestreo de aceptación** (Z1.4, Z1.9, Dodge-Romig):
+  {doc}`referencia/muestreo_aceptacion`.
+- **MSA / Gage R&R** (cruzado, anidado, Tipo 1, linealidad, atributos):
+  {doc}`referencia/msa`.
 - **Normalidad, Pareto y constantes**: {doc}`referencia/normalidad_y_herramientas`
   y {doc}`referencia/constantes`.
 - **Objetos de resultado** (`ControlChart`, `MultivariateChart`, `Panel`, y los
-  resultados de capacidad y normalidad): {doc}`referencia/resultados`.
+  resultados de capacidad, normalidad y análisis de proceso):
+  {doc}`referencia/resultados`.

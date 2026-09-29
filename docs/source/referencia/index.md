@@ -8,7 +8,11 @@ atributos
 tiempo_ponderado
 avanzadas
 multivariadas
+run_chart_y_precontrol
 capacidad
+tolerancia
+muestreo_aceptacion
+msa
 normalidad_y_herramientas
 constantes
 resultados

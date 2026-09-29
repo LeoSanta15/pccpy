@@ -26,3 +26,18 @@ Capacidad y normalidad devuelven, respectivamente:
 
 .. autoclass:: pccpy.NormalityResult
    :members:
+
+Herramientas de análisis de proceso
+--------------------------------------
+
+Los demás módulos devuelven objetos propios documentados en sus páginas
+de referencia:
+
+* :class:`~pccpy.RunChartResult` — véase :doc:`run_chart_y_precontrol`.
+* :class:`~pccpy.PreControlResult` — véase :doc:`run_chart_y_precontrol`.
+* :class:`~pccpy.ToleranceResult` — véase :doc:`tolerancia`.
+* :class:`~pccpy.SamplingPlanAttributes`, :class:`~pccpy.SamplingPlanVariables`,
+  :class:`~pccpy.DodgeRomigPlan` — véase :doc:`muestreo_aceptacion`.
+* :class:`~pccpy.GageRRResult`, :class:`~pccpy.Type1Result`,
+  :class:`~pccpy.LinearityResult`, :class:`~pccpy.AttributeAgreementResult`
+  — véase :doc:`msa`.
