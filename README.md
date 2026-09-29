@@ -159,10 +159,14 @@ carta_s = pp.xbar_s_chart(
 
 ### Formatos de entrada de datos
 
-Todas las cartas de variables aceptan tres formatos equivalentes:
+Las cartas de subgrupos (`xbar_r_chart`, `xbar_s_chart`, `ewma_chart`, `cusum_chart`,
+`ma_chart`, `imr_rs_chart`, `zone_chart`, `capability_analysis`, `capability_sixpack`)
+aceptan **cinco formatos equivalentes**:
 
 ```python
-# 1. Matriz 2-D: cada fila es un subgrupo
+import pandas as pd
+
+# 1. Matriz 2-D: cada fila es un subgrupo (formato clásico)
 datos_2d = np.array([[20.1, 20.3, 20.0],
                      [20.4, 20.1, 20.5],
                      [19.9, 20.2, 20.1]])
@@ -177,9 +181,30 @@ ids = np.repeat(["S1", "S2", "S3"], 3)
 pp.xbar_r_chart(vector, subgroup=ids)
 
 # También acepta pandas Series y DataFrame directamente
-import pandas as pd
 df = pd.DataFrame({"medida": vector, "subgrupo": ids})
 pp.xbar_r_chart(df["medida"], subgroup=df["subgrupo"])
+
+# 4. DataFrame en formato largo + nombres de columna
+#    (subgroup: columna de identificadores, value: columna de valores)
+df_largo = pd.DataFrame({
+    "lote":   [1, 1, 1, 2, 2, 2, 3, 3, 3],
+    "medida": [20.1, 20.3, 20.0, 20.4, 20.1, 20.5, 19.9, 20.2, 20.1],
+})
+pp.xbar_r_chart(df_largo, subgroup="lote", value="medida")
+
+# Si solo hay una columna numérica, 'value' se detecta automáticamente
+pp.xbar_r_chart(df_largo, subgroup="lote")
+
+# 5. Vector 1-D con subgroup_size cuando el total no es divisible exactamente
+#    El último subgrupo incompleto se grafica con sus propios límites
+#    pero NO entra en el cálculo de sigma ni de la media global
+import warnings
+datos_11 = np.array([20.1, 20.3, 20.0, 20.4, 20.1, 20.5, 19.9, 20.2, 20.1, 20.3, 20.4])
+with warnings.catch_warnings(record=True):
+    carta = pp.xbar_r_chart(datos_11, subgroup_size=4)
+# UserWarning: 11 observaciones no forman un número exacto de subgrupos de tamaño 4.
+# El último subgrupo tiene 3 de 4 observaciones: se incluye en la gráfica
+# pero NO en el cálculo de los límites de control.
 ```
 
 ---
