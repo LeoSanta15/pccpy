@@ -84,7 +84,7 @@ from .acceptance import (
 from .tolerance import ToleranceResult, tolerance_interval, tolerance_interval_summary
 from .results import ControlChart, MultivariateChart, Panel
 
-__version__ = "0.10.0"
+__version__ = "0.10.1"
 
 __all__ = [
     "CapabilityResult",

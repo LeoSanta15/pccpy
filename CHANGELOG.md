@@ -1,5 +1,14 @@
 # Registro de cambios
 
+## [0.10.1] - funciones de entrada por estadísticos resumen
+
+### Añadido
+- `tolerance_interval_summary(mean, std, n, ...)`: intervalo de tolerancia
+  normal a partir de estadísticos resumen, sin necesidad de datos crudos.
+- `gage_type1_summary(mean, std, n, reference, ...)`: estudio Tipo 1 (sesgo,
+  Cg, Cgk) a partir de estadísticos resumen.
+- `capability_analysis_summary` documentada en la referencia de Sphinx.
+
 ## [0.10.0] - MSA / Gage R&R
 
 ### Añadido
