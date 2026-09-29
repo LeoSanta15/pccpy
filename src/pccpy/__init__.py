@@ -45,17 +45,32 @@ from .multivariate import (
 from .normality import NormalityResult, normality_test
 from .plotting import (
     capability_sixpack,
+    plot_attribute_agreement,
     plot_capability,
     plot_control_chart,
+    plot_gage_rr,
+    plot_linearity,
     plot_precontrol,
     plot_run_chart,
     plot_sampling_attributes,
     plot_sampling_variables,
     plot_tolerance,
+    plot_type1,
     probability_plot,
 )
 from .precontrol import PreControlResult, precontrol
 from .quality_tools import pareto, plot_pareto
+from .msa import (
+    AttributeAgreementResult,
+    GageRRResult,
+    LinearityResult,
+    Type1Result,
+    attribute_agreement,
+    gage_linearity,
+    gage_rr,
+    gage_rr_nested,
+    gage_type1,
+)
 from .acceptance import (
     DodgeRomigPlan,
     SamplingPlanAttributes,
@@ -67,7 +82,7 @@ from .acceptance import (
 from .tolerance import ToleranceResult, tolerance_interval
 from .results import ControlChart, MultivariateChart, Panel
 
-__version__ = "0.9.0"
+__version__ = "0.10.0"
 
 __all__ = [
     "CapabilityResult",
@@ -114,7 +129,20 @@ __all__ = [
     "plot_capability",
     "plot_control_chart",
     "plot_pareto",
+    "AttributeAgreementResult",
     "DodgeRomigPlan",
+    "GageRRResult",
+    "LinearityResult",
+    "Type1Result",
+    "attribute_agreement",
+    "gage_linearity",
+    "gage_rr",
+    "gage_rr_nested",
+    "gage_type1",
+    "plot_attribute_agreement",
+    "plot_gage_rr",
+    "plot_linearity",
+    "plot_type1",
     "SamplingPlanAttributes",
     "SamplingPlanVariables",
     "acceptance_sampling_attributes",

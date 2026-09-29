@@ -1,6 +1,7 @@
 """Gráficos con matplotlib: cartas de control, capacidad, probabilidad normal y sixpack."""
 from __future__ import annotations
 
+import math
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MaxNLocator
@@ -449,5 +450,195 @@ def plot_sampling_variables(result, *, figsize=None, title: str | None = None):
     ax.set_ylabel("P(aceptar) (%)")
     ax.set_title(title or f"Curva OC — Plan variables  n={result.n}  k={result.k:.4f}")
     ax.grid(alpha=0.25)
+    fig.tight_layout()
+    return fig
+
+
+# ─────────────────────────────────────────────────── MSA / Gage R&R ──────────
+def plot_gage_rr(result, *, figsize=None, title: str | None = None):
+    """Gráficas de componentes de variación del Gage R&R.
+
+    Devuelve la figura de matplotlib.
+    """
+    data = result._data  # (parts, operators, replicates)
+    p, o, r = data.shape
+    part_labels = [f"P{i+1}" for i in range(p)]
+    op_labels = [f"Op{j+1}" for j in range(o)]
+
+    fig, axes = plt.subplots(2, 3, figsize=figsize or (14, 7))
+    ax = axes
+
+    # 1. % Contribution bar chart
+    srcs = ["Repetibilidad", "Reproducibilidad", "Parte a parte", "Gage R&R"]
+    pcts = [result.pct_repeatability, result.pct_reproducibility,
+            result.pct_part, result.pct_gage]
+    colors = [BLUE, ORANGE, GREEN, RED]
+    ax[0, 0].barh(srcs, pcts, color=colors)
+    ax[0, 0].axvline(10, color=GRAY, ls=":", lw=1)
+    ax[0, 0].axvline(30, color=GRAY, ls=":", lw=1)
+    ax[0, 0].set_xlabel("%Contribución")
+    ax[0, 0].set_title("%Contribución por fuente")
+    for i, v in enumerate(pcts):
+        ax[0, 0].text(v + 0.5, i, f"{v:.1f}%", va="center", fontsize=8)
+
+    # 2. Medias por parte (R-chart of parts)
+    part_means = data.mean(axis=(1, 2))
+    ax[0, 1].plot(range(1, p + 1), part_means, "o-", color=BLUE)
+    ax[0, 1].set_xticks(range(1, p + 1))
+    ax[0, 1].set_xticklabels(part_labels, fontsize=7)
+    ax[0, 1].set_xlabel("Parte")
+    ax[0, 1].set_ylabel("Media")
+    ax[0, 1].set_title("Media por parte")
+    ax[0, 1].grid(alpha=0.25)
+
+    # 3. Medias por operador
+    op_means = data.mean(axis=(0, 2))
+    ax[0, 2].plot(range(1, o + 1), op_means, "s-", color=ORANGE)
+    ax[0, 2].set_xticks(range(1, o + 1))
+    ax[0, 2].set_xticklabels(op_labels, fontsize=8)
+    ax[0, 2].set_xlabel("Operador")
+    ax[0, 2].set_ylabel("Media")
+    ax[0, 2].set_title("Media por operador")
+    ax[0, 2].grid(alpha=0.25)
+
+    # 4. Interacción parte × operador
+    for j in range(o):
+        op_part_means = data[:, j, :].mean(axis=1)
+        ax[1, 0].plot(range(1, p + 1), op_part_means, "o-", label=op_labels[j], lw=1.2)
+    ax[1, 0].set_xticks(range(1, p + 1))
+    ax[1, 0].set_xticklabels(part_labels, fontsize=7)
+    ax[1, 0].set_xlabel("Parte")
+    ax[1, 0].set_ylabel("Media")
+    ax[1, 0].set_title("Interacción parte×operador")
+    ax[1, 0].legend(fontsize=7)
+    ax[1, 0].grid(alpha=0.25)
+
+    # 5. Rangos por operador
+    ranges = data.max(axis=2) - data.min(axis=2)  # (p, o)
+    for j in range(o):
+        ax[1, 1].plot(range(1, p + 1), ranges[:, j], "o", ms=4,
+                      label=op_labels[j], alpha=0.7)
+    Rbar = ranges.mean()
+    ax[1, 1].axhline(Rbar, color=BLUE, ls="--", lw=1, label=f"R̄={Rbar:.3g}")
+    ax[1, 1].set_xticks(range(1, p + 1))
+    ax[1, 1].set_xticklabels(part_labels, fontsize=7)
+    ax[1, 1].set_xlabel("Parte")
+    ax[1, 1].set_ylabel("Rango")
+    ax[1, 1].set_title("Rango por parte/operador")
+    ax[1, 1].legend(fontsize=7)
+    ax[1, 1].grid(alpha=0.25)
+
+    # 6. Resumen numérico
+    ax[1, 2].axis("off")
+    summ = (f"Gage R&R ({result.method})\n"
+            f"n={result.parts}P × {result.operators}O × {result.replicates}R\n\n"
+            f"%GR&R = {result.pct_gage:.1f}%\n"
+            f"  Repet. = {result.pct_repeatability:.1f}%\n"
+            f"  Repro. = {result.pct_reproducibility:.1f}%\n"
+            f"Parte a parte = {result.pct_part:.1f}%\n"
+            f"NDC = {result.ndc}\n"
+            f"%Var. estudio = {result.pct_study_var:.1f}%")
+    ax[1, 2].text(0.1, 0.9, summ, transform=ax[1, 2].transAxes, va="top",
+                  fontsize=9, family="monospace",
+                  bbox={"fc": "white", "ec": GRAY, "alpha": 0.85})
+
+    fig.suptitle(title or "Análisis Gage R&R", fontsize=11, fontweight="bold")
+    fig.tight_layout()
+    return fig
+
+
+def plot_type1(result, *, figsize=None, title: str | None = None):
+    """Gráfico de corridas del Estudio Tipo 1 con líneas de referencia.
+
+    Devuelve la figura de matplotlib.
+    """
+    # We need data — read from the result; since we stored nothing, just plot bias info
+    fig, ax = plt.subplots(figsize=figsize or (8, 4))
+    # Plot bias as a horizontal bar / reference diagram
+    ax.axhline(0, color=GREEN, lw=1.5, label="Referencia")
+    ax.axhline(result.bias, color=RED, lw=2, ls="--",
+               label=f"Sesgo = {result.bias:.4g} ({result.bias_pct:.2f}%)")
+    sv_half = result.study_variation / 2
+    ax.axhspan(-sv_half, sv_half, alpha=0.10, color=BLUE, label=f"±Var. estudio/2")
+    ax.set_xlim(-0.5, 0.5)
+    ax.set_xlabel("")
+    ax.set_ylabel("Sesgo")
+    cg_s = f"Cg={result.cg:.3f}  " if not math.isnan(result.cg) else ""
+    cgk_s = f"Cgk={result.cgk:.3f}" if not math.isnan(result.cgk) else ""
+    ax.set_title(title or (f"Estudio Tipo 1  N={result.n}  "
+                            f"Ref={result.reference}  {cg_s}{cgk_s}"))
+    ax.legend(fontsize=8)
+    ax.grid(alpha=0.2)
+    fig.tight_layout()
+    return fig
+
+
+def plot_linearity(result, *, figsize=None, title: str | None = None):
+    """Sesgo vs referencia con la línea de regresión.
+
+    Devuelve la figura de matplotlib.
+    """
+    fig, ax = plt.subplots(figsize=figsize or (8, 4.5))
+    ax.scatter(result._all_refs, result._all_biases, color=BLUE, s=25, alpha=0.7, zorder=4)
+    # Reference level means
+    ax.plot(result.references, result.biases, "s", color=ORANGE, ms=7, zorder=5,
+            label="Sesgo medio")
+    # Regression line
+    x_line = np.linspace(result._all_refs.min(), result._all_refs.max(), 100)
+    y_line = result.intercept + result.slope * x_line
+    ax.plot(x_line, y_line, color=RED, lw=2, label=(
+        f"Regresión: sesgo={result.intercept:.4g}+{result.slope:.4g}·ref\n"
+        f"  R²={result.r_squared:.4f}  p={result.p_slope:.4f}"))
+    ax.axhline(0, color=GRAY, ls=":", lw=1)
+    ax.axhline(result.avg_bias, color=GREEN, ls="--", lw=1.2,
+               label=f"Sesgo prom.={result.avg_bias:.4g} ({result.avg_bias_pct:.2f}%)")
+    ax.set_xlabel("Valor de referencia")
+    ax.set_ylabel("Sesgo (medición − referencia)")
+    ax.set_title(title or "Linealidad y sesgo del sistema de medición")
+    ax.legend(fontsize=8)
+    ax.grid(alpha=0.2)
+    fig.tight_layout()
+    return fig
+
+
+def plot_attribute_agreement(result, *, figsize=None, title: str | None = None):
+    """Kappa por operador (vs referencia y dentro).
+
+    Devuelve la figura de matplotlib.
+    """
+    ops = list(result.kappa_within.index)
+    x = np.arange(len(ops))
+
+    fig, axes = plt.subplots(1, 2, figsize=figsize or (10, 4))
+
+    # Kappa vs reference
+    if not result.kappa_vs_reference.empty:
+        kappas_ref = result.kappa_vs_reference["kappa"].to_numpy(dtype=float)
+        axes[0].bar(x, kappas_ref, color=BLUE, alpha=0.7)
+        axes[0].axhline(0.75, color=GREEN, ls="--", lw=1.2, label="κ=0.75 (bueno)")
+        axes[0].axhline(0.40, color=RED, ls="--", lw=1.2, label="κ=0.40 (aceptable)")
+        axes[0].set_xticks(x)
+        axes[0].set_xticklabels(ops, fontsize=8)
+        axes[0].set_ylim(0, 1.05)
+        axes[0].set_ylabel("Kappa")
+        axes[0].set_title("Kappa vs referencia")
+        axes[0].legend(fontsize=8)
+        axes[0].grid(axis="y", alpha=0.25)
+
+    # Kappa within
+    kappas_in = result.kappa_within["kappa"].to_numpy(dtype=float)
+    axes[1].bar(x, kappas_in, color=ORANGE, alpha=0.7)
+    axes[1].axhline(0.75, color=GREEN, ls="--", lw=1.2, label="κ=0.75")
+    axes[1].set_xticks(x)
+    axes[1].set_xticklabels(ops, fontsize=8)
+    axes[1].set_ylim(0, 1.05)
+    axes[1].set_ylabel("Kappa")
+    axes[1].set_title("Kappa dentro del operador")
+    axes[1].legend(fontsize=8)
+    axes[1].grid(axis="y", alpha=0.25)
+
+    fig.suptitle(title or (f"Concordancia por atributos — "
+                            f"κ global={result.kappa_overall:.4f}  "
+                            f"Fleiss κ={result.fleiss_kappa:.4f}"), fontsize=10)
     fig.tight_layout()
     return fig

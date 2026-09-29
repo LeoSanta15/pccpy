@@ -1,5 +1,25 @@
 # Registro de cambios
 
+## [0.10.0] - MSA / Gage R&R
+
+### Añadido
+- `gage_rr`: Crossed Gage R&R completo. Soporta `method='anova'` (con tabla
+  ANOVA, prueba de interacción parte×operador y agrupación automática cuando
+  p-valor>0.25) y `method='xbar_r'` (método clásico AIAG). Devuelve
+  `GageRRResult` con %Contribución, %Variación de estudio, NDC, tabla ANOVA,
+  `.summary()`, `.to_frame()` y `.plot()`.
+- `gage_rr_nested`: Nested Gage R&R (partes anidadas dentro de operadores),
+  solo método ANOVA.
+- `gage_type1`: Estudio Tipo 1 (sesgo y repetibilidad de una fuente). Calcula
+  sesgo, t-test, Cg y Cgk. Devuelve `Type1Result`.
+- `gage_linearity`: Estudio de linealidad y sesgo. Regresión sesgo~referencia,
+  Linealidad (|pendiente|×rango), R², p-valor. Devuelve `LinearityResult`.
+- `attribute_agreement`: Análisis de concordancia por atributos. Kappa de Cohen
+  (dentro del operador y vs referencia) y Kappa de Fleiss. Devuelve
+  `AttributeAgreementResult`.
+- Funciones de graficación: `plot_gage_rr`, `plot_type1`, `plot_linearity`,
+  `plot_attribute_agreement`.
+
 ## [0.9.0] - Muestreo de aceptación
 
 ### Añadido
