@@ -29,6 +29,7 @@ Estudio Tipo 1
 ---------------
 
 .. autofunction:: pccpy.gage_type1
+.. autofunction:: pccpy.gage_type1_summary
 .. autofunction:: pccpy.plot_type1
 .. autoclass:: pccpy.Type1Result
    :members:

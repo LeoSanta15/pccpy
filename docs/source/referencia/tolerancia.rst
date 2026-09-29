@@ -13,6 +13,7 @@ Se soportan dos métodos:
   orden. Requiere muestras más grandes para la misma cobertura y confianza.
 
 .. autofunction:: pccpy.tolerance_interval
+.. autofunction:: pccpy.tolerance_interval_summary
 .. autofunction:: pccpy.plot_tolerance
 .. autoclass:: pccpy.ToleranceResult
    :members:
