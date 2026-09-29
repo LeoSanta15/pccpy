@@ -847,7 +847,7 @@ def _run_auto(x: np.ndarray) -> WizardResult:
     x = np.asarray(x, dtype=float)
 
     if x.ndim == 2:
-        n_rows, n_cols = x.shape
+        _n_rows, n_cols = x.shape
         if n_cols > 10:
             return _RESULTS["r:t2"]
         if n_cols <= 8:
@@ -912,7 +912,7 @@ class WidgetSession:
         return f"WidgetSession({state})"
 
 
-def _run_widget() -> "WidgetSession":
+def _run_widget() -> WidgetSession:
     """Interfaz gráfica para Jupyter usando ipywidgets."""
     try:
         import ipywidgets as w
@@ -1041,7 +1041,7 @@ def wizard(
     x: Any = None,
     *,
     mode: str | None = None,
-) -> "WizardResult | WidgetSession":
+) -> WizardResult | WidgetSession:
     """Asistente interactivo para seleccionar el análisis SPC correcto.
 
     Parameters

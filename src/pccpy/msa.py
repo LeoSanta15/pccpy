@@ -119,7 +119,7 @@ class GageRRResult:
     pct_study_var: float
     ndc: int
     anova_table: pd.DataFrame | None = None
-    _data: np.ndarray = field(repr=False, default=None)  # type: ignore[assignment]
+    _data: np.ndarray = field(repr=False, default=None)  # type: ignore[assignment, arg-type]
 
     def to_frame(self) -> pd.DataFrame:
         K = self.study_variation
@@ -153,8 +153,10 @@ class GageRRResult:
 
     def summary(self) -> str:
         lines = [
-            f"Gage R&R ({self.method}) — {self.parts} partes × "
-            f"{self.operators} operadores × {self.replicates} réplicas",
+            (
+                f"Gage R&R ({self.method}) — {self.parts} partes × "
+                f"{self.operators} operadores × {self.replicates} réplicas"
+            ),
             f"  K = {self.study_variation}  (variación de estudio = K·σ)",
             "",
             "  Fuente              Var          %Contribución",
@@ -182,7 +184,6 @@ def _gage_rr_anova(data: np.ndarray, study_variation: float,
                    tolerance: float | None, crossed: bool) -> GageRRResult:
     """ANOVA Gage R&R (crossed o nested)."""
     p, o, r = data.shape
-    n = p * o * r
     grand_mean = data.mean()
 
     # Sums of squares
@@ -314,7 +315,7 @@ def _gage_rr_anova(data: np.ndarray, study_variation: float,
 
 def _gage_rr_xbar_r(data: np.ndarray, study_variation: float) -> GageRRResult:
     """Gage R&R por el método Xbar-R (AIAG MSA)."""
-    from ._constants import d2, d3
+    from ._constants import d2
     p, o, r = data.shape
 
     # Ranges within each cell (part × operator)
@@ -333,7 +334,6 @@ def _gage_rr_xbar_r(data: np.ndarray, study_variation: float) -> GageRRResult:
     # Correct for sample size
     var_op_raw = max(sigma_av_raw ** 2 - var_err / (p * r), 0.0)
     var_op = var_op_raw
-    var_int = 0.0  # Xbar-R no estima interacción
     var_repro = var_op
 
     # Part variation — rango de medias de partes
@@ -783,7 +783,7 @@ def gage_linearity(
 
     # Regression: bias ~ reference (using all individual points)
     n = len(m)
-    slope, intercept, r_val, p_val, se_slope = stats.linregress(r, bias_all)
+    slope, intercept, r_val, p_val, _se_slope = stats.linregress(r, bias_all)
     r_sq = r_val ** 2
 
     # p-value for intercept
@@ -961,7 +961,7 @@ def attribute_agreement(
         if len(ref_arr) == n_parts:
             ref_arr = np.repeat(ref_arr, replicates)
         all_vals = np.concatenate([all_vals, ref_arr])
-    categories = sorted(set(v for v in all_vals if pd.notna(v)))
+    categories = sorted({v for v in all_vals if pd.notna(v)})
 
     # Kappa within (each operator vs itself across replicates)
     kappa_within_rows = []

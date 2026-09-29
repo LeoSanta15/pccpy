@@ -51,7 +51,7 @@ class PreControlResult:
         return sum(z.startswith("R") for z in self.zones)
 
     # ------------------------------------------------------------------ output
-    _SIGNAL_LABELS: dict[str, str] = field(default_factory=lambda: {}, init=False, repr=False)
+    _SIGNAL_LABELS: dict[str, str] = field(default_factory=dict, init=False, repr=False)
 
     _LABELS: dict[str, str] = field(
         default_factory=lambda: {
@@ -77,8 +77,10 @@ class PreControlResult:
 
     def summary(self) -> str:
         L = [
-            f"Pre-control  N={len(self.values)}  LEI={self.lsl:.5g}  LES={self.usl:.5g}"
-            f"  Centro={self.center:.5g}",
+            (
+                f"Pre-control  N={len(self.values)}  LEI={self.lsl:.5g}  LES={self.usl:.5g}"
+                f"  Centro={self.center:.5g}"
+            ),
             f"  Zona verde: [{self.green_lo:.5g}, {self.green_hi:.5g}]",
             f"  Verde={self.n_green}  Amarillo={self.n_yellow}  Rojo={self.n_red}",
         ]

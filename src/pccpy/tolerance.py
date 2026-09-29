@@ -37,7 +37,6 @@ def _k_normal_two(n: int, p: float, confidence: float) -> float:
 
 def _k_normal_one(n: int, p: float, confidence: float) -> float:
     """Factor k exacto (t no central) para intervalo unilateral normal."""
-    alpha = 1.0 - confidence
     nc = stats.norm.ppf(p) * math.sqrt(n)
     return float(stats.nct.ppf(confidence, n - 1, nc) / math.sqrt(n))
 
