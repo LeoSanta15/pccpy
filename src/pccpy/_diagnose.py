@@ -162,7 +162,7 @@ class DiagnoseResult:
         return fig
 
     # interno: guardamos x para plot() — se asigna tras la construcción
-    _x: np.ndarray = field(default=None, repr=False, compare=False)  # type: ignore[assignment]
+    _x: np.ndarray = field(default=None, repr=False, compare=False)  # type: ignore[assignment, arg-type]
 
 
 # ══════════════════════════════════════════════════════════════════════════════

@@ -642,6 +642,7 @@ def dodge_romig(
         plan_type = "LTPD"
         target = ltpd
     else:
+        assert aoql is not None
         if not 0 < aoql < 1:
             raise ValueError("'aoql' debe estar en (0, 1).")
         n, c = _dodge_romig_aoql(N, aoql, process_avg)

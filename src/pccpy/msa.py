@@ -119,7 +119,7 @@ class GageRRResult:
     pct_study_var: float
     ndc: int
     anova_table: pd.DataFrame | None = None
-    _data: np.ndarray = field(repr=False, default=None)  # type: ignore[assignment]
+    _data: np.ndarray = field(repr=False, default=None)  # type: ignore[assignment, arg-type]
 
     def to_frame(self) -> pd.DataFrame:
         K = self.study_variation
