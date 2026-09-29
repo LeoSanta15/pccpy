@@ -196,6 +196,9 @@ def _gage_rr_anova(data: np.ndarray, study_variation: float,
     SS_ops = p * r * np.sum((op_means - grand_mean) ** 2)
     df_ops = o - 1
 
+    MS_parts = SS_parts / df_parts if df_parts > 0 else NAN
+    MS_ops = SS_ops / df_ops if df_ops > 0 else NAN
+
     if crossed:
         # SS_interaction
         cell_means = data.mean(axis=2)  # shape (p, o)
@@ -204,9 +207,6 @@ def _gage_rr_anova(data: np.ndarray, study_variation: float,
         # SS_error (within cells)
         SS_err = np.sum((data - cell_means[:, :, None]) ** 2)
         df_err = p * o * (r - 1)
-
-        MS_parts = SS_parts / df_parts
-        MS_ops = SS_ops / df_ops
         MS_int = SS_int / df_int if df_int > 0 else NAN
         MS_err = SS_err / df_err if df_err > 0 else NAN
 

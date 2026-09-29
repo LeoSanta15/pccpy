@@ -42,10 +42,15 @@ documenta Minitab.
 9. [Visualización de las cartas](#visualización-de-las-cartas)
 10. [Capacidad del proceso](#capacidad-del-proceso)
 11. [Normalidad, Pareto y constantes SPC](#normalidad-pareto-y-constantes-spc)
-12. [Acceso a los datos del resultado](#acceso-a-los-datos-del-resultado)
-13. [Validación](#validación)
-14. [Desarrollo](#desarrollo)
-15. [Licencia](#licencia)
+12. [Carta de corridas y pre-control](#carta-de-corridas-y-pre-control)
+13. [EWMA y CUSUM para atributos](#ewma-y-cusum-para-atributos)
+14. [Intervalos de tolerancia](#intervalos-de-tolerancia)
+15. [Muestreo de aceptación](#muestreo-de-aceptación)
+16. [MSA / Gage R&R](#msa--gage-rr)
+17. [Acceso a los datos del resultado](#acceso-a-los-datos-del-resultado)
+18. [Validación](#validación)
+19. [Desarrollo](#desarrollo)
+20. [Licencia](#licencia)
 
 ---
 
@@ -776,6 +781,317 @@ pp.control_chart_constants(5)
 
 ---
 
+## Carta de corridas y pre-control
+
+### Carta de corridas
+
+Detecta patrones no aleatorios en los datos mediante **cuatro pruebas de hipótesis**
+(agrupamiento, mezclas, tendencias, oscilación) usando la distribución de rachas.
+
+```python
+rc = pp.run_chart(x)
+print(rc.summary())
+# Mediana: 100.12
+# p agrupamiento: 0.23  p mezclas: 0.77  p tendencias: 0.04  p oscilación: 0.96
+# → Tendencia detectada (p < 0.05)
+
+rc.to_frame()   # punto, valor, lado (arriba/abajo), racha
+rc.plot()       # carta con la mediana y puntos coloreados por lado
+```
+
+| Prueba | Detecta |
+|--------|---------|
+| Agrupamiento | demasiado pocas rachas → patrón por ciclos o mezcla de distribuciones |
+| Mezclas | demasiadas rachas → dos distribuciones alternando |
+| Tendencias | rachas largas consecutivas → deriva del proceso |
+| Oscilación | alternancia excesiva arriba/abajo → sobrecontrol |
+
+---
+
+### Pre-control (Shainin)
+
+Semáforo de cuatro zonas basado en el ancho de tolerancia. No requiere estimación
+de sigma: usa solo LSL/USL y marca cada observación con el color de su zona.
+
+```python
+pc = pp.precontrol(x, lsl=94, usl=106)
+print(pc.summary())
+# Verde (G): 45   Amarillo bajo (Y-): 3   Amarillo alto (Y+): 2   Rojo: 0
+# Señales de ajuste: 0
+
+pc.zones          # lista de etiquetas: 'G', 'Y-', 'Y+', 'R-', 'R+'
+pc.signals        # lista de índices donde se detectó señal de ajuste
+pc.to_frame()     # DataFrame con punto, valor y zona
+pc.plot()
+```
+
+**Zonas pre-control:**
+
+| Zona | Rango | Acción |
+|------|-------|--------|
+| Verde (G) | USL/4 alrededor del centro (50% de la tolerancia) | Continuar |
+| Amarilla baja (Y−) | [LSL, LSL + 25% tol] | Precaución |
+| Amarilla alta (Y+) | [USL − 25% tol, USL] | Precaución |
+| Roja (R−/R+) | Por debajo de LSL o por encima de USL | Detener |
+
+---
+
+## EWMA y CUSUM para atributos
+
+Versiones de cartas de tiempo ponderado para **datos discretos** (fracciones
+defectuosas, tasas de defectos). Los límites transitorios son exactos y se
+ensanchan en las primeras muestras hasta estabilizarse.
+
+```python
+defectuosos = [3, 5, 2, 4, 6, 1, 3, 5, 2, 4]
+n_muestral  = 200   # escalar o array de longitud igual
+
+# EWMA-P: fracción defectuosa
+carta = pp.ewma_p_chart(defectuosos, n=n_muestral, weight=0.2)
+
+# EWMA-U: tasa de defectos por unidad
+defectos   = [2, 1, 3, 0, 4, 2, 1, 3, 2, 1]
+n_unidades = [1, 1, 2, 1, 2, 1, 1, 2, 1, 2]
+carta_u = pp.ewma_u_chart(defectos, n=n_unidades)
+
+# CUSUM-P: suma acumulada para fracción defectuosa
+carta_cp = pp.cusum_p_chart(defectuosos, n=n_muestral, h=4, k=0.5)
+
+# CUSUM-C: suma acumulada para número de defectos
+carta_cc = pp.cusum_c_chart(defectos, h=4, k=0.5)
+```
+
+Con `n` variable (array), los límites se ajustan punto a punto al tamaño de muestra.
+
+---
+
+## Intervalos de tolerancia
+
+Un **intervalo de tolerancia** (α, p) garantiza —con confianza 1−α— que al menos
+una fracción `p` de la población cae dentro de los límites calculados.
+
+### Normal bilateral y unilateral
+
+```python
+rng = np.random.default_rng(1)
+x50 = rng.normal(100, 2, 50)
+
+# Bilateral: con 95% de confianza, ≥95% de la población en (LI, LS)
+res = pp.tolerance_interval(x50, coverage=0.95, confidence=0.95)
+print(res.summary())
+# LI = 93.7, LS = 106.3, k = 2.382 (normal bilateral, n=50, 95/95)
+
+res.lower          # límite inferior
+res.upper          # límite superior
+res.k_factor       # factor k
+res.achieved_confidence  # confianza lograda (si el método es no paramétrico)
+res.to_frame()
+res.plot()
+
+# Unilateral superior: P(X ≤ LS) ≥ 0.95 con 95% de confianza
+res_u = pp.tolerance_interval(x50, sides="upper")
+
+# Unilateral inferior: P(X ≥ LI) ≥ 0.95 con 95% de confianza
+res_l = pp.tolerance_interval(x50, sides="lower")
+```
+
+### No paramétrico
+
+```python
+x300 = rng.normal(100, 2, 300)
+res_np = pp.tolerance_interval(x300, method="nonparametric", coverage=0.95)
+# Los límites son estadísticos de orden; n≈300 para 95/95 bilateral
+```
+
+### Desde estadísticos resumen
+
+Cuando solo se tienen la media, desviación típica y n (sin datos individuales):
+
+```python
+res_s = pp.tolerance_interval_summary(
+    mean=100.0, std=2.0, n=50,
+    coverage=0.95, confidence=0.95,
+    sides="two",
+)
+print(res_s.summary())   # Mismos índices que tolerance_interval
+```
+
+---
+
+## Muestreo de aceptación
+
+### Z1.4 — Atributos (ANSI/ASQ Z1.4)
+
+Selecciona el plan de muestreo de la norma Z1.4 a partir del tamaño de lote y el AQL:
+
+```python
+# Lote N=1000, AQL=1%
+plan = pp.acceptance_sampling_attributes(N=1000, aql=1.0)
+print(plan.summary())
+# n=80, Ac=2, Re=3, LTPD=6.5%, AOQL=0.87%
+
+plan.n          # tamaño de muestra
+plan.c          # número de aceptación (Ac)
+plan.ltpd       # LTPD (fracción que da Pa ≈ 0.10)
+plan.aoq_max    # AOQL
+
+plan.pa(0.01)   # P(aceptar | p=1%) — curva OC
+plan.oc_curve() # DataFrame con columnas p_defectivo, P(aceptar)
+plan.aoq_curve()# DataFrame con columnas p_defectivo, AOQ
+plan.plot()     # curva OC + curva AOQ en una figura
+```
+
+### Z1.9 — Variables (ANSI/ASQ Z1.9)
+
+Requiere que la característica se distribuya normalmente; usa la media y la desviación
+para estimar la fracción defectuosa mediante el estadístico de calidad Q:
+
+```python
+plan_v = pp.acceptance_sampling_variables(N=1000, aql=1.0, spec_type="one")
+# spec_type='one'  → especificación unilateral (solo USL o solo LSL)
+# spec_type='two'  → especificación bilateral
+
+muestra = rng.normal(10.5, 0.2, plan_v.n)
+dec = plan_v.evaluate(muestra, usl=11.0)
+print(dec)
+# {'xbar': 10.49, 's': 0.19, 'Q_usl': 2.68, 'accept': True}
+
+plan_v.oc_curve()   # curva OC del plan
+```
+
+### Dodge-Romig
+
+Planes que minimizan la inspección total media (ATI):
+
+```python
+# Plan LTPD: diseñado para LTPD=5% con proceso promedio p̄=1%
+plan_ltpd = pp.dodge_romig(N=1000, ltpd=0.05, process_avg=0.01)
+print(plan_ltpd.summary())   # n, Ac, AOQL
+
+# Plan AOQL: diseñado para AOQL=1%
+plan_aoql = pp.dodge_romig(N=1000, aoql=0.01, process_avg=0.005)
+print(plan_aoql.summary())   # n, Ac, LTPD
+
+plan_ltpd.n        # tamaño de muestra
+plan_ltpd.c        # número de aceptación
+plan_ltpd.aoql     # AOQL
+plan_ltpd.ltpd     # LTPD
+plan_ltpd.to_frame()
+```
+
+---
+
+## MSA / Gage R&R
+
+### Cruzado (ANOVA y Xbar-R)
+
+El diseño cruzado mide cada **parte** con todos los **operadores**. Es el más común
+cuando la medición no destruye la pieza.
+
+```python
+# 10 partes × 3 operadores × 2 réplicas (orden del array: parte0-op0, parte0-op1, ...)
+data = rng.normal(0, 1, 10 * 3 * 2)
+
+# Método ANOVA (más preciso)
+grr = pp.gage_rr(data, parts=10, operators=3, replicates=2, tolerance=20.0)
+print(grr.summary())
+# Repetibilidad: 14.3%  Reproducibilidad: 3.1%  %R&R: 14.6%  NDC: 9
+
+grr.pct_gage            # % Estudio de variación total del sistema de medición
+grr.var_repeatability   # varianza de repetibilidad
+grr.var_reproducibility # varianza de reproducibilidad
+grr.var_part            # varianza de partes
+grr.var_total           # total (suma de los tres anteriores)
+grr.ndc                 # número de categorías distintas
+grr.anova_table         # DataFrame con GL, SC, CM, F, p-valor
+grr.to_frame()
+grr.plot()
+
+# Método Xbar-R (clásico AIAG)
+grr_xr = pp.gage_rr(data, parts=10, operators=3, replicates=2,
+                    method="xbar_r", tolerance=20.0)
+# grr_xr.anova_table es None (el método Xbar-R no produce tabla ANOVA)
+```
+
+### Anidado
+
+Cuando los operadores miden **partes distintas** (la medición destruye la muestra
+o las partes no son intercambiables entre operadores):
+
+```python
+grr_n = pp.gage_rr_nested(data, parts=10, operators=3, replicates=2)
+print(grr_n.summary())
+```
+
+### Estudio Tipo 1 — sesgo y repetibilidad
+
+Mide una **pieza de referencia** varias veces con un solo operador para estimar
+el sesgo y la repetibilidad:
+
+```python
+ref_meas = rng.normal(10.02, 0.05, 25)   # 25 mediciones de referencia = 10.0
+t1 = pp.gage_type1(ref_meas, reference=10.0, tolerance=0.5)
+print(t1.summary())
+# Sesgo: 0.02 mm  t = 2.0  p = 0.057  Cg = 1.67  Cgk = 1.33
+
+t1.bias      # sesgo = media - referencia
+t1.t_stat    # estadístico t para H₀: sesgo = 0
+t1.p_value   # valor p de la prueba bilateral
+t1.cg        # capacidad del instrumento (0.1×tolerancia / 6s)
+t1.cgk       # capacidad considerando sesgo
+
+# Desde estadísticos resumen (sin datos individuales)
+ts = pp.gage_type1_summary(
+    mean=10.02, std=0.05, n=25,
+    reference=10.0, tolerance=0.5,
+)
+```
+
+### Linealidad y sesgo
+
+Evalúa si el sesgo es constante en todo el rango de operación del instrumento:
+
+```python
+refs       = np.repeat([2, 4, 6, 8, 10], 5)    # 5 referentes × 5 réplicas
+mediciones = refs + rng.normal(0.05, 0.1, 25)
+
+lin = pp.gage_linearity(mediciones, refs, tolerance=10.0)
+print(lin.summary())
+# Pendiente: 0.001  Intercepto: 0.048  R²: 0.002  Linealidad: 0.01%
+
+lin.slope      # pendiente de la regresión sesgo ~ referencia
+lin.intercept
+lin.r_squared
+lin.to_frame()
+lin.plot()
+```
+
+### Concordancia por atributos (Kappa)
+
+Cuando la característica es categórica (conforme/no conforme, grados, colores):
+
+```python
+import pandas as pd
+
+clasificaciones = pd.DataFrame({
+    "Op1": ["G", "D", "G", "G", "D"] * 4,
+    "Op2": ["G", "D", "G", "D", "D"] * 4,
+    "Op3": ["G", "G", "G", "G", "D"] * 4,
+})
+referencia = np.array(["G", "D", "G", "G", "D"] * 2)
+
+atr = pp.attribute_agreement(clasificaciones, reference=referencia, replicates=2)
+print(atr.summary())
+# Kappa Fleiss: 0.84
+# Op1 vs ref: κ=0.90  Op2 vs ref: κ=0.80  Op3 vs ref: κ=0.82
+
+atr.fleiss_kappa           # Kappa de Fleiss (acuerdo entre todos los operadores)
+atr.kappa_vs_reference     # DataFrame con kappa, EE y p-valor por operador
+atr.to_frame()
+```
+
+---
+
 ## Acceso a los datos del resultado
 
 Todas las cartas de control devuelven un objeto `ControlChart` (las multivariadas
@@ -826,7 +1142,7 @@ carta.panels[0].violations   # dict {prueba: array de índices}
 
 ## Validación
 
-186 pruebas automatizadas. Las referencias son independientes de pccpy:
+252 pruebas automatizadas. Las referencias son independientes de pccpy:
 
 - Constantes d2, d3, c4 frente a tablas publicadas (Montgomery).
 - Límites I-MR, Xbar-R y Xbar-S frente al cálculo manual con A2, D3, D4, A3, B3, B4.

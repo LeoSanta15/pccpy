@@ -1,5 +1,51 @@
 # Registro de cambios
 
+## [0.10.5] - correcciones de CI y bump de versión
+
+### Corregido
+- CI `publish.yml`: job `publish-pypi` faltaban `checkout` y `setup-python`;
+  la acción `pypa/gh-action-pypi-publish` los requiere en el mismo job.
+- CI: todas las acciones actualizadas a v6 (`checkout`, `setup-python`,
+  `upload-artifact`, `download-artifact`) para eliminar advertencias de Node 20.
+- Bump de versión `0.10.4` → `0.10.5`.
+
+## [0.10.4] - wizard de selección de análisis SPC
+
+### Añadido
+- `wizard(x=None, mode='cli'|'auto'|'widget')` — asistente de selección de análisis con tres modos:
+  - **`'auto'`**: inspecciona el array de datos (dimensiones, normalidad, tendencia) y
+    devuelve automáticamente un `WizardResult` con la función recomendada.
+  - **`'cli'`**: menú interactivo de preguntas con opciones numeradas en la terminal.
+    El árbol de decisión cubre cartas de control, capacidad, MSA, muestreo de aceptación,
+    intervalos de tolerancia, normalidad, Pareto y pre-control.
+  - **`'widget'`**: interfaz gráfica para Jupyter con botones de selección (requiere
+    `ipywidgets`; degrada automáticamente a `cli` si no está instalado).
+- `WizardResult` — objeto retornado con `.function`, `.params`, `.rationale`,
+  `.alternatives`, `.snippet()`, `.summary()` y `.run(data)`.
+- 32 tests en `tests/test_wizard.py`.
+
+## [0.10.3] - cobertura de tests completa y README actualizado
+
+### Añadido
+- 4 nuevos módulos de tests (252 pruebas en total, +66 respecto a v0.10.2):
+  - `tests/test_tolerance.py`: intervalos de tolerancia normal, unilateral y no paramétrico,
+    y `tolerance_interval_summary`.
+  - `tests/test_acceptance.py`: Z1.4, Z1.9 y Dodge-Romig.
+  - `tests/test_msa.py`: Crossed Gage R&R (ANOVA y Xbar-R), Nested, Tipo 1,
+    `gage_type1_summary`, linealidad y concordancia por atributos.
+  - `tests/test_run_precontrol.py`: carta de corridas y pre-control.
+
+### Corregido
+- `gage_rr_nested`: `MS_ops` se computaba solo dentro de la rama `crossed`, pero se usaba
+  en la rama `nested`, causando `UnboundLocalError`.
+
+### Documentación
+- README: secciones completas para carta de corridas y pre-control, EWMA/CUSUM para
+  atributos, intervalos de tolerancia, muestreo de aceptación y MSA/Gage R&R.
+- `inicio_rapido.md`: ejemplos de `tolerance_interval_summary`, `gage_type1_summary`
+  y `capability_analysis_summary`.
+- Contador de pruebas actualizado: 186 → 252.
+
 ## [0.10.2] - documentación completa de referencia Sphinx
 
 ### Documentación
