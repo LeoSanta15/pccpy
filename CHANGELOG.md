@@ -1,5 +1,25 @@
 # Registro de cambios
 
+## [0.10.6] - diagnose(), WidgetSession y docs del wizard
+
+### Añadido
+- `diagnose(x, lsl=None, usl=None, target=None)` — diagnóstico rápido de proceso:
+  estadísticos básicos, prueba de normalidad, detección de tendencia (Mann-Kendall
+  simplificado), valores atípicos (IQR × 1.5), Cp/Cpk estimados y función recomendada.
+  `DiagnoseResult` incluye `.summary()` (texto al estilo Minitab) y `.plot()` (histograma
+  + gráfico de secuencia con matplotlib).
+- `WidgetSession` — objeto retornado por `wizard(mode='widget')`. El atributo `.result`
+  es `None` mientras la sesión está abierta y se llena con el `WizardResult` al navegar
+  hasta una hoja. Reemplaza la lista mutable anterior; la API es ahora consistente con
+  los otros modos.
+- Página de documentación `wizard.md` en Sphinx (incluida en el TOC de `index.md`).
+- 54 tests nuevos en `tests/test_diagnose.py`; 306 pruebas en total.
+
+### Mejorado
+- `wizard(mode='widget')` ahora muestra números de opción en cada botón (`1. …`, `2. …`)
+  y breadcrumbs con el texto de la pregunta en lugar del ID del nodo.
+- Tipo de retorno de `wizard()` en la firma y docstring alineado con la implementación.
+
 ## [0.10.5] - correcciones de CI y bump de versión
 
 ### Corregido

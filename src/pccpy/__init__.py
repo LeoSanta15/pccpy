@@ -83,9 +83,10 @@ from .acceptance import (
 )
 from .tolerance import ToleranceResult, tolerance_interval, tolerance_interval_summary
 from .results import ControlChart, MultivariateChart, Panel
-from ._wizard import WizardResult, wizard
+from ._wizard import WidgetSession, WizardResult, wizard
+from ._diagnose import DiagnoseResult, diagnose
 
-__version__ = "0.10.5"
+__version__ = "0.10.6"
 
 __all__ = [
     "CapabilityResult",
@@ -171,6 +172,9 @@ __all__ = [
     "xbar_s_chart",
     "zmr_chart",
     "zone_chart",
+    "WidgetSession",
     "WizardResult",
     "wizard",
+    "DiagnoseResult",
+    "diagnose",
 ]

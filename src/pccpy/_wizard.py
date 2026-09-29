@@ -13,7 +13,7 @@ from typing import Any
 
 import numpy as np
 
-__all__ = ["WizardResult", "wizard"]
+__all__ = ["WidgetSession", "WizardResult", "wizard"]
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Resultado
@@ -885,7 +885,34 @@ def _run_auto(x: np.ndarray) -> WizardResult:
 # Modo widget (Jupyter / ipywidgets)
 # ══════════════════════════════════════════════════════════════════════════════
 
-def _run_widget() -> Any:
+@dataclass
+class WidgetSession:
+    """Sesión activa del wizard en modo widget.
+
+    El atributo :attr:`result` es ``None`` hasta que el usuario completa
+    la navegación; después contiene el :class:`WizardResult` seleccionado.
+
+    Attributes
+    ----------
+    result : WizardResult or None
+        Recomendación seleccionada por el usuario. ``None`` mientras la
+        sesión está abierta.
+
+    Examples
+    --------
+    >>> session = pp.wizard(mode="widget")   # muestra los botones en Jupyter
+    >>> # …el usuario navega y elige…
+    >>> print(session.result.snippet())
+    """
+
+    result: WizardResult | None = field(default=None)
+
+    def __repr__(self) -> str:
+        state = "pendiente" if self.result is None else f"result='{self.result.function}'"
+        return f"WidgetSession({state})"
+
+
+def _run_widget() -> "WidgetSession":
     """Interfaz gráfica para Jupyter usando ipywidgets."""
     try:
         import ipywidgets as w
@@ -896,73 +923,103 @@ def _run_widget() -> Any:
             "    pip install ipywidgets\n"
             "Cambiando a modo interactivo (CLI)…"
         )
-        return _run_cli()
+        # degrada: envuelve el resultado CLI en una WidgetSession
+        session = WidgetSession()
+        session.result = _run_cli()
+        return session
 
-    result_box: list[WizardResult] = []
-
-    # Estado de la navegación: pila de (nodo_actual, índice_seleccionado)
+    session = WidgetSession()
     history: list[str] = []
-    current: list[str] = ["root"]
+    container = w.VBox(layout=w.Layout(max_width="640px"))
 
-    out = w.Output()
-    container = w.VBox()
+    _PALETTE = {
+        "primary": "#2563EB",
+        "success_bg": "#F0FDF4",
+        "success_border": "#22C55E",
+        "back": "#F59E0B",
+        "text": "#1E293B",
+        "muted": "#64748B",
+        "code_bg": "#F8FAFC",
+    }
+
+    def _breadcrumb_labels(history: list[str]) -> str:
+        parts = []
+        for node in history:
+            if node in _TREE:
+                parts.append(_TREE[node][0][:28])
+        return " › ".join(parts)
 
     def _render(node: str) -> None:
-        current[0] = node
         children: list[Any] = []
 
         # Breadcrumb
         if history:
-            bc = " › ".join(history)
-            children.append(w.HTML(f"<small style='color:#888'>{bc}</small>"))
+            bc = _breadcrumb_labels(history)
+            children.append(w.HTML(
+                f"<div style='font-size:11px;color:{_PALETTE['muted']};margin-bottom:6px'>{bc}</div>"
+            ))
 
+        # ── Hoja: resultado ────────────────────────────────────────────────
         if node in _RESULTS:
             res = _RESULTS[node]
-            result_box.clear()
-            result_box.append(res)
-            snippet_html = res.snippet().replace("\n", "<br>").replace(" ", "&nbsp;")
+            session.result = res
+            snippet_esc = res.snippet().replace("&", "&amp;").replace("<", "&lt;")
+            alts_html = (
+                f"<p style='margin:4px 0 0 0;font-size:12px;color:{_PALETTE['muted']}'>"
+                f"Alternativas: {', '.join(res.alternatives)}</p>"
+                if res.alternatives else ""
+            )
             children.append(w.HTML(
-                f"<div style='border:1px solid #4CAF50;border-radius:6px;"
-                f"padding:12px;background:#f9fff9'>"
-                f"<b>✔ Análisis recomendado:</b> <code>{res.function}</code><br><br>"
-                f"<b>Razón:</b> {res.rationale}<br><br>"
-                f"<b>Código:</b><br>"
-                f"<pre style='background:#f0f0f0;padding:8px;border-radius:4px'>"
-                f"{snippet_html}</pre>"
-                + (f"<b>Alternativas:</b> {', '.join(res.alternatives)}" if res.alternatives else "")
-                + "</div>"
+                f"<div style='border:1px solid {_PALETTE['success_border']};border-radius:8px;"
+                f"padding:14px 16px;background:{_PALETTE['success_bg']}'>"
+                f"<p style='margin:0 0 4px 0;font-weight:600;color:{_PALETTE['text']}'>"
+                f"✔ Análisis recomendado: <code style='font-size:13px'>{res.function}</code></p>"
+                f"<p style='margin:4px 0;font-size:13px;color:{_PALETTE['text']}'>"
+                f"{res.rationale}</p>"
+                f"<pre style='background:{_PALETTE['code_bg']};border:1px solid #E2E8F0;"
+                f"border-radius:6px;padding:10px;font-size:12px;margin:8px 0 0 0;"
+                f"overflow-x:auto'>{snippet_esc}</pre>"
+                f"{alts_html}"
+                f"</div>"
             ))
             if history:
-                btn_back = w.Button(description="← Volver", button_style="warning",
-                                    layout=w.Layout(width="120px"))
-                def _back(_b: Any, _h: list[str] = history) -> None:
+                btn_back = w.Button(
+                    description="← Volver", button_style="",
+                    layout=w.Layout(width="110px", margin="8px 0 0 0"),
+                    style={"button_color": _PALETTE["back"], "font_weight": "600"},
+                )
+                def _back_r(_b: Any, _h: list[str] = history) -> None:
                     prev = _h.pop()
                     _render(prev)
-                btn_back.on_click(_back)
+                btn_back.on_click(_back_r)
                 children.append(btn_back)
             container.children = children
             return
 
+        # ── Nodo: pregunta + botones ───────────────────────────────────────
         question, options = _TREE[node]
-        children.append(w.HTML(f"<b>{question}</b>"))
-        buttons = []
-        for label, dest in options:
+        children.append(w.HTML(
+            f"<p style='font-weight:600;font-size:14px;color:{_PALETTE['text']};margin:0 0 8px 0'>"
+            f"{question}</p>"
+        ))
+        for idx, (label, dest) in enumerate(options, 1):
             btn = w.Button(
-                description=label,
-                layout=w.Layout(width="100%", min_height="36px"),
-                style={"button_color": "#E8F4FD"},
+                description=f"{idx}. {label}",
+                layout=w.Layout(width="100%", min_height="36px", margin="2px 0"),
+                style={"button_color": "#EFF6FF", "font_weight": "500"},
             )
-            def _click(_b: Any, _dest: str = dest, _node: str = node,
-                       _lbl: str = label) -> None:
+            def _click(_b: Any, _dest: str = dest, _node: str = node) -> None:
                 history.append(_node)
                 _render(_dest)
             btn.on_click(_click)
-            buttons.append(btn)
-        children.extend(buttons)
+            children.append(btn)
 
         if history:
-            btn_back = w.Button(description="← Volver", button_style="warning",
-                                layout=w.Layout(width="120px"))
+            btn_back = w.Button(
+                description="← Volver", button_style="",
+                layout=w.Layout(width="110px", margin="8px 0 0 0"),
+                style={"button_color": _PALETTE["back"], "font_weight": "600"},
+            )
             def _back_q(_b: Any, _h: list[str] = history) -> None:
                 prev = _h.pop()
                 _render(prev)
@@ -973,7 +1030,7 @@ def _run_widget() -> Any:
 
     _render("root")
     display(container)
-    return result_box  # referencia mutable; se llena cuando el usuario llega a una hoja
+    return session
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -984,7 +1041,7 @@ def wizard(
     x: Any = None,
     *,
     mode: str | None = None,
-) -> WizardResult | list | None:
+) -> "WizardResult | WidgetSession":
     """Asistente interactivo para seleccionar el análisis SPC correcto.
 
     Parameters
@@ -1005,9 +1062,9 @@ def wizard(
     -------
     WizardResult
         En modos ``'auto'`` y ``'cli'``.
-    list
-        En modo ``'widget'`` (se llena con el ``WizardResult`` cuando el usuario
-        completa la navegación).
+    WidgetSession
+        En modo ``'widget'``. El atributo ``.result`` se llena con el
+        :class:`WizardResult` cuando el usuario completa la navegación.
     """
     if mode is None:
         mode = "auto" if x is not None else "cli"
