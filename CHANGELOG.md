@@ -1,5 +1,16 @@
 # Registro de cambios
 
+## [0.7.0] - EWMA y CUSUM para cartas de atributos
+
+### Añadido
+- `ewma_p_chart`, `ewma_c_chart`, `ewma_u_chart`: EWMA para las cartas de
+  atributos P, C y U. Límites exactos que se ensanchan al inicio de la serie
+  usando el factor √(1−(1−λ)^{2i}), igual que el EWMA de variables.
+- `cusum_p_chart`, `cusum_c_chart`, `cusum_u_chart`: CUSUM tabular estandarizado
+  para atributos. Cada observación se convierte a z-score antes de acumular,
+  lo que permite tamaños de muestra variables en P y U. ``h`` y ``k`` en
+  unidades de σ (por defecto h=4, k=0.5 como en Minitab).
+
 ## [0.6.0] - run chart, pre-control y DPMO en capacidad
 
 ### Añadido

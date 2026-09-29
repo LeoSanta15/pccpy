@@ -10,8 +10,14 @@ from .capability import (
 from .charts import (
     RunChartResult,
     c_chart,
+    cusum_c_chart,
     cusum_chart,
+    cusum_p_chart,
+    cusum_u_chart,
+    ewma_c_chart,
     ewma_chart,
+    ewma_p_chart,
+    ewma_u_chart,
     g_chart,
     imr_chart,
     imr_rs_chart,
@@ -49,7 +55,7 @@ from .precontrol import PreControlResult, precontrol
 from .quality_tools import pareto, plot_pareto
 from .results import ControlChart, MultivariateChart, Panel
 
-__version__ = "0.6.0"
+__version__ = "0.7.0"
 
 __all__ = [
     "CapabilityResult",
@@ -64,6 +70,12 @@ __all__ = [
     "c5",
     "c_chart",
     "capability_analysis",
+    "cusum_c_chart",
+    "cusum_p_chart",
+    "cusum_u_chart",
+    "ewma_c_chart",
+    "ewma_p_chart",
+    "ewma_u_chart",
     "capability_boxcox",
     "capability_nonnormal",
     "capability_sixpack",
