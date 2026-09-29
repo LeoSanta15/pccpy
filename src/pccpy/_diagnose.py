@@ -79,13 +79,13 @@ class DiagnoseResult:
         if self.has_trend:
             lines += [
                 "",
-                f"  ── Tendencia ──",
+                "  ── Tendencia ──",
                 f"  Se detectó tendencia {self.trend_direction}.",
             ]
         if self.outlier_count:
             lines += [
                 "",
-                f"  ── Valores atípicos (IQR) ──",
+                "  ── Valores atípicos (IQR) ──",
                 f"  Cantidad : {self.outlier_count}",
                 f"  Índices  : {self.outlier_indices[:10]}"
                 + (" …" if len(self.outlier_indices) > 10 else ""),
@@ -111,7 +111,7 @@ class DiagnoseResult:
         ]
         return "\n".join(lines)
 
-    def plot(self, *, figsize: tuple[float, float] = (10, 4)) -> "plt.Figure":
+    def plot(self, *, figsize: tuple[float, float] = (10, 4)) -> plt.Figure:
         """Histograma con curva normal + gráfico de secuencia.
 
         Returns
@@ -119,7 +119,7 @@ class DiagnoseResult:
         matplotlib.figure.Figure
         """
         import matplotlib.pyplot as plt
-        import matplotlib.gridspec as gridspec
+        from matplotlib import gridspec
 
         fig = plt.figure(figsize=figsize, constrained_layout=True)
         gs = gridspec.GridSpec(1, 2, figure=fig)
@@ -223,8 +223,12 @@ def diagnose(
     kurt = float(stats.kurtosis(x))
 
     # ── Normalidad ─────────────────────────────────────────────────────────
-    norm_stat, norm_p = stats.normaltest(x)
-    is_normal = bool(norm_p > 0.05)
+    if n < 8:
+        norm_stat, norm_p = float("nan"), float("nan")
+        is_normal = True
+    else:
+        norm_stat, norm_p = stats.normaltest(x)
+        is_normal = bool(norm_p > 0.05)
 
     # ── Tendencia (Mann-Kendall simplificado: % incrementos) ────────────────
     diffs = np.diff(x)
@@ -259,10 +263,7 @@ def diagnose(
                 if v is not None
             )
             rec_snippet = f"import pccpy as pp\nresultado = pp.capability_boxcox(datos, {args})"
-    elif n >= 30 and is_normal:
-        rec_fn = "imr_chart"
-        rec_snippet = "import pccpy as pp\nresultado = pp.imr_chart(datos)"
-    elif n >= 30:
+    elif n >= 30 and is_normal or n >= 30:
         rec_fn = "imr_chart"
         rec_snippet = "import pccpy as pp\nresultado = pp.imr_chart(datos)"
     else:

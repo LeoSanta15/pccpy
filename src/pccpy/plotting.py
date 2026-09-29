@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import math
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.ticker import MaxNLocator
@@ -237,7 +238,6 @@ def plot_run_chart(result, *, figsize=None, title: str | None = None):
 
     Devuelve la figura de matplotlib.
     """
-    from .charts.run_chart import RunChartResult
 
     x = result.values
     n = len(x)
@@ -290,7 +290,6 @@ def plot_precontrol(result, *, figsize=None, title: str | None = None):
     fig, ax = plt.subplots(figsize=figsize or (max(8, n * 0.35), 5))
 
     # Zones background
-    lo, hi = min(x.min(), result.lsl) * 0.98, max(x.max(), result.usl) * 1.02
     ax.axhspan(result.lsl, result.usl, alpha=0.06, color=GREEN, zorder=0)
     ax.axhspan(result.green_lo, result.green_hi, alpha=0.12, color=GREEN, zorder=0)
 
@@ -345,7 +344,7 @@ def plot_tolerance(result, *, figsize=None, title: str | None = None, bins: int 
     ax.hist(x, bins=bins, color=BLUE, alpha=0.55, edgecolor="white", linewidth=0.5, label="Datos")
 
     ymax = ax.get_ylim()[1]
-    line_kw = dict(lw=1.8, zorder=5)
+    line_kw = {"lw": 1.8, "zorder": 5}
     if result.lower is not None:
         ax.axvline(result.lower, color=RED, ls="--", label=f"LI = {result.lower:.4g}", **line_kw)
         ax.annotate(f"LI={result.lower:.4g}", xy=(result.lower, ymax * 0.92),
@@ -461,7 +460,7 @@ def plot_gage_rr(result, *, figsize=None, title: str | None = None):
     Devuelve la figura de matplotlib.
     """
     data = result._data  # (parts, operators, replicates)
-    p, o, r = data.shape
+    p, o, _r = data.shape
     part_labels = [f"P{i+1}" for i in range(p)]
     op_labels = [f"Op{j+1}" for j in range(o)]
 
@@ -559,7 +558,7 @@ def plot_type1(result, *, figsize=None, title: str | None = None):
     ax.axhline(result.bias, color=RED, lw=2, ls="--",
                label=f"Sesgo = {result.bias:.4g} ({result.bias_pct:.2f}%)")
     sv_half = result.study_variation / 2
-    ax.axhspan(-sv_half, sv_half, alpha=0.10, color=BLUE, label=f"±Var. estudio/2")
+    ax.axhspan(-sv_half, sv_half, alpha=0.10, color=BLUE, label="±Var. estudio/2")
     ax.set_xlim(-0.5, 0.5)
     ax.set_xlabel("")
     ax.set_ylabel("Sesgo")

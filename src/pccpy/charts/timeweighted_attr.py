@@ -13,7 +13,6 @@ from __future__ import annotations
 
 import numpy as np
 
-from .._data import as_1d
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
 from .attributes import _prep

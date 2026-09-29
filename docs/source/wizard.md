@@ -107,8 +107,8 @@ Si `ipywidgets` no está instalado, el modo degrada automáticamente a `'cli'`.
 
 ## `WidgetSession`
 
-```{eval-rst}
-.. autoclass:: pccpy.WidgetSession
-   :members:
-   :undoc-members:
-```
+Objeto devuelto por `pp.wizard(mode="widget")`.
+
+| Atributo | Tipo | Descripción |
+|----------|------|-------------|
+| `result` | `WizardResult \| None` | `None` mientras el usuario navega; se llena al llegar a una hoja del árbol. |

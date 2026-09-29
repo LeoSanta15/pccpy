@@ -557,7 +557,7 @@ def _dodge_romig_ltpd(N: int, ltpd: float, process_avg: float) -> tuple[int, int
     """Encuentra (n, c) mínimo tal que Pa(LTPD) ≤ 0.10 minimizando ATI."""
     best_n, best_c, best_ati = N, 0, float("inf")
     # Buscar en rango razonable de c
-    for c in range(0, 20):
+    for c in range(20):
         # Encuentra n mínimo tal que Pa(ltpd) ≤ 0.10 con este c
         if _pa_binomial(c + 1, c, ltpd) <= 0.10:
             n = c + 1
@@ -570,7 +570,7 @@ def _dodge_romig_ltpd(N: int, ltpd: float, process_avg: float) -> tuple[int, int
                         break
                 else:
                     continue
-            except Exception:
+            except (ValueError, OverflowError, ZeroDivisionError):
                 continue
         if n > N:
             continue
@@ -586,7 +586,7 @@ def _dodge_romig_aoql(N: int, aoql: float, process_avg: float) -> tuple[int, int
     """Encuentra (n, c) tal que el AOQL real ≈ objetivo, minimizando ATI."""
     p_arr = np.linspace(1e-6, 0.5, 500)
     best_n, best_c, best_ati = N, 0, float("inf")
-    for c in range(0, 20):
+    for c in range(20):
         for n_try in range(c + 1, min(N + 1, 1000)):
             pa_arr = _pa_binomial_arr(n_try, c, p_arr)
             aoq_arr = pa_arr * p_arr * (N - n_try) / N
