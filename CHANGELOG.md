@@ -4,6 +4,16 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 pccpy usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
 
+## [0.5.1] - formato largo extendido a todos los gráficos de subgrupos
+
+### Cambiado
+- `ewma_chart`, `cusum_chart`, `ma_chart`: aceptan ahora DataFrame largo con
+  ``subgroup`` + ``value``, y vector 1-D con ``subgroup_size`` con resto (el
+  subgrupo incompleto se grafica pero no entra en la estimación de sigma).
+- `imr_rs_chart`, `zone_chart`: ídem.
+- `capability_analysis`, `capability_sixpack`: ídem; la sigma dentro se estima
+  solo con los subgrupos completos.
+
 ## [0.5.0] - entrada de datos en formato largo para cartas Xbar
 
 ### Añadido

@@ -9,18 +9,21 @@ from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
 
 
-def _series(data, subgroup_size, subgroup):
+def _series(data, subgroup_size, subgroup, value=None):
     """Devuelve (medias por punto, n por subgrupo, sigma estimada, media global)."""
     arr = np.asarray(data, dtype=float)
-    if arr.ndim == 1 and subgroup_size is None and subgroup is None:
+    if arr.ndim == 1 and subgroup_size is None and subgroup is None and value is None:
         x = as_1d(arr)
         return x, 1, sigma_individuals(x, "mr", 2), float(x.mean())
-    g, _ = to_subgroups(data, subgroup_size, subgroup)
-    if np.isnan(g).any():
-        raise ValueError("EWMA/CUSUM requieren subgrupos de igual tamaño (sin valores faltantes).")
+    g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
+    # Verificar subgrupos completos (el incompleto tiene NaN por diseño)
+    if np.isnan(g[:n_complete]).any():
+        raise ValueError("EWMA/CUSUM/MA requieren subgrupos de igual tamaño (sin valores faltantes).")
     n = g.shape[1]
-    sigma = sigma_subgroups(g, "rbar") if n > 1 else sigma_individuals(g[:, 0], "mr", 2)
-    return g.mean(axis=1), n, sigma, float(g.mean())
+    g_lim = g[:n_complete]
+    sigma = sigma_subgroups(g_lim, "rbar") if n > 1 else sigma_individuals(g_lim[:, 0], "mr", 2)
+    means = np.nanmean(g, axis=1)
+    return means, n, sigma, float(np.nanmean(g_lim))
 
 
 def ewma_chart(
@@ -28,6 +31,7 @@ def ewma_chart(
     *,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     weight: float = 0.2,
     k: float = 3.0,
     target: float | None = None,
@@ -39,10 +43,13 @@ def ewma_chart(
     por defecto 3) coinciden con los valores por defecto de Minitab. Los límites
     son los exactos, que se ensanchan al inicio de la serie. ``target`` y
     ``sigma`` se estiman de los datos si no se dan.
+
+    Acepta los mismos formatos de entrada que :func:`xbar_r_chart` (matriz 2-D,
+    vector 1-D + ``subgroup_size``, o DataFrame largo con ``subgroup`` + ``value``).
     """
     if not 0 < weight <= 1:
         raise ValueError("'weight' debe estar en (0, 1].")
-    means, n, sigma_est, grand = _series(data, subgroup_size, subgroup)
+    means, n, sigma_est, grand = _series(data, subgroup_size, subgroup, value=value)
     s = float(sigma) if sigma is not None else sigma_est
     t0 = float(target) if target is not None else grand
     s_x = s / np.sqrt(n)
@@ -70,6 +77,7 @@ def cusum_chart(
     *,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     target: float | None = None,
     sigma: float | None = None,
     h: float = 4.0,
@@ -80,10 +88,12 @@ def cusum_chart(
     ``h`` (límite de decisión) y ``k`` (holgura) están en unidades de sigma del
     estadístico graficado; por defecto h=4 y k=0.5. Se grafica la suma superior
     (positiva) y la inferior (negativa) en las unidades originales de los datos.
+
+    Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
     """
     if h <= 0 or k < 0:
         raise ValueError("'h' debe ser > 0 y 'k' >= 0.")
-    means, n, sigma_est, grand = _series(data, subgroup_size, subgroup)
+    means, n, sigma_est, grand = _series(data, subgroup_size, subgroup, value=value)
     s = float(sigma) if sigma is not None else sigma_est
     t0 = float(target) if target is not None else grand
     s_x = s / np.sqrt(n)

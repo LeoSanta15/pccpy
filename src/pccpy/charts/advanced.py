@@ -23,6 +23,7 @@ def ma_chart(
     length: int = 3,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     mu: float | None = None,
     sigma: float | None = None,
     k: float = 3.0,
@@ -34,11 +35,12 @@ def ma_chart(
     los límites son más anchos, como en Minitab. Después los límites son constantes.
 
     ``mu`` y ``sigma`` se estiman de los datos si no se dan. Solo aplica la prueba 1.
+    Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
     """
     if int(length) != length or length < 2:
         raise ValueError("'length' debe ser un entero >= 2.")
     length = int(length)
-    means, n, sigma_est, grand = _series(data, subgroup_size, subgroup)
+    means, n, sigma_est, grand = _series(data, subgroup_size, subgroup, value=value)
     s = float(sigma) if sigma is not None else sigma_est
     t0 = float(mu) if mu is not None else grand
     s_x = s / np.sqrt(n)
@@ -191,6 +193,7 @@ def imr_rs_chart(
     *,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     within: str = "r",
     sigma_method: str | None = None,
     mu: float | None = None,
@@ -216,6 +219,8 @@ def imr_rs_chart(
     tamaño de subgrupo más frecuente, que debe darse en más de la mitad de los
     subgrupos; si no, se reportan como NaN). Con ``sigma_between`` histórica, la sigma
     de las medias es sqrt(sigma_entre² + sigma_dentro²/n).
+
+    Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
     """
     within = within.lower()
     if within not in ("r", "s"):
@@ -223,16 +228,19 @@ def imr_rs_chart(
     default = "rbar" if within == "r" else "sbar"
     sigma_method = sigma_method or default
     check_method(sigma_method, (default, "pooled"))
-    g, _ = to_subgroups(data, subgroup_size, subgroup)
+    g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
+    total = g.shape[0]
 
     def stage_fn(idx):
-        gs = g[idx]
-        n_i, means, rng, s_i = subgroup_stats(gs)
+        gs_all = g[idx]
+        n_i, means, rng, s_i = subgroup_stats(gs_all)
         k = len(idx)
         if k < 2:
             raise ValueError("Cada etapa necesita al menos 2 subgrupos.")
-        m = float(np.mean(means)) if mu is None else float(mu)
-        sw = float(sigma_within) if sigma_within is not None else sigma_subgroups(gs, sigma_method)
+        idx_complete = idx[idx < n_complete] if n_complete < total else idx
+        gs_lim = g[idx_complete] if idx_complete.size > 1 else gs_all
+        m = float(np.nanmean(np.nanmean(gs_lim, axis=1))) if mu is None else float(mu)
+        sw = float(sigma_within) if sigma_within is not None else sigma_subgroups(gs_lim, sigma_method)
 
         sizes, counts = np.unique(n_i, return_counts=True)
         n_mode = int(sizes[np.argmax(counts)])
@@ -435,6 +443,7 @@ def zone_chart(
     *,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     sigma_method: str | None = None,
     mu: float | None = None,
     sigma: float | None = None,
@@ -463,8 +472,12 @@ def zone_chart(
     if len(w) != 4 or min(w) < 0 or any(b < a for a, b in zip(w, w[1:])) or w[3] <= 0:
         raise ValueError("'weights' debe tener 4 pesos no negativos, no decrecientes y con el último > 0.")
     arr = np.asarray(data, dtype=float)
-    individuals = arr.ndim == 1 and subgroup_size is None and subgroup is None
-    g, _ = to_subgroups(arr, 1) if individuals else to_subgroups(data, subgroup_size, subgroup)
+    individuals = arr.ndim == 1 and subgroup_size is None and subgroup is None and value is None
+    if individuals:
+        g, n_complete = to_subgroups(arr, 1)
+    else:
+        g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
+    total = g.shape[0]
     if individuals or (g.shape[1] == 1 and not np.isnan(g).any()):
         individuals = True
         check_method(sigma_method or "mr", ("mr", "median_mr", "mssd"))
@@ -472,16 +485,19 @@ def zone_chart(
         check_method(sigma_method or "rbar", ("rbar", "pooled"))
 
     def stage_fn(idx):
-        gs = g[idx]
-        n_i, means, _, _ = subgroup_stats(gs)
+        gs_all = g[idx]
+        n_i, means, _, _ = subgroup_stats(gs_all)
         k = len(idx)
-        m = float(np.nansum(gs) / n_i.sum()) if mu is None else float(mu)
+        idx_complete = idx[idx < n_complete] if n_complete < total else idx
+        gs_lim = g[idx_complete] if idx_complete.size > 0 else gs_all
+        n_i_lim = subgroup_stats(gs_lim)[0]
+        m = float(np.nansum(gs_lim) / n_i_lim.sum()) if mu is None else float(mu)
         if sigma is not None:
             sg = float(sigma)
         elif individuals:
-            sg = sigma_individuals(means, sigma_method or "mr", 2)
+            sg = sigma_individuals(means[:len(idx_complete)], sigma_method or "mr", 2)
         else:
-            sg = sigma_subgroups(gs, sigma_method or "rbar")
+            sg = sigma_subgroups(gs_lim, sigma_method or "rbar")
         sig_x = sg / np.sqrt(n_i)
         score, flagged = _zone_scores((means - m) / sig_x, w, reset)
         z_panel = StagePanel("Zona", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,

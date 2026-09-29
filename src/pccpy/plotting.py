@@ -178,20 +178,22 @@ def _capability_plot(ax, res) -> None:
 
 
 def capability_sixpack(data, lsl=None, usl=None, target=None, *, subgroup_size=None,
-                       subgroup=None, tests=(1,), figsize=(13, 11)):
+                       subgroup=None, value=None, tests=(1,), figsize=(13, 11)):
     """Capability Sixpack de Minitab: carta de control, últimos 25, histograma,
     probabilidad normal y gráfico de capacidad.
 
     Devuelve ``(figura, resultado_de_capacidad, carta_de_control)``.
+    Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
     """
     from .capability import capability_analysis
     from .charts import imr_chart, xbar_r_chart, xbar_s_chart
 
     arr = np.asarray(data, dtype=float)
     grouped = arr.ndim == 2 or subgroup is not None or (subgroup_size is not None and subgroup_size > 1)
-    res = capability_analysis(arr, lsl, usl, target, subgroup_size=subgroup_size, subgroup=subgroup)
+    res = capability_analysis(arr, lsl, usl, target, subgroup_size=subgroup_size,
+                              subgroup=subgroup, value=value)
     if grouped:
-        g, _ = to_subgroups(arr, subgroup_size, subgroup)
+        g, _ = to_subgroups(arr, subgroup_size, subgroup, value=value)
         fn = xbar_r_chart if g.shape[1] <= 8 else xbar_s_chart
         chart = fn(g, tests=tests)
     else:

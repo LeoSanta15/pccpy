@@ -165,6 +165,7 @@ def capability_analysis(
     *,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     within_method: str | None = None,
     sigma_within: float | None = None,
     ci_level: float = 0.95,
@@ -193,12 +194,13 @@ def capability_analysis(
     arr = np.asarray(data, dtype=float)
     grouped = arr.ndim == 2 or subgroup is not None or (subgroup_size is not None and subgroup_size > 1)
     if grouped:
-        g, _ = to_subgroups(arr, subgroup_size, subgroup)
+        g, n_complete = to_subgroups(arr, subgroup_size, subgroup, value=value)
         x = g[~np.isnan(g)]
         method = within_method or "pooled"
         if method not in ("pooled", "rbar", "sbar"):
             raise ValueError("Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'.")
-        sw = float(sigma_within) if sigma_within is not None else sigma_subgroups(g, method)
+        g_lim = g[:n_complete]
+        sw = float(sigma_within) if sigma_within is not None else sigma_subgroups(g_lim, method)
     else:
         x = as_1d(arr)
         method = within_method or "mr"
