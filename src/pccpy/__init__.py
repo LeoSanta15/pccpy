@@ -4,6 +4,7 @@ from .capability import (
     CapabilityResult,
     NonNormalCapabilityResult,
     capability_analysis,
+    capability_analysis_summary,
     capability_boxcox,
     capability_nonnormal,
 )
@@ -97,6 +98,7 @@ __all__ = [
     "c5",
     "c_chart",
     "capability_analysis",
+    "capability_analysis_summary",
     "cusum_c_chart",
     "cusum_p_chart",
     "cusum_u_chart",

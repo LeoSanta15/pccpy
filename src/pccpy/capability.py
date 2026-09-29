@@ -258,6 +258,97 @@ def capability_analysis(
     )
 
 
+def capability_analysis_summary(
+    mean: float,
+    std_overall: float,
+    n: int,
+    lsl: float | None = None,
+    usl: float | None = None,
+    target: float | None = None,
+    *,
+    std_within: float | None = None,
+    ci_level: float = 0.95,
+) -> CapabilityResult:
+    """Capacidad del proceso a partir de estadísticos resumen (sin datos crudos).
+
+    Útil cuando solo se dispone de la media, desviación estándar y tamaño de
+    muestra (por ejemplo, desde un informe o un sistema externo).
+
+    Parameters
+    ----------
+    mean : float
+        Media del proceso.
+    std_overall : float
+        Desviación estándar global (muestral, ddof=1). Se usa para Pp/Ppk.
+    n : int
+        Número de observaciones (necesario para los intervalos de confianza).
+    lsl, usl, target : float, opcional
+        Límites de especificación inferior/superior y valor objetivo.
+    std_within : float, opcional
+        Sigma dentro de subgrupos. Si no se proporciona se asume igual a
+        ``std_overall`` (lo que equivale a tratar los datos como individuales
+        sin estructura de subgrupo).
+    ci_level : float
+        Nivel de confianza de los IC de Pp y Ppk. Por defecto 0.95.
+
+    Returns
+    -------
+    CapabilityResult
+
+    Examples
+    --------
+    >>> import pccpy as pp
+    >>> res = pp.capability_analysis_summary(mean=10.0, std_overall=0.5, n=100,
+    ...                                      lsl=8.5, usl=11.5)
+    >>> print(res.summary())
+    """
+    _check_specs(lsl, usl)
+    if std_overall <= 0:
+        raise ValueError("'std_overall' debe ser positivo.")
+    if n < 2:
+        raise ValueError("'n' debe ser ≥ 2.")
+    if not 0 < ci_level < 1:
+        raise ValueError("'ci_level' debe estar entre 0 y 1.")
+
+    sw = float(std_within) if std_within is not None else float(std_overall)
+    so = float(std_overall)
+    mean = float(mean)
+
+    cp, cpl, cpu, cpk = _indices(mean, sw, lsl, usl)
+    pp, ppl, ppu, ppk = _indices(mean, so, lsl, usl)
+
+    cpm = NAN
+    if target is not None and lsl is not None and usl is not None:
+        cpm = (usl - lsl) / (6 * math.sqrt(so**2 + (mean - target) ** 2))
+
+    alpha = 1 - ci_level
+    pp_ci = (NAN, NAN)
+    if not math.isnan(pp):
+        pp_ci = (
+            pp * math.sqrt(stats.chi2.ppf(alpha / 2, n - 1) / (n - 1)),
+            pp * math.sqrt(stats.chi2.ppf(1 - alpha / 2, n - 1) / (n - 1)),
+        )
+    zc = stats.norm.ppf(1 - alpha / 2)
+    half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
+    ppk_ci = (ppk - half, ppk + half)
+
+    ppm_w = _expected_ppm(mean, sw, lsl, usl)
+    ppm_o = _expected_ppm(mean, so, lsl, usl)
+
+    return CapabilityResult(
+        n=n, mean=mean, sigma_within=sw, sigma_overall=so,
+        within_method="especificada" if std_within is not None else "overall",
+        lsl=lsl, usl=usl, target=target,
+        cp=cp, cpl=cpl, cpu=cpu, cpk=cpk, pp=pp, ppl=ppl, ppu=ppu, ppk=ppk, cpm=cpm,
+        z_bench_within=_z_bench(ppm_w[2]), z_bench_overall=_z_bench(ppm_o[2]),
+        z_lsl_overall=(mean - lsl) / so if lsl is not None else NAN,
+        z_usl_overall=(usl - mean) / so if usl is not None else NAN,
+        ppm_obs=(NAN, NAN, NAN),  # sin datos crudos no se puede calcular
+        ppm_within=ppm_w, ppm_overall=ppm_o,
+        pp_ci=pp_ci, ppk_ci=ppk_ci, ci_level=ci_level, data=np.array([]),
+    )
+
+
 def capability_boxcox(
     data,
     lsl: float | None = None,
