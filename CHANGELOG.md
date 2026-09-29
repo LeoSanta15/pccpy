@@ -1,5 +1,20 @@
 # Registro de cambios
 
+## [0.10.4] - wizard de selección de análisis SPC
+
+### Añadido
+- `wizard(x=None, mode='cli'|'auto'|'widget')` — asistente de selección de análisis con tres modos:
+  - **`'auto'`**: inspecciona el array de datos (dimensiones, normalidad, tendencia) y
+    devuelve automáticamente un `WizardResult` con la función recomendada.
+  - **`'cli'`**: menú interactivo de preguntas con opciones numeradas en la terminal.
+    El árbol de decisión cubre cartas de control, capacidad, MSA, muestreo de aceptación,
+    intervalos de tolerancia, normalidad, Pareto y pre-control.
+  - **`'widget'`**: interfaz gráfica para Jupyter con botones de selección (requiere
+    `ipywidgets`; degrada automáticamente a `cli` si no está instalado).
+- `WizardResult` — objeto retornado con `.function`, `.params`, `.rationale`,
+  `.alternatives`, `.snippet()`, `.summary()` y `.run(data)`.
+- 32 tests en `tests/test_wizard.py`.
+
 ## [0.10.3] - cobertura de tests completa y README actualizado
 
 ### Añadido
