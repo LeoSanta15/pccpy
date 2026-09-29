@@ -331,3 +331,46 @@ def plot_precontrol(result, *, figsize=None, title: str | None = None):
     ax.grid(alpha=0.2)
     fig.tight_layout(rect=(0, 0, 0.88, 1))
     return fig
+
+
+# ---------------------------------------------------------------------- tolerance
+def plot_tolerance(result, *, figsize=None, title: str | None = None, bins: int = 20):
+    """Histograma con el intervalo de tolerancia superpuesto.
+
+    Devuelve la figura de matplotlib.
+    """
+    x = result.data
+    fig, ax = plt.subplots(figsize=figsize or (8, 4))
+    ax.hist(x, bins=bins, color=BLUE, alpha=0.55, edgecolor="white", linewidth=0.5, label="Datos")
+
+    ymax = ax.get_ylim()[1]
+    line_kw = dict(lw=1.8, zorder=5)
+    if result.lower is not None:
+        ax.axvline(result.lower, color=RED, ls="--", label=f"LI = {result.lower:.4g}", **line_kw)
+        ax.annotate(f"LI={result.lower:.4g}", xy=(result.lower, ymax * 0.92),
+                    xytext=(-4, 0), textcoords="offset points",
+                    ha="right", fontsize=8, color=RED, annotation_clip=False)
+    if result.upper is not None:
+        ax.axvline(result.upper, color=RED, ls="--", label=f"LS = {result.upper:.4g}", **line_kw)
+        ax.annotate(f"LS={result.upper:.4g}", xy=(result.upper, ymax * 0.92),
+                    xytext=(4, 0), textcoords="offset points",
+                    ha="left", fontsize=8, color=RED, annotation_clip=False)
+    ax.axvline(result.mean, color=GREEN, ls=":", lw=1.2, label=f"Media = {result.mean:.4g}", zorder=4)
+
+    p100 = round(result.coverage * 100, 1)
+    g100 = round(result.confidence * 100, 1)
+    info = f"N={result.n}  Cobertura≥{p100}%  Confianza={g100}%\nMétodo={result.method}  Lados={result.sides}"
+    if result.k_factor is not None:
+        info += f"  k={result.k_factor:.4f}"
+    if result.achieved_confidence is not None:
+        info += f"\nConf. alcanzada={result.achieved_confidence*100:.2f}%"
+    ax.text(0.02, 0.97, info, transform=ax.transAxes, va="top",
+            fontsize=8, bbox={"fc": "white", "ec": GRAY, "alpha": 0.85})
+
+    ax.set_xlabel("Valor")
+    ax.set_ylabel("Frecuencia")
+    ax.set_title(title or "Intervalo de tolerancia")
+    ax.legend(fontsize=8)
+    ax.grid(alpha=0.2)
+    fig.tight_layout()
+    return fig

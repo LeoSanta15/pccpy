@@ -1,5 +1,18 @@
 # Registro de cambios
 
+## [0.8.0] - Intervalos de tolerancia
+
+### Añadido
+- `tolerance_interval`: calcula intervalos de tolerancia estadísticos. Con
+  `method='normal'` usa la aproximación de Howe (1969) para bilateral y la
+  distribución t no central exacta para unilateral. Con
+  `method='nonparametric'` usa estadísticos de orden (libre de distribución).
+  Soporta `sides='two'`, `'lower'` y `'upper'`.
+- `ToleranceResult`: objeto de resultado con `.summary()`, `.to_frame()` y
+  `.plot()` (histograma con el intervalo superpuesto).
+- `plot_tolerance`: función de graficación disponible también como método
+  `.plot()` del resultado.
+
 ## [0.7.0] - EWMA y CUSUM para cartas de atributos
 
 ### Añadido

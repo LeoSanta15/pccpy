@@ -49,13 +49,15 @@ from .plotting import (
     plot_control_chart,
     plot_precontrol,
     plot_run_chart,
+    plot_tolerance,
     probability_plot,
 )
 from .precontrol import PreControlResult, precontrol
 from .quality_tools import pareto, plot_pareto
+from .tolerance import ToleranceResult, tolerance_interval
 from .results import ControlChart, MultivariateChart, Panel
 
-__version__ = "0.7.0"
+__version__ = "0.8.0"
 
 __all__ = [
     "CapabilityResult",
@@ -104,8 +106,11 @@ __all__ = [
     "plot_pareto",
     "plot_precontrol",
     "plot_run_chart",
+    "plot_tolerance",
     "precontrol",
     "probability_plot",
+    "tolerance_interval",
+    "ToleranceResult",
     "run_chart",
     "t2_chart",
     "t_chart",
