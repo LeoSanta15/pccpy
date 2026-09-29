@@ -6,6 +6,8 @@ multivariadas devuelven la subclase :class:`~pccpy.MultivariateChart`), con un
 :class:`~pccpy.Panel` por cada gráfico que la compone (por ejemplo, el panel
 ``"I"`` y el panel ``"MR"`` de una carta I-MR).
 
+.. autofunction:: pccpy.plot_control_chart
+
 .. autoclass:: pccpy.ControlChart
    :members:
 

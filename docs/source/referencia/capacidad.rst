@@ -6,6 +6,7 @@ Capacidad del proceso
 .. autofunction:: pccpy.capability_nonnormal
 .. autofunction:: pccpy.capability_boxcox
 .. autofunction:: pccpy.capability_sixpack
+.. autofunction:: pccpy.plot_capability
 
 .. note::
 
