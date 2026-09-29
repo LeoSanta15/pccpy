@@ -191,7 +191,7 @@ def capability_sixpack(data, lsl=None, usl=None, target=None, *, subgroup_size=N
     grouped = arr.ndim == 2 or subgroup is not None or (subgroup_size is not None and subgroup_size > 1)
     res = capability_analysis(arr, lsl, usl, target, subgroup_size=subgroup_size, subgroup=subgroup)
     if grouped:
-        g = to_subgroups(arr, subgroup_size, subgroup)
+        g, _ = to_subgroups(arr, subgroup_size, subgroup)
         fn = xbar_r_chart if g.shape[1] <= 8 else xbar_s_chart
         chart = fn(g, tests=tests)
     else:

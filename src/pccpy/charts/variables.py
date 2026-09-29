@@ -68,15 +68,23 @@ def imr_chart(
 
 
 def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sigma,
-                stages, tests, test_params) -> ControlChart:
-    g = to_subgroups(data, subgroup_size, subgroup)
+                stages, tests, test_params, value=None) -> ControlChart:
+    g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
+    total = g.shape[0]
 
     def stage_fn(idx):
-        gs = g[idx]
-        n_i, means, rng, s_i = subgroup_stats(gs)
+        gs_all = g[idx]
+        n_i, means, rng, s_i = subgroup_stats(gs_all)
         k = len(idx)
-        m = float(np.nansum(gs) / n_i.sum()) if mu is None else float(mu)
-        sg = float(sigma) if sigma is not None else sigma_subgroups(gs, sigma_method)
+
+        # Subgrupos completos dentro de esta etapa (excluye el último si es incompleto)
+        idx_complete = idx[idx < n_complete] if n_complete < total else idx
+        gs_lim = g[idx_complete] if idx_complete.size > 0 else gs_all
+
+        n_i_lim = subgroup_stats(gs_lim)[0]
+        m = float(np.nansum(gs_lim) / n_i_lim.sum()) if mu is None else float(mu)
+        sg = float(sigma) if sigma is not None else sigma_subgroups(gs_lim, sigma_method)
+
         sig_x = sg / np.sqrt(n_i)
         x_panel = StagePanel(
             "Xbar", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
@@ -97,7 +105,7 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
         size = int(n_i[0]) if n_i.min() == n_i.max() else "variable"
         return [x_panel, d_panel], {"media": m, "sigma": sg, "subgrupos": k, "tamaño": size}
 
-    return build_chart(kind, g.shape[0], stages, stage_fn, tests, test_params)
+    return build_chart(kind, total, stages, stage_fn, tests, test_params)
 
 
 def xbar_r_chart(
@@ -105,6 +113,7 @@ def xbar_r_chart(
     *,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     sigma_method: str = "rbar",
     mu: float | None = None,
     sigma: float | None = None,
@@ -114,16 +123,22 @@ def xbar_r_chart(
 ) -> ControlChart:
     """Carta X-barra y R (Stat > Control Charts > Xbar-R).
 
-    ``data``: matriz 2-D (una fila por subgrupo), o vector 1-D junto con
-    ``subgroup_size`` (tamaño fijo) o ``subgroup`` (identificador de subgrupo por
-    observación, admite tamaños desiguales).
+    Acepta tres formatos de entrada:
+
+    * ``data`` 2-D (array o DataFrame ancho): cada fila es un subgrupo.
+    * ``data`` 1-D (array o Series) + ``subgroup_size``: se parte en subgrupos de
+      tamaño fijo. Si el total no es divisible, el último subgrupo incompleto se
+      grafica con sus propios límites pero no entra en el cálculo de sigma ni media.
+    * ``data`` DataFrame largo + ``subgroup`` (nombre de la columna de grupos) +
+      ``value`` (nombre de la columna de valores; opcional si hay solo una columna
+      numérica): convierte automáticamente al formato matricial.
 
     ``sigma_method``: ``'rbar'`` (por defecto) o ``'pooled'``.
     Con tamaños desiguales, sigma se estima promediando R_i/d2(n_i) (ver README).
     """
     check_method(sigma_method, ("rbar", "pooled"))
     return _xbar_chart("Xbar-R", "r", data, subgroup_size, subgroup, sigma_method,
-                       mu, sigma, stages, tests, test_params)
+                       mu, sigma, stages, tests, test_params, value=value)
 
 
 def xbar_s_chart(
@@ -131,6 +146,7 @@ def xbar_s_chart(
     *,
     subgroup_size: int | None = None,
     subgroup=None,
+    value: str | None = None,
     sigma_method: str = "sbar",
     mu: float | None = None,
     sigma: float | None = None,
@@ -140,9 +156,9 @@ def xbar_s_chart(
 ) -> ControlChart:
     """Carta X-barra y S (Stat > Control Charts > Xbar-S).
 
-    Igual que :func:`xbar_r_chart` pero la dispersión se mide con la desviación
-    estándar. ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``.
+    Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
+    ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``.
     """
     check_method(sigma_method, ("sbar", "pooled"))
     return _xbar_chart("Xbar-S", "s", data, subgroup_size, subgroup, sigma_method,
-                       mu, sigma, stages, tests, test_params)
+                       mu, sigma, stages, tests, test_params, value=value)

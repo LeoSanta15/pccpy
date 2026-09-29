@@ -59,11 +59,14 @@ def test_pareto_from_raw_and_counts():
 
 def test_to_subgroups_variants_and_errors():
     v = np.arange(12.0)
-    assert to_subgroups(v, subgroup_size=4).shape == (3, 4)
-    m = to_subgroups(v[:7], subgroup=[1, 1, 1, 2, 2, 3, 3])
-    assert m.shape == (3, 3) and np.isnan(m[1, 2])
-    with pytest.raises(ValueError):
-        to_subgroups(v, subgroup_size=5)  # 12 no divisible por 5
+    mat, nc = to_subgroups(v, subgroup_size=4)
+    assert mat.shape == (3, 4) and nc == 3
+    m, nc2 = to_subgroups(v[:7], subgroup=[1, 1, 1, 2, 2, 3, 3])
+    assert m.shape == (3, 3) and np.isnan(m[1, 2]) and nc2 == 3
+    # Resto no divisible: emite warning, no error; el subgrupo incompleto se grafica
+    with pytest.warns(UserWarning, match="no forman"):
+        mat2, nc3 = to_subgroups(v, subgroup_size=5)  # 12 obs, resto=2
+    assert mat2.shape == (3, 5) and nc3 == 2 and np.isnan(mat2[2, 2])
     with pytest.raises(ValueError):
         to_subgroups(v)
     with pytest.raises(ValueError):

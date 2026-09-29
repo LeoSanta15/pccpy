@@ -193,7 +193,7 @@ def capability_analysis(
     arr = np.asarray(data, dtype=float)
     grouped = arr.ndim == 2 or subgroup is not None or (subgroup_size is not None and subgroup_size > 1)
     if grouped:
-        g = to_subgroups(arr, subgroup_size, subgroup)
+        g, _ = to_subgroups(arr, subgroup_size, subgroup)
         x = g[~np.isnan(g)]
         method = within_method or "pooled"
         if method not in ("pooled", "rbar", "sbar"):

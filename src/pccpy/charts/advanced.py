@@ -223,7 +223,7 @@ def imr_rs_chart(
     default = "rbar" if within == "r" else "sbar"
     sigma_method = sigma_method or default
     check_method(sigma_method, (default, "pooled"))
-    g = to_subgroups(data, subgroup_size, subgroup)
+    g, _ = to_subgroups(data, subgroup_size, subgroup)
 
     def stage_fn(idx):
         gs = g[idx]
@@ -464,7 +464,7 @@ def zone_chart(
         raise ValueError("'weights' debe tener 4 pesos no negativos, no decrecientes y con el último > 0.")
     arr = np.asarray(data, dtype=float)
     individuals = arr.ndim == 1 and subgroup_size is None and subgroup is None
-    g = to_subgroups(arr, 1) if individuals else to_subgroups(data, subgroup_size, subgroup)
+    g, _ = to_subgroups(arr, 1) if individuals else to_subgroups(data, subgroup_size, subgroup)
     if individuals or (g.shape[1] == 1 and not np.isnan(g).any()):
         individuals = True
         check_method(sigma_method or "mr", ("mr", "median_mr", "mssd"))

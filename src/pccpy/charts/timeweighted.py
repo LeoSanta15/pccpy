@@ -15,7 +15,7 @@ def _series(data, subgroup_size, subgroup):
     if arr.ndim == 1 and subgroup_size is None and subgroup is None:
         x = as_1d(arr)
         return x, 1, sigma_individuals(x, "mr", 2), float(x.mean())
-    g = to_subgroups(data, subgroup_size, subgroup)
+    g, _ = to_subgroups(data, subgroup_size, subgroup)
     if np.isnan(g).any():
         raise ValueError("EWMA/CUSUM requieren subgrupos de igual tamaño (sin valores faltantes).")
     n = g.shape[1]

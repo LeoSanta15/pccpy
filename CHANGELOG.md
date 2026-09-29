@@ -4,6 +4,24 @@ Formato basado en [Keep a Changelog](https://keepachangelog.com/es-ES/1.0.0/).
 pccpy usa versionado semántico mientras esté en desarrollo (0.x): un incremento en
 el segundo número puede incluir cambios que no son compatibles hacia atrás.
 
+## [0.5.0] - entrada de datos en formato largo para cartas Xbar
+
+### Añadido
+- `xbar_r_chart` y `xbar_s_chart` aceptan tres formatos de entrada:
+  1. **Matriz 2-D** (una fila por subgrupo) — comportamiento anterior, sin cambios.
+  2. **Vector 1-D + `subgroup_size`** — si el total de observaciones no es divisible
+     por el tamaño, el último subgrupo incompleto se **grafica** con sus propios
+     límites (calculados con las constantes de su tamaño real) pero **no entra** en
+     la estimación de sigma ni media; se emite un `UserWarning` describiendo la
+     situación.
+  3. **DataFrame en formato largo + `subgroup` + `value`** — `subgroup` es el nombre
+     de la columna de identificadores de subgrupo y `value` el de la columna de
+     valores; si hay una sola columna numérica, `value` se detecta automáticamente.
+
+### Cambiado
+- `to_subgroups` ahora devuelve `(mat, n_complete)` en vez de solo `mat`.
+  `n_complete` indica cuántos subgrupos se usan para el cálculo de límites.
+
 ## [0.4.9] - README exhaustivo
 
 ### Cambiado
