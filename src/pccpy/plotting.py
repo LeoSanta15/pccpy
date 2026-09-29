@@ -374,3 +374,80 @@ def plot_tolerance(result, *, figsize=None, title: str | None = None, bins: int 
     ax.grid(alpha=0.2)
     fig.tight_layout()
     return fig
+
+
+# ---------------------------------------------------------------------- acceptance sampling
+def plot_sampling_attributes(result, *, figsize=None, title: str | None = None):
+    """Curva OC y curva AOQ para un plan de muestreo por atributos.
+
+    Devuelve la figura de matplotlib.
+    """
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize or (11, 4.5))
+
+    oc = result.oc_curve()
+    p = oc["p_defectivo"].to_numpy()
+    pa = oc["P(aceptar)"].to_numpy()
+
+    ax1.plot(p * 100, pa * 100, color=BLUE, lw=2)
+    ax1.axhline(95, color=GRAY, ls=":", lw=0.8)
+    ax1.axhline(10, color=GRAY, ls=":", lw=0.8)
+    ax1.set_xlabel("Fracción defectiva p (%)")
+    ax1.set_ylabel("P(aceptar) (%)")
+    ax1.set_title("Curva OC")
+    ax1.grid(alpha=0.25)
+
+    if hasattr(result, "aql"):
+        aql_frac = result.aql if result.aql <= 1.0 else result.aql / 100.0
+        ax1.axvline(aql_frac * 100, color=GREEN, ls="--", lw=1.2,
+                    label=f"AQL={result.aql:.3g}%")
+    if hasattr(result, "ltpd") and not math.isnan(result.ltpd):
+        ax1.axvline(result.ltpd * 100, color=RED, ls="--", lw=1.2,
+                    label=f"LTPD={result.ltpd*100:.3g}%")
+    ax1.legend(fontsize=8)
+
+    aoq_df = result.aoq_curve()
+    aoq = aoq_df["AOQ"].to_numpy()
+    ax2.plot(p * 100, aoq * 100, color=ORANGE, lw=2)
+    if hasattr(result, "aoql") and not math.isnan(result.aoql):
+        ax2.axhline(result.aoql * 100, color=RED, ls="--", lw=1.2,
+                    label=f"AOQL={result.aoql*100:.3g}%")
+        ax2.legend(fontsize=8)
+    ax2.set_xlabel("Fracción defectiva p (%)")
+    ax2.set_ylabel("AOQ (%)")
+    ax2.set_title("Calidad media de salida (AOQ)")
+    ax2.grid(alpha=0.25)
+
+    n_txt = result.n
+    c_txt = result.c
+    info = f"N={result.N}  n={n_txt}  Ac={c_txt}  Re={c_txt + 1}"
+    fig.suptitle(title or f"Muestreo de aceptación — {info}", fontsize=10)
+    fig.tight_layout()
+    return fig
+
+
+def plot_sampling_variables(result, *, figsize=None, title: str | None = None):
+    """Curva OC para un plan de muestreo por variables.
+
+    Devuelve la figura de matplotlib.
+    """
+    oc = result.oc_curve()
+    p = oc["p_defectivo"].to_numpy()
+    pa = oc["P(aceptar)"].to_numpy()
+
+    fig, ax = plt.subplots(figsize=figsize or (7, 4.5))
+    ax.plot(p * 100, pa * 100, color=BLUE, lw=2)
+    ax.axhline(95, color=GRAY, ls=":", lw=0.8)
+    ax.axhline(10, color=GRAY, ls=":", lw=0.8)
+    if not math.isnan(result.ltpd):
+        ax.axvline(result.ltpd * 100, color=RED, ls="--", lw=1.2,
+                   label=f"LTPD={result.ltpd*100:.3g}%")
+    aql_frac = result.aql / 100.0
+    ax.axvline(aql_frac * 100, color=GREEN, ls="--", lw=1.2,
+               label=f"AQL={result.aql:.3g}%")
+    ax.legend(fontsize=8)
+    ax.set_xlabel("Fracción defectiva p (%)")
+    ax.set_ylabel("P(aceptar) (%)")
+    ax.set_title(title or f"Curva OC — Plan variables  n={result.n}  k={result.k:.4f}")
+    ax.grid(alpha=0.25)
+    fig.tight_layout()
+    return fig

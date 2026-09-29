@@ -1,5 +1,21 @@
 # Registro de cambios
 
+## [0.9.0] - Muestreo de aceptación
+
+### Añadido
+- `acceptance_sampling_attributes`: plan de muestreo por atributos según
+  ANSI/ASQ Z1.4. Devuelve `SamplingPlanAttributes` con `.pa()`, `.oc_curve()`,
+  `.aoq_curve()`, `.summary()`, `.to_frame()` y `.plot()`. Calcula
+  automáticamente α, β (0.10), LTPD y AOQL del plan.
+- `acceptance_sampling_variables`: plan de muestreo por variables según
+  ANSI/ASQ Z1.9 (método k). Devuelve `SamplingPlanVariables` con
+  `.evaluate()` para decidir aceptación dado un vector de muestra.
+- `dodge_romig`: plan Dodge-Romig por atributos, minimizando el ATI.
+  Soporta dos modos: protección al consumidor (`ltpd=`) y calidad media
+  de salida máxima (`aoql=`). Devuelve `DodgeRomigPlan`.
+- `plot_sampling_attributes`: curva OC + curva AOQ para planes por atributos.
+- `plot_sampling_variables`: curva OC para planes por variables.
+
 ## [0.8.0] - Intervalos de tolerancia
 
 ### Añadido

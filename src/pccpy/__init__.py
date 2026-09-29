@@ -49,15 +49,25 @@ from .plotting import (
     plot_control_chart,
     plot_precontrol,
     plot_run_chart,
+    plot_sampling_attributes,
+    plot_sampling_variables,
     plot_tolerance,
     probability_plot,
 )
 from .precontrol import PreControlResult, precontrol
 from .quality_tools import pareto, plot_pareto
+from .acceptance import (
+    DodgeRomigPlan,
+    SamplingPlanAttributes,
+    SamplingPlanVariables,
+    acceptance_sampling_attributes,
+    acceptance_sampling_variables,
+    dodge_romig,
+)
 from .tolerance import ToleranceResult, tolerance_interval
 from .results import ControlChart, MultivariateChart, Panel
 
-__version__ = "0.8.0"
+__version__ = "0.9.0"
 
 __all__ = [
     "CapabilityResult",
@@ -104,8 +114,16 @@ __all__ = [
     "plot_capability",
     "plot_control_chart",
     "plot_pareto",
+    "DodgeRomigPlan",
+    "SamplingPlanAttributes",
+    "SamplingPlanVariables",
+    "acceptance_sampling_attributes",
+    "acceptance_sampling_variables",
+    "dodge_romig",
     "plot_precontrol",
     "plot_run_chart",
+    "plot_sampling_attributes",
+    "plot_sampling_variables",
     "plot_tolerance",
     "precontrol",
     "probability_plot",
