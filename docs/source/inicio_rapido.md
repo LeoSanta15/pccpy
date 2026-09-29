@@ -162,6 +162,38 @@ atr = pp.attribute_agreement(clasificaciones, reference=referencia, replicates=2
 print(atr.summary())  # Kappa de Cohen por operador + Kappa de Fleiss
 ```
 
+## Funciones desde estadísticos resumen
+
+Cuando solo dispones de estadísticos agregados (media, desviación y n), sin los
+datos individuales, usa las variantes `_summary`:
+
+```python
+# Intervalo de tolerancia normal bilateral 95/95 desde resumen
+res = pp.tolerance_interval_summary(
+    mean=100.0, std=2.0, n=50,
+    coverage=0.95, confidence=0.95, sides="two",
+)
+print(res.summary())   # mismos campos que tolerance_interval
+
+# Estudio Tipo 1 (sesgo y repetibilidad) desde media, s y n
+t1 = pp.gage_type1_summary(
+    mean=10.02, std=0.05, n=25,
+    reference=10.0, tolerance=0.5,
+)
+print(t1.summary())    # Sesgo, t-stat, Cg, Cgk
+
+# Capacidad del proceso desde estadísticos resumen
+rs = pp.capability_analysis_summary(
+    mean=50.0, std_overall=2.0, n=200,
+    lsl=44, usl=56,
+    std_within=1.8,       # opcional: si no se da, Cp/Cpk = NaN
+)
+print(rs.summary())    # Pp, Ppk y (si se da std_within) Cp, Cpk
+```
+
+Estos resultados devuelven el mismo tipo de objeto que su contraparte con datos
+individuales, por lo que `to_frame()`, `summary()` y demás métodos funcionan igual.
+
 ## Un vistazo por tema
 
 - **Variables** (I-MR, Xbar-R, Xbar-S, media móvil, Z-MR, I-MR-R/S, Zona):
