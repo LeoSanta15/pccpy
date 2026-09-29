@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [0.10.2] - documentación completa de referencia Sphinx
+
+### Documentación
+- Referencia Sphinx cubre ahora el 100 % de los símbolos públicos (`__all__`).
+  Se agregan `plot_capability`, `plot_control_chart`, `capability_analysis_summary`,
+  `tolerance_interval_summary` y `gage_type1_summary` a sus páginas RST.
+
 ## [0.10.1] - funciones de entrada por estadísticos resumen y documentación completa
 
 ### Añadido
