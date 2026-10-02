@@ -58,7 +58,7 @@ class DiagnoseResult:
     cpk: float | None = None
 
     # ══════════════════════════════════════════════════════════════════════
-    def to_frame(self) -> "pd.DataFrame":
+    def to_frame(self) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico)."""
         import pandas as pd
 
