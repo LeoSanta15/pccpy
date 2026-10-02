@@ -162,6 +162,14 @@ class CapabilityResult:
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()
 
+    def to_excel(self, path) -> None:
+        """Exporta el análisis de capacidad a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Capacidad")
+
     def plot(self, **kwargs):
         """Histograma de capacidad. Ver :func:`pccpy.plotting.plot_capability`."""
         from .plotting import plot_capability
@@ -438,6 +446,30 @@ class NonNormalCapabilityResult:
             f"    {'Observado':<18}{_fmt(o.ppm_obs[0]):>10}{_fmt(o.ppm_obs[1]):>12}{_fmt(o.ppm_obs[2]):>11}",
             f"    {'Esperado':<18}{_fmt(o.ppm_expected[0]):>10}{_fmt(o.ppm_expected[1]):>12}{_fmt(o.ppm_expected[2]):>11}",
         ])
+
+    def to_frame(self) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico)."""
+        o = self
+        rows = [
+            ("N", o.n), ("Distribución", o.distribution),
+            ("LEI", o.lsl), ("LES", o.usl), ("Objetivo", o.target),
+            ("Percentil 0.135%", o.x_low), ("Mediana", o.x_median),
+            ("Percentil 99.865%", o.x_high),
+            ("Pp", o.pp), ("PPL", o.ppl), ("PPU", o.ppu), ("Ppk", o.ppk),
+            ("PPM obs < LEI", o.ppm_obs[0]), ("PPM obs > LES", o.ppm_obs[1]),
+            ("PPM obs total", o.ppm_obs[2]),
+            ("PPM esp < LEI", o.ppm_expected[0]), ("PPM esp > LES", o.ppm_expected[1]),
+            ("PPM esp total", o.ppm_expected[2]),
+        ]
+        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+
+    def to_excel(self, path) -> None:
+        """Exporta el análisis de capacidad no normal a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Capacidad")
 
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()

@@ -172,6 +172,17 @@ class GageRRResult:
         ]
         return "\n".join(lines)
 
+    def to_excel(self, path) -> None:
+        """Exporta el Gage R&R a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        Hojas: Resumen, ANOVA (si está disponible).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Resumen")
+            if self.anova_table is not None:
+                self.anova_table.to_excel(writer, sheet_name="ANOVA")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
@@ -538,6 +549,14 @@ class Type1Result:
             f"  Cg={cg_s}  Cgk={cgk_s}"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el Estudio Tipo 1 a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Tipo1")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
@@ -736,6 +755,14 @@ class LinearityResult:
             f"  Sesgo promedio={self.avg_bias:.5g} ({self.avg_bias_pct:.2f}%)"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el análisis de linealidad a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Linealidad")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
@@ -869,6 +896,17 @@ class AttributeAgreementResult:
             lines.append(f"    {op}: κ={row['kappa']:.4f}  p-valor={row['p_valor']:.5f}  "
                          f"Acuerdo={row['% acuerdo']:.1f}%")
         return "\n".join(lines)
+
+    def to_excel(self, path) -> None:
+        """Exporta la concordancia por atributos a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        Hojas: Resumen, KappaVsReferencia (si hay más de un operador).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Resumen")
+            if not self.kappa_vs_reference.empty:
+                self.kappa_vs_reference.to_excel(writer, sheet_name="KappaVsReferencia")
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()

@@ -55,6 +55,37 @@ class DiagnoseResult:
     cpk: float | None = None
 
     # ══════════════════════════════════════════════════════════════════════
+    def to_frame(self) -> "pd.DataFrame":
+        """Tabla resumen (una fila por estadístico)."""
+        import pandas as pd
+
+        o = self
+        rows = [
+            ("N", o.n), ("Media", o.mean), ("Desv.Est.", o.std), ("CV (%)", o.cv),
+            ("Mínimo", o.min_val), ("Máximo", o.max_val), ("Mediana", o.median),
+            ("Asimetría", o.skewness), ("Curtosis", o.kurtosis),
+            ("Estadístico normalidad", o.normality_stat),
+            ("p-valor normalidad", o.normality_p),
+            ("Distribución normal", o.is_normal),
+            ("Tiene tendencia", o.has_trend),
+            ("Dirección tendencia", o.trend_direction),
+            ("Valores atípicos (IQR)", o.outlier_count),
+            ("LEI", o.lsl), ("LES", o.usl), ("Objetivo", o.target),
+            ("Cp estimado", o.cp), ("Cpk estimado", o.cpk),
+            ("Función recomendada", o.recommended_function),
+        ]
+        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+
+    def to_excel(self, path) -> None:
+        """Exporta el diagnóstico a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        import pandas as pd
+
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Diagnóstico")
+
     def summary(self) -> str:
         """Resumen en texto al estilo sesión de Minitab."""
         sep = "═" * 60

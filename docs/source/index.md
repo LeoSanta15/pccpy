@@ -16,6 +16,8 @@ instalacion
 inicio_rapido
 wizard
 diagnose
+tolerance
+acceptance
 referencia/index
 changelog
 ```

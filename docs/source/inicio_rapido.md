@@ -52,6 +52,38 @@ v2 = rng.normal(100, 2, 82)             # 82 no es múltiplo de 4
 carta = pp.xbar_r_chart(v2, subgroup_size=4)
 ```
 
+## Diagnóstico rápido del proceso
+
+Cuando tienes datos pero no sabes aún qué análisis aplicar, comienza con
+`diagnose()`. Calcula estadísticos descriptivos, prueba de normalidad,
+detecta tendencias y valores atípicos, e indica la función de pccpy que
+deberías usar a continuación.
+
+```python
+import numpy as np
+import pccpy as pp
+
+rng = np.random.default_rng(0)
+x = rng.normal(50, 2, 60)
+
+d = pp.diagnose(x, lsl=44, usl=56)   # lsl/usl opcionales
+print(d.summary())                    # resumen completo en texto
+d.plot()                              # histograma + gráfico de secuencia
+d.to_frame()                          # tabla resumen como DataFrame
+d.to_excel("diagnostico.xlsx")        # exportar a Excel (requiere openpyxl)
+```
+
+La recomendación automática varía según lo que encuentre:
+
+| Condición detectada | Función recomendada |
+|---------------------|---------------------|
+| Tendencia creciente o decreciente | `run_chart` |
+| Con especificaciones, distribución normal | `capability_analysis` |
+| Con especificaciones, distribución no normal | `capability_boxcox` |
+| Sin especificaciones | `imr_chart` |
+
+Consulta la página {doc}`diagnose` para todos los detalles.
+
 ## Carta de corridas y pre-control
 
 ```python

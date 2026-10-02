@@ -154,6 +154,14 @@ class ToleranceResult:
         lines.append("  " + "   ".join(interval))
         return "\n".join(lines)
 
+    def to_excel(self, path) -> None:
+        """Exporta el intervalo de tolerancia a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Tolerancia")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 

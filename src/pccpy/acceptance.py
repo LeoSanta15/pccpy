@@ -163,6 +163,14 @@ class SamplingPlanAttributes:
             f"  AOQL={self.aoq_max*100:.3g}%"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el plan de muestreo a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Plan")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
@@ -318,6 +326,14 @@ class SamplingPlanVariables:
             f"LTPD={self.ltpd*100:.3g}%  β=0.10\n"
             f"  Especificación: {self.spec_type}"
         )
+
+    def to_excel(self, path) -> None:
+        """Exporta el plan de muestreo por variables a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Plan")
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
@@ -544,6 +560,14 @@ class DodgeRomigPlan:
             f"Promedio proceso={self.process_avg*100:.3g}%\n"
             f"  AOQL={self.aoql*100:.3g}%  LTPD={self.ltpd*100:.3g}%"
         )
+
+    def to_excel(self, path) -> None:
+        """Exporta el plan Dodge-Romig a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            self.to_frame().to_excel(writer, sheet_name="Plan")
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()

@@ -130,6 +130,19 @@ class ControlChart:
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()
 
+    def to_excel(self, path) -> None:
+        """Exporta la carta a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        Cada panel ocupa una hoja; las violaciones van en una hoja adicional.
+        """
+        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+            for p in self.panels:
+                p.to_frame().to_excel(writer, sheet_name=p.name[:31], index=False)
+            v = self.violations()
+            if not v.empty:
+                v.to_excel(writer, sheet_name="Violaciones", index=False)
+
     def plot(self, **kwargs):
         """Dibuja la carta con matplotlib. Ver :func:`pccpy.plotting.plot_control_chart`."""
         from .plotting import plot_control_chart
