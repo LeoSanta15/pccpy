@@ -137,6 +137,73 @@ devuelve `is_normal=True` y `normality_p=NaN` para evitar resultados engañosos.
 
 ---
 
+## Compatibilidad con seaborn, plotly y otras librerías
+
+### ¿Puedo usar pccpy junto a seaborn?
+
+Sí. pccpy usa matplotlib internamente y sus funciones `plot()` están aisladas con
+`plt.rc_context({})`, de modo que los estilos de seaborn no afectan el aspecto de
+los gráficos de pccpy.
+
+```python
+import seaborn as sns
+import pccpy as pp
+
+sns.set_theme(style="darkgrid")          # cambia el estilo global de matplotlib
+carta = pp.imr_chart(x)
+carta.plot()                             # se renderiza con los estilos internos de pccpy
+```
+
+---
+
+### ¿Los gráficos de pccpy acumulan figuras abiertas?
+
+`plot()` crea una figura nueva cada vez que se llama y **no la cierra**. En un
+bucle largo esto genera la advertencia `More than 20 figures have been opened`.
+
+Opciones para evitarlo:
+
+```python
+import matplotlib.pyplot as plt
+
+# Opción 1: cerrar manualmente
+for x_lote in lotes:
+    fig = pp.imr_chart(x_lote).plot()
+    fig.savefig(f"carta_{i}.png")
+    plt.close(fig)
+
+# Opción 2: usar save_plot() (cierra la figura internamente)
+for i, x_lote in enumerate(lotes):
+    pp.imr_chart(x_lote).save_plot(f"carta_{i}.png")
+
+# Opción 3: cerrar todas al salir del bucle
+for x_lote in lotes:
+    carta = pp.imr_chart(x_lote)
+    # … hacer algo con carta.to_frame() …
+plt.close("all")
+```
+
+---
+
+### ¿Puedo combinar pccpy con plotly?
+
+Plotly y matplotlib son sistemas independientes. `plot()` devuelve un
+`matplotlib.figure.Figure` que no se puede insertar directamente en plotly.
+
+Para integrar en una app Dash o Plotly puedes convertir la figura:
+
+```python
+import plotly.tools as tls
+import pccpy as pp
+
+fig_mpl = pp.imr_chart(x).plot()
+fig_plotly = tls.mpl_to_plotly(fig_mpl)  # conversión aproximada
+```
+
+O exportar como imagen PNG y usarla en plotly con `plotly.graph_objects.Image`.
+
+---
+
 ## Exportación y visualización
 
 ### ¿Cómo guardo el gráfico en un archivo?

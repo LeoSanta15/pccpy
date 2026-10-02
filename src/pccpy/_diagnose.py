@@ -160,7 +160,8 @@ class DiagnoseResult:
         import matplotlib.pyplot as plt
         from matplotlib import gridspec
 
-        fig = plt.figure(figsize=figsize, constrained_layout=True)
+        with plt.rc_context({}):
+            fig = plt.figure(figsize=figsize, constrained_layout=True)
         gs = gridspec.GridSpec(1, 2, figure=fig)
 
         # ── Histograma ─────────────────────────────────────────────────────

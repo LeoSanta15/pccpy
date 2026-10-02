@@ -44,7 +44,8 @@ def plot_pareto(table: pd.DataFrame, *, ax=None):
     """Dibuja el diagrama de Pareto a partir de la tabla de :func:`pareto`."""
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(9, 4.8))
+        with plt.rc_context({}):
+            fig, ax = plt.subplots(figsize=(9, 4.8))
     x = np.arange(len(table))
     ax.bar(x, table["conteo"], color="#1f4e9c")
     ax.set_xticks(x)
