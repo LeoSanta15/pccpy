@@ -133,6 +133,7 @@ Cpk = min(USL − x̄, x̄ − LSL) / (3 · s)
 .. autoclass:: pccpy.DiagnoseResult
    :members: summary, plot
    :undoc-members:
+   :no-index:
    :exclude-members: lsl, usl, target, cp, cpk, n, mean, std, cv,
                      min_val, max_val, median, skewness, kurtosis,
                      normality_stat, normality_p, is_normal,

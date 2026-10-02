@@ -225,8 +225,8 @@ def diagnose(
 
     Parameters
     ----------
-    x : array-like, shape (n,)
-        Datos del proceso.
+    x : array-like
+        Datos del proceso (vector 1-D).
     lsl : float, optional
         Límite de especificación inferior.
     usl : float, optional
