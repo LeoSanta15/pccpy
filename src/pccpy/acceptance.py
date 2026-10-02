@@ -14,6 +14,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
+from ._data import _excel_writer
 from scipy import stats
 from scipy.optimize import brentq
 
@@ -168,7 +169,7 @@ class SamplingPlanAttributes:
 
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Plan")
 
     def __str__(self) -> str:  # pragma: no cover
@@ -339,7 +340,7 @@ class SamplingPlanVariables:
 
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Plan")
 
     def __str__(self) -> str:  # pragma: no cover
@@ -580,7 +581,7 @@ class DodgeRomigPlan:
 
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Plan")
 
     def __str__(self) -> str:  # pragma: no cover

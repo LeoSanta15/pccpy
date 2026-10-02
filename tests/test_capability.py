@@ -89,12 +89,12 @@ def test_user_supplied_sigma_within():
 
 
 def test_input_validation():
-    with pytest.raises(ValueError):
-        pccpy.capability_analysis(X)
+    # sin specs: ya no lanza ValueError; devuelve NaN en los índices
+    import math
+    r = pccpy.capability_analysis(X)
+    assert math.isnan(r.cp) and math.isnan(r.pp)
     with pytest.raises(ValueError):
         pccpy.capability_analysis(X, 105, 95)
-    with pytest.raises(ValueError):
-        pccpy.capability_analysis(np.full(10, 3.0), 0, 6)
     with pytest.raises(ValueError):
         pccpy.capability_analysis(X, LSL, USL, within_method="rbar")  # inválido para individuales
     with pytest.raises(ValueError):

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from .rules import DEFAULT_K, describe
+from ._data import _excel_writer
 
 
 @dataclass
@@ -136,7 +137,7 @@ class ControlChart:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         Cada panel ocupa una hoja; las violaciones van en una hoja adicional.
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             for p in self.panels:
                 p.to_frame().to_excel(writer, sheet_name=p.name[:31], index=False)
             v = self.violations()

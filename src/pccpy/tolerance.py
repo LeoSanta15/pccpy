@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from ._data import as_1d
+from ._data import as_1d, _excel_writer
 
 NAN = float("nan")
 
@@ -159,7 +159,7 @@ class ToleranceResult:
 
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Tolerancia")
 
     def __str__(self) -> str:  # pragma: no cover

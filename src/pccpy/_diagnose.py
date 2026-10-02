@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
+from ._data import _excel_writer
 from scipy import stats
 
 if TYPE_CHECKING:
@@ -83,7 +84,7 @@ class DiagnoseResult:
         """
         import pandas as pd
 
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Diagnóstico")
 
     def summary(self) -> str:

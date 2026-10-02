@@ -474,7 +474,7 @@ def zone_chart(
     arr = np.asarray(data, dtype=float)
     individuals = arr.ndim == 1 and subgroup_size is None and subgroup is None and value is None
     if individuals:
-        g, n_complete = to_subgroups(arr, 1)
+        g, n_complete = to_subgroups(arr, 1, _allow_size_1=True)
     else:
         g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
     total = g.shape[0]

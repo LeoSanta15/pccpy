@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from ._data import as_1d
+from ._data import as_1d, _excel_writer
 
 NAN = float("nan")
 
@@ -178,7 +178,7 @@ class GageRRResult:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         Hojas: Resumen, ANOVA (si está disponible).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Resumen")
             if self.anova_table is not None:
                 self.anova_table.to_excel(writer, sheet_name="ANOVA")
@@ -561,7 +561,7 @@ class Type1Result:
 
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Tipo1")
 
     def __str__(self) -> str:  # pragma: no cover
@@ -774,7 +774,7 @@ class LinearityResult:
 
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Linealidad")
 
     def __str__(self) -> str:  # pragma: no cover
@@ -924,7 +924,7 @@ class AttributeAgreementResult:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         Hojas: Resumen, KappaVsReferencia (si hay más de un operador).
         """
-        with pd.ExcelWriter(path, engine="openpyxl") as writer:
+        with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Resumen")
             if not self.kappa_vs_reference.empty:
                 self.kappa_vs_reference.to_excel(writer, sheet_name="KappaVsReferencia")
