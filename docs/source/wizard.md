@@ -112,3 +112,10 @@ Objeto devuelto por `pp.wizard(mode="widget")`.
 | Atributo | Tipo | Descripción |
 |----------|------|-------------|
 | `result` | `WizardResult \| None` | `None` mientras el usuario navega; se llena al llegar a una hoja del árbol. |
+
+```{eval-rst}
+.. autoclass:: pccpy.WidgetSession
+   :members:
+   :undoc-members:
+   :no-index:
+```

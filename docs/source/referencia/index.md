@@ -14,6 +14,8 @@ tolerancia
 muestreo_aceptacion
 msa
 normalidad_y_herramientas
+diagnose
+wizard
 constantes
 resultados
 ```
