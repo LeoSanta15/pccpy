@@ -19,7 +19,7 @@
 | **Cómo se detectó** | Revisión visual de salida de gráficos; commit de fix en v0.4.8 |
 | **Solución aplicada** | Eliminada la condición `panel.symmetric`; matplotlib recorta naturalmente líneas por debajo del rango visible |
 | **Archivo/línea** | `src/pccpy/plotting.py` (commit `314cb86`) |
-| **Test de regresión** | NO VERIFICADO — no hay test que confirme que las zonas están presentes en cartas MR/R/S |
+| **Test de regresión** | NO — confirmado: ningún test cuenta líneas de zona en paneles R/S/MR. Receta probada: `fig = pp.xbar_r_chart(datos).plot(zones=True)`; `assert len([l for l in fig.axes[1].get_lines() if l.get_linestyle() == "--"]) >= 4`. Probada por mutación (desactivar el dibujo de zonas hace fallar el test) |
 | **¿Puede ocurrir en otras libs?** | Sí — cualquier librería de visualización que añada condiciones de "simetría" para controlar trazado. |
 
 ---
@@ -109,7 +109,7 @@
 | **Cómo se detectó** | Commit `39bd66a` / v0.10.7; openpyxl es dependencia opcional |
 | **Solución aplicada** | Helper `_excel_writer()` en `_data.py` que captura `ImportError` y da instrucción explícita `pip install pccpy[excel]` |
 | **Archivo/línea** | `src/pccpy/_data.py`, función `_excel_writer()` (commit `39bd66a`) |
-| **Test de regresión** | NO VERIFICADO — no hay test que simule ausencia de openpyxl |
+| **Test de regresión** | NO — confirmado: solo `tests/test_plots.py:159` hace `importorskip("openpyxl")`. Receta probada (pasa en `main`): `monkeypatch.setitem(sys.modules, "openpyxl", None)` y `pytest.raises(ImportError, match=r"pccpy\[excel\]")` sobre `_excel_writer(tmp_path / "a.xlsx")`. NO se probó por mutación |
 | **¿Puede ocurrir en otras libs?** | Sí — patrón universal para dependencias opcionales. |
 
 ---
@@ -149,12 +149,12 @@
 | Campo | Detalle |
 |---|---|
 | **ID** | BUG-10 |
-| **Síntoma** | `diagnose(x)` con menos de 8 puntos fallaba en Python 3.9 (`ValueError` de scipy) |
-| **Causa raíz** | En Python 3.11+, `scipy.stats.normaltest` emite `SmallSampleWarning` para n<8. En Python 3.9 con scipy más antiguo lanza `ValueError`. No se manejaba la excepción. |
+| **Síntoma** | `diagnose(x)` con menos de 8 puntos fallaba en CI Python 3.9 (`stats.normaltest` exige n >= 8) |
+| **Causa raíz** | `scipy.stats.normaltest` no admite n < 8 y `diagnose` lo llamaba sin guardia (el comportamiento exacto por versión de scipy NO VERIFICADO) |
 | **Cómo se detectó** | CI multi-versión; commit `44f7f69` |
-| **Solución aplicada** | Guardar n antes del `try`; capturar la excepción y devolver resultado parcial |
-| **Archivo/línea** | `src/pccpy/_diagnose.py` (commit `44f7f69`) |
-| **Test de regresión** | SÍ — `test_diagnose.py` cubre casos con n < 8 |
+| **Solución aplicada** | Guardia `if n < 8:` → `normality_stat/p = nan`, `is_normal = True`; sin `try/except` (`src/pccpy/_diagnose.py:267-272`). *Corrección: la ficha original describía un `try/except` que no existe en el código.* |
+| **Archivo/línea** | `src/pccpy/_diagnose.py:267` (commit `44f7f69`) |
+| **Test de regresión** | PARCIAL — `tests/test_diagnose.py:20` ejecuta n=5 pero solo asserta estadísticos descriptivos; nada asserta `normality_p` NaN / `is_normal=True`. `test_diagnose_min_n` (línea 33) prueba n<4, otra rama |
 | **¿Puede ocurrir en otras libs?** | Sí — scipy cambia comportamiento de warnings/errores entre versiones menores. |
 
 ---
@@ -164,13 +164,13 @@
 | Campo | Detalle |
 |---|---|
 | **ID** | BUG-11 |
-| **Síntoma** | `sphinx-build -W` fallaba con 18 warnings (duplicados y referencias cruzadas ambiguas) |
-| **Causa raíz** | `wizard.md` usaba `.. autoclass:: pccpy.WidgetSession` cuando ya estaba documentado en otro lugar; referencias cruzadas sin namespace explícito |
-| **Cómo se detectó** | CI job `documentacion`; commit `819ca11` |
-| **Solución aplicada** | Reemplazar `autoclass` con tabla Markdown manual en `wizard.md`; corregir referencias cruzadas |
-| **Archivo/línea** | `docs/source/referencia/wizard.rst`, `docs/source/wizard.md` (commit `819ca11`) |
-| **Test de regresión** | SÍ — CI corre `sphinx-build -W` |
-| **¿Puede ocurrir en otras libs?** | Sí — `autoclass` + documentación manual del mismo símbolo siempre genera duplicado. |
+| **Síntoma** | CI `documentacion` (`sphinx-build -W`) falló con 18 warnings tras el PR #6: "duplicate object description" de `DiagnoseResult`, `WizardResult`, `WidgetSession` y sus miembros, más 1 referencia ambigua a `n` |
+| **Causa raíz** | (a) Las nuevas páginas `referencia/diagnose.rst` y `referencia/wizard.rst` hacían `autoclass` de símbolos que `diagnose.md` y `wizard.md` ya documentaban; (b) `x : array-like, shape (n,)` en el docstring de `diagnose()` hacía que Sphinx resolviera `n` contra todos los atributos `n` |
+| **Cómo se detectó** | CI job `documentacion` en el commit `31e9b74`; corregido en `819ca11` |
+| **Solución aplicada** | `:no-index:` en la directiva de la página que Sphinx procesa primero (`diagnose.md`; `referencia/wizard.rst`), dejando la otra como canónica; docstring `shape (n,)` → `array-like` (`_diagnose.py`). *Corrección: la ficha original decía "reemplazar autoclass por tabla Markdown", lo cual no corresponde al código (`wizard.md:117-120` sigue usando `autoclass` con `:no-index:`).* |
+| **Archivo/línea** | `docs/source/diagnose.md:136`, `docs/source/referencia/wizard.rst:9,14`, `docs/source/wizard.md:120`, `src/pccpy/_diagnose.py:228` |
+| **Test de regresión** | SÍ — el job de CI `sphinx-build -W` (no es un test pytest); `sphinx-build -W` local sobre `main` termina con `build succeeded` |
+| **¿Puede ocurrir en otras libs?** | Sí — dos páginas con autodoc del mismo símbolo siempre duplican; `shape (n,)` choca con cualquier atributo `n`. Regla R-14. |
 
 ---
 
@@ -184,8 +184,38 @@
 | **Cómo se detectó** | Uso en Jupyter con seaborn; commit `786fccb` |
 | **Solución aplicada** | Envolver todas las funciones `plot_*` en `plt.rc_context({})` |
 | **Archivo/línea** | `src/pccpy/plotting.py`, `src/pccpy/quality_tools.py` (commit `786fccb`) |
-| **Test de regresión** | NO VERIFICADO — no hay test que verifique aislamiento de estilos |
+| **Test de regresión** | NO — confirmado: `grep -rn "rc_context\|rcParams" tests/` vacío. Receta probada (pasa en `main`): `antes = dict(matplotlib.rcParams); fig = pp.xbar_r_chart(datos).plot(); plt.close(fig); assert dict(matplotlib.rcParams) == antes`. NO se probó por mutación |
 | **¿Puede ocurrir en otras libs?** | Sí — cualquier librería de visualización que no use `rc_context`. |
+
+---
+
+### BUG-13 · Release v0.10.8 falló: tag creado antes de subir la versión
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-13 |
+| **Síntoma** | Workflow "Publicar en PyPI" (run `37060818445`) terminó en `failure`: PyPI respondió `400 File already exists ('pccpy-0.10.7-py3-none-any.whl')` |
+| **Causa raíz** | El tag `v0.10.8` apuntaba a `d16df0d`, donde `pyproject.toml` y `__init__.py` seguían en `0.10.7`; el build generó artefactos 0.10.7, ya publicados. Se había declarado "listo para release" sin verificar la versión. Versión duplicada en 2 archivos (clase C-08) y sin guarda tag↔wheel en `publish.yml` |
+| **Cómo se detectó** | Logs del job fallido (`mcp__github__get_job_logs`); el usuario reportó el fallo |
+| **Solución aplicada** | Commit `2be31df` (bump a 0.10.8 en ambos archivos + CHANGELOG); el usuario movió el tag y el release 0.10.8 se publicó |
+| **Archivo/línea** | `pyproject.toml:7`, `src/pccpy/__init__.py:89` |
+| **Test de regresión** | NO. Falta: (1) guarda tag==versión del wheel en `publish.yml` (probada localmente, ver R-13: exit 1 contra el commit que falló, exit 0 contra `2be31df`); (2) versión única vía `dynamic` (probado en copia). El step de YAML NO se ha ejecutado en Actions |
+| **¿Puede ocurrir en otras libs?** | Sí — cualquier proyecto que etiquete a mano y mantenga la versión en más de un sitio. |
+
+---
+
+### BUG-14 · `examples/*.py` rotos tras el renombre `spyc` → `pccpy`
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-14 |
+| **Síntoma** | `python examples/ejemplo_basico.py` → `AttributeError: module 'spyc' has no attribute 'imr_chart'`; `ejemplo_avanzado.py` → `... 'zmr_chart'` |
+| **Causa raíz** | Ambos scripts conservan `import spyc` (`ejemplo_basico.py:14`, `ejemplo_avanzado.py:9`); el renombre no los tocó y ningún test ni CI los ejecuta |
+| **Cómo se detectó** | Esta revisión: `grep -rIl spyc .` + ejecución de los scripts (2026-10-02). La retrospectiva inicial no lo vio |
+| **Solución aplicada** | **NO CORREGIDO** (pendiente; fuera del alcance de esta fase) |
+| **Archivo/línea** | `examples/ejemplo_basico.py`, `examples/ejemplo_avanzado.py` |
+| **Test de regresión** | NO — falta un paso de CI que ejecute `examples/*.py` |
+| **¿Puede ocurrir en otras libs?** | Sí — los ejemplos fuera de `src/` y `tests/` se pudren en silencio tras cualquier renombre o cambio de API. |
 
 ---
 
@@ -196,8 +226,9 @@
 | **C-01 Validación de entrada faltante** | La función acepta datos inválidos (NaN, inf, tipo incorrecto, vacío) y falla con error opaco aguas abajo | Capa de validación explícita en cada función pública; tests con entradas malformadas | `pytest` con casos borde; `mypy` para tipos | BUG-02, BUG-03, BUG-05 |
 | **C-02 Caso degenerado no considerado** | El diseño de API no contempló valores extremos válidos (sin límites, datos constantes, n<8) | Listar casos degenerados al diseñar la API; documentar en docstring | Tests parametrizados con valores límite | BUG-04, BUG-05, BUG-10 |
 | **C-03 Import opcional sin mensaje orientativo** | Dependencia opcional ausente genera `ImportError` crudo sin guía al usuario | Capturar `ImportError` de opcionales; mensaje con `pip install ...` | Test que simula ausencia con `unittest.mock` | BUG-07 |
-| **C-04 CI que no detecta el fallo** | El build/test local pasa pero CI falla por diferencia de entorno (versión Python, Node) | Correr la matrix localmente con tox antes del PR; CI fail-fast desactivado | Primera ejecución en CI; logs de CI | BUG-08, BUG-09, BUG-10, BUG-11 |
-| **C-05 Documentación desactualizada** | Código o comandos en docs/CLAUDE.md apuntan al estado anterior | Incluir docs en el checklist de cada PR; grep de términos obsoletos en CI | Grep automatizado; revisión de CLAUDE.md en cada sesión | BUG-08, L-01, L-07 |
+| **C-04 CI que no detecta el fallo** | El build/test local pasa pero CI falla por diferencia de entorno (versión Python, Node), o el pipeline de release no verifica lo que publica | Correr la matrix localmente con tox antes del PR; CI fail-fast desactivado; guarda tag==versión del wheel y `twine check` antes de publicar | Primera ejecución en CI; logs de CI | BUG-08, BUG-09, BUG-10, BUG-11, BUG-13 |
+| **C-05 Documentación/ejemplos desactualizados** | Código, comandos o ejemplos apuntan al estado anterior (nombre viejo, API vieja) | Incluir docs y `examples/` en el checklist de cada PR; ejecutar `examples/*.py` y `grep` de términos obsoletos en CI | Grep automatizado; ejecutar los ejemplos; revisión de CLAUDE.md en cada sesión | BUG-08, BUG-14, L-01, L-07 |
 | **C-06 Efecto secundario de refactor** | Validación añadida en función base rompe llamada interna válida | Al añadir validación, buscar todas las llamadas internas con `grep`; añadir parámetro escape-hatch explícito | Tests de integración de módulos que se llaman entre sí | BUG-06 |
 | **C-07 Estado global de entorno** | La librería modifica estado global (rcParams) contaminando el entorno del usuario | Usar context managers (`rc_context`, `warnings.catch_warnings`) | Test que verifica estado antes/después de la llamada | BUG-12 |
-| **C-08 Versión múltiple fuente** | La versión se gestiona en N>1 lugares y se desincroniza | Única fuente de verdad: `importlib.metadata` o `setuptools-scm` | `assert pccpy.__version__ == importlib.metadata.version("pccpy")` en test | L-10 |
+| **C-08 Versión múltiple fuente** | La versión se gestiona en N>1 lugares y se desincroniza | Literal único en `__init__.py` + `[tool.setuptools.dynamic] version = {attr = ...}` (probado). **No** `importlib.metadata` en `__init__.py`: se congela al instalar (probado) | Guarda tag==versión del wheel en el workflow de publicación (R-13); en dev, `grep -n '^version\|^__version__'` | BUG-13, L-10 |
+| **C-09 Autodoc duplicado/ambiguo** | Dos directivas autodoc para el mismo símbolo, o tipos en docstring (`shape (n,)`) que Sphinx resuelve como referencia | Una directiva canónica por símbolo; `:no-index:` en la procesada primero; `array-like` en vez de `shape (n,)` | `sphinx-build -W` en CI | BUG-11 |

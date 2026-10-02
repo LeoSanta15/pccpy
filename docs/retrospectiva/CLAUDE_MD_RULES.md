@@ -13,8 +13,9 @@
 # Tests
 python -m pytest tests/ -q
 
-# Linter (bugs reales, no solo estilo)
-python -m ruff check src/ --select F,E9,B,I,S
+# Linter: el MISMO comando que CI (config en pyproject). No uses un --select
+# distinto sin probarlo: F,E9,B,I,S falló en este repo (S101, acceptance.py:692).
+python -m ruff check src/
 
 # Tipos
 python -m mypy src/<paquete> --ignore-missing-imports
@@ -25,8 +26,21 @@ python -m build --wheel
 # Tests con cobertura
 python -m pytest --cov=<paquete> --cov-report=term-missing -q
 
-# Verificar sin referencias obsoletas
-grep -r "PLACEHOLDER\|TU_USUARIO" . --include="*.py" --include="*.md" --include="*.toml" --include="*.yml" || echo "OK"
+# Docs sin warnings
+sphinx-build -b html -W docs/source docs/build
+
+# Ejemplos ejecutables
+for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA $f"; done
+
+# Cobertura por módulo (lista los módulos < 70 %; salida vacía = OK)
+python -m pytest -q --cov=<paquete> --cov-report=json:/tmp/cov.json >/dev/null && python - <<'EOF'
+import json
+d = json.load(open("/tmp/cov.json"))["files"]
+print({k: round(v["summary"]["percent_covered"]) for k, v in d.items() if v["summary"]["percent_covered"] < 70} or "OK")
+EOF
+
+# Referencias obsoletas (probado: sin falsos positivos con estas exclusiones)
+grep -rIln "nombre_viejo\|PLACEHOLDER" . --exclude-dir=.git --exclude-dir=build --exclude-dir=_build --exclude-dir=retrospectiva --exclude=CHANGELOG.md --exclude=CLAUDE.md || echo "OK"
 ```
 
 ## Definición de "terminado"
@@ -36,10 +50,14 @@ Una tarea está **terminada** solo cuando:
 2. `ruff check src/` → `All checks passed!`
 3. `mypy src/<paquete> --ignore-missing-imports` → `Success: no issues found`
 4. `python -m build --wheel` → `Successfully built`
-5. Cobertura global >= 85%; ningún módulo público < 70%.
-6. Sin referencias al nombre antiguo del paquete en ningún archivo.
-7. CHANGELOG.md actualizado con la versión nueva.
-8. CLAUDE.md actualizado si se añadió funcionalidad o se cambió un comando.
+5. Cobertura global >= 85%; módulo nuevo o modificado >= 70%; ningún módulo baja
+   su cobertura actual (trinquete). Si el repo ya tiene módulos < 70%, listarlos
+   como deuda en CLAUDE.md en vez de declarar una regla que el repo ya incumple.
+6. Sin referencias al nombre antiguo del paquete (incluye `examples/`, CI, LICENSE).
+7. `sphinx-build -W` sin warnings y `examples/*.py` ejecutan sin error.
+8. Todo bug corregido tiene test de regresión y ficha en BUG_CATALOG.md.
+9. CHANGELOG.md actualizado con la versión nueva.
+10. CLAUDE.md actualizado si se añadió funcionalidad o se cambió un comando.
 
 ## Reglas de trabajo (no negociables)
 
@@ -61,12 +79,20 @@ Cada versión: construir, probar (suite + wheel en venv limpio), commit, tag `vX
 No dejar trabajo a medio hacer entre commits.
 
 ### R-05: Una sola fuente de verdad para la versión
-La versión vive en `pyproject.toml`. `__init__.py` la lee:
-```python
-from importlib.metadata import version
-__version__ = version("<nombre_pypi>")
+Deja el literal solo en `__init__.py` y que el build lo lea (probado: una edición
+produjo `pccpy-0.10.9-py3-none-any.whl`):
+```toml
+[project]
+dynamic = ["version"]          # y quitar `version = "..."`
+
+[tool.setuptools.dynamic]
+version = {attr = "<paquete>.__version__"}
 ```
-No actualices la versión en dos lugares distintos.
+NO uses `importlib.metadata.version()` dentro de `__init__.py`: la metadata
+queda congelada al instalar y diverge del código en instalaciones editables
+(probado: metadata 0.10.8 vs fuente 0.10.9 tras subir versión sin reinstalar).
+Si no puedes migrar aún, edita ambos archivos y verifica con
+`grep -n '^version\|^__version__' pyproject.toml src/<paquete>/__init__.py`.
 
 ### R-06: Dependencias opcionales con mensaje orientativo
 Cualquier `import` de dependencia opcional va dentro de `try/except ImportError`:
@@ -113,6 +139,33 @@ Cada función pública nueva necesita al menos un test de caso borde:
 Antes de abrir un PR, confirmar que los tests pasan en la versión mínima de Python
 declarada en `pyproject.toml`. Si no se puede verificar localmente, el CI debe correr
 esa versión y el PR no se mergea hasta que pase.
+
+### R-13: "Listo para release" exige verificación, no opinión
+Solo declara "listo" si: (a) la versión en el código == entrada superior de
+CHANGELOG.md; (b) `python -m build --wheel` genera `<nombre>-<esa versión>-*.whl`.
+En el workflow de publicación añade, tras el build, una guarda que compare el
+tag/release con la versión del wheel (probada localmente contra el commit que
+falló: devuelve exit 1 con tag 0.10.8 vs versión 0.10.7):
+```bash
+V=$(python -c "import glob,re;print(re.search(r'-(\d[^-]*)-py', glob.glob('dist/*.whl')[0]).group(1))")
+[ "${TAG#v}" = "$V" ] || { echo "tag $TAG != wheel $V"; exit 1; }
+```
+(`TAG` = `github.event.release.tag_name` si el trigger es `release`, o `GITHUB_REF_NAME` si es push de tag.)
+
+### R-14: Sphinx — un símbolo, una directiva canónica
+No hagas `autoclass`/`autofunction` del mismo símbolo en dos páginas. Si es
+inevitable, la que Sphinx procesa primero lleva `:no-index:`; verifícalo con
+`sphinx-build -W`. En docstrings numpy no uses `shape (n,)` si existe un
+atributo `n` en algún objeto documentado (referencia ambigua): usa `array-like`.
+
+### R-15: Los ejemplos son código que se ejecuta
+Cada `examples/*.py` corre sin error antes de un release y, idealmente, en CI.
+Un renombre que no los toca los deja rotos sin que ningún test lo note.
+
+### R-16: Una regla nueva se prueba antes de adoptarla
+Ejecuta el comando de verificación de la regla contra el propio repo y registra
+el resultado. Si la regla falla en el repo actual, o es un falso positivo (p. ej.
+un `grep` que coincide con el propio CLAUDE.md), corrígela o documéntala como deuda.
 
 ## Política de no repetición
 

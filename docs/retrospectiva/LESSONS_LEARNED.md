@@ -157,20 +157,18 @@ Para código que requiere dependencias opcionales de entorno (widgets, GUI), usa
 
 ---
 
-## L-10 · Versión en `pyproject.toml` se desincronizó de `__init__.py` en dos ocasiones (IMPACTO: BAJO)
+## L-10 · La versión duplicada produjo un release fallido (IMPACTO: ALTO — corregido en la segunda pasada)
 
 **¿Qué pasó?**
-El commit `fb8fc3d` ("revert version to 0.4.3") muestra que `pyproject.toml` y `__init__.py` tenían versiones diferentes en el mismo punto del historial. También el commit `2be31df` bumpeó "0.10.7 → 0.10.8" pero `pip show pccpy` reporta 0.10.6 (instalación previa).
+(1) El commit `fb8fc3d` ("revert version to 0.4.3") muestra que `pyproject.toml` y `__init__.py` tenían versiones diferentes en el mismo punto del historial. (2) El release `v0.10.8` falló (run `37060818445`, PyPI `400 File already exists`): el tag apuntaba a `d16df0d`, donde ambos archivos seguían en 0.10.7; se había declarado "listo para release" sin construir el wheel. Se arregló con `2be31df` (ver BUG-13 en `BUG_CATALOG.md`).
 
 **Evidencia:** commit `fb8fc3d` modifica tanto `pyproject.toml` como `src/spyc/__init__.py` para alinear a `0.4.3`.
 
 **¿Por qué?**
 La versión se gestiona manualmente en dos lugares. Es fácil actualizar uno y olvidar el otro.
 
-**¿Cómo evitarlo?**
-Usar `importlib.metadata` en `__init__.py`:
-```python
-from importlib.metadata import version
-__version__ = version("pccpy")
-```
-O usar `setuptools-scm` para derivar la versión del tag git. Así hay una sola fuente de verdad.
+**¿Cómo evitarlo?** (revisado: la primera versión de esta lección recomendaba `importlib.metadata`, y la prueba lo refutó)
+- Una sola fuente: literal en `__init__.py` + `[tool.setuptools.dynamic] version = {attr = "pccpy.__version__"}`. Probado en una copia: una edición produjo `pccpy-0.10.9-py3-none-any.whl`.
+- NO `importlib.metadata.version()` dentro de `__init__.py`: la metadata queda congelada al instalar. Probado: tras subir la versión de la fuente a 0.10.9, `importlib.metadata` seguía devolviendo 0.10.8.
+- Guarda en el workflow de publicación: tag/release == versión del wheel (probada contra el commit que falló: exit 1; contra `2be31df`: exit 0).
+- Proceso: "listo para release" solo tras `python -m build --wheel` y ver la versión en el nombre del wheel.

@@ -14,17 +14,25 @@
 | 2 | Diseño de API pública | **4** | Maduro |
 | 3 | Validación de entradas | **3** | Sólido |
 | 4 | Corrección numérica | **4** | Maduro |
-| 5 | Suite de pruebas | **4** | Maduro |
+| 5 | Suite de pruebas | **3** *(antes 4)* | Sólido |
 | 6 | Tipado estático | **4** | Maduro |
 | 7 | Gestión de dependencias | **3** | Sólido |
 | 8 | CI/CD | **4** | Maduro |
 | 9 | Documentación | **4** | Maduro |
 | 10 | Rendimiento | **2** | Funcional |
 | 11 | Seguridad | **2** | Funcional |
-| 12 | Versionado y releases | **3** | Sólido |
+| 12 | Versionado y releases | **2** *(antes 3)* | Funcional |
 | 13 | Comunidad y contribución | **2** | Funcional |
-| 14 | Developer Experience (DX) | **3** | Sólido |
-| **GLOBAL** | | **3.4** | **Sólido** |
+| 14 | Developer Experience (DX) | **2** *(antes 3)* | Funcional |
+| **GLOBAL** | | **3.1** *(43/14 = 3.07; antes 3.4)* | **Sólido** |
+
+### Qué cambió en la segunda pasada (2026-10-02) y por qué
+
+- **Aritmética corregida:** las puntuaciones originales sumaban 46/14 = 3.29, no 3.4.
+- **Criterio explícito para un 4:** "ningún bug cerrado sin test de regresión y ningún módulo público < 70 % de cobertura". Hoy se incumple (BUG-01/07/12 sin test; `timeweighted_attr.py` 19 %, `_wizard.py` 62 %) → Suite de pruebas baja a 3.
+- **Versionado y releases 3 → 2:** el release v0.10.8 falló en producción (BUG-13) por falta de guarda y versión duplicada.
+- **DX 3 → 2:** `examples/*.py` no ejecutan (BUG-14: `import spyc`). CLAUDE.md ya se actualizó en esta pasada, pero eso no compensa ejemplos rotos.
+- **Afirmación falsa retirada:** "`actions/checkout@v6` no existe". Evidencia en contra: `publish.yml` en el tag `v0.10.7` ya usaba `checkout@v6` y ese release publicó con éxito; el CI de `819ca11` pasó con v6 en los 7 jobs.
 
 ---
 
@@ -39,7 +47,7 @@
 - `.github/workflows/` con tests y publish.
 - `benchmarks/`, `examples/`, `docs/` organizados.
 
-**DÉFICITS (-1):** CLAUDE.md desactualizado con referencias a `src/spyc` (evidencia: archivo activo). Sin `.github/ISSUE_TEMPLATE/` ni `.github/PULL_REQUEST_TEMPLATE.md`.
+**DÉFICITS (-1):** Sin `.github/ISSUE_TEMPLATE/` ni `.github/PULL_REQUEST_TEMPLATE.md`. (CLAUDE.md estaba desactualizado con `src/spyc`; corregido en la segunda pasada.) `LICENSE` aún dice "Autores de spyc".
 
 ---
 
@@ -81,7 +89,7 @@
 
 ---
 
-### 5. Suite de pruebas — 4/5
+### 5. Suite de pruebas — 3/5
 
 **HECHOS:**
 - 344 tests pasando (verificado: `344 passed in 33.97s`).
@@ -90,7 +98,7 @@
 - Fixture `rng` en `conftest.py` para reproducibilidad.
 - Tests de stages, Box-Cox, multivariate en archivos dedicados.
 
-**DÉFICITS (-1):** `timeweighted_attr.py` con 19% de cobertura (77 líneas, 62 sin cubrir). `_wizard.py` con 62% (modo widget sin tests). `_data.py` con 72%.
+**DÉFICITS (-2):** `timeweighted_attr.py` con 19% de cobertura (77 líneas, 62 sin cubrir; 6 funciones públicas EWMA/CUSUM de atributos). `_wizard.py` con 62% (modo widget sin tests). `_data.py` con 72%. Bugs cerrados sin test de regresión (verificado con `grep` en `tests/`): BUG-01, BUG-07, BUG-12; BUG-10 solo parcial. Dos de los tres tienen ya una receta de test probada en `BUG_CATALOG.md` (BUG-01 también por mutación).
 
 ---
 
@@ -125,7 +133,7 @@
 - Actions actualizadas a v6 para Node 24.
 - publish.yml con job separado de build y publicación condicionada a tag.
 
-**DÉFICITS (-1):** `actions/checkout@v6` no existe actualmente (versión inválida — GitHub Actions actualmente en v4). CI puede fallar por versión de action incorrecta en un nuevo repo.
+**DÉFICITS (-1):** El pipeline de publicación no verifica lo que publica: sin guarda tag/release == versión del wheel ni `twine check` (BUG-13). `publish.yml` se dispara con `release: published`, no con push de tag. CI no ejecuta `examples/*.py` (BUG-14) ni `pip audit`. *(La afirmación original "`checkout@v6` no existe" era falsa y se retiró; ver arriba.)*
 
 ---
 
@@ -138,7 +146,7 @@
 - FAQ, guía de selección, comparativa con Minitab.
 - CHANGELOG completo versión a versión.
 
-**DÉFICITS (-1):** CLAUDE.md desactualizado (referencias `spyc`). Sin página de "Migración desde versión anterior".
+**DÉFICITS (-1):** Sin página de "Migración desde versión anterior". Esta documentación tenía además errores propios (BUG-11 mal descrito, `checkout@v6`), corregidos en la segunda pasada. `sphinx-build -W` local sobre `main`: `build succeeded`.
 
 ---
 
@@ -162,15 +170,16 @@
 
 ---
 
-### 12. Versionado y releases — 3/5
+### 12. Versionado y releases — 2/5
 
 **HECHOS:**
 - Versionado semántico.
 - Tags git para releases.
 - CHANGELOG detallado.
-- CI de publicación a PyPI en push de tag.
+- CI de publicación a PyPI al publicar un release (`on: release: types: [published]`).
+- v0.10.7 publicó correctamente; **v0.10.8 falló** (run `37060818445`, PyPI `400 File already exists`) y se resolvió con `2be31df` (BUG-13).
 
-**DÉFICITS (-2):** Versión en dos lugares (`pyproject.toml` y `__init__.py`) — desincronización histórica documentada. Sin `twine check dist/*` en CI. `pip show pccpy` reportó 0.10.6 mientras `__version__` era 0.10.8 (desincronización de instalación).
+**DÉFICITS (-3):** Versión en dos lugares (`pyproject.toml:7` y `__init__.py:89`) — desincronización histórica (`fb8fc3d`) y causa del release fallido. Sin guarda tag/release == versión del wheel. Sin `twine check dist/*`. Se declaró "listo para release" sin construir el wheel.
 
 ---
 
@@ -185,24 +194,39 @@
 
 ---
 
-### 14. Developer Experience (DX) — 3/5
+### 14. Developer Experience (DX) — 2/5
 
 **HECHOS:**
 - `pip install -e ".[dev]"` instala todo en un paso.
-- CLAUDE.md con mapa de código y reglas de trabajo.
-- Ejemplos en `examples/` documentados.
+- CLAUDE.md con mapa de código, comandos y reglas (reescrito y verificado en la segunda pasada).
 - Wizard de selección para usuarios nuevos.
 
-**DÉFICITS (-2):** CLAUDE.md desactualizado (comandos incorrectos para el nombre actual). Sin `Makefile` ni script de conveniencia. La primera instalación en Python 3.9 puede fallar si el entorno no está configurado.
+**DÉFICITS (-3):** `examples/ejemplo_basico.py` y `examples/ejemplo_avanzado.py` **no ejecutan** (`import spyc` → `AttributeError`, BUG-14). *(La primera pasada los daba como positivos sin ejecutarlos: contradicción corregida.)* Sin `Makefile` ni script de conveniencia. "La instalación en Python 3.9 puede fallar" de la primera pasada es NO VERIFICADO.
 
 ---
 
 ## Nivel de madurez global: NIVEL 3 — Sólido
 
-**Puntuación media: 3.4 / 5.0**
+**Puntuación media: 3.1 / 5.0** (43/14 = 3.07; en el límite inferior del Nivel 3)
 
 El proyecto es funcional, bien testeado y tiene CI activo. Los déficits principales son:
-1. CLAUDE.md desactualizado (riesgo operacional inmediato).
-2. Módulo `timeweighted_attr.py` sin cobertura de tests.
-3. Gestión de versión con dos fuentes de verdad.
+1. Pipeline de release sin verificación y versión en dos fuentes (BUG-13, ya ocurrió).
+2. `examples/` rotos (BUG-14).
+3. Bugs sin test de regresión y módulos con cobertura < 70 % (`timeweighted_attr.py` 19 %, `_wizard.py` 62 %).
 4. Sin auditoría de seguridad en CI.
+
+---
+
+## Dimensión más rezagada y siguiente acción de mayor impacto
+
+**Más rezagada:** hay un empate a 2/5 entre Rendimiento, Seguridad, Versionado y releases, Comunidad y DX. Ninguna está por debajo del resto.
+
+**Desempate por impacto observado:** **Versionado y releases** es la única de las cinco que ya causó un fallo en producción (release v0.10.8) y la de menor esfuerzo de corrección.
+
+**Siguiente acción de mayor impacto (≈30 min):**
+1. Añadir en `publish.yml`, tras el build, la guarda tag/release == versión del wheel y `twine check dist/*`.
+2. Pasar la versión a fuente única con `[tool.setuptools.dynamic] version = {attr = "pccpy.__version__"}`.
+
+Ambas piezas se probaron localmente (guarda: exit 1 contra el commit que falló, exit 0 contra `2be31df`; `dynamic`: una edición → wheel 0.10.9). **NO se han ejecutado todavía dentro de GitHub Actions**, así que la primera ejecución real debe revisarse con un release de prueba o un `workflow_dispatch`.
+
+Segunda en la lista (≈15 min, sube DX): arreglar `examples/` (`spyc` → `pccpy`), ejecutarlos y añadirlos a CI.

@@ -1,146 +1,155 @@
 # pccpy — contexto para Claude Code
 
-Este archivo es el punto de partida para retomar el trabajo en spyc desde Claude
-Code. Léelo completo antes de tocar código: resume las convenciones, el estado
-actual y lo que falta, para no repetir decisiones ya tomadas ni romper algo que
-ya funciona.
+Léelo completo antes de tocar código: resume convenciones, estado verificado y
+deuda conocida para no repetir decisiones ni romper algo que ya funciona.
+Las lecciones y el catálogo de bugs viven en `docs/retrospectiva/`.
 
 ## Qué es pccpy
 
 Librería Python de Control Estadístico de Procesos (SPC) que replica la
 funcionalidad de Minitab: cartas de control (univariadas y multivariadas),
-análisis de capacidad, prueba de normalidad y Pareto. Todo el código,
-docstrings, mensajes de error y salidas están **en español**.
+capacidad, normalidad, Pareto, MSA/Gage R&R, muestreo de aceptación,
+intervalos de tolerancia, `diagnose()` y `wizard()`. Todo el código visible al
+usuario (docstrings, errores, salidas) está **en español**.
 
-## Estado actual
+## Estado actual (verificado el 2026-10-02)
 
-- Versión **0.4.5**, en `src/spyc/__init__.py` (`__version__`) y `pyproject.toml`.
-- **186 pruebas**, todas pasando, ~97% de cobertura.
-- 6 commits en `main`, etiquetados `v0.1.0` a `v0.4.2` (uno por versión).
-- **No está en GitHub todavía** — el repositorio solo existe en este `.tar.gz`.
-  El `pyproject.toml` y el `README.md` tienen `TU_USUARIO` como marcador de
-  posición en las URLs; hay que reemplazarlo antes de subirlo (ver "Pendientes").
-- Documentación con Sphinx en `docs/`, sin publicar (no hay Read the Docs
-  conectado todavía, pero `.readthedocs.yaml` ya está listo para eso).
+- Versión **0.10.8** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
+- **344 pruebas** pasando, **90 %** de cobertura global, Python `>=3.9`.
+- Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
+- CI: `.github/workflows/tests.yml` (tests 3.9–3.13, calidad = ruff + mypy,
+  documentación = `sphinx-build -W`) y `publish.yml` (se dispara con
+  **release publicada**, no con un push de tag).
+- Detalle versión por versión: `CHANGELOG.md` (no lo dupliques aquí).
 
-Para el detalle versión por versión, lee `CHANGELOG.md` — no lo dupliques aquí.
+## Comandos estándar (los mismos que corre CI)
+
+```bash
+pip install -e ".[dev,docs,excel]"
+python -m pytest tests/ -q
+python -m ruff check src/                      # usa la config de pyproject (= CI)
+python -m mypy src/pccpy --ignore-missing-imports
+python -m build --wheel                        # build aislado, como CI
+sphinx-build -b html -W docs/source docs/build # si tocaste código público, docstrings o docs/
+for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA $f"; done
+```
+
+## Definición de "terminado"
+
+1. `pytest -q` → 0 fallos. 2. `ruff check src/` → `All checks passed!`.
+3. `mypy` → `Success`. 4. `python -m build --wheel` → `Successfully built`.
+5. Cobertura global >= 85 %; módulo nuevo o modificado >= 70 %; ningún módulo
+   puede bajar su cobertura actual (deuda: ver "Deuda técnica").
+6. `sphinx-build -W` sin warnings si se tocó código público o docs.
+7. Todo bug corregido trae test de regresión y ficha en `BUG_CATALOG.md`.
+8. `CHANGELOG.md` y este archivo actualizados si cambió funcionalidad o un comando.
 
 ## Reglas de trabajo (no negociables)
 
-1. **Sigue `/mnt/skills/user/karpathy-guidelines/SKILL.md` si existe en tu
-   entorno** (o los mismos principios si no): simplicidad, cambios quirúrgicos,
-   criterios de éxito verificables. No reescribas módulos enteros para agregar
-   una función; sigue el patrón que ya usan los módulos vecinos.
-2. **Todo resultado numérico se valida contra una referencia independiente** —
-   nunca contra la propia salida de spyc. Referencias usadas hasta ahora:
-   tablas publicadas (Montgomery, Minitab), cálculo manual, `scipy`/`statsmodels`,
-   o simulación Monte Carlo con **al menos ~20 semillas distintas** antes de dar
-   por buena una tolerancia (varias pruebas de este proyecto fallaron con la
-   primera semilla que se probó y hubo que ajustar la tolerancia o el enunciado).
-3. **Español en todo lo que ve el usuario**: nombres de funciones en snake_case
-   inglés está bien (`imr_chart`), pero docstrings, mensajes de `ValueError`,
-   columnas de DataFrame, texto de gráficos y de `summary()` van en español.
-4. **Avances incrementales con checkpoint**: cada versión nueva se construye,
-   se prueba (pruebas propias + wheel en un venv limpio), se hace commit, se
-   etiqueta `vX.Y.Z`, y solo entonces se sigue. No dejes trabajo a medio hacer
-   entre un commit y otro.
-5. **Antes de un commit de versión**, corre siempre, en este orden:
-   ```bash
-   pytest -q                                    # deben pasar todas
-   ruff check src/ --select F,E9,B,S            # bugs reales, no solo estilo
-   mypy src/spyc --ignore-missing-imports        # debe salir limpio
-   python -m build --wheel                       # construir
-   # instalar el wheel en un venv limpio y correr pytest ahí también
-   sphinx-build -b html -W docs/source docs/build # si tocaste código público, docstrings o docs/
-   ```
-6. **No inventes comparaciones con Minitab real** — nunca hubo licencia
-   disponible durante el desarrollo. Cuando una fórmula no está clara en la
-   documentación pública de Minitab, se usa la referencia estadística estándar
-   (Montgomery, el paper original del método) y se anota como decisión propia
-   en el README, sección "Notas sobre diferencias posibles con Minitab".
+- **R-01 Cambios quirúrgicos.** Sigue `/mnt/skills/user/karpathy-guidelines/SKILL.md`
+  si existe. No reescribas módulos para añadir una función; imita a los vecinos.
+- **R-02 Validar contra referencia independiente.** Todo resultado numérico se
+  contrasta con una fuente externa (Montgomery, Minitab publicado, cálculo
+  manual, `scipy`/`statsmodels`, Monte Carlo con **>= ~20 semillas**). Nunca
+  contra la salida de pccpy. No inventes comparaciones con Minitab real: anota
+  la decisión en el README ("Notas sobre diferencias posibles con Minitab").
+- **R-03 Español** en docstrings, `ValueError`/`UserWarning`, columnas de
+  DataFrame y texto de gráficos. Nombres de funciones: snake_case inglés.
+- **R-04 Checkpoint incremental:** construir, probar (suite + wheel), commit.
+  **El tag y el release los crea el usuario a mano** (decisión explícita suya);
+  Claude no crea tags ni releases.
+- **R-05 Versión: una sola fuente.** Hoy está duplicada (`pyproject.toml` +
+  `__init__.py`): al subir versión edita **ambos** y verifica con
+  `grep -n '^version\|^__version__' pyproject.toml src/pccpy/__init__.py`.
+  Destino probado en copia: quitar `version` de `[project]`, añadir
+  `dynamic = ["version"]` y `[tool.setuptools.dynamic] version = {attr = "pccpy.__version__"}`.
+  No uses `importlib.metadata.version()` para `__version__`: la metadata se
+  congela al instalar y queda obsoleta en instalaciones editables.
+- **R-06 "Listo para release" solo si:** (a) la versión de `pyproject.toml` y
+  `__init__.py` == entrada superior de `CHANGELOG.md`; (b) `python -m build --wheel`
+  produce `pccpy-<esa versión>-*.whl`. El release v0.10.8 falló (PyPI `400 File
+  already exists`) porque se etiquetó con la versión sin subir (BUG-13).
+- **R-07 Dependencias opcionales** con mensaje accionable (`pip install pccpy[excel]`):
+  patrón en `_excel_writer()` (`src/pccpy/_data.py`). Test: `monkeypatch.setitem(sys.modules, "openpyxl", None)`.
+- **R-08 No contaminar estado global:** gráficos dentro de `plt.rc_context({})`,
+  warnings temporales dentro de `warnings.catch_warnings()`. Test: comparar
+  `dict(matplotlib.rcParams)` antes y después de `.plot()`.
+- **R-09 Ingesta centralizada:** datos de usuario pasan por `as_1d()` /
+  `to_subgroups()` (`_data.py`). Antes de endurecer una validación base, `grep`
+  las llamadas internas; usa escape-hatch explícito (`_allow_size_1=True`).
+- **R-10 Referencias obsoletas:** tras un renombre o antes de un release corre
+  `grep -rIln "spyc\|TU_USUARIO\|PLACEHOLDER" . --exclude-dir=.git --exclude-dir=build --exclude-dir=_build --exclude-dir=retrospectiva --exclude=CHANGELOG.md --exclude=CLAUDE.md`
+  (cubre `examples/`, CI y `LICENSE`). Debe salir vacío; hoy lista `LICENSE` y `examples/` (ver deuda).
+- **R-11 Tests obligatorios:** cada función pública nueva tiene test de caso
+  borde (vacío, NaN/inf, n mínimo, parámetros opcionales ausentes, std=0) y
+  todo bug corregido tiene test de regresión que **falla** si el bug vuelve.
+- **R-12 Sphinx:** un símbolo = una directiva autodoc canónica. Si dos páginas
+  documentan el mismo símbolo, la procesada primero lleva `:no-index:`; verifica
+  con `sphinx-build -W`. En docstrings numpy no escribas `shape (n,)` si existe
+  un atributo `n` (referencia ambigua): usa `array-like`.
+- **R-13 Ejemplos ejecutables:** `examples/*.py` deben correr sin error antes de
+  cada release (comando en "Comandos estándar").
+- **R-14 CI en versión mínima:** la matrix de `tests.yml` incluye 3.9; un PR no
+  se mergea con CI en rojo.
+- **R-15 No repetir bugs:** antes de tocar validación de entrada, casos borde,
+  imports opcionales, autodoc o releases, lee `docs/retrospectiva/BUG_CATALOG.md`.
+  Si un bug reaparece: test de regresión, actualizar catálogo, reforzar la regla.
+- **R-16 Reglas probadas:** antes de añadir una regla a este archivo, ejecuta su
+  comando contra este repo y registra el resultado (una regla propuesta con
+  `ruff --select F,E9,B,I,S` falló: `S101` en `acceptance.py:692`).
 
 ## Mapa del código
 
 ```
-src/spyc/
-  __init__.py          # API pública: todo lo exportado vive en __all__ aquí
-  _constants.py         # d2, d3, c4, c5, A2..B4 por integración numérica (n>=2)
-  _data.py               # as_1d, to_subgroups, stage_slices (etapas contiguas)
-  _sigma.py               # estimadores de sigma (individuales y subgrupos)
-  rules.py                 # las 8 pruebas de causas especiales de Minitab
-  results.py                # Panel, ControlChart, MultivariateChart (+ .plot(), .summary()...)
+src/pccpy/
+  __init__.py        # API pública: todo lo exportado vive en __all__
+  _constants.py      # d2, d3, c4, c5, A2..B4 por integración numérica
+  _data.py           # as_1d, to_subgroups, stage_slices, _excel_writer
+  _sigma.py          # estimadores de sigma
+  _diagnose.py       # diagnose() y DiagnoseResult
+  _wizard.py         # wizard(), WizardResult, WidgetSession
+  rules.py           # las 8 pruebas de causas especiales de Minitab
+  results.py         # Panel, ControlChart, MultivariateChart
   charts/
-    _engine.py               # build_chart(): motor común, itera etapas, aplica pruebas
-    variables.py               # I-MR, Xbar-R, Xbar-S
-    attributes.py               # P, NP, C, U, Laney P'/U'
-    timeweighted.py               # EWMA, CUSUM (NO soportan 'stages' todavía)
-    advanced.py                     # MA, Z-MR, I-MR-R/S, Zona, G, T
-  multivariate.py                    # T², |S|, MEWMA, MCUSUM (con 'stages' y 'boxcox')
-  capability.py                       # capacidad normal/no normal/Box-Cox, sixpack
-  normality.py                         # Anderson-Darling, Shapiro, D'Agostino
-  plotting.py                           # plot_control_chart, plot_capability, etc.
-  quality_tools.py                       # pareto, plot_pareto
-
-tests/            # un archivo por área temática, todas usan la fixture `rng` de conftest.py
-examples/         # ejemplo_basico.py y ejemplo_avanzado.py, ambos se ejecutan sin error
-docs/source/      # Sphinx: referencia/*.rst usa autofunction/autoclass (no dupliques docstrings ahí)
+    _engine.py       # build_chart(): motor común (etapas + pruebas)
+    variables.py     # I-MR, Xbar-R, Xbar-S
+    attributes.py    # P, NP, C, U, Laney P'/U'
+    timeweighted.py  # EWMA, CUSUM (sin 'stages')
+    timeweighted_attr.py  # EWMA/CUSUM de atributos (cobertura 19 %)
+    run_chart.py     # carta de corridas
+    advanced.py      # MA, Z-MR, I-MR-R/S, Zona, G, T
+  multivariate.py    # T², |S|, MEWMA, MCUSUM
+  capability.py      # capacidad normal/no normal/Box-Cox, sixpack
+  msa.py             # MSA / Gage R&R / acuerdo por atributos
+  acceptance.py      # muestreo de aceptación
+  tolerance.py       # intervalos de tolerancia
+  precontrol.py      # pre-control
+  normality.py       # Anderson-Darling, Shapiro, D'Agostino
+  plotting.py        # plot_control_chart, plot_capability, ...
+  quality_tools.py   # pareto, plot_pareto
+tests/               # un archivo por área; fixture `rng` en conftest.py
+examples/            # ejemplo_basico.py, ejemplo_avanzado.py
+docs/source/         # Sphinx: referencia/*.rst usa autodoc (ver R-12)
+docs/retrospectiva/  # LESSONS_LEARNED, BUG_CATALOG, PLAYBOOK, SCORECARD, ...
 ```
 
-**Patrón para agregar una carta nueva:** mira `charts/advanced.py` (una carta
-univariada simple, p. ej. `g_chart`) o `multivariate.py` (una multivariada,
-p. ej. `mcusum_chart`) como plantilla. Toda carta termina llamando a
-`build_chart(kind, n_puntos, stages, stage_fn, tests, test_params)`, que se
-encarga de iterar etapas y aplicar las pruebas de causas especiales — no
-reimplementes ese bucle.
+**Patrón para una carta nueva:** usa `charts/advanced.py` (`g_chart`) o
+`multivariate.py` (`mcusum_chart`) como plantilla; toda carta termina en
+`build_chart(kind, n_puntos, stages, stage_fn, tests, test_params)`. No
+reimplementes el bucle de etapas.
 
-## Cómo verificar que todo sigue sano
+## Pendientes conocidos (verificados contra el código el 2026-10-02)
 
-```bash
-pip install -e ".[dev,docs]"
-pytest -q                                          # 186 pruebas, deben pasar todas
-ruff check src/
-mypy src/spyc
-sphinx-build -b html -W docs/source docs/build
-python examples/ejemplo_basico.py                  # debe correr sin error
-python examples/ejemplo_avanzado.py                 # ídem
-```
+1. Prueba de Benneyan en la carta G (`charts/advanced.py:317` dice que no la incluye).
+2. `stages` en `ewma_chart`/`cusum_chart` (`charts/timeweighted.py` no lo soporta).
+3. Transformación de Johnson (no hay código en `src/`).
+4. Box-Cox en cartas univariadas y duraciones = 0 en la carta T: NO VERIFICADO.
 
-## Pendientes conocidos (en orden aproximado de lo que se ha ido priorizando)
+## Deuda técnica detectada en la revisión del 2026-10-02
 
-1. **Subir a GitHub** — sigue sin hacerse porque requiere la cuenta del
-   usuario. Pasos exactos en la sección siguiente de este archivo.
-2. **Publicar en PyPI** — nunca se preparó (no hay `twine`, no hay cuenta de
-   PyPI configurada). Si se pide, empezar por `python -m build`, revisar con
-   `twine check dist/*`, y pedir las credenciales al usuario antes de subir
-   nada.
-3. **Box-Cox en las cartas univariadas** (solo existe en capacidad y en las 4
-   cartas multivariadas).
-4. **Prueba de Benneyan** en la carta G.
-5. **Duraciones = 0** en la carta T (Weibull/exponencial no las admite).
-6. **Transformación de Johnson** (solo hay Box-Cox y percentiles no-normales).
-7. **MSA / Gage R&R** — no implementado en absoluto.
-8. **`stages` en `ewma_chart`/`cusum_chart`** — las 4 cartas multivariadas y la
-   mayoría de las univariadas sí lo soportan; EWMA/CUSUM univariados no.
-9. Nunca se ejecutó el CI de verdad (solo localmente) porque no hay repo
-   remoto — conviene revisar el primer run en GitHub Actions en cuanto exista,
-   por si hay diferencias de entorno no detectadas aquí.
-
-## Cómo subir esto a GitHub (primera vez)
-
-```bash
-# 1. Reemplazar el marcador de usuario
-sed -i 's/TU_USUARIO/tu-usuario-real/g' pyproject.toml README.md docs/source/index.md .readthedocs.yaml
-
-# 2. Crear un repositorio vacío en github.com/new (sin README ni licencia)
-
-# 3. Conectar y subir (ya trae 6 commits y las etiquetas v0.1.0..v0.4.2)
-git remote add origin https://github.com/tu-usuario-real/spyc.git
-git push -u origin main --tags
-```
-
-Después de eso, el workflow `.github/workflows/tests.yml` va a correr solo en
-cada push (pruebas + cobertura, ruff + mypy, y build de la documentación). Es
-la primera vez que corre de verdad — vale la pena revisar el resultado.
-
-Para publicar la documentación: conectar el repo en readthedocs.org (detecta
-`.readthedocs.yaml` solo, no requiere configuración adicional).
+- **`examples/*.py` están rotos:** hacen `import spyc` (nombre antiguo) y fallan con `AttributeError`.
+- Sin test de regresión: BUG-01 (zonas en cartas R/S/MR), BUG-07 (openpyxl ausente), BUG-12 (aislamiento de `rcParams`). Recetas probadas en `BUG_CATALOG.md`.
+- Cobertura < 70 %: `charts/timeweighted_attr.py` (19 %), `_wizard.py` (62 %).
+- `publish.yml` no verifica que la versión del wheel coincida con el release ni corre `twine check`.
+- `ruff --select ...,S` falla por `assert` en `acceptance.py:692` (S101).
+- `LICENSE` dice "Autores de spyc": decidir el titular correcto (lo decide el autor).

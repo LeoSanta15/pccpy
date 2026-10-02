@@ -1,6 +1,8 @@
 # RESUMEN EJECUTIVO — pccpy v0.10.8
 
-**Fecha:** 2026-10-02 | **Versión evaluada:** 0.10.8 | **Madurez:** Nivel 3 — Sólido (3.4/5.0)
+**Fecha:** 2026-10-02 (revisado en segunda pasada) | **Versión evaluada:** 0.10.8 | **Madurez:** Nivel 3 — Sólido (3.1/5.0)
+
+> **Correcciones de la segunda pasada:** (1) la media anterior 3.4 estaba mal calculada (las puntuaciones sumaban 46/14 = 3.29); (2) se retiró la recomendación de bajar `checkout@v6` a `v4`: v6 funciona (CI verde en `819ca11`; el release v0.10.7 publicó con él); (3) CLAUDE.md ya está actualizado; (4) se añadieron BUG-13 (release fallido) y BUG-14 (ejemplos rotos).
 
 ---
 
@@ -37,31 +39,35 @@ La versión 0.10.7 corrigió NaN/inf, DataFrames con columnas mixtas, capability
 
 ## 5 mayores riesgos
 
-**R-01: CLAUDE.md desactualizado — riesgo operacional inmediato.**
-Contiene comandos activos con `src/spyc` y `mypy src/spyc`. Cualquier sesión nueva ejecutará comandos incorrectos. Acción: actualizar antes de la próxima sesión de desarrollo.
+**R-01: El pipeline de release no verifica lo que publica (ya falló una vez).**
+`publish.yml` (trigger `release: published`) no compara el release con la versión del wheel ni corre `twine check`; la versión vive en dos archivos. El release v0.10.8 falló por esto (BUG-13).
 
-**R-02: `timeweighted_attr.py` con 19% de cobertura.**
-El módulo EWMA/CUSUM para atributos tiene 62 de 77 líneas sin cubrir. Un bug en este módulo no sería detectado por la suite actual.
+**R-02: `examples/*.py` están rotos.**
+Ambos scripts hacen `import spyc` y fallan con `AttributeError` (BUG-14). Ningún test ni CI los ejecuta. *No estaba en la primera versión de este informe.*
 
-**R-03: `actions/checkout@v6` no existe en GitHub Actions.**
-El CI usa `v6` pero GitHub Actions está en `v4`. El CI puede fallar silenciosamente en un repo nuevo o en un re-run tras expiración de caché.
+**R-03: Bugs cerrados sin test de regresión y módulos casi sin cobertura.**
+BUG-01, BUG-07 y BUG-12 sin test (recetas probadas en el catálogo); BUG-10 solo parcial. `charts/timeweighted_attr.py` al 19 % (6 funciones públicas EWMA/CUSUM de atributos) y `_wizard.py` al 62 %.
 
-**R-04: Versión gestionada en dos lugares.**
-`pyproject.toml` y `src/pccpy/__init__.py` declaran la versión manualmente. La desincronización ya ocurrió (historial documentado). Riesgo de publicar con metadata incorrecta.
+**R-04: Sin auditoría de seguridad de dependencias.**
+No hay `pip audit` en CI ni `SECURITY.md`; rangos sin límite superior (`numpy>=1.22` sin `<3`).
 
-**R-05: Sin auditoría de seguridad de dependencias.**
-No hay `pip audit` en CI. Dependencias sin límite superior de versión (`numpy>=1.22` sin `<3`). Un breaking change en una dependencia mayor podría romper el paquete sin detección automática.
+**R-05: Reglas de calidad sin trinquete.**
+El criterio "ningún módulo < 70 %" no se cumple hoy (2 módulos) y un `ruff --select ...,S` propuesto falla (`S101`, `acceptance.py:692`). Hasta que se adopten como trinquete, son deuda declarada, no gate.
 
 ---
 
 ## Siguientes pasos (ordenados por impacto/esfuerzo)
 
-1. **Actualizar CLAUDE.md** — reemplazar `spyc` por `pccpy` en todos los comandos. 30 minutos. Impacto: inmediato.
+1. ~~Actualizar CLAUDE.md~~ — **hecho** (segunda pasada).
 
-2. **Añadir tests a `timeweighted_attr.py`** — `ewma_p_chart`, `ewma_c_chart`, `cusum_p_chart`, `cusum_u_chart` en `test_charts.py`. Meta: subir de 19% a ≥85%. 2–4 horas.
+2. **Blindar el release** — guarda tag/release == versión del wheel + `twine check` en `publish.yml`, y versión única con `[tool.setuptools.dynamic]` (ambos probados localmente; el step de YAML aún no se ha ejecutado en Actions). ~30 min. Es la acción de mayor impacto: evita repetir BUG-13.
 
-3. **Unificar versión con `importlib.metadata`** — eliminar `__version__ = "0.10.8"` de `__init__.py`; añadir `from importlib.metadata import version; __version__ = version("pccpy")`. 15 minutos.
+3. **Arreglar `examples/`** — `spyc` → `pccpy` en los dos scripts, ejecutarlos y añadir el bucle de ejemplos a CI. ~15 min.
 
-4. **Corregir versión de GitHub Actions** — `checkout@v6` → `checkout@v4`, `setup-python@v6` → `setup-python@v5` en los dos workflows. 15 minutos.
+4. **Tests de regresión faltantes** — BUG-01, BUG-07, BUG-12 (recetas ya probadas en `BUG_CATALOG.md`) y el `assert` de n<8 en `_diagnose` (BUG-10). ~30 min.
 
-5. **Añadir `pip audit` al CI** — nuevo step en el job `calidad`. 15 minutos.
+5. **Tests para `timeweighted_attr.py` y el modo widget de `_wizard.py`** (mock de `ipywidgets`). Meta: >= 70 % por módulo. 2–4 horas.
+
+6. **`pip audit` en CI + `SECURITY.md`**. ~15 min.
+
+~~Corregir `checkout@v6` → `v4`~~ — **descartado**: la versión v6 funciona (evidencia arriba); bajarla causaría una regresión.

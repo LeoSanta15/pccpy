@@ -95,10 +95,17 @@ python -m mypy src/<paquete> --ignore-missing-imports
 
 **Verificación:**
 ```bash
-python -m pytest --cov=<paquete> --cov-report=term-missing -q
+python -m pytest --cov=<paquete> --cov-report=json:/tmp/cov.json -q
+python - <<'EOF'
+import json
+d = json.load(open("/tmp/cov.json"))["files"]
+print({k: round(v["summary"]["percent_covered"]) for k, v in d.items() if v["summary"]["percent_covered"] < 70} or "OK")
+EOF
 ```
 
-**Criterio "hecho":** columna `Cover` >= 85% en `TOTAL`; ningún módulo público < 70%.
+**Criterio "hecho":** `TOTAL` >= 85% y el script imprime `OK` (ningún módulo público < 70%). `--cov-fail-under` solo controla el total: un 90% global puede esconder un módulo al 19%.
+**Adopción en un repo existente:** si ya hay módulos < 70%, trátalos como trinquete (no pueden bajar) y regístralos como deuda; no declares una regla que el repo ya incumple.
+**Un bug cerrado sin test de regresión no cuenta como cerrado.** Prueba que el test falla si el bug vuelve (mutación manual de una línea).
 
 ---
 
@@ -159,13 +166,17 @@ python -m pytest tests/ -k "nan or edge or empty or zero" -v
 - [ ] CHANGELOG.md con entradas por versión
 - [ ] Sphinx (o equivalente) construye sin warnings con `-W`
 
+- [ ] Cada símbolo público tiene UNA directiva autodoc canónica; si hay dos páginas, la procesada primero lleva `:no-index:`
+- [ ] Docstrings numpy sin `shape (n,)` cuando existe un atributo `n` documentado (usa `array-like`)
+
 **Verificación:**
 ```bash
 sphinx-build -b html -W docs/source docs/build
-grep -r "TU_USUARIO\|PLACEHOLDER\|TODO" README.md docs/
+grep -r "TU_USUARIO\|PLACEHOLDER\|TODO" README.md docs/ --exclude-dir=retrospectiva --exclude-dir=_build --exclude-dir=build
 ```
 
-**Criterio "hecho":** build de docs sin errores; README sin placeholders.
+**Criterio "hecho":** build de docs sin errores ni warnings; README sin placeholders.
+**Caso real:** añadir dos páginas de referencia produjo 18 warnings ("duplicate object description" + una referencia ambigua `n`); `-W` en CI los detuvo antes del release.
 
 ---
 
@@ -183,18 +194,27 @@ grep -r "TU_USUARIO\|PLACEHOLDER\|TODO" README.md docs/
 ### Dimensión: Versioning y releases
 
 - [ ] Versionado semántico (MAJOR.MINOR.PATCH)
-- [ ] Una sola fuente de verdad para la versión (recomendado: `importlib.metadata` o `setuptools-scm`)
+- [ ] Una sola fuente de verdad para la versión: literal en `__init__.py` +
+      `[tool.setuptools.dynamic] version = {attr = "<paquete>.__version__"}` (probado: una
+      edición → wheel con la versión nueva). Evita `importlib.metadata` dentro de
+      `__init__.py`: la metadata se congela al instalar y diverge del código.
 - [ ] Tags git para cada release (`vX.Y.Z`)
-- [ ] CI de publicación a PyPI en push de tag
+- [ ] CI de publicación a PyPI (con el trigger que uses: `release: published` o push de tag)
+- [ ] Guarda en el workflow de publicación: tag/release == versión del wheel construido
 - [ ] `twine check dist/*` en CI antes de publicar
+- [ ] "Listo para release" se declara solo tras construir el wheel y ver su versión
 
 **Verificación:**
 ```bash
-python -c "from importlib.metadata import version; print(version('<paquete>'))"
+python -m build --wheel && ls dist/                     # el nombre del wheel muestra la versión
+grep -n '^version\|^__version__' pyproject.toml src/<paquete>/__init__.py   # no debe haber dos literales
+V=$(python -c "import glob,re;print(re.search(r'-(\d[^-]*)-py', glob.glob('dist/*.whl')[0]).group(1))")
+[ "${TAG#v}" = "$V" ] && echo OK || echo "tag != wheel"   # TAG = tag/release a publicar
 git tag --list | grep "^v"
 ```
 
-**Criterio "hecho":** versión en metadata == versión en `__version__`; existe tag por cada versión publicada.
+**Criterio "hecho":** el wheel construido tiene la versión del tag; existe tag por cada versión publicada; la guarda falla si no coinciden.
+**Caso real:** un tag creado antes de subir la versión produjo artefactos de la versión anterior y PyPI respondió `400 File already exists`.
 
 ---
 
@@ -222,11 +242,13 @@ python -m pytest tests/ -q  # en Python==versión_mínima
 
 **Verificación:**
 ```bash
-python examples/*.py
-grep -r "TU_USUARIO\|spyc\|nombre_viejo" CLAUDE.md CONTRIBUTING.md
+# `python examples/*.py` solo ejecutaría el primero: usa un bucle
+for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA $f"; done
+grep -rIln "nombre_viejo\|TU_USUARIO\|PLACEHOLDER" . --exclude-dir=.git --exclude-dir=build --exclude-dir=_build --exclude-dir=retrospectiva --exclude=CHANGELOG.md --exclude=CLAUDE.md
 ```
 
-**Criterio "hecho":** ejemplos corren; sin referencias al nombre antiguo en documentación.
+**Criterio "hecho":** todos los ejemplos corren (idealmente en CI); el `grep` no devuelve nada (incluye `examples/`, CI y LICENSE, no solo la documentación).
+**Caso real:** tras un renombre, los dos scripts de `examples/` conservaron `import <nombre_viejo>` y fallaron durante varias versiones sin que ningún test lo notara.
 
 ---
 
@@ -274,18 +296,32 @@ Antes de mergear cualquier PR:
 # 1. Tests completos
 python -m pytest tests/ -q
 
-# 2. Sin fallos de linter
+# 2. Sin fallos de linter (mismo comando que CI)
 python -m ruff check src/
 
 # 3. Sin fallos de tipos
 python -m mypy src/<paquete> --ignore-missing-imports
 
-# 4. Build limpio
+# 4. Build limpio (aislado, como CI)
 python -m build --wheel
 
 # 5. Sin referencias obsoletas
-grep -r "nombre_antiguo\|TU_USUARIO\|PLACEHOLDER" . --include="*.py" --include="*.md" --include="*.toml" --include="*.yml"
+grep -rIln "nombre_antiguo\|TU_USUARIO\|PLACEHOLDER" . --exclude-dir=.git --exclude-dir=build --exclude-dir=_build --exclude-dir=retrospectiva --exclude=CHANGELOG.md --exclude=CLAUDE.md
 
 # 6. Cobertura no cayó
 python -m pytest --cov=<paquete> --cov-fail-under=85 -q
+
+# 7. Docs y ejemplos
+sphinx-build -b html -W docs/source docs/build
+for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA $f"; done
+
+# 8. Si el PR corrige un bug: ¿hay test de regresión y ficha en BUG_CATALOG.md?
 ```
+
+## Meta-regla: las reglas también se prueban
+
+Antes de adoptar una regla o un comando de verificación, ejecútalo contra el
+propio repo. En esta revisión, tres "reglas" fallaron al probarlas: un `ruff
+--select ...,S` que el repo no pasa (`S101`), un `grep` de referencias obsoletas
+que coincidía con el propio CLAUDE.md, y una recomendación de versión
+(`importlib.metadata`) que se queda obsoleta en instalaciones editables.
