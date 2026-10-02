@@ -318,6 +318,32 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 # 8. Si el PR corrige un bug: ¿hay test de regresión y ficha en BUG_CATALOG.md?
 ```
 
+## Preparación para desarrollo con agentes de IA
+
+Checklist verificable (cada ítem se comprobó en un repo real, ver `SCORECARD.md`):
+
+- [ ] `CLAUDE.md` actualizado: comandos reales, definición de "terminado", reglas, deuda conocida
+- [ ] `AGENTS.md` mínimo que apunta a `CLAUDE.md` (otros agentes no leen `CLAUDE.md`)
+- [ ] `Makefile`/`nox` con un único `check` (lint + tipos + tests + build + docs + ejemplos) y `check-fast`
+- [ ] `.claude/settings.json` con permisos para los comandos de verificación y `git` de solo lectura
+- [ ] Hook `SessionStart` (solo si `CLAUDE_CODE_REMOTE=true`): instala dependencias, idempotente, síncrono
+- [ ] Hook `Stop`: si hay cambios en código, corre `check-fast`; exit 2 si falla; respeta `stop_hook_active`
+- [ ] Plantilla de PR con el checklist de verificación y `CODEOWNERS`
+- [ ] `.gitignore` cubre artefactos de build/docs/cobertura (que no aparezcan como cambios sin seguimiento)
+- [ ] `py.typed` en el paquete y en `package-data` (el wheel lo contiene)
+- [ ] Protección de la rama por defecto (CI obligatorio antes de mergear): se comprueba en la configuración de GitHub, no en el repo
+
+**Verificación:**
+```bash
+make check                                              # exit 0
+CLAUDE_CODE_REMOTE=true .claude/hooks/session-start.sh  # exit 0
+python -c "import json;json.load(open('.claude/settings.json'))"
+echo '{"stop_hook_active": true}' | .claude/hooks/verify-before-stop.sh   # exit 0 (no bucle)
+python -c "import zipfile,glob;print([n for n in zipfile.ZipFile(glob.glob('dist/*.whl')[0]).namelist() if 'py.typed' in n])"
+```
+**Prueba del hook Stop:** inyecta un fallo (p. ej. `import os` sin usar) en una copia del repo y comprueba que el hook devuelve exit 2 con el error; con `stop_hook_active=true` debe devolver 0.
+**Cuidado con el hook de inicio:** en una sesión web `CLAUDE_CODE_REMOTE` ya vale `true`, así que para probar el salto local hay que usar `env -u CLAUDE_CODE_REMOTE`.
+
 ## Meta-regla: las reglas también se prueban
 
 Antes de adoptar una regla o un comando de verificación, ejecútalo contra el

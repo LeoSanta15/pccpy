@@ -23,15 +23,15 @@
 | 11 | Seguridad | **2** | Funcional |
 | 12 | Versionado y releases | **2** *(antes 3)* | Funcional |
 | 13 | Comunidad y contribución | **2** | Funcional |
-| 14 | Developer Experience (DX) | **3** | Sólido |
-| **GLOBAL** | | **3.1** *(44/14 = 3.14; antes 3.4)* | **Sólido** |
+| 14 | Developer Experience (DX) | **4** *(antes 3)* | Maduro |
+| **GLOBAL** | | **3.2** *(45/14 = 3.21; antes 3.4)* | **Sólido** |
 
 ### Qué cambió en la segunda pasada (2026-10-02) y por qué
 
 - **Aritmética corregida:** las puntuaciones originales sumaban 46/14 = 3.29, no 3.4.
 - **Criterio explícito para un 4:** "ningún bug cerrado sin test de regresión y ningún módulo público < 70 % de cobertura". Hoy se incumple (BUG-01/07/12 sin test; `timeweighted_attr.py` 19 %, `_wizard.py` 62 %) → Suite de pruebas baja a 3.
 - **Versionado y releases 3 → 2:** el release v0.10.8 falló en producción (BUG-13) por falta de guarda y versión duplicada.
-- **DX 3 → 2 → 3:** bajó a 2 porque `examples/*.py` no ejecutaban (BUG-14); volvió a 3 tras corregirlos y verificar que ambos corren. CLAUDE.md también se actualizó.
+- **DX 3 → 2 → 3 → 4:** bajó a 2 porque `examples/*.py` no ejecutaban (BUG-14); volvió a 3 al corregirlos y subió a 4 con la infraestructura para agentes (Makefile, hooks, permisos).
 - **Afirmación falsa retirada:** "`actions/checkout@v6` no existe". Evidencia en contra: `publish.yml` en el tag `v0.10.7` ya usaba `checkout@v6` y ese release publicó con éxito; el CI de `819ca11` pasó con v6 en los 7 jobs.
 
 ---
@@ -194,20 +194,21 @@
 
 ---
 
-### 14. Developer Experience (DX) — 3/5
+### 14. Developer Experience (DX) — 4/5
 
 **HECHOS:**
 - `pip install -e ".[dev]"` instala todo en un paso.
 - CLAUDE.md con mapa de código, comandos y reglas (reescrito y verificado en la segunda pasada).
 - Wizard de selección para usuarios nuevos.
+- Infraestructura para agentes añadida y probada (tercera pasada): `Makefile` (`make check`), `.claude/settings.json`, hooks `SessionStart` y `Stop`, `AGENTS.md`, plantilla de PR, `CODEOWNERS`, `py.typed`.
 
-**DÉFICITS (-2):** `examples/` estaban rotos (BUG-14) y la primera pasada los daba como positivos sin ejecutarlos; ya corregidos y verificados, pero CI sigue sin ejecutarlos. Sin `Makefile` ni script de conveniencia. "La instalación en Python 3.9 puede fallar" de la primera pasada es NO VERIFICADO.
+**DÉFICITS (-1):** `examples/` estaban rotos (BUG-14); ya corregidos, pero CI sigue sin ejecutarlos. Protección de rama NO VERIFICADA (es configuración de GitHub). Sin `Makefile` ni script de conveniencia. "La instalación en Python 3.9 puede fallar" de la primera pasada es NO VERIFICADO.
 
 ---
 
 ## Nivel de madurez global: NIVEL 3 — Sólido
 
-**Puntuación media: 3.1 / 5.0** (44/14 = 3.14; en el límite inferior del Nivel 3)
+**Puntuación media: 3.2 / 5.0** (45/14 = 3.21; en el límite inferior del Nivel 3)
 
 El proyecto es funcional, bien testeado y tiene CI activo. Los déficits principales son:
 1. Pipeline de release sin verificación y versión en dos fuentes (BUG-13, ya ocurrió).

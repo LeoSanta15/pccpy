@@ -24,6 +24,9 @@ usuario (docstrings, errores, salidas) está **en español**.
 
 ## Comandos estándar (los mismos que corre CI)
 
+Atajo: `make check` corre todo lo de abajo (lint, tipos, tests, build, docs, ejemplos);
+`make check-fast` = lint + tipos + tests; `make release-check TAG=vX.Y.Z` verifica tag == versión del wheel.
+
 ```bash
 pip install -e ".[dev,docs,excel]"
 python -m pytest tests/ -q
@@ -97,6 +100,13 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - **R-16 Reglas probadas:** antes de añadir una regla a este archivo, ejecuta su
   comando contra este repo y registra el resultado (una regla propuesta con
   `ruff --select F,E9,B,I,S` falló: `S101` en `acceptance.py:692`).
+
+## Infraestructura para agentes (verificada el 2026-10-02)
+
+- `.claude/settings.json`: permisos para `make`, `pytest`, `ruff`, `mypy`, `build`, `sphinx` y `git` de solo lectura.
+- `.claude/hooks/session-start.sh`: en sesiones web instala `.[dev,docs,excel]` (síncrono, idempotente).
+- `.claude/hooks/verify-before-stop.sh` (hook `Stop`): si hay cambios en `src/`, `tests/` o `pyproject.toml`, corre `make check-fast`; si falla, bloquea el cierre (exit 2) y devuelve el error. Respeta `stop_hook_active` para no entrar en bucle.
+- `AGENTS.md` apunta a este archivo; `.github/PULL_REQUEST_TEMPLATE.md` y `CODEOWNERS`; `py.typed` incluido en el wheel.
 
 ## Mapa del código
 
