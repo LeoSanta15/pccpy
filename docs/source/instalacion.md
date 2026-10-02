@@ -18,9 +18,9 @@ Desarrollo local (incluye las pruebas y las herramientas de calidad):
 git clone https://github.com/LeoSanta15/pccpy.git
 cd pccpy
 pip install -e ".[dev]"
-pytest --cov=spyc
+pytest --cov=pccpy
 ruff check src/
-mypy src/spyc
+mypy src/pccpy
 ```
 
 Para generar esta documentación en tu máquina:

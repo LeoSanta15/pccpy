@@ -21,7 +21,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from ._data import as_1d
+from ._data import _excel_writer, as_1d
 
 NAN = float("nan")
 
@@ -154,6 +154,14 @@ class ToleranceResult:
         lines.append("  " + "   ".join(interval))
         return "\n".join(lines)
 
+    def to_excel(self, path) -> None:
+        """Exporta el intervalo de tolerancia a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Tolerancia")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
@@ -162,6 +170,14 @@ class ToleranceResult:
         from .plotting import plot_tolerance
 
         return plot_tolerance(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 # ──────────────────────────────────────────────────────────── public API ──────

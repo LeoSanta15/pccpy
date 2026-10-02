@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
+from ._data import _excel_writer
 from .rules import DEFAULT_K, describe
 
 
@@ -130,11 +131,43 @@ class ControlChart:
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()
 
+    def to_excel(self, path) -> None:
+        """Exporta la carta a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        Cada panel ocupa una hoja; las violaciones van en una hoja adicional.
+        """
+        with _excel_writer(path) as writer:
+            for p in self.panels:
+                p.to_frame().to_excel(writer, sheet_name=p.name[:31], index=False)
+            v = self.violations()
+            if not v.empty:
+                v.to_excel(writer, sheet_name="Violaciones", index=False)
+
     def plot(self, **kwargs):
         """Dibuja la carta con matplotlib. Ver :func:`pccpy.plotting.plot_control_chart`."""
         from .plotting import plot_control_chart
 
         return plot_control_chart(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …).
+
+        Parameters
+        ----------
+        path : str
+            Ruta de destino, p. ej. ``"carta_imr.png"`` o ``"carta.pdf"``.
+        dpi : int
+            Resolución en puntos por pulgada (solo relevante para formatos
+            de mapa de bits). Por defecto 150.
+        **kwargs
+            Argumentos adicionales para :meth:`plot`.
+        """
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 @dataclass

@@ -87,9 +87,15 @@ def test_non_contiguous_stages_rejected():
         pccpy.imr_chart(np.arange(6.0), stages=[1, 2])
 
 
-def test_missing_values_rejected():
-    with pytest.raises(ValueError):
-        pccpy.imr_chart([1.0, np.nan, 3.0])
+def test_missing_values_warning():
+    # NaN ya no lanza ValueError: se excluye con UserWarning
+    import warnings
+    data = [1.0, np.nan, 3.0, 2.5, 2.8, 3.1, 2.9, 3.0, 2.7, 3.2]
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        chart = pccpy.imr_chart(data)
+    assert len(chart.panels[0].values) == 9  # 10 - 1 NaN
+    assert any("no finito" in str(wi.message) for wi in w)
 
 
 # ---------------------------------------------------------------- Xbar-R / Xbar-S

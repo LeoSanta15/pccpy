@@ -17,6 +17,8 @@ import pandas as pd
 from scipy import stats
 from scipy.optimize import brentq
 
+from ._data import _excel_writer
+
 
 # ──────────────────────────────────────────────────── curva OC (binomial) ────
 def _pa_binomial(n: int, c: int, p: float) -> float:
@@ -163,6 +165,14 @@ class SamplingPlanAttributes:
             f"  AOQL={self.aoq_max*100:.3g}%"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el plan de muestreo a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Plan")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
@@ -170,6 +180,13 @@ class SamplingPlanAttributes:
         """Curva OC y curva AOQ."""
         from .plotting import plot_sampling_attributes
         return plot_sampling_attributes(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def _build_attr_plan(N: int, n: int, c: int, aql_frac: float, method: str) -> SamplingPlanAttributes:
@@ -319,12 +336,27 @@ class SamplingPlanVariables:
             f"  Especificación: {self.spec_type}"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el plan de muestreo por variables a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Plan")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
     def plot(self, **kwargs):
         from .plotting import plot_sampling_variables
         return plot_sampling_variables(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
     def evaluate(self, sample: np.ndarray, usl: float | None = None,
                  lsl: float | None = None) -> dict:
@@ -545,12 +577,27 @@ class DodgeRomigPlan:
             f"  AOQL={self.aoql*100:.3g}%  LTPD={self.ltpd*100:.3g}%"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el plan Dodge-Romig a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Plan")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
     def plot(self, **kwargs):
         from .plotting import plot_sampling_attributes
         return plot_sampling_attributes(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def _dodge_romig_ltpd(N: int, ltpd: float, process_avg: float) -> tuple[int, int]:

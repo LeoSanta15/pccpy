@@ -21,7 +21,7 @@ import pandas as pd
 from scipy import stats
 from scipy.special import boxcox as _boxcox
 
-from ._data import as_1d, to_subgroups
+from ._data import _excel_writer, as_1d, to_subgroups
 from ._sigma import sigma_individuals, sigma_subgroups
 
 NAN = float("nan")
@@ -32,15 +32,22 @@ def _fmt(v, nd: int = 2) -> str:
 
 
 def _check_specs(lsl, usl):
-    if lsl is None and usl is None:
-        raise ValueError("Indique al menos un límite de especificación (lsl o usl).")
     if lsl is not None and usl is not None and lsl >= usl:
         raise ValueError("El límite inferior (lsl) debe ser menor que el superior (usl).")
 
 
 def _indices(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float, float]:
+    if lsl is None and usl is None:
+        return NAN, NAN, NAN, NAN
     if not sigma > 0:
-        raise ValueError("La variación del proceso es cero; no se pueden calcular índices.")
+        import warnings
+        warnings.warn(
+            "La variación del proceso es cero (desviación estándar = 0). "
+            "Los índices de capacidad no están definidos y se devuelven como NaN.",
+            UserWarning,
+            stacklevel=4,
+        )
+        return NAN, NAN, NAN, NAN
     cpl = (mean - lsl) / (3 * sigma) if lsl is not None else NAN
     cpu = (usl - mean) / (3 * sigma) if usl is not None else NAN
     cp = (usl - lsl) / (6 * sigma) if lsl is not None and usl is not None else NAN
@@ -49,12 +56,16 @@ def _indices(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float, 
 
 
 def _expected_ppm(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float]:
+    if not sigma > 0:
+        return NAN, NAN, NAN
     lo = 1e6 * stats.norm.cdf((lsl - mean) / sigma) if lsl is not None else NAN
     hi = 1e6 * stats.norm.sf((usl - mean) / sigma) if usl is not None else NAN
     return lo, hi, float(np.nansum([lo, hi]))
 
 
 def _z_bench(total_ppm: float) -> float:
+    if math.isnan(total_ppm):
+        return NAN
     p = total_ppm / 1e6
     return float(stats.norm.isf(p)) if p > 0 else math.inf
 
@@ -162,11 +173,27 @@ class CapabilityResult:
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()
 
+    def to_excel(self, path) -> None:
+        """Exporta el análisis de capacidad a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Capacidad")
+
     def plot(self, **kwargs):
         """Histograma de capacidad. Ver :func:`pccpy.plotting.plot_capability`."""
         from .plotting import plot_capability
 
         return plot_capability(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def capability_analysis(
@@ -235,24 +262,27 @@ def capability_analysis(
 
     alpha = 1 - ci_level
     pp_ci = (NAN, NAN)
+    ppk_ci = (NAN, NAN)
     if not math.isnan(pp):
         pp_ci = (
             pp * math.sqrt(stats.chi2.ppf(alpha / 2, n - 1) / (n - 1)),
             pp * math.sqrt(stats.chi2.ppf(1 - alpha / 2, n - 1) / (n - 1)),
         )
-    zc = stats.norm.ppf(1 - alpha / 2)
-    half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
-    ppk_ci = (ppk - half, ppk + half)
+    if not math.isnan(ppk):
+        zc = stats.norm.ppf(1 - alpha / 2)
+        half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
+        ppk_ci = (ppk - half, ppk + half)
 
     ppm_w = _expected_ppm(mean, sw, lsl, usl)
     ppm_o = _expected_ppm(mean, so, lsl, usl)
+    so_safe = so if so > 0 else NAN
     return CapabilityResult(
         n=n, mean=mean, sigma_within=sw, sigma_overall=so, within_method=method,
         lsl=lsl, usl=usl, target=target,
         cp=cp, cpl=cpl, cpu=cpu, cpk=cpk, pp=pp, ppl=ppl, ppu=ppu, ppk=ppk, cpm=cpm,
         z_bench_within=_z_bench(ppm_w[2]), z_bench_overall=_z_bench(ppm_o[2]),
-        z_lsl_overall=(mean - lsl) / so if lsl is not None else NAN,
-        z_usl_overall=(usl - mean) / so if usl is not None else NAN,
+        z_lsl_overall=(mean - lsl) / so_safe if lsl is not None else NAN,
+        z_usl_overall=(usl - mean) / so_safe if usl is not None else NAN,
         ppm_obs=_observed_ppm(x, lsl, usl), ppm_within=ppm_w, ppm_overall=ppm_o,
         pp_ci=pp_ci, ppk_ci=ppk_ci, ci_level=ci_level, data=x,
     )
@@ -323,17 +353,20 @@ def capability_analysis_summary(
 
     alpha = 1 - ci_level
     pp_ci = (NAN, NAN)
+    ppk_ci = (NAN, NAN)
     if not math.isnan(pp):
         pp_ci = (
             pp * math.sqrt(stats.chi2.ppf(alpha / 2, n - 1) / (n - 1)),
             pp * math.sqrt(stats.chi2.ppf(1 - alpha / 2, n - 1) / (n - 1)),
         )
-    zc = stats.norm.ppf(1 - alpha / 2)
-    half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
-    ppk_ci = (ppk - half, ppk + half)
+    if not math.isnan(ppk):
+        zc = stats.norm.ppf(1 - alpha / 2)
+        half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
+        ppk_ci = (ppk - half, ppk + half)
 
     ppm_w = _expected_ppm(mean, sw, lsl, usl)
     ppm_o = _expected_ppm(mean, so, lsl, usl)
+    so_safe = so if so > 0 else NAN
 
     return CapabilityResult(
         n=n, mean=mean, sigma_within=sw, sigma_overall=so,
@@ -341,8 +374,8 @@ def capability_analysis_summary(
         lsl=lsl, usl=usl, target=target,
         cp=cp, cpl=cpl, cpu=cpu, cpk=cpk, pp=pp, ppl=ppl, ppu=ppu, ppk=ppk, cpm=cpm,
         z_bench_within=_z_bench(ppm_w[2]), z_bench_overall=_z_bench(ppm_o[2]),
-        z_lsl_overall=(mean - lsl) / so if lsl is not None else NAN,
-        z_usl_overall=(usl - mean) / so if usl is not None else NAN,
+        z_lsl_overall=(mean - lsl) / so_safe if lsl is not None else NAN,
+        z_usl_overall=(usl - mean) / so_safe if usl is not None else NAN,
         ppm_obs=(NAN, NAN, NAN),  # sin datos crudos no se puede calcular
         ppm_within=ppm_w, ppm_overall=ppm_o,
         pp_ci=pp_ci, ppk_ci=ppk_ci, ci_level=ci_level, data=np.array([]),
@@ -439,6 +472,30 @@ class NonNormalCapabilityResult:
             f"    {'Esperado':<18}{_fmt(o.ppm_expected[0]):>10}{_fmt(o.ppm_expected[1]):>12}{_fmt(o.ppm_expected[2]):>11}",
         ])
 
+    def to_frame(self) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico)."""
+        o = self
+        rows = [
+            ("N", o.n), ("Distribución", o.distribution),
+            ("LEI", o.lsl), ("LES", o.usl), ("Objetivo", o.target),
+            ("Percentil 0.135%", o.x_low), ("Mediana", o.x_median),
+            ("Percentil 99.865%", o.x_high),
+            ("Pp", o.pp), ("PPL", o.ppl), ("PPU", o.ppu), ("Ppk", o.ppk),
+            ("PPM obs < LEI", o.ppm_obs[0]), ("PPM obs > LES", o.ppm_obs[1]),
+            ("PPM obs total", o.ppm_obs[2]),
+            ("PPM esp < LEI", o.ppm_expected[0]), ("PPM esp > LES", o.ppm_expected[1]),
+            ("PPM esp total", o.ppm_expected[2]),
+        ]
+        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+
+    def to_excel(self, path) -> None:
+        """Exporta el análisis de capacidad no normal a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Capacidad")
+
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()
 
@@ -446,6 +503,14 @@ class NonNormalCapabilityResult:
         from .plotting import plot_capability
 
         return plot_capability(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def capability_nonnormal(

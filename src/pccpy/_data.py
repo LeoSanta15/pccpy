@@ -7,8 +7,25 @@ import numpy as np
 import pandas as pd
 
 
+def _excel_writer(path):
+    """Abre un ``pd.ExcelWriter`` con openpyxl; da mensaje claro si no está instalado."""
+    try:
+        return pd.ExcelWriter(path, engine="openpyxl")
+    except ImportError:
+        raise ImportError(
+            "openpyxl es necesario para exportar a Excel. Instálalo con:\n"
+            "    pip install openpyxl\n"
+            "o con la dependencia opcional de pccpy:\n"
+            "    pip install pccpy[excel]"
+        ) from None
+
+
 def as_1d(x, name: str = "x", allow_nan: bool = False) -> np.ndarray:
-    """Convierte ``x`` (lista, array, Series) a un array float 1-D."""
+    """Convierte ``x`` (lista, array, Series) a un array float 1-D.
+
+    Si ``x`` contiene ``NaN`` o ``inf`` y ``allow_nan=False``, los valores
+    no finitos se eliminan con un ``UserWarning``.
+    """
     arr = np.asarray(x, dtype=float)
     if arr.ndim == 0:
         arr = arr.reshape(1)
@@ -16,8 +33,20 @@ def as_1d(x, name: str = "x", allow_nan: bool = False) -> np.ndarray:
         raise ValueError(f"'{name}' debe ser unidimensional (recibido: {arr.ndim}-D).")
     if arr.size == 0:
         raise ValueError(f"'{name}' está vacío.")
-    if not allow_nan and not np.all(np.isfinite(arr)):
-        raise ValueError(f"'{name}' contiene valores faltantes o infinitos.")
+    if not allow_nan:
+        bad = ~np.isfinite(arr)
+        if bad.any():
+            n_bad = int(bad.sum())
+            warnings.warn(
+                f"'{name}' contiene {n_bad} valor(es) no finito(s) (NaN/inf) "
+                f"en las posiciones {np.where(bad)[0].tolist()}. "
+                "Se excluyen del análisis.",
+                UserWarning,
+                stacklevel=3,
+            )
+            arr = arr[~bad]
+            if arr.size == 0:
+                raise ValueError(f"'{name}' no tiene valores válidos tras eliminar NaN/inf.")
     return arr
 
 
@@ -26,6 +55,8 @@ def to_subgroups(
     subgroup_size: int | None = None,
     subgroup=None,
     value: str | None = None,
+    *,
+    _allow_size_1: bool = False,
 ) -> tuple[np.ndarray, int]:
     """Devuelve ``(mat, n_complete)``: matriz (k × m) y número de subgrupos completos.
 
@@ -72,6 +103,20 @@ def to_subgroups(
         subgroup = ids
         data = vals
 
+    # ── DataFrame ancho: filtrar columnas no numéricas antes de convertir ───────
+    if isinstance(data, pd.DataFrame) and not isinstance(subgroup, str):
+        numeric_cols = [c for c in data.columns if pd.api.types.is_numeric_dtype(data[c])]
+        dropped = [c for c in data.columns if c not in numeric_cols]
+        if dropped:
+            warnings.warn(
+                f"Se ignoraron {len(dropped)} columna(s) no numéricas del DataFrame: "
+                f"{dropped}. Si querías usar una como identificador de subgrupo, "
+                "pasa subgroup='nombre_columna'.",
+                UserWarning,
+                stacklevel=3,
+            )
+            data = data[numeric_cols]
+
     arr = np.asarray(data, dtype=float)
 
     if arr.ndim == 2:
@@ -98,6 +143,12 @@ def to_subgroups(
             m = int(subgroup_size)
             if m < 1:
                 raise ValueError("'subgroup_size' debe ser >= 1.")
+            if m == 1 and not _allow_size_1:
+                raise ValueError(
+                    "'subgroup_size=1' da subgrupos de un solo elemento; no se puede "
+                    "estimar la variación dentro de subgrupos. "
+                    "Para datos individuales usa imr_chart() en lugar de xbar_r_chart()."
+                )
             remainder = arr.size % m
             if remainder != 0:
                 n_complete = arr.size // m

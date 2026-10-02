@@ -73,15 +73,16 @@ def plot_control_chart(chart: ControlChart, *, zones: bool = True, figsize=None,
     paneles, igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI.
     Los puntos que fallan una prueba se marcan en rojo con el número de la prueba.
     """
-    k = len(chart.panels)
-    fig, axes = plt.subplots(k, 1, sharex=True, figsize=figsize or (11, 3.6 * k), squeeze=False)
-    for ax, panel in zip(axes[:, 0], chart.panels):
-        _draw_panel(ax, panel, zones)
-    axes[-1, 0].xaxis.set_major_locator(MaxNLocator(integer=True))
-    axes[-1, 0].set_xlabel("Observación" if chart.kind in _POINT_KINDS else "Muestra")
-    fig.suptitle(title or f"Carta de control {chart.kind}", fontweight="bold")
-    fig.tight_layout(rect=(0, 0, 0.9, 0.97))
-    return fig
+    with plt.rc_context({}):
+        k = len(chart.panels)
+        fig, axes = plt.subplots(k, 1, sharex=True, figsize=figsize or (11, 3.6 * k), squeeze=False)
+        for ax, panel in zip(axes[:, 0], chart.panels):
+            _draw_panel(ax, panel, zones)
+        axes[-1, 0].xaxis.set_major_locator(MaxNLocator(integer=True))
+        axes[-1, 0].set_xlabel("Observación" if chart.kind in _POINT_KINDS else "Muestra")
+        fig.suptitle(title or f"Carta de control {chart.kind}", fontweight="bold")
+        fig.tight_layout(rect=(0, 0, 0.9, 0.97))
+        return fig
 
 
 # ------------------------------------------------------------------------ capacidad
@@ -91,7 +92,8 @@ def plot_capability(res, *, bins=None, ax=None):
 
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(8, 4.5))
+        with plt.rc_context({}):
+            fig, ax = plt.subplots(figsize=(8, 4.5))
     x = res.data
     ax.hist(x, bins=bins or "auto", density=True, color="#cfe0f5", edgecolor="white")
     pts = [x.min(), x.max()] + [v for v in (res.lsl, res.usl) if v is not None]
@@ -134,7 +136,8 @@ def probability_plot(data, *, ax=None):
     n = x.size
     fig = None
     if ax is None:
-        fig, ax = plt.subplots(figsize=(6, 4.5))
+        with plt.rc_context({}):
+            fig, ax = plt.subplots(figsize=(6, 4.5))
     p = (np.arange(1, n + 1) - 0.3) / (n + 0.4)
     ax.plot(x, stats.norm.ppf(p), "o", ms=4, color=BLUE)
     mu, s = x.mean(), x.std(ddof=1)
@@ -202,34 +205,35 @@ def capability_sixpack(data, lsl=None, usl=None, target=None, *, subgroup_size=N
         g = None
         chart = imr_chart(arr, tests=tests)
 
-    fig = plt.figure(figsize=figsize)
-    gs = fig.add_gridspec(3, 2, hspace=0.45, wspace=0.42)
-    ax_a, ax_b, ax_c = (fig.add_subplot(gs[i, 0]) for i in range(3))
-    _draw_panel(ax_a, chart.panels[0])
-    _draw_panel(ax_b, chart.panels[1])
-    ax_a.set_title(chart.panels[0].name + " (dentro)", fontsize=10)
-    ax_b.set_title(chart.panels[1].name, fontsize=10)
+    with plt.rc_context({}):
+        fig = plt.figure(figsize=figsize)
+        gs = fig.add_gridspec(3, 2, hspace=0.45, wspace=0.42)
+        ax_a, ax_b, ax_c = (fig.add_subplot(gs[i, 0]) for i in range(3))
+        _draw_panel(ax_a, chart.panels[0])
+        _draw_panel(ax_b, chart.panels[1])
+        ax_a.set_title(chart.panels[0].name + " (dentro)", fontsize=10)
+        ax_b.set_title(chart.panels[1].name, fontsize=10)
 
-    if grouped:
-        last = g[-25:]
-        base = len(g) - len(last)
-        for i, row in enumerate(last):
-            ax_c.plot(np.full(row.size, base + i + 1), row, "o", ms=4, color=BLUE, alpha=0.7)
-        ax_c.set_title("Últimos 25 subgrupos", fontsize=10)
-        ax_c.set_xlabel("Subgrupo")
-    else:
-        lastv = arr[-25:]
-        ax_c.plot(np.arange(len(arr) - len(lastv) + 1, len(arr) + 1), lastv, "o-", ms=4, color=BLUE)
-        ax_c.set_title("Últimas 25 observaciones", fontsize=10)
-        ax_c.set_xlabel("Observación")
-    ax_c.axhline(res.mean, color=GREEN, lw=1)
-    ax_c.grid(alpha=0.25)
+        if grouped:
+            last = g[-25:]
+            base = len(g) - len(last)
+            for i, row in enumerate(last):
+                ax_c.plot(np.full(row.size, base + i + 1), row, "o", ms=4, color=BLUE, alpha=0.7)
+            ax_c.set_title("Últimos 25 subgrupos", fontsize=10)
+            ax_c.set_xlabel("Subgrupo")
+        else:
+            lastv = arr[-25:]
+            ax_c.plot(np.arange(len(arr) - len(lastv) + 1, len(arr) + 1), lastv, "o-", ms=4, color=BLUE)
+            ax_c.set_title("Últimas 25 observaciones", fontsize=10)
+            ax_c.set_xlabel("Observación")
+        ax_c.axhline(res.mean, color=GREEN, lw=1)
+        ax_c.grid(alpha=0.25)
 
-    plot_capability(res, ax=fig.add_subplot(gs[0, 1]))
-    probability_plot(res.data, ax=fig.add_subplot(gs[1, 1]))
-    _capability_plot(fig.add_subplot(gs[2, 1]), res)
-    fig.suptitle("Sixpack de capacidad", fontweight="bold")
-    return fig, res, chart
+        plot_capability(res, ax=fig.add_subplot(gs[0, 1]))
+        probability_plot(res.data, ax=fig.add_subplot(gs[1, 1]))
+        _capability_plot(fig.add_subplot(gs[2, 1]), res)
+        fig.suptitle("Sixpack de capacidad", fontweight="bold")
+        return fig, res, chart
 
 
 # ----------------------------------------------------------------------- run chart
@@ -242,7 +246,8 @@ def plot_run_chart(result, *, figsize=None, title: str | None = None):
     x = result.values
     n = len(x)
     obs = np.arange(1, n + 1)
-    fig, ax = plt.subplots(figsize=figsize or (max(8, n * 0.35), 4.5))
+    with plt.rc_context({}):
+        fig, ax = plt.subplots(figsize=figsize or (max(8, n * 0.35), 4.5))
     ax.plot(obs, x, "o-", ms=4, lw=1, color=BLUE, zorder=3)
     ax.axhline(result.median, color=GREEN, lw=1.3, ls="--", label=f"Mediana={result.median:.4g}")
 
@@ -287,7 +292,8 @@ def plot_precontrol(result, *, figsize=None, title: str | None = None):
     obs = np.arange(1, n + 1)
 
     ZONE_COLORS = {"G": "#2e8b57", "Y-": "#e08a00", "Y+": "#e08a00", "R-": "#d62728", "R+": "#d62728"}
-    fig, ax = plt.subplots(figsize=figsize or (max(8, n * 0.35), 5))
+    with plt.rc_context({}):
+        fig, ax = plt.subplots(figsize=figsize or (max(8, n * 0.35), 5))
 
     # Zones background
     ax.axhspan(result.lsl, result.usl, alpha=0.06, color=GREEN, zorder=0)
@@ -340,7 +346,8 @@ def plot_tolerance(result, *, figsize=None, title: str | None = None, bins: int 
     Devuelve la figura de matplotlib.
     """
     x = result.data
-    fig, ax = plt.subplots(figsize=figsize or (8, 4))
+    with plt.rc_context({}):
+        fig, ax = plt.subplots(figsize=figsize or (8, 4))
     ax.hist(x, bins=bins, color=BLUE, alpha=0.55, edgecolor="white", linewidth=0.5, label="Datos")
 
     ymax = ax.get_ylim()[1]
@@ -382,7 +389,8 @@ def plot_sampling_attributes(result, *, figsize=None, title: str | None = None):
 
     Devuelve la figura de matplotlib.
     """
-    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize or (11, 4.5))
+    with plt.rc_context({}):
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize or (11, 4.5))
 
     oc = result.oc_curve()
     p = oc["p_defectivo"].to_numpy()
@@ -434,7 +442,8 @@ def plot_sampling_variables(result, *, figsize=None, title: str | None = None):
     p = oc["p_defectivo"].to_numpy()
     pa = oc["P(aceptar)"].to_numpy()
 
-    fig, ax = plt.subplots(figsize=figsize or (7, 4.5))
+    with plt.rc_context({}):
+        fig, ax = plt.subplots(figsize=figsize or (7, 4.5))
     ax.plot(p * 100, pa * 100, color=BLUE, lw=2)
     ax.axhline(95, color=GRAY, ls=":", lw=0.8)
     ax.axhline(10, color=GRAY, ls=":", lw=0.8)
@@ -464,7 +473,8 @@ def plot_gage_rr(result, *, figsize=None, title: str | None = None):
     part_labels = [f"P{i+1}" for i in range(p)]
     op_labels = [f"Op{j+1}" for j in range(o)]
 
-    fig, axes = plt.subplots(2, 3, figsize=figsize or (14, 7))
+    with plt.rc_context({}):
+        fig, axes = plt.subplots(2, 3, figsize=figsize or (14, 7))
     ax = axes
 
     # 1. % Contribution bar chart
@@ -552,7 +562,8 @@ def plot_type1(result, *, figsize=None, title: str | None = None):
     Devuelve la figura de matplotlib.
     """
     # We need data — read from the result; since we stored nothing, just plot bias info
-    fig, ax = plt.subplots(figsize=figsize or (8, 4))
+    with plt.rc_context({}):
+        fig, ax = plt.subplots(figsize=figsize or (8, 4))
     # Plot bias as a horizontal bar / reference diagram
     ax.axhline(0, color=GREEN, lw=1.5, label="Referencia")
     ax.axhline(result.bias, color=RED, lw=2, ls="--",
@@ -577,7 +588,8 @@ def plot_linearity(result, *, figsize=None, title: str | None = None):
 
     Devuelve la figura de matplotlib.
     """
-    fig, ax = plt.subplots(figsize=figsize or (8, 4.5))
+    with plt.rc_context({}):
+        fig, ax = plt.subplots(figsize=figsize or (8, 4.5))
     ax.scatter(result._all_refs, result._all_biases, color=BLUE, s=25, alpha=0.7, zorder=4)
     # Reference level means
     ax.plot(result.references, result.biases, "s", color=ORANGE, ms=7, zorder=5,
@@ -608,7 +620,8 @@ def plot_attribute_agreement(result, *, figsize=None, title: str | None = None):
     ops = list(result.kappa_within.index)
     x = np.arange(len(ops))
 
-    fig, axes = plt.subplots(1, 2, figsize=figsize or (10, 4))
+    with plt.rc_context({}):
+        fig, axes = plt.subplots(1, 2, figsize=figsize or (10, 4))
 
     # Kappa vs reference
     if not result.kappa_vs_reference.empty:

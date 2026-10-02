@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from ._data import as_1d
+from ._data import _excel_writer, as_1d
 
 NAN = float("nan")
 
@@ -172,12 +172,30 @@ class GageRRResult:
         ]
         return "\n".join(lines)
 
+    def to_excel(self, path) -> None:
+        """Exporta el Gage R&R a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        Hojas: Resumen, ANOVA (si está disponible).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Resumen")
+            if self.anova_table is not None:
+                self.anova_table.to_excel(writer, sheet_name="ANOVA")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
     def plot(self, **kwargs):
         from .plotting import plot_gage_rr
         return plot_gage_rr(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def _gage_rr_anova(data: np.ndarray, study_variation: float,
@@ -538,12 +556,27 @@ class Type1Result:
             f"  Cg={cg_s}  Cgk={cgk_s}"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el Estudio Tipo 1 a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Tipo1")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
     def plot(self, **kwargs):
         from .plotting import plot_type1
         return plot_type1(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def gage_type1(
@@ -736,12 +769,27 @@ class LinearityResult:
             f"  Sesgo promedio={self.avg_bias:.5g} ({self.avg_bias_pct:.2f}%)"
         )
 
+    def to_excel(self, path) -> None:
+        """Exporta el análisis de linealidad a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Linealidad")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
     def plot(self, **kwargs):
         from .plotting import plot_linearity
         return plot_linearity(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def gage_linearity(
@@ -870,12 +918,30 @@ class AttributeAgreementResult:
                          f"Acuerdo={row['% acuerdo']:.1f}%")
         return "\n".join(lines)
 
+    def to_excel(self, path) -> None:
+        """Exporta la concordancia por atributos a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        Hojas: Resumen, KappaVsReferencia (si hay más de un operador).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Resumen")
+            if not self.kappa_vs_reference.empty:
+                self.kappa_vs_reference.to_excel(writer, sheet_name="KappaVsReferencia")
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
     def plot(self, **kwargs):
         from .plotting import plot_attribute_agreement
         return plot_attribute_agreement(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def _cohen_kappa(a: np.ndarray, b: np.ndarray, categories) -> tuple[float, float, float]:

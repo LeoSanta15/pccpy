@@ -52,6 +52,38 @@ v2 = rng.normal(100, 2, 82)             # 82 no es múltiplo de 4
 carta = pp.xbar_r_chart(v2, subgroup_size=4)
 ```
 
+## Diagnóstico rápido del proceso
+
+Cuando tienes datos pero no sabes aún qué análisis aplicar, comienza con
+`diagnose()`. Calcula estadísticos descriptivos, prueba de normalidad,
+detecta tendencias y valores atípicos, e indica la función de pccpy que
+deberías usar a continuación.
+
+```python
+import numpy as np
+import pccpy as pp
+
+rng = np.random.default_rng(0)
+x = rng.normal(50, 2, 60)
+
+d = pp.diagnose(x, lsl=44, usl=56)   # lsl/usl opcionales
+print(d.summary())                    # resumen completo en texto
+d.plot()                              # histograma + gráfico de secuencia
+d.to_frame()                          # tabla resumen como DataFrame
+d.to_excel("diagnostico.xlsx")        # exportar a Excel (requiere openpyxl)
+```
+
+La recomendación automática varía según lo que encuentre:
+
+| Condición detectada | Función recomendada |
+|---------------------|---------------------|
+| Tendencia creciente o decreciente | `run_chart` |
+| Con especificaciones, distribución normal | `capability_analysis` |
+| Con especificaciones, distribución no normal | `capability_boxcox` |
+| Sin especificaciones | `imr_chart` |
+
+Consulta la página {doc}`diagnose` para todos los detalles.
+
 ## Carta de corridas y pre-control
 
 ```python
@@ -193,6 +225,58 @@ print(rs.summary())    # Pp, Ppk y (si se da std_within) Cp, Cpk
 
 Estos resultados devuelven el mismo tipo de objeto que su contraparte con datos
 individuales, por lo que `to_frame()`, `summary()` y demás métodos funcionan igual.
+
+## Fase I y Fase II — congelar límites históricos
+
+En un estudio de **Fase I** calculas los límites con datos históricos y verificas
+que el proceso estaba bajo control. En **Fase II** aplicas esos mismos límites a
+producción nueva para detectar cambios.
+
+```python
+import numpy as np, pccpy as pp
+
+# ── Fase I: datos históricos (solo lotes 1-20) ─────────────────
+x_historico = x[:80]
+carta_i = pp.imr_chart(x_historico, tests="all")
+mu_i    = carta_i.params[0]["mu"]           # media estimada
+sigma_i = carta_i.params[0]["sigma"]        # sigma dentro estimado
+print(f"Fase I:  μ = {mu_i:.4f}  σ = {sigma_i:.4f}")
+
+# ── Fase II: nuevos datos con límites fijos ─────────────────────
+x_nuevo = x[80:]
+carta_ii = pp.imr_chart(x_nuevo, mu=mu_i, sigma_within=sigma_i, tests=(1, 2))
+carta_ii.plot()
+```
+
+Para cartas de subgrupos usa los mismos parámetros:
+
+```python
+# Xbar-R con límites fijados
+g_nuevo = x_nuevo.reshape(-1, 4)
+carta_ii = pp.xbar_r_chart(g_nuevo, mu=mu_i, sigma_within=sigma_i)
+```
+
+Para marcar múltiples etapas dentro de un mismo gráfico (Minitab "stages"):
+
+```python
+etapas = np.r_[np.ones(50), np.full(50, 2)]   # 50 puntos en cada etapa
+carta = pp.imr_chart(x, stages=etapas, tests="all")
+# Cada etapa tiene sus propios límites calculados por separado
+```
+
+## Guardar gráficos
+
+Todos los resultados tienen `save_plot()`:
+
+```python
+# Guardar como PNG, PDF o SVG con una sola línea
+carta.save_plot("carta_imr.png")                 # 150 dpi por defecto
+carta.save_plot("carta_imr.pdf")                 # vectorial
+cap.save_plot("capacidad.png",  dpi=200)         # alta resolución
+tol.save_plot("tolerancia.svg")                  # editable
+# Pasar kwargs del método plot()
+carta.save_plot("carta_sinzonas.png", zones=False)
+```
 
 ## Un vistazo por tema
 

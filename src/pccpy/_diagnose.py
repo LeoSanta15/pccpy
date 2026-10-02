@@ -8,8 +8,11 @@ from typing import TYPE_CHECKING
 import numpy as np
 from scipy import stats
 
+from ._data import _excel_writer
+
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
+    import pandas as pd
 
 __all__ = ["DiagnoseResult", "diagnose"]
 
@@ -55,6 +58,35 @@ class DiagnoseResult:
     cpk: float | None = None
 
     # ══════════════════════════════════════════════════════════════════════
+    def to_frame(self) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico)."""
+        import pandas as pd
+
+        o = self
+        rows = [
+            ("N", o.n), ("Media", o.mean), ("Desv.Est.", o.std), ("CV (%)", o.cv),
+            ("Mínimo", o.min_val), ("Máximo", o.max_val), ("Mediana", o.median),
+            ("Asimetría", o.skewness), ("Curtosis", o.kurtosis),
+            ("Estadístico normalidad", o.normality_stat),
+            ("p-valor normalidad", o.normality_p),
+            ("Distribución normal", o.is_normal),
+            ("Tiene tendencia", o.has_trend),
+            ("Dirección tendencia", o.trend_direction),
+            ("Valores atípicos (IQR)", o.outlier_count),
+            ("LEI", o.lsl), ("LES", o.usl), ("Objetivo", o.target),
+            ("Cp estimado", o.cp), ("Cpk estimado", o.cpk),
+            ("Función recomendada", o.recommended_function),
+        ]
+        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+
+    def to_excel(self, path) -> None:
+        """Exporta el diagnóstico a un archivo Excel (.xlsx).
+
+        Requiere ``openpyxl`` (``pip install openpyxl``).
+        """
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name="Diagnóstico")
+
     def summary(self) -> str:
         """Resumen en texto al estilo sesión de Minitab."""
         sep = "═" * 60
@@ -111,6 +143,14 @@ class DiagnoseResult:
         ]
         return "\n".join(lines)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
     def plot(self, *, figsize: tuple[float, float] = (10, 4)) -> plt.Figure:
         """Histograma con curva normal + gráfico de secuencia.
 
@@ -121,7 +161,8 @@ class DiagnoseResult:
         import matplotlib.pyplot as plt
         from matplotlib import gridspec
 
-        fig = plt.figure(figsize=figsize, constrained_layout=True)
+        with plt.rc_context({}):
+            fig = plt.figure(figsize=figsize, constrained_layout=True)
         gs = gridspec.GridSpec(1, 2, figure=fig)
 
         # ── Histograma ─────────────────────────────────────────────────────
