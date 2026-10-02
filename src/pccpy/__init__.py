@@ -86,7 +86,7 @@ from .quality_tools import pareto, plot_pareto
 from .results import ControlChart, MultivariateChart, Panel
 from .tolerance import ToleranceResult, tolerance_interval, tolerance_interval_summary
 
-__version__ = "0.10.7"
+__version__ = "0.10.8"
 
 __all__ = [
     "AttributeAgreementResult",

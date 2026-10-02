@@ -1,5 +1,16 @@
 # Registro de cambios
 
+## [0.10.8] - documentación de referencia completa
+
+### Añadido
+- Páginas de referencia API para `diagnose()` / `DiagnoseResult` y `wizard()` / `WizardResult` / `WidgetSession`.
+- Nota en la documentación de `capability_analysis()` sobre uso sin límites de especificación (LSL/USL opcionales).
+
+### Corregido
+- 18 advertencias de Sphinx tratadas como errores en CI (descripciones duplicadas y referencia cruzada ambigua).
+
+---
+
 ## [0.10.7] - compatibilidad con datos reales y dependencias externas
 
 ### Añadido
