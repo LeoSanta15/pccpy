@@ -114,15 +114,15 @@
 
 ---
 
-### BUG-08 · CI tests.yml tenía referencias a `spyc` tras el renombre
+### BUG-08 · CI tests.yml tenía referencias a `nombre_anterior` tras el renombre
 
 | Campo | Detalle |
 |---|---|
 | **ID** | BUG-08 |
-| **Síntoma** | CI corría `pytest --cov=spyc` y `mypy src/spyc` — el módulo ya no existía |
+| **Síntoma** | CI corría `pytest --cov=nombre_anterior` y `mypy src/nombre_anterior` — el módulo ya no existía |
 | **Causa raíz** | El renombre de módulo no actualizó los workflows de GitHub Actions |
 | **Cómo se detectó** | Primer run de CI tras el renombre; commit `3de6dc5` |
-| **Solución aplicada** | Sed en los workflows: `--cov=spyc → --cov=pccpy`, `src/spyc → src/pccpy` |
+| **Solución aplicada** | Sed en los workflows: `--cov=nombre_anterior → --cov=pccpy`, `src/nombre_anterior → src/pccpy` |
 | **Archivo/línea** | `.github/workflows/tests.yml`, `.github/workflows/publish.yml` (commit `3de6dc5`) |
 | **Test de regresión** | N/A — es un bug de infraestructura CI |
 | **¿Puede ocurrir en otras libs?** | Sí — renombres de paquete deben incluir todos los artefactos de CI. |
@@ -204,17 +204,17 @@
 
 ---
 
-### BUG-14 · `examples/*.py` rotos tras el renombre `spyc` → `pccpy`
+### BUG-14 · `examples/*.py` rotos tras el renombre `nombre_anterior` → `pccpy`
 
 | Campo | Detalle |
 |---|---|
 | **ID** | BUG-14 |
-| **Síntoma** | `python examples/ejemplo_basico.py` → `AttributeError: module 'spyc' has no attribute 'imr_chart'`; `ejemplo_avanzado.py` → `... 'zmr_chart'` |
-| **Causa raíz** | Ambos scripts conservan `import spyc` (`ejemplo_basico.py:14`, `ejemplo_avanzado.py:9`); el renombre no los tocó y ningún test ni CI los ejecuta |
-| **Cómo se detectó** | Esta revisión: `grep -rIl spyc .` + ejecución de los scripts (2026-10-02). La retrospectiva inicial no lo vio |
-| **Solución aplicada** | **NO CORREGIDO** (pendiente; fuera del alcance de esta fase) |
+| **Síntoma** | `python examples/ejemplo_basico.py` → `AttributeError: module 'nombre_anterior' has no attribute 'imr_chart'`; `ejemplo_avanzado.py` → `... 'zmr_chart'` |
+| **Causa raíz** | Ambos scripts conservan `import nombre_anterior` (`ejemplo_basico.py:14`, `ejemplo_avanzado.py:9`); el renombre no los tocó y ningún test ni CI los ejecuta |
+| **Cómo se detectó** | Esta revisión: `grep -rIl nombre_anterior .` + ejecución de los scripts (2026-10-02). La retrospectiva inicial no lo vio |
+| **Solución aplicada** | CORREGIDO: se reemplazó el nombre antiguo por `pccpy` en ambos scripts; los dos ejecutan sin error (`MPLBACKEND=Agg python examples/<f>.py`, 2026-10-02) |
 | **Archivo/línea** | `examples/ejemplo_basico.py`, `examples/ejemplo_avanzado.py` |
-| **Test de regresión** | NO — falta un paso de CI que ejecute `examples/*.py` |
+| **Test de regresión** | NO — sigue faltando un paso de CI que ejecute `examples/*.py` |
 | **¿Puede ocurrir en otras libs?** | Sí — los ejemplos fuera de `src/` y `tests/` se pudren en silencio tras cualquier renombre o cambio de API. |
 
 ---

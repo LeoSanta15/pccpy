@@ -23,15 +23,15 @@
 | 11 | Seguridad | **2** | Funcional |
 | 12 | Versionado y releases | **2** *(antes 3)* | Funcional |
 | 13 | Comunidad y contribución | **2** | Funcional |
-| 14 | Developer Experience (DX) | **2** *(antes 3)* | Funcional |
-| **GLOBAL** | | **3.1** *(43/14 = 3.07; antes 3.4)* | **Sólido** |
+| 14 | Developer Experience (DX) | **3** | Sólido |
+| **GLOBAL** | | **3.1** *(44/14 = 3.14; antes 3.4)* | **Sólido** |
 
 ### Qué cambió en la segunda pasada (2026-10-02) y por qué
 
 - **Aritmética corregida:** las puntuaciones originales sumaban 46/14 = 3.29, no 3.4.
 - **Criterio explícito para un 4:** "ningún bug cerrado sin test de regresión y ningún módulo público < 70 % de cobertura". Hoy se incumple (BUG-01/07/12 sin test; `timeweighted_attr.py` 19 %, `_wizard.py` 62 %) → Suite de pruebas baja a 3.
 - **Versionado y releases 3 → 2:** el release v0.10.8 falló en producción (BUG-13) por falta de guarda y versión duplicada.
-- **DX 3 → 2:** `examples/*.py` no ejecutan (BUG-14: `import spyc`). CLAUDE.md ya se actualizó en esta pasada, pero eso no compensa ejemplos rotos.
+- **DX 3 → 2 → 3:** bajó a 2 porque `examples/*.py` no ejecutaban (BUG-14); volvió a 3 tras corregirlos y verificar que ambos corren. CLAUDE.md también se actualizó.
 - **Afirmación falsa retirada:** "`actions/checkout@v6` no existe". Evidencia en contra: `publish.yml` en el tag `v0.10.7` ya usaba `checkout@v6` y ese release publicó con éxito; el CI de `819ca11` pasó con v6 en los 7 jobs.
 
 ---
@@ -47,7 +47,7 @@
 - `.github/workflows/` con tests y publish.
 - `benchmarks/`, `examples/`, `docs/` organizados.
 
-**DÉFICITS (-1):** Sin `.github/ISSUE_TEMPLATE/` ni `.github/PULL_REQUEST_TEMPLATE.md`. (CLAUDE.md estaba desactualizado con `src/spyc`; corregido en la segunda pasada.) `LICENSE` aún dice "Autores de spyc".
+**DÉFICITS (-1):** Sin `.github/ISSUE_TEMPLATE/` ni `.github/PULL_REQUEST_TEMPLATE.md`. (CLAUDE.md estaba desactualizado con `src/nombre_anterior`; corregido en la segunda pasada.) `LICENSE` aún dice "Autores de nombre_anterior".
 
 ---
 
@@ -190,28 +190,28 @@
 - `LICENSE` MIT.
 - Repositorio público en GitHub.
 
-**DÉFICITS (-3):** Sin issue templates. Sin PR template. Sin código de conducta. Sin `SECURITY.md`. CONTRIBUTING.md tuvo referencias obsoletas a `spyc` (commit `415f412`).
+**DÉFICITS (-3):** Sin issue templates. Sin PR template. Sin código de conducta. Sin `SECURITY.md`. CONTRIBUTING.md tuvo referencias obsoletas a `nombre_anterior` (commit `415f412`).
 
 ---
 
-### 14. Developer Experience (DX) — 2/5
+### 14. Developer Experience (DX) — 3/5
 
 **HECHOS:**
 - `pip install -e ".[dev]"` instala todo en un paso.
 - CLAUDE.md con mapa de código, comandos y reglas (reescrito y verificado en la segunda pasada).
 - Wizard de selección para usuarios nuevos.
 
-**DÉFICITS (-3):** `examples/ejemplo_basico.py` y `examples/ejemplo_avanzado.py` **no ejecutan** (`import spyc` → `AttributeError`, BUG-14). *(La primera pasada los daba como positivos sin ejecutarlos: contradicción corregida.)* Sin `Makefile` ni script de conveniencia. "La instalación en Python 3.9 puede fallar" de la primera pasada es NO VERIFICADO.
+**DÉFICITS (-2):** `examples/` estaban rotos (BUG-14) y la primera pasada los daba como positivos sin ejecutarlos; ya corregidos y verificados, pero CI sigue sin ejecutarlos. Sin `Makefile` ni script de conveniencia. "La instalación en Python 3.9 puede fallar" de la primera pasada es NO VERIFICADO.
 
 ---
 
 ## Nivel de madurez global: NIVEL 3 — Sólido
 
-**Puntuación media: 3.1 / 5.0** (43/14 = 3.07; en el límite inferior del Nivel 3)
+**Puntuación media: 3.1 / 5.0** (44/14 = 3.14; en el límite inferior del Nivel 3)
 
 El proyecto es funcional, bien testeado y tiene CI activo. Los déficits principales son:
 1. Pipeline de release sin verificación y versión en dos fuentes (BUG-13, ya ocurrió).
-2. `examples/` rotos (BUG-14).
+2. CI no ejecuta `examples/` (BUG-14 ya corregido, pero puede repetirse).
 3. Bugs sin test de regresión y módulos con cobertura < 70 % (`timeweighted_attr.py` 19 %, `_wizard.py` 62 %).
 4. Sin auditoría de seguridad en CI.
 
@@ -219,9 +219,9 @@ El proyecto es funcional, bien testeado y tiene CI activo. Los déficits princip
 
 ## Dimensión más rezagada y siguiente acción de mayor impacto
 
-**Más rezagada:** hay un empate a 2/5 entre Rendimiento, Seguridad, Versionado y releases, Comunidad y DX. Ninguna está por debajo del resto.
+**Más rezagada:** hay un empate a 2/5 entre Rendimiento, Seguridad, Versionado y releases y Comunidad. Ninguna está por debajo del resto.
 
-**Desempate por impacto observado:** **Versionado y releases** es la única de las cinco que ya causó un fallo en producción (release v0.10.8) y la de menor esfuerzo de corrección.
+**Desempate por impacto observado:** **Versionado y releases** es la única de las cuatro que ya causó un fallo en producción (release v0.10.8) y la de menor esfuerzo de corrección.
 
 **Siguiente acción de mayor impacto (≈30 min):**
 1. Añadir en `publish.yml`, tras el build, la guarda tag/release == versión del wheel y `twine check dist/*`.
@@ -229,4 +229,4 @@ El proyecto es funcional, bien testeado y tiene CI activo. Los déficits princip
 
 Ambas piezas se probaron localmente (guarda: exit 1 contra el commit que falló, exit 0 contra `2be31df`; `dynamic`: una edición → wheel 0.10.9). **NO se han ejecutado todavía dentro de GitHub Actions**, así que la primera ejecución real debe revisarse con un release de prueba o un `workflow_dispatch`.
 
-Segunda en la lista (≈15 min, sube DX): arreglar `examples/` (`spyc` → `pccpy`), ejecutarlos y añadirlos a CI.
+Segunda en la lista (≈10 min): añadir a CI el bucle que ejecuta `examples/*.py`.

@@ -8,7 +8,7 @@
 
 ## Estado actual
 
-pccpy es una librería Python de Control Estadístico de Procesos (SPC) con 6.636 líneas de código fuente, 344 tests pasando al 100%, 90% de cobertura global y un CI funcional en GitHub Actions con matrix Python 3.9–3.13. El proyecto pasó de prototipo local (`spyc`) a paquete publicado en PyPI en ~100 commits a lo largo de varios meses.
+pccpy es una librería Python de Control Estadístico de Procesos (SPC) con 6.636 líneas de código fuente, 344 tests pasando al 100%, 90% de cobertura global y un CI funcional en GitHub Actions con matrix Python 3.9–3.13. El proyecto pasó de prototipo local (`nombre_anterior`) a paquete publicado en PyPI en ~100 commits a lo largo de varios meses.
 
 **CI ejecutado en esta revisión:**
 - `pytest -q`: **344 passed in 33.97s** (0 fallos)
@@ -42,8 +42,8 @@ La versión 0.10.7 corrigió NaN/inf, DataFrames con columnas mixtas, capability
 **R-01: El pipeline de release no verifica lo que publica (ya falló una vez).**
 `publish.yml` (trigger `release: published`) no compara el release con la versión del wheel ni corre `twine check`; la versión vive en dos archivos. El release v0.10.8 falló por esto (BUG-13).
 
-**R-02: `examples/*.py` están rotos.**
-Ambos scripts hacen `import spyc` y fallan con `AttributeError` (BUG-14). Ningún test ni CI los ejecuta. *No estaba en la primera versión de este informe.*
+**R-02: `examples/*.py` estaban rotos (ya corregidos).**
+Ambos scripts hacen `import nombre_anterior` y fallan con `AttributeError` (BUG-14). Ningún test ni CI los ejecuta. *No estaba en la primera versión de este informe.*
 
 **R-03: Bugs cerrados sin test de regresión y módulos casi sin cobertura.**
 BUG-01, BUG-07 y BUG-12 sin test (recetas probadas en el catálogo); BUG-10 solo parcial. `charts/timeweighted_attr.py` al 19 % (6 funciones públicas EWMA/CUSUM de atributos) y `_wizard.py` al 62 %.
@@ -62,7 +62,7 @@ El criterio "ningún módulo < 70 %" no se cumple hoy (2 módulos) y un `ruff --
 
 2. **Blindar el release** — guarda tag/release == versión del wheel + `twine check` en `publish.yml`, y versión única con `[tool.setuptools.dynamic]` (ambos probados localmente; el step de YAML aún no se ha ejecutado en Actions). ~30 min. Es la acción de mayor impacto: evita repetir BUG-13.
 
-3. **Arreglar `examples/`** — `spyc` → `pccpy` en los dos scripts, ejecutarlos y añadir el bucle de ejemplos a CI. ~15 min.
+3. ~~Arreglar `examples/`~~ — **hecho**; falta añadir el bucle de ejemplos a CI (~10 min).
 
 4. **Tests de regresión faltantes** — BUG-01, BUG-07, BUG-12 (recetas ya probadas en `BUG_CATALOG.md`) y el `assert` de n<8 en `_diagnose` (BUG-10). ~30 min.
 

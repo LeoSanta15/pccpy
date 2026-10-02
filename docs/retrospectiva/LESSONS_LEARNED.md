@@ -8,9 +8,9 @@
 ## L-01 · Renombrar un módulo Python mientras ya está publicado es costoso (IMPACTO: CRÍTICO)
 
 **¿Qué pasó?**
-El proyecto nació como `spyc` (PyPI: `spyc`, módulo Python: `spyc`). Se renombró a `pccpy` — PyPI: `pccpy`, módulo Python: `pccpy` — sin coordinar todos los artefactos de una vez. Resultado: >20 commits de limpieza residual (`docs: fix README code examples - import spyc not pccpy`, `docs: corregir nombre spyc → pccpy en CONTRIBUTING`, `ci: corrige referencias spyc→pccpy`, commits `chore: delete src/spyc/*`). El CLAUDE.md activo todavía referencia `src/spyc` en comandos de mypy y pytest.
+El proyecto nació como `nombre_anterior` (PyPI: `nombre_anterior`, módulo Python: `nombre_anterior`). Se renombró a `pccpy` — PyPI: `pccpy`, módulo Python: `pccpy` — sin coordinar todos los artefactos de una vez. Resultado: >20 commits de limpieza residual (`docs: fix README code examples - import nombre_anterior not pccpy`, `docs: corregir nombre nombre_anterior → pccpy en CONTRIBUTING`, `ci: corrige referencias nombre_anterior→pccpy`, commits `chore: delete src/nombre_anterior/*`). El CLAUDE.md activo todavía referencia `src/nombre_anterior` en comandos de mypy y pytest.
 
-**Evidencia:** commits `85537d5` (README import erróneo), `3fc99f2`, `3db3c6e`, `454619a`, `3fb309c`, `ccefba7`–`6cb8e00` (16 commits de borrado uno a uno), CLAUDE.md líneas `mypy src/spyc`, `pytest --cov=spyc`.
+**Evidencia:** commits `85537d5` (README import erróneo), `3fc99f2`, `3db3c6e`, `454619a`, `3fb309c`, `ccefba7`–`6cb8e00` (16 commits de borrado uno a uno), CLAUDE.md líneas `mypy src/nombre_anterior`, `pytest --cov=nombre_anterior`.
 
 **¿Por qué?**
 El renombre se ejecutó en ramas separadas y en lotes (tests batch 1, tests batch 2, src batch 2), sin una lista de verificación que cubriera CI, CLAUDE.md, docs RST y README.
@@ -112,12 +112,12 @@ Separar la lógica de "dibujar zonas" de la lógica de "recortar zonas bajo cero
 
 ---
 
-## L-07 · El CLAUDE.md nunca se actualizó tras el renombre spyc→pccpy (IMPACTO: MEDIO)
+## L-07 · El CLAUDE.md nunca se actualizó tras el renombre nombre_anterior→pccpy (IMPACTO: MEDIO)
 
 **¿Qué pasó?**
-El archivo CLAUDE.md contiene referencias activas a `src/spyc` en comandos de pytest, mypy y en la sección "Mapa del código". Cualquier sesión nueva de Claude Code que lea el CLAUDE.md ejecutará comandos incorrectos.
+El archivo CLAUDE.md contiene referencias activas a `src/nombre_anterior` en comandos de pytest, mypy y en la sección "Mapa del código". Cualquier sesión nueva de Claude Code que lea el CLAUDE.md ejecutará comandos incorrectos.
 
-**Evidencia:** CLAUDE.md líneas activas: `pytest --cov=spyc`, `mypy src/spyc`, `src/spyc/` en mapa de código. Estado actual del proyecto: `src/pccpy/`.
+**Evidencia:** CLAUDE.md líneas activas: `pytest --cov=nombre_anterior`, `mypy src/nombre_anterior`, `src/nombre_anterior/` en mapa de código. Estado actual del proyecto: `src/pccpy/`.
 
 **¿Por qué?**
 El CLAUDE.md fue creado en v0.4.3 (pre-renombre) y no fue incluido en el checklist del renombre.
@@ -162,7 +162,7 @@ Para código que requiere dependencias opcionales de entorno (widgets, GUI), usa
 **¿Qué pasó?**
 (1) El commit `fb8fc3d` ("revert version to 0.4.3") muestra que `pyproject.toml` y `__init__.py` tenían versiones diferentes en el mismo punto del historial. (2) El release `v0.10.8` falló (run `37060818445`, PyPI `400 File already exists`): el tag apuntaba a `d16df0d`, donde ambos archivos seguían en 0.10.7; se había declarado "listo para release" sin construir el wheel. Se arregló con `2be31df` (ver BUG-13 en `BUG_CATALOG.md`).
 
-**Evidencia:** commit `fb8fc3d` modifica tanto `pyproject.toml` como `src/spyc/__init__.py` para alinear a `0.4.3`.
+**Evidencia:** commit `fb8fc3d` modifica tanto `pyproject.toml` como `src/nombre_anterior/__init__.py` para alinear a `0.4.3`.
 
 **¿Por qué?**
 La versión se gestiona manualmente en dos lugares. Es fácil actualizar uno y olvidar el otro.

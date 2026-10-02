@@ -1,4 +1,4 @@
-"""Cartas avanzadas y multivariadas de spyc. Las figuras se guardan en ./salida."""
+"""Cartas avanzadas y multivariadas de pccpy. Las figuras se guardan en ./salida."""
 from pathlib import Path
 
 import matplotlib
@@ -6,7 +6,7 @@ import matplotlib
 matplotlib.use("Agg")
 import numpy as np
 
-import spyc
+import pccpy
 
 salida = Path("salida")
 salida.mkdir(exist_ok=True)
@@ -18,15 +18,15 @@ medias = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
 x = np.array([rng.normal(*medias[p]) for p in partes])
 x[15] += 10                                    # una pieza B fuera de lo normal
 # medias y sigmas históricas por parte (con solo 10 datos, un valor atípico inflaría la sigma estimada)
-zmr = spyc.zmr_chart(x, partes, mu={p: m for p, (m, _) in medias.items()},
+zmr = pccpy.zmr_chart(x, partes, mu={p: m for p, (m, _) in medias.items()},
                      sigma={p: s for p, (_, s) in medias.items()}, tests=(1, 2, 3, 4, 5, 6))
 print(zmr.summary(), "\n")
 zmr.plot().savefig(salida / "zmr.png")
 
 # 2) Variación entre y dentro de subgrupos: Xbar-R alarma de más, I-MR-R no
 lotes = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
-print("Xbar-R  puntos marcados:", len(spyc.xbar_r_chart(lotes).violations()))
-ch = spyc.imr_rs_chart(lotes)
+print("Xbar-R  puntos marcados:", len(pccpy.xbar_r_chart(lotes).violations()))
+ch = pccpy.imr_rs_chart(lotes)
 print("I-MR-R  puntos marcados:", len(ch.violations()))
 print({k: round(v, 3) for k, v in ch.params[0].items()}, "\n")
 ch.plot().savefig(salida / "imr_r.png")
@@ -34,15 +34,15 @@ ch.plot().savefig(salida / "imr_r.png")
 # 3) Eventos raros
 entre = rng.geometric(0.01, 40) - 1
 entre[25] = 600
-spyc.g_chart(entre).plot().savefig(salida / "g.png")
+pccpy.g_chart(entre).plot().savefig(salida / "g.png")
 tiempos = rng.weibull(1.4, 40) * 30
 tiempos[12] = 250
-print(spyc.t_chart(tiempos).summary(), "\n")
+print(pccpy.t_chart(tiempos).summary(), "\n")
 
 # 3b) Carta de zona: puntaje acumulado en lugar de pruebas de causas especiales
 deriva = rng.normal(0, 1, 50)
 deriva[30:] += 1.2                             # desplazamiento sostenido de 1.2 sigmas
-zona = spyc.zone_chart(deriva, mu=0.0, sigma=1.0, reset=True)
+zona = pccpy.zone_chart(deriva, mu=0.0, sigma=1.0, reset=True)
 print(zona.summary(), "\n")
 zona.plot(zones=True).savefig(salida / "zona.png")
 
@@ -51,33 +51,33 @@ Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
 hist = rng.multivariate_normal([0, 0, 0], Sigma, 100)
 nuevos = rng.multivariate_normal([0, 0, 0], Sigma, 50)
 nuevos[30:, 2] += 4                            # la variable 3 se desplaza
-print(spyc.t2_chart(hist).summary(), "\n")
+print(pccpy.t2_chart(hist).summary(), "\n")
 mu, cov = hist.mean(axis=0), np.cov(hist, rowvar=False)
-t2 = spyc.t2_chart(nuevos, mu=mu, cov=cov, n_hist=100)
+t2 = pccpy.t2_chart(nuevos, mu=mu, cov=cov, n_hist=100)
 print(t2.summary().splitlines()[0:3])
 primero = int(t2["T2"].flagged[0]) + 1
 print(f"Contribuciones en el punto {primero}:\n{t2.contributions(primero).round(2)}\n")
 t2.plot().savefig(salida / "t2.png")
-me = spyc.mewma_chart(nuevos, mu=mu, cov=cov)
+me = pccpy.mewma_chart(nuevos, mu=mu, cov=cov)
 print("MEWMA primera señal en el punto", int(me["MEWMA"].flagged[0]) + 1)
 me.plot().savefig(salida / "mewma.png")
-mc = spyc.mcusum_chart(nuevos, mu=mu, cov=cov)
+mc = pccpy.mcusum_chart(nuevos, mu=mu, cov=cov)
 print("MCUSUM primera señal en el punto", int(mc["MCUSUM"].flagged[0]) + 1, f"(h = {mc.params[0]['LCS']:.2f})")
 mc.plot().savefig(salida / "mcusum.png")
 
 # 4b) Etapas: dos periodos con medias distintas, cada uno reestima sus propios límites
 dos_etapas = np.vstack([nuevos[:40], nuevos[:40] + [0, 0, 3]])
 etiquetas = [1] * 40 + [2] * 40
-t2_et = spyc.t2_chart(dos_etapas, stages=etiquetas)
+t2_et = pccpy.t2_chart(dos_etapas, stages=etiquetas)
 print("T2 por etapas -> centros:", [round(p["fase"] == "I" and c, 2)
       for p, c in zip(t2_et.params, (t2_et["T2"].center[0], t2_et["T2"].center[-1]))])
 print("medias por etapa:", t2_et.stage_mean[1].round(2), t2_et.stage_mean[2].round(2), "\n")
 
 # 4c) Box-Cox multivariado (datos positivos y sesgados)
 sesgados = rng.lognormal(0, 0.4, (60, 3))
-t2_bc = spyc.t2_chart(sesgados, boxcox=True)
+t2_bc = pccpy.t2_chart(sesgados, boxcox=True)
 print("lambda de Box-Cox por variable:", t2_bc.params[0]["lambda_boxcox"], "\n")
 subs = rng.multivariate_normal([0, 0, 0], Sigma, 120)
 subs[60:] *= 2.5                               # aumenta la dispersión
-spyc.generalized_variance_chart(subs, subgroup_size=6).plot().savefig(salida / "gv.png")
+pccpy.generalized_variance_chart(subs, subgroup_size=6).plot().savefig(salida / "gv.png")
 print("Figuras en", salida.resolve())

@@ -48,8 +48,8 @@
 - `_expected_ppm()`, `_z_bench()` y el cálculo del intervalo de confianza de Ppk
   manejaban incorrectamente el caso `sigma=0`, produciendo `ZeroDivisionError`
   o resultados sin sentido.
-- `instalacion.md`: corregidas las referencias a `spyc` en los comandos de
-  desarrollo (`pytest --cov=spyc`, `mypy src/spyc` → `pccpy`).
+- `instalacion.md`: corregidas las referencias al nombre anterior en los comandos de
+  desarrollo (`pytest --cov`, `mypy src/...` → `pccpy`).
 
 ## [0.10.6] - diagnose(), WidgetSession y docs del wizard
 
@@ -275,9 +275,9 @@ el segundo número puede incluir cambios que no son compatibles hacia atrás.
 ### Corregido
 - Eliminado classifier de licencia duplicado (`License :: OSI Approved :: MIT License`)
   incompatible con PEP 639 en setuptools ≥ 77.
-- Corregidas todas las URLs y referencias de `TU_USUARIO/spyc` a `LeoSanta15/pccpy`
+- Corregidas todas las URLs y referencias de `TU_USUARIO/<nombre anterior>` a `LeoSanta15/pccpy`
   en README.md, docs/ y CONTRIBUTING.md.
-- Nombre del proyecto actualizado de `spyc` a `pccpy` en pyproject.toml, conf.py
+- Nombre del proyecto actualizado del nombre anterior a `pccpy` en pyproject.toml, conf.py
   e index.md.
 - Modernizadas anotaciones de tipo con ruff (UP006, UP035, UP045).
 

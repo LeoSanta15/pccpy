@@ -78,8 +78,8 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
   `to_subgroups()` (`_data.py`). Antes de endurecer una validación base, `grep`
   las llamadas internas; usa escape-hatch explícito (`_allow_size_1=True`).
 - **R-10 Referencias obsoletas:** tras un renombre o antes de un release corre
-  `grep -rIln "spyc\|TU_USUARIO\|PLACEHOLDER" . --exclude-dir=.git --exclude-dir=build --exclude-dir=_build --exclude-dir=retrospectiva --exclude=CHANGELOG.md --exclude=CLAUDE.md`
-  (cubre `examples/`, CI y `LICENSE`). Debe salir vacío; hoy lista `LICENSE` y `examples/` (ver deuda).
+  `grep -rIln "<nombre_viejo>\|TU_USUARIO\|PLACEHOLDER" . --exclude-dir=.git --exclude-dir=build --exclude-dir=_build --exclude-dir=retrospectiva --exclude=CHANGELOG.md --exclude=CLAUDE.md`
+  (cubre `examples/`, CI y `LICENSE`). Debe salir vacío. Sustituye `<nombre_viejo>` por el nombre anterior tras un renombre.
 - **R-11 Tests obligatorios:** cada función pública nueva tiene test de caso
   borde (vacío, NaN/inf, n mínimo, parámetros opcionales ausentes, std=0) y
   todo bug corregido tiene test de regresión que **falla** si el bug vuelve.
@@ -87,7 +87,7 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
   documentan el mismo símbolo, la procesada primero lleva `:no-index:`; verifica
   con `sphinx-build -W`. En docstrings numpy no escribas `shape (n,)` si existe
   un atributo `n` (referencia ambigua): usa `array-like`.
-- **R-13 Ejemplos ejecutables:** `examples/*.py` deben correr sin error antes de
+- **R-13 Ejemplos ejecutables** (corregidos y verificados el 2026-10-02): `examples/*.py` deben correr sin error antes de
   cada release (comando en "Comandos estándar").
 - **R-14 CI en versión mínima:** la matrix de `tests.yml` incluye 3.9; un PR no
   se mergea con CI en rojo.
@@ -147,9 +147,7 @@ reimplementes el bucle de etapas.
 
 ## Deuda técnica detectada en la revisión del 2026-10-02
 
-- **`examples/*.py` están rotos:** hacen `import spyc` (nombre antiguo) y fallan con `AttributeError`.
 - Sin test de regresión: BUG-01 (zonas en cartas R/S/MR), BUG-07 (openpyxl ausente), BUG-12 (aislamiento de `rcParams`). Recetas probadas en `BUG_CATALOG.md`.
 - Cobertura < 70 %: `charts/timeweighted_attr.py` (19 %), `_wizard.py` (62 %).
 - `publish.yml` no verifica que la versión del wheel coincida con el release ni corre `twine check`.
 - `ruff --select ...,S` falla por `assert` en `acceptance.py:692` (S101).
-- `LICENSE` dice "Autores de spyc": decidir el titular correcto (lo decide el autor).
