@@ -156,6 +156,7 @@ def test_diagnose_plot():
 # ── to_excel smoke tests ─────────────────────────────────────────────────────
 
 def _xl(obj):
+    pytest.importorskip("openpyxl")
     with tempfile.NamedTemporaryFile(suffix=".xlsx", delete=False) as f:
         path = f.name
     try:

@@ -1,7 +1,5 @@
 # Preguntas frecuentes (FAQ)
 
----
-
 ## Cartas de control
 
 ### ¿Por qué el límite inferior de la carta P no aparece?

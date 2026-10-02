@@ -118,6 +118,7 @@ res.to_excel("tolerancia.xlsx")   # requiere openpyxl
 .. autoclass:: pccpy.ToleranceResult
    :members: summary, plot, to_frame, to_excel
    :undoc-members:
+   :no-index:
 ```
 
 ### Atributos principales
@@ -140,8 +141,10 @@ res.to_excel("tolerancia.xlsx")   # requiere openpyxl
 
 ```{eval-rst}
 .. autofunction:: pccpy.tolerance_interval
+   :no-index:
 ```
 
 ```{eval-rst}
 .. autofunction:: pccpy.tolerance_interval_summary
+   :no-index:
 ```

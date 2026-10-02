@@ -140,14 +140,17 @@ plan_dr.to_excel("dodge_romig.xlsx")
 
 ```{eval-rst}
 .. autofunction:: pccpy.acceptance_sampling_attributes
+   :no-index:
 ```
 
 ```{eval-rst}
 .. autofunction:: pccpy.acceptance_sampling_variables
+   :no-index:
 ```
 
 ```{eval-rst}
 .. autofunction:: pccpy.dodge_romig
+   :no-index:
 ```
 
 ### Objetos de resultado
@@ -156,16 +159,19 @@ plan_dr.to_excel("dodge_romig.xlsx")
 .. autoclass:: pccpy.SamplingPlanAttributes
    :members: summary, plot, to_frame, to_excel
    :undoc-members:
+   :no-index:
 ```
 
 ```{eval-rst}
 .. autoclass:: pccpy.SamplingPlanVariables
    :members: summary, plot, to_frame, to_excel, evaluate
    :undoc-members:
+   :no-index:
 ```
 
 ```{eval-rst}
 .. autoclass:: pccpy.DodgeRomigPlan
    :members: summary, plot, to_frame, to_excel
    :undoc-members:
+   :no-index:
 ```
