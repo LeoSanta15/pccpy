@@ -10,14 +10,31 @@ descripciones de pruebas y gráficos.
 
 ```{toctree}
 :maxdepth: 2
-:caption: Contenido
+:caption: Comenzar
 
 instalacion
+guia_seleccion
+minitab
+tutorial_real
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Guías
+
 inicio_rapido
-wizard
 diagnose
+capacidad_indices
 tolerance
 acceptance
+faq
+wizard
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Referencia
+
 referencia/index
 changelog
 ```

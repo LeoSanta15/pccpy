@@ -142,6 +142,14 @@ class DiagnoseResult:
         ]
         return "\n".join(lines)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
     def plot(self, *, figsize: tuple[float, float] = (10, 4)) -> plt.Figure:
         """Histograma con curva normal + gráfico de secuencia.
 

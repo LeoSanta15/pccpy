@@ -218,3 +218,56 @@ def test_to_excel_attribute_agreement():
     ratings = RNG.choice(["Good", "Bad"], 12)
     df = pd.DataFrame({"part": parts, "operator": ops, "rating": ratings})
     assert _xl(pccpy.attribute_agreement(df)) > 0
+
+
+# ── save_plot smoke tests ─────────────────────────────────────────────────────
+
+def _sp(obj, fmt="png", **kwargs):
+    with tempfile.NamedTemporaryFile(suffix=f".{fmt}", delete=False) as f:
+        path = f.name
+    try:
+        obj.save_plot(path, **kwargs)
+        return os.path.getsize(path)
+    finally:
+        os.unlink(path)
+
+
+def test_save_plot_control_chart_png():
+    assert _sp(pccpy.imr_chart(X)) > 0
+
+
+def test_save_plot_control_chart_pdf():
+    assert _sp(pccpy.imr_chart(X), fmt="pdf") > 0
+
+
+def test_save_plot_capability():
+    assert _sp(pccpy.capability_analysis(X, 94, 106)) > 0
+
+
+def test_save_plot_tolerance():
+    assert _sp(pccpy.tolerance_interval(X)) > 0
+
+
+def test_save_plot_diagnose():
+    assert _sp(pccpy.diagnose(X, lsl=94, usl=106)) > 0
+
+
+def test_save_plot_precontrol():
+    assert _sp(pccpy.precontrol(X, 94, 106)) > 0
+
+
+def test_save_plot_run_chart():
+    assert _sp(pccpy.run_chart(X)) > 0
+
+
+def test_save_plot_acceptance():
+    assert _sp(pccpy.acceptance_sampling_attributes(1000, 1.5)) > 0
+
+
+def test_save_plot_gage_rr():
+    data3d = RNG.normal(0, 1, (10, 3, 2))
+    assert _sp(pccpy.gage_rr(data3d, parts=10, operators=3, replicates=2)) > 0
+
+
+def test_save_plot_multivariate():
+    assert _sp(pccpy.t2_chart(MV)) > 0

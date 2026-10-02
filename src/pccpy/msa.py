@@ -190,6 +190,13 @@ class GageRRResult:
         from .plotting import plot_gage_rr
         return plot_gage_rr(self, **kwargs)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
 
 def _gage_rr_anova(data: np.ndarray, study_variation: float,
                    tolerance: float | None, crossed: bool) -> GageRRResult:
@@ -564,6 +571,13 @@ class Type1Result:
         from .plotting import plot_type1
         return plot_type1(self, **kwargs)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
 
 def gage_type1(
     data,
@@ -770,6 +784,13 @@ class LinearityResult:
         from .plotting import plot_linearity
         return plot_linearity(self, **kwargs)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
 
 def gage_linearity(
     measurements,
@@ -914,6 +935,13 @@ class AttributeAgreementResult:
     def plot(self, **kwargs):
         from .plotting import plot_attribute_agreement
         return plot_attribute_agreement(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
 
 
 def _cohen_kappa(a: np.ndarray, b: np.ndarray, categories) -> tuple[float, float, float]:

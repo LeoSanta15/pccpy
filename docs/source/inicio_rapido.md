@@ -226,6 +226,58 @@ print(rs.summary())    # Pp, Ppk y (si se da std_within) Cp, Cpk
 Estos resultados devuelven el mismo tipo de objeto que su contraparte con datos
 individuales, por lo que `to_frame()`, `summary()` y demás métodos funcionan igual.
 
+## Fase I y Fase II — congelar límites históricos
+
+En un estudio de **Fase I** calculas los límites con datos históricos y verificas
+que el proceso estaba bajo control. En **Fase II** aplicas esos mismos límites a
+producción nueva para detectar cambios.
+
+```python
+import numpy as np, pccpy as pp
+
+# ── Fase I: datos históricos (solo lotes 1-20) ─────────────────
+x_historico = x[:80]
+carta_i = pp.imr_chart(x_historico, tests="all")
+mu_i    = carta_i.params[0]["mu"]           # media estimada
+sigma_i = carta_i.params[0]["sigma"]        # sigma dentro estimado
+print(f"Fase I:  μ = {mu_i:.4f}  σ = {sigma_i:.4f}")
+
+# ── Fase II: nuevos datos con límites fijos ─────────────────────
+x_nuevo = x[80:]
+carta_ii = pp.imr_chart(x_nuevo, mu=mu_i, sigma_within=sigma_i, tests=(1, 2))
+carta_ii.plot()
+```
+
+Para cartas de subgrupos usa los mismos parámetros:
+
+```python
+# Xbar-R con límites fijados
+g_nuevo = x_nuevo.reshape(-1, 4)
+carta_ii = pp.xbar_r_chart(g_nuevo, mu=mu_i, sigma_within=sigma_i)
+```
+
+Para marcar múltiples etapas dentro de un mismo gráfico (Minitab "stages"):
+
+```python
+etapas = np.r_[np.ones(50), np.full(50, 2)]   # 50 puntos en cada etapa
+carta = pp.imr_chart(x, stages=etapas, tests="all")
+# Cada etapa tiene sus propios límites calculados por separado
+```
+
+## Guardar gráficos
+
+Todos los resultados tienen `save_plot()`:
+
+```python
+# Guardar como PNG, PDF o SVG con una sola línea
+carta.save_plot("carta_imr.png")                 # 150 dpi por defecto
+carta.save_plot("carta_imr.pdf")                 # vectorial
+cap.save_plot("capacidad.png",  dpi=200)         # alta resolución
+tol.save_plot("tolerancia.svg")                  # editable
+# Pasar kwargs del método plot()
+carta.save_plot("carta_sinzonas.png", zones=False)
+```
+
 ## Un vistazo por tema
 
 - **Variables** (I-MR, Xbar-R, Xbar-S, media móvil, Z-MR, I-MR-R/S, Zona):

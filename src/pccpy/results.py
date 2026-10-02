@@ -149,6 +149,25 @@ class ControlChart:
 
         return plot_control_chart(self, **kwargs)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …).
+
+        Parameters
+        ----------
+        path : str
+            Ruta de destino, p. ej. ``"carta_imr.png"`` o ``"carta.pdf"``.
+        dpi : int
+            Resolución en puntos por pulgada (solo relevante para formatos
+            de mapa de bits). Por defecto 150.
+        **kwargs
+            Argumentos adicionales para :meth:`plot`.
+        """
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
 
 @dataclass
 class MultivariateChart(ControlChart):

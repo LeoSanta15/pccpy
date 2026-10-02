@@ -127,6 +127,14 @@ class RunChartResult:
 
         return plot_run_chart(self, **kwargs)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
 
 def run_chart(data, *, alpha: float = 0.05) -> RunChartResult:
     """Carta de corridas con las 4 pruebas de aleatoriedad de Minitab.

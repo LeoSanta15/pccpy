@@ -171,6 +171,14 @@ class ToleranceResult:
 
         return plot_tolerance(self, **kwargs)
 
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
 
 # ──────────────────────────────────────────────────────────── public API ──────
 def tolerance_interval(
