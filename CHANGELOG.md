@@ -1,5 +1,45 @@
 # Registro de cambios
 
+## [0.10.7] - compatibilidad con datos reales y dependencias externas
+
+### Añadido
+- `_excel_writer(path)`: helper interno centralizado para abrir `pd.ExcelWriter`
+  con openpyxl. Todos los métodos `to_excel()` (en `results.py`, `capability.py`,
+  `tolerance.py`, `msa.py`, `acceptance.py` y `_diagnose.py`) usan este helper y
+  ahora dan el mensaje `pip install pccpy[excel]` si openpyxl no está instalado.
+
+### Mejorado
+- `as_1d()`: ya **no** lanza `ValueError` cuando los datos contienen `NaN` o
+  `inf`. En su lugar emite un `UserWarning` indicando cuántos valores no finitos
+  se encontraron y en qué posiciones, y los excluye del análisis. El error solo
+  se lanza si no quedan valores válidos.
+- `to_subgroups()`: filtra automáticamente las columnas no numéricas de un
+  DataFrame ancho emitiendo un `UserWarning`. Antes, `np.asarray()` fallaba con
+  un error de tipo opaco al encontrar texto en el DataFrame.
+- `to_subgroups()`: el error `subgroup_size=1` ahora describe la situación y
+  apunta explícitamente a `imr_chart()` como alternativa correcta. Parámetro
+  interno `_allow_size_1` para el uso legítimo de `zone_chart`.
+- `capability_analysis()`: ya no requiere `lsl` o `usl`. Sin límites de
+  especificación los índices Cp/Cpk/Pp/Ppk/… se devuelven como `NaN` y
+  `summary()` los marca con `*`; los estadísticos descriptivos y las sigmas
+  se calculan con normalidad.
+- `capability_analysis()`: con datos de variación cero (desviación estándar = 0)
+  emite un `UserWarning` y devuelve `NaN` en todos los índices, en vez de lanzar
+  `ZeroDivisionError`.
+- Todas las funciones `plot_*`, `DiagnoseResult.plot()` y `plot_pareto()` están
+  ahora envueltas en `plt.rc_context({})`, aislando los estilos internos de pccpy
+  de cambios globales de matplotlib introducidos por seaborn u otras librerías.
+
+### Corregido
+- `zone_chart` fallaba internamente con el nuevo error `subgroup_size=1` al
+  llamar a `to_subgroups(arr, 1)` para datos individuales. Corregido con el
+  parámetro `_allow_size_1=True`.
+- `_expected_ppm()`, `_z_bench()` y el cálculo del intervalo de confianza de Ppk
+  manejaban incorrectamente el caso `sigma=0`, produciendo `ZeroDivisionError`
+  o resultados sin sentido.
+- `instalacion.md`: corregidas las referencias a `spyc` en los comandos de
+  desarrollo (`pytest --cov=spyc`, `mypy src/spyc` → `pccpy`).
+
 ## [0.10.6] - diagnose(), WidgetSession y docs del wizard
 
 ### Añadido

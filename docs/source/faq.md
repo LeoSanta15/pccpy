@@ -280,6 +280,94 @@ fig.savefig("carta_custom.png", dpi=150, bbox_inches="tight")
 
 ---
 
+## Datos de entrada
+
+### ¿Mis datos tienen valores faltantes (NaN) o infinitos?
+
+pccpy **no cancela el análisis**: filtra automáticamente los valores no finitos y
+emite un `UserWarning` indicando cuántos y en qué posiciones. El análisis continúa
+con los valores válidos restantes.
+
+```python
+import numpy as np, warnings
+import pccpy as pp
+
+x = [1.2, np.nan, 3.4, 2.8, np.inf, 3.1]
+with warnings.catch_warnings(record=True) as w:
+    warnings.simplefilter("always")
+    carta = pp.imr_chart(x)
+# w[0].message describe los valores excluidos
+# carta tiene 4 puntos (2 NaN/inf eliminados)
+```
+
+> Si quieres que los valores faltantes **sí detengan** el análisis, filtra el array
+> antes de pasarlo: `x = x[np.isfinite(x)]` + comprueba que `len(x) > 0`.
+
+---
+
+### ¿Por qué aparece un `UserWarning` sobre columnas no numéricas en mi DataFrame?
+
+Cuando pasas un DataFrame ancho con columnas de texto (etiquetas, categorías,
+fechas), pccpy las ignora automáticamente y emite una advertencia:
+
+```
+UserWarning: Se ignoraron 1 columna(s) no numéricas del DataFrame: ['lote'].
+Si querías usar una como identificador de subgrupo, pasa subgroup='lote'.
+```
+
+```python
+import pandas as pd, pccpy as pp
+
+df = pd.DataFrame({
+    "lote":   ["A", "A", "B", "B", "C", "C"],
+    "medida": [10.1, 9.9, 10.3, 10.0, 9.8, 10.2],
+})
+
+# ❌ columna 'lote' se ignora con advertencia
+# carta = pp.xbar_r_chart(df)
+
+# ✅ pasa 'lote' como identificador de subgrupo
+carta = pp.xbar_r_chart(df, subgroup="lote", value="medida")
+```
+
+---
+
+### ¿Puedo hacer `capability_analysis()` sin límites de especificación?
+
+Sí. Desde v0.10.7 ya no es obligatorio pasar `lsl` o `usl`. Los índices que
+dependen de especificaciones (Cp, Cpk, Pp, Ppk…) se devuelven como `NaN` y
+`summary()` los marca con `*`.
+
+```python
+import pccpy as pp
+
+# Solo estadísticos descriptivos y sigma_within / sigma_overall
+r = pp.capability_analysis(x)
+print(r.sigma_within, r.sigma_overall)  # valores válidos
+print(r.cp)                             # nan
+```
+
+---
+
+### ¿Qué pasa si todos mis datos son iguales (variación cero)?
+
+Si la desviación estándar del proceso es cero (todos los valores idénticos),
+pccpy emite un `UserWarning` y devuelve `NaN` para todos los índices de
+capacidad en vez de lanzar `ZeroDivisionError`.
+
+```python
+import pccpy as pp, warnings
+
+x = [10.0] * 30  # datos constantes
+with warnings.catch_warnings(record=True) as w:
+    warnings.simplefilter("always")
+    r = pp.capability_analysis(x, lsl=9, usl=11)
+# w contiene la advertencia sobre variación cero
+# r.cp, r.cpk, r.pp, r.ppk son NaN
+```
+
+---
+
 ## Errores comunes
 
 ### `ValueError: Datos 1-D: indique 'subgroup_size' o 'subgroup'`
@@ -297,6 +385,22 @@ carta = pp.xbar_r_chart(x, subgroup_size=4)
 
 # Opción 3: DataFrame largo con columna de subgrupo
 carta = pp.xbar_r_chart(df, subgroup="lote", value="diametro_mm")
+```
+
+---
+
+### `ValueError: 'subgroup_size=1' da subgrupos de un solo elemento`
+
+`xbar_r_chart` y otras cartas de subgrupos no pueden estimar la variación
+**dentro** del subgrupo si cada subgrupo tiene una sola observación. Para
+datos individuales usa `imr_chart` en su lugar:
+
+```python
+# ❌ no funciona con subgrupos de 1
+# pp.xbar_r_chart(x, subgroup_size=1)
+
+# ✅ carta correcta para datos individuales
+carta = pp.imr_chart(x)
 ```
 
 ---
