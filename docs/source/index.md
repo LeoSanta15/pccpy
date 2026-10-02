@@ -15,6 +15,7 @@ descripciones de pruebas y gráficos.
 instalacion
 inicio_rapido
 wizard
+diagnose
 referencia/index
 changelog
 ```
