@@ -14,9 +14,10 @@ from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
-from ._data import _excel_writer
 from scipy import stats
 from scipy.optimize import brentq
+
+from ._data import _excel_writer
 
 
 # ──────────────────────────────────────────────────── curva OC (binomial) ────

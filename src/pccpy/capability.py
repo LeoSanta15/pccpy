@@ -21,7 +21,7 @@ import pandas as pd
 from scipy import stats
 from scipy.special import boxcox as _boxcox
 
-from ._data import as_1d, to_subgroups, _excel_writer
+from ._data import _excel_writer, as_1d, to_subgroups
 from ._sigma import sigma_individuals, sigma_subgroups
 
 NAN = float("nan")

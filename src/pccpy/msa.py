@@ -22,7 +22,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from ._data import as_1d, _excel_writer
+from ._data import _excel_writer, as_1d
 
 NAN = float("nan")
 

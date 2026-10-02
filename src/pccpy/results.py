@@ -6,8 +6,8 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from .rules import DEFAULT_K, describe
 from ._data import _excel_writer
+from .rules import DEFAULT_K, describe
 
 
 @dataclass

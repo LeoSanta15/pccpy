@@ -6,11 +6,13 @@ from dataclasses import dataclass, field
 from typing import TYPE_CHECKING
 
 import numpy as np
-from ._data import _excel_writer
 from scipy import stats
+
+from ._data import _excel_writer
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
+    import pandas as pd
 
 __all__ = ["DiagnoseResult", "diagnose"]
 
@@ -82,8 +84,6 @@ class DiagnoseResult:
 
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
-        import pandas as pd
-
         with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name="Diagnóstico")
 
