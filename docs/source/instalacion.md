@@ -34,5 +34,24 @@ Abre `docs/build/index.html` en el navegador.
 
 ## Requisitos
 
-Python ≥ 3.9, con `numpy`, `scipy`, `pandas` y `matplotlib` (se instalan solos
-como dependencias del paquete).
+Python ≥ 3.9. Las dependencias `numpy`, `scipy`, `pandas` y `matplotlib` se
+instalan automáticamente al hacer `pip install pccpy` — no es necesario
+instalarlas por separado ni importarlas antes de usar la librería.
+
+### Dependencia opcional: `ipywidgets`
+
+`ipywidgets` es necesaria **solo** si quieres usar `pp.wizard(mode='widget')`
+en Jupyter Notebook o JupyterLab. Si no está instalada, el modo degrada
+automáticamente a `'cli'` (preguntas en la terminal) sin lanzar ningún error.
+
+Para habilitarlo:
+
+```bash
+pip install ipywidgets
+```
+
+En JupyterLab < 3 puede requerir además:
+
+```bash
+jupyter labextension install @jupyter-widgets/jupyterlab-manager
+```
