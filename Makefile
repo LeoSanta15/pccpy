@@ -1,4 +1,4 @@
-.PHONY: install test cov lint types build docs examples check-fast check release-check
+.PHONY: install test cov lint types build docs examples i18n-extract i18n-update i18n-compile i18n-check check-fast check release-check
 
 install:
 	python -m pip install -e ".[dev,docs,excel]"
@@ -24,7 +24,19 @@ docs:
 examples:
 	@for f in examples/*.py; do MPLBACKEND=Agg python "$$f" >/dev/null || { echo "FALLA $$f"; exit 1; }; done; echo "ejemplos OK"
 
-check-fast: lint types test
+i18n-extract:
+	pybabel extract -F babel.cfg -k N_ --no-location --sort-output -o src/pccpy/locale/pccpy.pot --project=pccpy --msgid-bugs-address="" --copyright-holder="" src
+
+i18n-update: i18n-extract
+	pybabel update -i src/pccpy/locale/pccpy.pot -d src/pccpy/locale -D pccpy
+
+i18n-compile:
+	pybabel compile -d src/pccpy/locale -D pccpy
+
+i18n-check:
+	python scripts/i18n_check.py
+
+check-fast: lint types test i18n-check
 
 check: check-fast build docs examples
 
