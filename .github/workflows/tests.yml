@@ -39,6 +39,8 @@ jobs:
         run: ruff check src/
       - name: mypy
         run: mypy src/pccpy
+      - name: Catálogos de traducción
+        run: python scripts/i18n_check.py
 
   documentacion:
     runs-on: ubuntu-latest
