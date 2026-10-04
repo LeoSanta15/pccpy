@@ -19,7 +19,7 @@
 
 | Fase | Rama | PR | Estado |
 |---|---|---|---|
-| 0 Andamiaje | `feat/i18n-fase-0-andamiaje` | _(se completa al abrir el PR)_ | en revisión |
+| 0 Andamiaje | `feat/i18n-fase-0-andamiaje` | tr(se completa al abrir el PR)_ | en revisión |
 | 1 Errores y avisos | `feat/i18n-fase-1-errores` | — | pendiente |
 | 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | — | pendiente |
 | 3 Gráficos y constantes de módulo | `feat/i18n-fase-3-graficos` | — | pendiente |
@@ -55,13 +55,14 @@
 | D-2 | **Mecanismo** | `gettext` de la **biblioteca estándar** en ejecución; **Babel solo en desarrollo** (`pybabel extract/update/compile`) ✅ (probado: wheel instalado, sin `babel` importado en ejecución) | dependencia de ejecución nueva: innecesaria |
 | D-3 | **Selección de idioma** | Global (`set_language("en")`, variable `PCCPY_LANG`) **+** sobreescritura por contexto (`with pccpy.language("en"):`) ✅ | solo `ContextVar` ‼️ (v1 del prototipo): `set_language("en")` **no llegaba a los hilos nuevos**; la v2 (global + contexto) lo corrige. Limitación documentada: un hilo nuevo creado *dentro* de `with language()` no hereda el contexto |
 | D-4 | **Idioma por defecto** | **`es`** → comportamiento actual intacto; versión **0.11.0** (funcionalidad nueva, compatible) | cambiar a `en` es un cambio que rompe compatibilidad |
-| D-5 | **f-strings** | Convertir a plantillas con `.format()` y marcadores con nombre: `_("'{name}' está vacío.").format(name=name)` ✅. Los formatos numéricos (`{x:.4f}`) se quedan dentro de la plantilla | dejar el f-string dentro de `_()` ‼️: **no se extrae** (0 mensajes) ni se puede traducir. Son 34 f-strings en errores/avisos y ~183 en `summary()` |
-| D-6 | **Constantes de módulo (184)** | Marcar con `N_()` (solo para extraer) y traducir con `_()` **al mostrar** ✅ (probado: definido al importar en `es`, mostrado en `en`, y de vuelta a `es`) | `_()` al importar: fijaría el idioma del momento de importar |
+| D-5 | **f-strings** | Convertir a plantillas con `.format()` y marcadores con nombre: `tr("'{name}' está vacío.").format(name=name)` ✅. Los formatos numéricos (`{x:.4f}`) se quedan dentro de la plantilla | dejar el f-string dentro de `tr()` ‼️: **no se extrae** (0 mensajes) ni se puede traducir. Son 34 f-strings en errores/avisos y ~183 en `summary()` |
+| D-6 | **Constantes de módulo (184)** | Marcar con `N_()` (solo para extraer) y traducir con `tr()` **al mostrar** ✅ (probado: definido al importar en `es`, mostrado en `en`, y de vuelta a `es`) | `tr()` al importar: fijaría el idioma del momento de importar |
 | D-7 | **Columnas/índices de DataFrame** (decisión crítica) | `to_frame()` devuelve cabeceras **en el idioma activo** (es presentación, como `summary()`), y se añade **`to_frame(stable=True)`** con claves canónicas (inglés, `snake_case`) para código que no debe depender del idioma. Con `es` por defecto, nada cambia para los usuarios actuales | (a) traducir sin más: rompe `df["valor"]` al cambiar de idioma. (b) pasar todo a claves canónicas: rompe a todos los usuarios actuales |
 | D-8 | **Docstrings y `help()`** | Se quedan en español (gettext no traduce docstrings en ejecución). La documentación se traduce con `sphinx-intl` en una fase opcional | docstrings en inglés: cambia todo el código sin beneficio |
 | D-9 | **Catálogos** | Versionar `.po` y `.mo` ✅ (compilar dos veces da bytes idénticos) + `make i18n-check` en CI (hecho en la Fase 0) que recompila y falla si `.pot`/`.mo` están desactualizados | compilar en el build con un hook de setuptools: más complejo, ❔ sin probar |
 | D-10 | **Idiomas** | `es` + `en`. No pasar de dos hasta que haya quien los mantenga: cada versión obliga a actualizar todos | — |
 | D-11 | **Glosario SPC** | Lista cerrada revisada por una persona del dominio: `LC/LCS/LCI` → `CL/UCL/LCL`, `Desv.Est.` → `Std. Dev.`, «capacidad del proceso» → `process capability`, etc. *(inferencia: usar los términos de la interfaz en inglés de Minitab como referencia, porque pccpy replica Minitab)* | traducción libre sin revisar |
+| D-12 | **Nombre del marcador** | **`tr()`** (no el habitual `_()`): 27 usos de `_` como variable en `src/`, y **8 funciones** (`mewma_chart`, `zmr_chart`, `capability_boxcox`, `mcusum_chart`…) lo asignan en su propio ámbito **y** lanzan errores; un `_("…")` ahí fallaría solo en la ruta de error, donde ningún test lo vería ✅ (medido con AST) | `_`: riesgo permanente ante cualquier `for _ in …` futuro |
 
 ---
 
@@ -79,7 +80,7 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 ### Fase 1 — Errores y avisos *(≈ 1–2 días; 151 textos, de ellos 34 f-strings)*
 - Empezar por `_data.py` (piloto) y los validadores; seguir módulo a módulo.
 - Catálogo `en` completo para estos textos.
-- **Gate:** un test AST (con control negativo, como `test_idioma`) falla si algún `raise`/`warn` tiene texto sin `_()`; test de paridad: mismos marcadores `{…}` en `es` y `en` (evita un `KeyError` en `.format`); la suite actual sigue pasando con `es`.
+- **Gate:** un test AST (con control negativo, como `test_idioma`) falla si algún `raise`/`warn` tiene texto sin `tr()`; test de paridad: mismos marcadores `{…}` en `es` y `en` (evita un `KeyError` en `.format`); la suite actual sigue pasando con `es`.
 
 ### Fase 2 — `summary()` y etiquetas de `to_frame()` *(≈ 3–5 días; el grueso)*
 - Orden por tamaño: `msa` (117 textos), `capability` (107), `_diagnose` (66), `acceptance` (56), `tolerance` (36), `results`, `run_chart`, `precontrol`.
@@ -108,7 +109,7 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 |---|---|
 | Un `msgid` en español se corrige (errata) y la traducción se pierde | `make i18n-check` en CI; `pybabel update` marca el cambio como *fuzzy* y el test de paridad lo detecta |
 | Un marcador `{…}` distinto entre idiomas → `KeyError` al mostrar | test de paridad de marcadores (Fase 1) |
-| Texto nuevo sin pasar por `_()` | test AST con control negativo; regla en `CLAUDE.md` (§5) |
+| Texto nuevo sin pasar por `tr()` | test AST con control negativo; regla en `CLAUDE.md` (§5) |
 | Constantes de módulo traducidas al importar | `N_()` + test que cambia de idioma tras importar |
 | Hilos y contexto | idioma global + contexto (D-3); limitación documentada |
 | Los 28 tests con `match=` en español fallan al cambiar el idioma por defecto | el idioma por defecto sigue siendo `es` (D-4); un fixture fija `es` en la suite |
@@ -118,7 +119,7 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 ---
 
 ## 5. Regla propuesta para `CLAUDE.md` (no aplicada; para decidir)
-**R-nn Texto visible traducible `[test]`:** todo mensaje de error, aviso, `summary()`, etiqueta de `to_frame()` o texto de gráfico pasa por `_()` (o `N_()` si es una constante de módulo); no se usan f-strings dentro de `_()`; los marcadores son idénticos en todos los idiomas. Comprobación: test AST con control negativo + `make i18n-check`.
+**R-nn Texto visible traducible `[test]`:** todo mensaje de error, aviso, `summary()`, etiqueta de `to_frame()` o texto de gráfico pasa por `tr()` (o `N_()` si es una constante de módulo); no se usan f-strings dentro de `tr()`; los marcadores son idénticos en todos los idiomas. Comprobación: test AST con control negativo + `make i18n-check`.
 
 ---
 
@@ -130,11 +131,11 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 | Compilación determinista (dos compilaciones → bytes idénticos) | ✅ |
 | Idioma por defecto, `set_language`, `PCCPY_LANG`, contexto, respaldo a español | ✅ |
 | Propagación a hilos (solo `ContextVar`) | ‼️ falla → corregido con global + contexto ✅ |
-| f-string dentro de `_()` | ‼️ no se extrae (0 mensajes) → plantillas con `.format()` ✅ |
+| f-string dentro de `tr()` | ‼️ no se extrae (0 mensajes) → plantillas con `.format()` ✅ |
 | Suite completa de pccpy con el prototipo (idioma `es`) | ✅ 344 tests, 0 fallos |
 | Wheel y sdist con el `.mo`; wheel instalado sin `babel` en ejecución | ✅ |
 | Constantes de módulo con `N_()` y cambio de idioma en caliente | ✅ |
-| Coste: `_()` ≈ 0,2 µs (es) / 0,5 µs (en) por llamada; primera carga 0,13 ms | ✅ medido (solo se ejecuta al mostrar texto o en rutas de error; `summary()` actual ≈ 17 µs) |
+| Coste: `tr()` ≈ 0,2 µs (es) / 0,5 µs (en) por llamada; primera carga 0,13 ms | ✅ medido (solo se ejecuta al mostrar texto o en rutas de error; `summary()` actual ≈ 17 µs) |
 
 ❔ **No verificado:** migración real de los módulos grandes (`msa`, `capability`, `wizard`); Python 3.9–3.10 y 3.12–3.13 (la matriz de CI lo comprobaría); Windows/macOS; `sphinx-intl`; compilación del catálogo en el build; la calidad de las traducciones al inglés (solo se tradujeron 4 textos de prueba).
 

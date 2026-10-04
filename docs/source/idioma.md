@@ -44,9 +44,9 @@ se muestra un aviso y se usa `es`; nunca impide importar la librería.
 
 ## Para quien contribuye con traducciones
 
-El código marca los textos con `_("…")` (se traducen al mostrarse) o `N_("…")` (constantes de módulo, que se
-traducen al usarlas con `_()`). Los f-strings **no** se pueden traducir: usa
-`_("'{name}' está vacío.").format(name=name)`. Comandos:
+El código marca los textos con `tr("…")` (se traducen al mostrarse) o `N_("…")` (constantes de módulo, que se
+traducen al usarlas con `tr()`). Los f-strings **no** se pueden traducir: usa
+`tr("'{name}' está vacío.").format(name=name)`. Comandos:
 
 ```bash
 make i18n-update      # extrae los textos y actualiza los .po

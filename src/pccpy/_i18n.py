@@ -27,7 +27,7 @@ def _normalizar(lang: str) -> str:
     """``'en_US'``, ``'EN-us'`` y ``'en.UTF-8'`` → ``'en'``."""
     codigo = str(lang).strip().lower().replace("-", "_").split(".")[0].split("_")[0]
     if not codigo:
-        raise ValueError(_("El idioma no puede estar vacío."))
+        raise ValueError(tr("El idioma no puede estar vacío."))
     return codigo
 
 
@@ -44,7 +44,7 @@ def _validar(lang: str) -> str:
     disponibles = available_languages()
     if codigo not in disponibles:
         raise ValueError(
-            _("Idioma no disponible: {lang!r}. Idiomas disponibles: {disponibles}.").format(
+            tr("Idioma no disponible: {lang!r}. Idiomas disponibles: {disponibles}.").format(
                 lang=lang, disponibles=", ".join(disponibles)
             )
         )
@@ -60,7 +60,7 @@ def _idioma_inicial() -> str:
         return _validar(valor)
     except ValueError:
         warnings.warn(
-            _("La variable PCCPY_LANG={valor!r} no es un idioma disponible; se usa {defecto!r}.").format(
+            tr("La variable PCCPY_LANG={valor!r} no es un idioma disponible; se usa {defecto!r}.").format(
                 valor=valor, defecto=IDIOMA_FUENTE
             ),
             UserWarning,
@@ -80,13 +80,13 @@ def get_language() -> str:
     return _ctx.get() or _global
 
 
-def _(mensaje: str) -> str:
+def tr(mensaje: str) -> str:
     """Traduce ``mensaje`` al idioma activo (o lo devuelve igual si no hay traducción)."""
     return _catalogo(get_language()).gettext(mensaje)
 
 
 def N_(mensaje: str) -> str:
-    """Marca un texto para extraerlo **sin** traducirlo todavía (constantes de módulo): se traduce con ``_()`` al mostrarlo."""
+    """Marca un texto para extraerlo **sin** traducirlo todavía (constantes de módulo): se traduce con ``tr()`` al mostrarlo."""
     return mensaje
 
 

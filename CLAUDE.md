@@ -112,7 +112,7 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 
 - Idioma fuente: **español**; adicional: `en`. Mecanismo: `gettext` de la biblioteca estándar (`src/pccpy/_i18n.py`); `babel` solo en desarrollo.
 - API: `pccpy.set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable `PCCPY_LANG`. Un idioma inexistente lanza `ValueError`.
-- Textos: `_("…")` se traduce al mostrar; `N_("…")` marca constantes de módulo (se traducen con `_()` al usarlas). Los f-strings **no** se pueden traducir: usa `_("… {x} …").format(x=x)`.
+- Textos: `tr("…")` se traduce al mostrar; `N_("…")` marca constantes de módulo (se traducen con `tr()` al usarlas). Los f-strings **no** se pueden traducir: usa `tr("… {x} …").format(x=x)`.
 - Comandos: `make i18n-update` (extraer + actualizar `.po`), `make i18n-compile` (los `.mo` se versionan) y `make i18n-check` (lo exige el CI).
 - Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Hasta terminar las fases 1–3, los textos de funciones, `summary()`, `to_frame()` y gráficos siguen solo en español.
 
@@ -125,7 +125,7 @@ src/pccpy/
   _data.py           # as_1d, to_subgroups, stage_slices, _excel_writer
   _sigma.py          # estimadores de sigma
   _diagnose.py       # diagnose() y DiagnoseResult
-  _i18n.py           # idioma: _(), N_(), set_language(), language()… (catálogos en locale/)
+  _i18n.py           # idioma: tr(), N_(), set_language(), language()… (catálogos en locale/)
   _wizard.py         # wizard(), WizardResult, WidgetSession
   rules.py           # las 8 pruebas de causas especiales de Minitab
   results.py         # Panel, ControlChart, MultivariateChart

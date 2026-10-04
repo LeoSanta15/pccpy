@@ -6,7 +6,7 @@ Uso::
 
 Falla (código 1) si:
 
-1. los textos marcados con ``_()`` / ``N_()`` en ``src/`` no coinciden con ``src/pccpy/locale/pccpy.pot``
+1. los textos marcados con ``tr()`` / ``N_()`` en ``src/`` no coinciden con ``src/pccpy/locale/pccpy.pot``
    (ejecuta ``make i18n-update``);
 2. algún idioma tiene un texto sin traducir, ``fuzzy`` o con marcadores ``{…}`` distintos de los del original
    (un marcador distinto provoca un ``KeyError`` al mostrar el mensaje);
@@ -31,10 +31,10 @@ MARCADOR = re.compile(r"\{[^{}]*\}")
 
 
 def textos_del_codigo() -> set[str]:
-    """Textos literales pasados a ``_()`` o ``N_()`` en ``src/``."""
+    """Textos literales pasados a ``tr()`` o ``N_()`` en ``src/``."""
     encontrados: set[str] = set()
     for _archivo, _linea, mensaje, _comentarios, _contexto in extract_from_dir(
-        str(SRC), method_map=[("**.py", "python")], keywords={"_": None, "N_": None}
+        str(SRC), method_map=[("**.py", "python")], keywords={"tr": None, "N_": None}
     ):
         if isinstance(mensaje, str) and mensaje:
             encontrados.add(mensaje)

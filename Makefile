@@ -25,7 +25,7 @@ examples:
 	@for f in examples/*.py; do MPLBACKEND=Agg python "$$f" >/dev/null || { echo "FALLA $$f"; exit 1; }; done; echo "ejemplos OK"
 
 i18n-extract:
-	pybabel extract -F babel.cfg -k N_ --no-location --sort-output -o src/pccpy/locale/pccpy.pot --project=pccpy --msgid-bugs-address="" --copyright-holder="" src
+	pybabel extract -F babel.cfg --no-default-keywords -k tr -k N_ --no-location --sort-output -o src/pccpy/locale/pccpy.pot --project=pccpy --msgid-bugs-address="" --copyright-holder="" src
 
 i18n-update: i18n-extract
 	pybabel update -i src/pccpy/locale/pccpy.pot -d src/pccpy/locale -D pccpy

@@ -9,7 +9,7 @@ import pytest
 
 import pccpy
 from pccpy import _i18n
-from pccpy._i18n import N_, _
+from pccpy._i18n import N_, tr
 
 
 @pytest.fixture(autouse=True)
@@ -41,23 +41,23 @@ def catalogo_de_prueba(tmp_path, monkeypatch):
 
 def test_el_idioma_por_defecto_es_espanol_y_no_traduce():
     assert _i18n.get_language() == "es"
-    assert _("Hola {nombre}.") == "Hola {nombre}."
+    assert tr("Hola {nombre}.") == "Hola {nombre}."
 
 
 def test_set_language_traduce(catalogo_de_prueba):
     pccpy.set_language(catalogo_de_prueba)
-    assert _("Hola {nombre}.").format(nombre="Ana") == "Hallo Ana."
+    assert tr("Hola {nombre}.").format(nombre="Ana") == "Hallo Ana."
 
 
 def test_texto_sin_traduccion_devuelve_el_original(catalogo_de_prueba):
     pccpy.set_language(catalogo_de_prueba)
-    assert _("Un texto que no está en el catálogo.") == "Un texto que no está en el catálogo."
+    assert tr("Un texto que no está en el catálogo.") == "Un texto que no está en el catálogo."
 
 
 def test_el_idioma_global_se_ve_desde_un_hilo_nuevo(catalogo_de_prueba):
     pccpy.set_language(catalogo_de_prueba)
     resultado = {}
-    hilo = threading.Thread(target=lambda: resultado.update(t=_("Hola {nombre}.")))
+    hilo = threading.Thread(target=lambda: resultado.update(t=tr("Hola {nombre}.")))
     hilo.start()
     hilo.join()
     assert resultado["t"] == "Hallo {nombre}."
@@ -66,9 +66,9 @@ def test_el_idioma_global_se_ve_desde_un_hilo_nuevo(catalogo_de_prueba):
 def test_language_cambia_solo_dentro_del_bloque(catalogo_de_prueba):
     with pccpy.language(catalogo_de_prueba):
         assert pccpy.get_language() == "de"
-        assert _("Hola {nombre}.") == "Hallo {nombre}."
+        assert tr("Hola {nombre}.") == "Hallo {nombre}."
     assert pccpy.get_language() == "es"
-    assert _("Hola {nombre}.") == "Hola {nombre}."
+    assert tr("Hola {nombre}.") == "Hola {nombre}."
 
 
 def test_language_se_restaura_aunque_el_bloque_falle(catalogo_de_prueba):
@@ -143,8 +143,8 @@ def test_N_marca_sin_traducir_y_se_traduce_al_mostrar(catalogo_de_prueba):
     constante = N_("Hola {nombre}.")           # constante de módulo: se define una vez, en español
     assert constante == "Hola {nombre}."
     with pccpy.language(catalogo_de_prueba):
-        assert _(constante) == "Hallo {nombre}."
-    assert _(constante) == "Hola {nombre}."    # y vuelve al español sin reimportar
+        assert tr(constante) == "Hallo {nombre}."
+    assert tr(constante) == "Hola {nombre}."    # y vuelve al español sin reimportar
 
 
 def test_la_api_publica_exporta_las_funciones_de_idioma():
