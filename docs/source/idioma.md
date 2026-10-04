@@ -1,13 +1,21 @@
 # Idioma de los mensajes
 
 ```{note}
-**Estado: en desarrollo.** El mecanismo de idioma ya existe, pero hoy solo se traducen los mensajes del propio
-sistema de idioma (errores de {func}`~pccpy.set_language`). El resto de los textos (errores de las funciones,
-`summary()`, etiquetas de `to_frame()` y gráficos) se migra por fases y sigue en español hasta entonces.
+**Estado: en desarrollo (fase 1 de 5).** Hoy se traducen al inglés los **mensajes de error y de aviso**
+(las `ValueError`, `TypeError`, `ImportError` y `UserWarning` de las funciones). El resto de los textos
+(`summary()`, etiquetas de `to_frame()` y gráficos) se migra por fases y sigue en español hasta entonces.
 ```
 
 pccpy escribe sus textos en **español**, que es el idioma fuente: si un idioma no tiene traducción para un texto,
 se muestra el original. Idiomas disponibles: `es` y `en` (`en` irá completándose por fases).
+
+```python
+import pccpy as pp
+
+with pp.language("en"):
+    pp.diagnose([1.0, 2.0, 3.0])
+# ValueError: diagnose requires at least 4 observations.
+```
 
 ## Elegir el idioma
 

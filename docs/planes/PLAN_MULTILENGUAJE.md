@@ -20,7 +20,7 @@
 | Fase | Rama | PR | Estado |
 |---|---|---|---|
 | 0 Andamiaje | `feat/i18n-fase-0-andamiaje` | [#7](https://github.com/LeoSanta15/pccpy/pull/7) | en revisión |
-| 1 Errores y avisos | `feat/i18n-fase-1-errores` | — | pendiente |
+| 1 Errores y avisos | `feat/i18n-fase-1-errores` | _(se completa al abrir el PR)_ | en revisión |
 | 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | — | pendiente |
 | 3 Gráficos y constantes de módulo | `feat/i18n-fase-3-graficos` | — | pendiente |
 | 4 Documentación multilingüe | — | — | diferida |
