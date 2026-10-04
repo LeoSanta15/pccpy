@@ -21,6 +21,7 @@ import numpy as np
 import pandas as pd
 from scipy import optimize, stats
 
+from ._i18n import tr
 from .charts._engine import StagePanel, build_chart, full
 from .results import MultivariateChart
 
@@ -40,7 +41,7 @@ def _prepare(data, subgroup_size):
     arr = np.asarray(data, dtype=float)
     if arr.ndim == 3:
         if subgroup_size is not None:
-            raise ValueError("Con datos 3-D no se debe indicar 'subgroup_size'.")
+            raise ValueError(tr("Con datos 3-D no se debe indicar 'subgroup_size'."))
         grp = arr
     elif arr.ndim == 2:
         if subgroup_size is None or subgroup_size == 1:
@@ -49,16 +50,18 @@ def _prepare(data, subgroup_size):
             n = int(subgroup_size)
             if n < 2 or arr.shape[0] % n != 0:
                 raise ValueError(
-                    f"{arr.shape[0]} filas no se pueden dividir en subgrupos de {subgroup_size}."
+                    tr(
+                        "{rows} filas no se pueden dividir en subgrupos de {subgroup_size}."
+                    ).format(rows=arr.shape[0], subgroup_size=subgroup_size)
                 )
             grp = arr.reshape(-1, n, arr.shape[1])
     else:
-        raise ValueError("Los datos deben ser una matriz N x p (o 3-D: subgrupos x n x p).")
+        raise ValueError(tr("Los datos deben ser una matriz N x p (o 3-D: subgrupos x n x p)."))
     if not np.all(np.isfinite(arr)):
-        raise ValueError("Los datos contienen valores faltantes o infinitos.")
+        raise ValueError(tr("Los datos contienen valores faltantes o infinitos."))
     p = arr.shape[-1]
     if p < 2:
-        raise ValueError("Una carta multivariada necesita al menos 2 variables.")
+        raise ValueError(tr("Una carta multivariada necesita al menos 2 variables."))
     names = names or [f"X{j + 1}" for j in range(p)]
 
     if grp is None:
@@ -84,26 +87,26 @@ def _stage_ref(pts: np.ndarray, grp, idx: np.ndarray):
 
 def _check_cov(cov: np.ndarray) -> None:
     if cov.shape[0] != cov.shape[1] or not np.allclose(cov, cov.T):
-        raise ValueError("La matriz de covarianzas debe ser cuadrada y simétrica.")
+        raise ValueError(tr("La matriz de covarianzas debe ser cuadrada y simétrica."))
     if np.linalg.cond(cov) > 1e12:
         raise ValueError(
-            "La matriz de covarianzas es singular o casi singular: hay variables "
+            tr("La matriz de covarianzas es singular o casi singular: hay variables "
             "(casi) linealmente dependientes o muy pocas observaciones (revise, si usa "
-            "'stages', que cada etapa tenga suficientes puntos)."
+            "'stages', que cada etapa tenga suficientes puntos).")
         )
 
 
 def _resolve_params(mu, cov, est_mu, est_cov, p, n_hist):
     """(media, cov, fase) donde fase es 'phase1', 'phase2' o 'known'."""
     if (mu is None) != (cov is None):
-        raise ValueError("Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno.")
+        raise ValueError(tr("Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."))
     if mu is None:
         if n_hist is not None:
-            raise ValueError("'n_hist' solo aplica con parámetros históricos.")
+            raise ValueError(tr("'n_hist' solo aplica con parámetros históricos."))
         return est_mu, est_cov, "phase1"
     mu, cov = np.asarray(mu, dtype=float).ravel(), np.asarray(cov, dtype=float)
     if mu.size != p or cov.shape != (p, p):
-        raise ValueError(f"'mu' debe tener {p} elementos y 'cov' ser {p} x {p}.")
+        raise ValueError(tr("'mu' debe tener {p} elementos y 'cov' ser {p} x {p}.").format(p=p))
     return mu, cov, ("known" if n_hist is None else "phase2")
 
 
@@ -113,7 +116,7 @@ def _boxcox_transform(arr: np.ndarray):
     (máxima verosimilitud, ``scipy.stats.boxcox``), estimado con todas las
     observaciones individuales disponibles (sin promediar por subgrupo)."""
     if np.any(arr <= 0):
-        raise ValueError("'boxcox' requiere datos positivos en todas las variables.")
+        raise ValueError(tr("'boxcox' requiere datos positivos en todas las variables."))
     shape = arr.shape
     flat = arr.reshape(-1, shape[-1])
     out = np.empty_like(flat)
@@ -129,7 +132,7 @@ def _maybe_boxcox(data, mu, cov, boxcox: bool):
     if not boxcox:
         return data, None, None
     if mu is not None or cov is not None:
-        raise ValueError("'boxcox' no se puede combinar con parámetros históricos ('mu'/'cov').")
+        raise ValueError(tr("'boxcox' no se puede combinar con parámetros históricos ('mu'/'cov')."))
     names = [str(c) for c in data.columns] if isinstance(data, pd.DataFrame) else None
     arr, lambdas = _boxcox_transform(np.asarray(data, dtype=float))
     return arr, names, lambdas
@@ -149,17 +152,19 @@ def _t2_reference(p, m, n, alpha, phase):
     if n == 1:
         if phase == "phase1":
             if m - p - 1 <= 0:
-                raise ValueError(f"Se necesitan más de {p + 1} observaciones (hay {m}).")
+                raise ValueError(tr(
+                    "Se necesitan más de {minimum} observaciones (hay {m})."
+                ).format(minimum=p + 1, m=m))
             ucl = (m - 1) ** 2 / m * stats.beta.ppf(q, p / 2, (m - p - 1) / 2)
             return p * (m - 1) / m, float(ucl)
         v2 = m - p
         if v2 <= 0:
-            raise ValueError("'n_hist' debe ser mayor que el número de variables.")
+            raise ValueError(tr("'n_hist' debe ser mayor que el número de variables."))
         kk = p * (m + 1) * (m - 1) / (m * (m - p))
     else:
         v2 = m * n - m - p + 1
         if v2 <= 0:
-            raise ValueError("Muy pocos datos para el número de variables (grados de libertad <= 0).")
+            raise ValueError(tr("Muy pocos datos para el número de variables (grados de libertad <= 0)."))
         kk = (p * (m - 1) if phase == "phase1" else p * (m + 1)) * (n - 1) / v2
     center = kk * v2 / (v2 - 2) if v2 > 2 else float("nan")
     return float(center), float(kk * stats.f.ppf(q, p, v2))
@@ -287,19 +292,21 @@ def generalized_variance_chart(
     transforma cada variable antes de calcular la carta.
     """
     if subgroup_size is None and np.asarray(data).ndim != 3:
-        raise ValueError("La varianza generalizada requiere subgrupos: indique 'subgroup_size' o pase datos 3-D.")
+        raise ValueError(tr("La varianza generalizada requiere subgrupos: indique 'subgroup_size' o pase datos 3-D."))
     data, names_bc, lambdas = _maybe_boxcox(data, None, cov, boxcox)
     pts, n, s_est, _, names, m, grp = _prepare(data, subgroup_size)
     if names_bc is not None:
         names = names_bc
     p = pts.shape[1]
     if n <= p:
-        raise ValueError(f"El tamaño de subgrupo ({n}) debe ser mayor que el número de variables ({p}).")
+        raise ValueError(tr(
+            "El tamaño de subgrupo ({n}) debe ser mayor que el número de variables ({p})."
+        ).format(n=n, p=p))
     dets = np.array([np.linalg.det(np.cov(g, rowvar=False)) for g in grp])
     if cov is not None:
         fixed_sig = np.asarray(cov, dtype=float)
         if fixed_sig.shape != (p, p):
-            raise ValueError(f"'cov' debe ser {p} x {p}.")
+            raise ValueError(tr("'cov' debe ser {p} x {p}.").format(p=p))
         _check_cov(fixed_sig)
     b1, b2 = _gv_constants(p, n)
 
@@ -360,7 +367,7 @@ def mewma_limit(p: int, weight: float = 0.1, arl: float = 200.0) -> float:
     p=2, weight=0.1 y arl=200 da H ≈ 8.64 (Prabhu y Runger, 1997).
     """
     if arl <= 1:
-        raise ValueError("'arl' debe ser > 1.")
+        raise ValueError(tr("'arl' debe ser > 1."))
     f = lambda h: np.log(_mewma_arl(h, p, weight)) - np.log(arl)
     lo, hi = 1e-3, 2.0 * p
     while f(hi) < 0:
@@ -395,7 +402,7 @@ def mewma_chart(
     ``boxcox``: transforma cada variable antes de calcular la carta.
     """
     if not 0 < weight <= 1:
-        raise ValueError("'weight' debe estar en (0, 1].")
+        raise ValueError(tr("'weight' debe estar en (0, 1]."))
     data, names_bc, lambdas = _maybe_boxcox(data, mu, cov, boxcox)
     pts, n, s_est, grand, names, m, grp = _prepare(data, subgroup_size)
     if names_bc is not None:
@@ -460,9 +467,9 @@ def _mcusum_arl(h: float, p: int, k: float, cells: int = 300) -> float:
 def mcusum_limit(p: int, k: float = 0.5, arl: float = 200.0) -> float:
     """Límite de control h de la MCUSUM de Crosier para un ARL en control dado."""
     if arl <= 1:
-        raise ValueError("'arl' debe ser > 1.")
+        raise ValueError(tr("'arl' debe ser > 1."))
     if k < 0:
-        raise ValueError("'k' debe ser >= 0.")
+        raise ValueError(tr("'k' debe ser >= 0."))
     f = lambda h: np.log(_mcusum_arl(h, p, k)) - np.log(arl)
     lo, hi = 1e-3, 2.0 * p
     while f(hi) < 0:
@@ -496,7 +503,7 @@ def mcusum_chart(
     ``boxcox``: transforma cada variable antes de calcular la carta.
     """
     if k < 0:
-        raise ValueError("'k' debe ser >= 0.")
+        raise ValueError(tr("'k' debe ser >= 0."))
     data, names_bc, lambdas = _maybe_boxcox(data, mu, cov, boxcox)
     pts, n, s_est, grand, names, m, grp = _prepare(data, subgroup_size)
     if names_bc is not None:
@@ -507,7 +514,7 @@ def mcusum_chart(
     if use_hist:
         _check_cov(hist_S)
     if h is not None and h <= 0:
-        raise ValueError("'h' debe ser > 0.")
+        raise ValueError(tr("'h' debe ser > 0."))
     lim = float(h) if h is not None else mcusum_limit(p, float(k), float(arl))
 
     def stage_fn(idx):

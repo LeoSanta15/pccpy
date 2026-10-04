@@ -6,6 +6,8 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
+from ._i18n import tr
+
 
 @dataclass
 class PreControlResult:
@@ -151,10 +153,10 @@ def precontrol(
     PreControlResult
     """
     if lsl >= usl:
-        raise ValueError("lsl debe ser menor que usl.")
+        raise ValueError(tr("lsl debe ser menor que usl."))
     x = np.asarray(data, dtype=float).ravel()
     if x.size < 1:
-        raise ValueError("Se necesita al menos una observación.")
+        raise ValueError(tr("Se necesita al menos una observación."))
     center = float(target) if target is not None else (lsl + usl) / 2.0
     tol = usl - lsl
     green_lo = center - tol / 4.0

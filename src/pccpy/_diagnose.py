@@ -9,6 +9,7 @@ import numpy as np
 from scipy import stats
 
 from ._data import _excel_writer
+from ._i18n import tr
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
@@ -251,7 +252,7 @@ def diagnose(
     x = np.asarray(x, dtype=float).ravel()
     n = len(x)
     if n < 4:
-        raise ValueError("diagnose requiere al menos 4 observaciones.")
+        raise ValueError(tr("diagnose requiere al menos 4 observaciones."))
 
     # ── Estadísticos básicos ────────────────────────────────────────────────
     mean = float(np.mean(x))

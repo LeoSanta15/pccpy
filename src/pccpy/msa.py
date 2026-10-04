@@ -23,6 +23,7 @@ import pandas as pd
 from scipy import stats
 
 from ._data import _excel_writer, as_1d
+from ._i18n import tr
 
 NAN = float("nan")
 
@@ -39,17 +40,21 @@ def _to_matrix(data, parts, operators, replicates) -> np.ndarray:
     if arr.ndim == 1:
         if len(arr) != parts * operators * replicates:
             raise ValueError(
-                f"Longitud de datos ({len(arr)}) ≠ parts*operators*replicates "
-                f"({parts}×{operators}×{replicates}={parts*operators*replicates})."
+                tr(
+                    "Longitud de datos ({n_data}) ≠ parts*operators*replicates "
+                    "({parts}×{operators}×{replicates}={expected})."
+                ).format(n_data=len(arr), parts=parts, operators=operators, replicates=replicates, expected=parts*operators*replicates)
             )
         arr = arr.reshape(parts, operators, replicates)
     elif arr.ndim == 3:
         if arr.shape != (parts, operators, replicates):
             raise ValueError(
-                f"Forma del array {arr.shape} ≠ ({parts}, {operators}, {replicates})."
+                tr(
+                    "Forma del array {shape} ≠ ({parts}, {operators}, {replicates})."
+                ).format(shape=arr.shape, parts=parts, operators=operators, replicates=replicates)
             )
     else:
-        raise ValueError("Los datos deben ser 1-D o 3-D.")
+        raise ValueError(tr("Los datos deben ser 1-D o 3-D."))
     return arr
 
 
@@ -444,7 +449,7 @@ def gage_rr(
     elif method == "xbar_r":
         return _gage_rr_xbar_r(arr, study_variation)
     else:
-        raise ValueError("'method' debe ser 'anova' o 'xbar_r'.")
+        raise ValueError(tr("'method' debe ser 'anova' o 'xbar_r'."))
 
 
 def gage_rr_nested(
@@ -606,7 +611,7 @@ def gage_type1(
     x = as_1d(data, "data")
     n = len(x)
     if n < 2:
-        raise ValueError("Se necesitan al menos 2 mediciones.")
+        raise ValueError(tr("Se necesitan al menos 2 mediciones."))
 
     xbar = float(x.mean())
     s = float(x.std(ddof=1))
@@ -670,9 +675,9 @@ def gage_type1_summary(
     Type1Result
     """
     if n < 2:
-        raise ValueError("'n' debe ser ≥ 2.")
+        raise ValueError(tr("'n' debe ser ≥ 2."))
     if std <= 0:
-        raise ValueError("'std' debe ser positivo.")
+        raise ValueError(tr("'std' debe ser positivo."))
 
     xbar, s = float(mean), float(std)
     bias = xbar - reference
@@ -819,9 +824,9 @@ def gage_linearity(
     m = np.asarray(measurements, dtype=float).ravel()
     r = np.asarray(references, dtype=float).ravel()
     if len(m) != len(r):
-        raise ValueError("'measurements' y 'references' deben tener la misma longitud.")
+        raise ValueError(tr("'measurements' y 'references' deben tener la misma longitud."))
     if len(m) < 3:
-        raise ValueError("Se necesitan al menos 3 pares para la regresión.")
+        raise ValueError(tr("Se necesitan al menos 3 pares para la regresión."))
 
     bias_all = m - r
     refs_unique = np.unique(r)

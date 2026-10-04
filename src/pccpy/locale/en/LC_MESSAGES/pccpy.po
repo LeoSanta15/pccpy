@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-04 20:53+0000\n"
+"POT-Creation-Date: 2026-10-04 20:56+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -18,14 +18,481 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
+msgid "'aoql' debe estar en (0, 1)."
+msgstr "'aoql' must be in (0, 1)."
+
+msgid "'aql' debe estar en (0, 10] %."
+msgstr "'aql' must be in (0, 10] %."
+
+msgid "'arl' debe ser > 1."
+msgstr "'arl' must be > 1."
+
+msgid "'boxcox' no se puede combinar con parámetros históricos ('mu'/'cov')."
+msgstr "'boxcox' cannot be combined with historical parameters ('mu'/'cov')."
+
+msgid "'boxcox' requiere datos positivos en todas las variables."
+msgstr "'boxcox' requires positive data in all variables."
+
+msgid "'categories' y 'counts' deben tener la misma longitud."
+msgstr "'categories' and 'counts' must have the same length."
+
+msgid "'ci_level' debe estar entre 0 y 1."
+msgstr "'ci_level' must be between 0 and 1."
+
+msgid "'confidence' debe estar en (0, 1)."
+msgstr "'confidence' must be in (0, 1)."
+
+#, python-brace-format
+msgid "'cov' debe ser {p} x {p}."
+msgstr "'cov' must be {p} x {p}."
+
+msgid "'coverage' debe estar en (0, 1)."
+msgstr "'coverage' must be in (0, 1)."
+
+msgid "'h' debe ser > 0 y 'k' >= 0."
+msgstr "'h' must be > 0 and 'k' >= 0."
+
+msgid "'h' debe ser > 0."
+msgstr "'h' must be > 0."
+
+msgid "'k' debe ser >= 0."
+msgstr "'k' must be >= 0."
+
+msgid "'length' debe ser un entero >= 2."
+msgstr "'length' must be an integer >= 2."
+
+msgid "'ltpd' debe estar en (0, 1)."
+msgstr "'ltpd' must be in (0, 1)."
+
+msgid "'measurements' y 'references' deben tener la misma longitud."
+msgstr "'measurements' and 'references' must have the same length."
+
+msgid "'median_mr' solo está disponible con span = 2."
+msgstr "'median_mr' is only available with span = 2."
+
+msgid "'method' debe ser 'anova' o 'xbar_r'."
+msgstr "'method' must be 'anova' or 'xbar_r'."
+
+msgid "'method' debe ser 'normal' o 'nonparametric'."
+msgstr "'method' must be 'normal' or 'nonparametric'."
+
+#, python-brace-format
+msgid "'mu' debe tener {p} elementos y 'cov' ser {p} x {p}."
+msgstr "'mu' must have {p} elements and 'cov' must be {p} x {p}."
+
+msgid "'n' debe ser un escalar o tener la misma longitud que los conteos."
+msgstr "'n' must be a scalar or have the same length as the counts."
+
+msgid "'n' debe ser ≥ 2."
+msgstr "'n' must be >= 2."
+
+msgid "'n_hist' debe ser mayor que el número de variables."
+msgstr "'n_hist' must be greater than the number of variables."
+
+msgid "'n_hist' solo aplica con parámetros históricos."
+msgstr "'n_hist' only applies with historical parameters."
+
+msgid "'p' debe estar en (0, 1)."
+msgstr "'p' must be in (0, 1)."
+
+msgid "'parts' debe tener una etiqueta por observación."
+msgstr "'parts' must have one label per observation."
+
+#, python-brace-format
+msgid "'point' debe estar entre 1 y {m}."
+msgstr "'point' must be between 1 and {m}."
+
+msgid "'process_avg' debe estar en (0, 1)."
+msgstr "'process_avg' must be in (0, 1)."
+
+msgid "'sides' debe ser 'two', 'lower' o 'upper'."
+msgstr "'sides' must be 'two', 'lower' or 'upper'."
+
+msgid "'span' debe ser >= 2."
+msgstr "'span' must be >= 2."
+
+msgid "'spec_type' debe ser 'one' o 'two'."
+msgstr "'spec_type' must be 'one' or 'two'."
+
+#, python-brace-format
+msgid "'stages' debe tener una etiqueta por punto graficado ({n_points}); recibido: {shape}."
+msgstr "'stages' must have one label per plotted point ({n_points}); received: {shape}."
+
+msgid "'std' debe ser positivo."
+msgstr "'std' must be positive."
+
+msgid "'std_overall' debe ser positivo."
+msgstr "'std_overall' must be positive."
+
+msgid "'subgroup' debe tener la misma longitud que los datos."
+msgstr "'subgroup' must have the same length as the data."
+
+msgid "'subgroup_size' debe ser >= 1."
+msgstr "'subgroup_size' must be >= 1."
+
+msgid ""
+"'subgroup_size=1' da subgrupos de un solo elemento; no se puede estimar la variación dentro de subgrupos. Para datos "
+"individuales usa imr_chart() en lugar de xbar_r_chart()."
+msgstr ""
+"'subgroup_size=1' gives single-element subgroups; the within-subgroup variation cannot be estimated. For individual "
+"data use imr_chart() instead of xbar_r_chart()."
+
+msgid "'tests' debe ser 'all', None o una lista de enteros 1-8."
+msgstr "'tests' must be 'all', None or a list of integers 1-8."
+
+msgid "'weight' debe estar en (0, 1]."
+msgstr "'weight' must be in (0, 1]."
+
+msgid "'weights' debe tener 4 pesos no negativos, no decrecientes y con el último > 0."
+msgstr "'weights' must have 4 non-negative, non-decreasing weights with the last one > 0."
+
+msgid "'within' debe ser 'r' o 's'."
+msgstr "'within' must be 'r' or 's'."
+
+msgid "'x' debe ser un array 1-D o 2-D con al menos 2 elementos."
+msgstr "'x' must be a 1-D or 2-D array with at least 2 elements."
+
+msgid "'x' es obligatorio en mode='auto'."
+msgstr "'x' is required when mode='auto'."
+
+#, python-brace-format
+msgid "'{name}' contiene {n_bad} valor(es) no finito(s) (NaN/inf) en las posiciones {positions}. Se excluyen del análisis."
+msgstr "'{name}' contains {n_bad} non-finite value(s) (NaN/inf) at positions {positions}. They are excluded from the analysis."
+
+#, python-brace-format
+msgid "'{name}' debe ser unidimensional (recibido: {ndim}-D)."
+msgstr "'{name}' must be one-dimensional (received: {ndim}-D)."
+
+#, python-brace-format
+msgid "'{name}' está vacío."
+msgstr "'{name}' is empty."
+
+#, python-brace-format
+msgid "'{name}' no tiene valores válidos tras eliminar NaN/inf."
+msgstr "'{name}' has no valid values after removing NaN/inf."
+
+msgid "Box-Cox requiere datos estrictamente positivos."
+msgstr "Box-Cox requires strictly positive data."
+
+#, python-brace-format
+msgid "Box-Cox requiere que {name} sea positivo."
+msgstr "Box-Cox requires {name} to be positive."
+
+msgid "Cada etapa necesita al menos 2 subgrupos."
+msgstr "Each stage needs at least 2 subgroups."
+
+#, python-brace-format
+msgid "Combinación AQL={aql_key}% y letra={letra} no disponible en la tabla Z1.9."
+msgstr "AQL={aql_key}% and letter={letra} combination not available in the Z1.9 table."
+
+#, python-brace-format
+msgid "Combinación de letra={letra} y AQL={aql_key} no disponible en la tabla."
+msgstr "Letter={letra} and AQL={aql_key} combination not available in the table."
+
+#, python-brace-format
+msgid ""
+"Con DataFrame en formato largo y 'subgroup' como nombre de columna, especifica también 'value' con el nombre de la "
+"columna de valores (columnas numéricas disponibles: {numeric_cols})."
+msgstr ""
+"With a long-format DataFrame and 'subgroup' as a column name, also specify 'value' with the name of the values column"
+" (available numeric columns: {numeric_cols})."
+
+msgid "Con datos 2-D no se debe indicar 'subgroup_size' ni 'subgroup'."
+msgstr "With 2-D data, neither 'subgroup_size' nor 'subgroup' should be given."
+
+msgid "Con datos 3-D no se debe indicar 'subgroup_size'."
+msgstr "With 3-D data, 'subgroup_size' should not be given."
+
+msgid "Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'."
+msgstr "With individual observations, within_method must be 'mr', 'median_mr' or 'mssd'."
+
+msgid "Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."
+msgstr "With subgroups, within_method must be 'pooled', 'rbar' or 'sbar'."
+
+msgid "D'Agostino-Pearson requiere al menos 8 observaciones."
+msgstr "D'Agostino-Pearson requires at least 8 observations."
+
+msgid "Datos 1-D: indique 'subgroup_size' o 'subgroup', o pase una matriz 2-D."
+msgstr "1-D data: give 'subgroup_size' or 'subgroup', or pass a 2-D matrix."
+
+#, python-brace-format
+msgid "Distribución no soportada: {distribution!r}. Opciones: {options}"
+msgstr "Unsupported distribution: {distribution!r}. Options: {options}"
+
+msgid "EWMA/CUSUM/MA requieren subgrupos de igual tamaño (sin valores faltantes)."
+msgstr "EWMA/CUSUM/MA require subgroups of equal size (no missing values)."
+
 msgid "El idioma no puede estar vacío."
 msgstr "The language cannot be empty."
+
+msgid "El límite inferior (lsl) debe ser menor que el superior (usl)."
+msgstr "The lower limit (lsl) must be less than the upper limit (usl)."
+
+msgid "El método 'relative' requiere datos positivos (usa ln)."
+msgstr "The 'relative' method requires positive data (it uses ln)."
+
+#, python-brace-format
+msgid ""
+"El tamaño de muestra n={n} es insuficiente para el intervalo no paramétrico con cobertura={coverage} y "
+"confianza={confidence}."
+msgstr "Sample size n={n} is insufficient for the nonparametric interval with coverage={coverage} and confidence={confidence}."
+
+#, python-brace-format
+msgid "El tamaño de subgrupo ({n}) debe ser mayor que el número de variables ({p})."
+msgstr "The subgroup size ({n}) must be greater than the number of variables ({p})."
+
+#, python-brace-format
+msgid "El tamaño de subgrupo debe ser >= 2 (recibido: {n})."
+msgstr "The subgroup size must be >= 2 (received: {n})."
+
+msgid "Especifica exactamente uno de 'ltpd' o 'aoql'."
+msgstr "Specify exactly one of 'ltpd' or 'aoql'."
+
+msgid "Falta el tamaño de la muestra 'n'."
+msgstr "The sample size 'n' is missing."
+
+#, python-brace-format
+msgid "Falta la media histórica de la parte {lab!r} en 'mu'."
+msgstr "The historical mean of part {lab!r} is missing from 'mu'."
+
+#, python-brace-format
+msgid "Forma del array {shape} ≠ ({parts}, {operators}, {replicates})."
+msgstr "Array shape {shape} != ({parts}, {operators}, {replicates})."
+
+msgid "Hay conteos de defectuosos mayores que el tamaño de la muestra."
+msgstr "Some defective counts are greater than the sample size."
+
+msgid "Hay conteos mayores que el tamaño de muestra."
+msgstr "Some counts are greater than the sample size."
+
+msgid "Hay subgrupos sin ninguna observación válida."
+msgstr "Some subgroups have no valid observations."
 
 #, python-brace-format
 msgid "Idioma no disponible: {lang!r}. Idiomas disponibles: {disponibles}."
 msgstr "Language not available: {lang!r}. Available languages: {disponibles}."
 
+msgid "Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."
+msgstr "Give 'mu' and 'cov' together (historical parameters) or neither."
+
+msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
+msgstr "The NP chart requires a constant sample size; use the P chart."
+
+msgid "La carta no tiene media/covarianza calculadas para este punto."
+msgstr "The chart has no mean/covariance computed for this point."
+
+#, python-brace-format
+msgid "La distribución {key} requiere datos estrictamente positivos."
+msgstr "The {key} distribution requires strictly positive data."
+
+#, python-brace-format
+msgid "La etapa {label!r} aparece en bloques separados; cada etapa debe ser contigua."
+msgstr "Stage {label!r} appears in separate blocks; each stage must be contiguous."
+
+msgid "La matriz de covarianzas debe ser cuadrada y simétrica."
+msgstr "The covariance matrix must be square and symmetric."
+
+msgid ""
+"La matriz de covarianzas es singular o casi singular: hay variables (casi) linealmente dependientes o muy pocas "
+"observaciones (revise, si usa 'stages', que cada etapa tenga suficientes puntos)."
+msgstr ""
+"The covariance matrix is singular or nearly singular: some variables are (nearly) linearly dependent or there are too"
+" few observations (if you use 'stages', check that each stage has enough points)."
+
+msgid "La suma de frecuencias debe ser positiva."
+msgstr "The sum of the frequencies must be positive."
+
 #, python-brace-format
 msgid "La variable PCCPY_LANG={valor!r} no es un idioma disponible; se usa {defecto!r}."
 msgstr "The PCCPY_LANG={valor!r} variable is not an available language; {defecto!r} is used."
+
+msgid ""
+"La variación del proceso es cero (desviación estándar = 0). Los índices de capacidad no están definidos y se "
+"devuelven como NaN."
+msgstr ""
+"The process variation is zero (standard deviation = 0). The capability indices are not defined and are returned as "
+"NaN."
+
+msgid "La varianza generalizada requiere subgrupos: indique 'subgroup_size' o pase datos 3-D."
+msgstr "The generalized variance requires subgroups: give 'subgroup_size' or pass 3-D data."
+
+msgid "Laney requiere al menos 2 puntos por etapa."
+msgstr "Laney requires at least 2 points per stage."
+
+msgid "Las contribuciones solo están disponibles para la carta T²."
+msgstr "Contributions are only available for the T² chart."
+
+msgid "Las duraciones deben ser positivas (no se admiten duraciones iguales a 0)."
+msgstr "Durations must be positive (durations equal to 0 are not allowed)."
+
+msgid "Las frecuencias no pueden ser negativas."
+msgstr "Frequencies cannot be negative."
+
+#, python-brace-format
+msgid "Longitud de datos ({n_data}) ≠ parts*operators*replicates ({parts}×{operators}×{replicates}={expected})."
+msgstr "Data length ({n_data}) != parts*operators*replicates ({parts}×{operators}×{replicates}={expected})."
+
+msgid "Los conteos entre eventos no pueden ser negativos."
+msgstr "Counts between events cannot be negative."
+
+msgid "Los conteos no pueden ser negativos."
+msgstr "Counts cannot be negative."
+
+msgid "Los datos contienen valores faltantes o infinitos."
+msgstr "The data contain missing or infinite values."
+
+msgid "Los datos contienen valores infinitos."
+msgstr "The data contain infinite values."
+
+msgid "Los datos deben ser 1-D o 2-D."
+msgstr "The data must be 1-D or 2-D."
+
+msgid "Los datos deben ser 1-D o 3-D."
+msgstr "The data must be 1-D or 3-D."
+
+msgid "Los datos deben ser una matriz N x p (o 3-D: subgrupos x n x p)."
+msgstr "The data must be an N x p matrix (or 3-D: subgroups x n x p)."
+
+msgid "Los tamaños de muestra deben ser positivos."
+msgstr "Sample sizes must be positive."
+
+msgid "Muy pocos datos para el número de variables (grados de libertad <= 0)."
+msgstr "Too little data for the number of variables (degrees of freedom <= 0)."
+
+msgid "N debe ser ≥ 2."
+msgstr "N must be >= 2."
+
+msgid "Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma."
+msgstr "No subgroup has 2 or more observations; sigma cannot be estimated."
+
+#, python-brace-format
+msgid "No existe el panel {name!r}. Disponibles: {available}"
+msgstr "Panel {name!r} does not exist. Available: {available}"
+
+msgid "No hay datos."
+msgstr "There is no data."
+
+#, python-brace-format
+msgid ""
+"No hay rangos móviles para estimar sigma ({what}); se necesitan al menos 2 observaciones consecutivas de la misma "
+"parte."
+msgstr ""
+"There are no moving ranges to estimate sigma ({what}); at least 2 consecutive observations of the same part are "
+"needed."
+
+#, python-brace-format
+msgid "Nodo desconocido en el árbol: {node!r}"
+msgstr "Unknown node in the tree: {node!r}"
+
+msgid "Para parámetros históricos Weibull indique 'shape' y 'scale' juntos."
+msgstr "For historical Weibull parameters give 'shape' and 'scale' together."
+
+#, python-brace-format
+msgid "Pruebas no válidas: {bad}. Use enteros entre 1 y 8."
+msgstr "Invalid tests: {bad}. Use integers between 1 and 8."
+
+#, python-brace-format
+msgid ""
+"Se ignoraron {n_dropped} columna(s) no numéricas del DataFrame: {dropped}. Si querías usar una como identificador de "
+"subgrupo, pasa subgroup='nombre_columna'."
+msgstr ""
+"{n_dropped} non-numeric column(s) of the DataFrame were ignored: {dropped}. If you wanted to use one as a subgroup "
+"identifier, pass subgroup='column_name'."
+
+msgid "Se necesita al menos una observación."
+msgstr "At least one observation is needed."
+
+msgid "Se necesitan al menos 2 mediciones."
+msgstr "At least 2 measurements are needed."
+
+msgid "Se necesitan al menos 2 observaciones para estimar sigma."
+msgstr "At least 2 observations are needed to estimate sigma."
+
+msgid "Se necesitan al menos 2 observaciones."
+msgstr "At least 2 observations are needed."
+
+msgid "Se necesitan al menos 3 observaciones."
+msgstr "At least 3 observations are needed."
+
+msgid "Se necesitan al menos 3 pares para la regresión."
+msgstr "At least 3 pairs are needed for the regression."
+
+#, python-brace-format
+msgid "Se necesitan al menos {span} observaciones (span={span})."
+msgstr "At least {span} observations are needed (span={span})."
+
+#, python-brace-format
+msgid "Se necesitan más de {minimum} observaciones (hay {m})."
+msgstr "More than {minimum} observations are needed (there are {m})."
+
+msgid "Se obtuvo una sigma igual a cero (datos sin variación)."
+msgstr "A sigma equal to zero was obtained (data with no variation)."
+
+msgid "Todas las duraciones son iguales; no se puede ajustar la Weibull."
+msgstr "All durations are equal; the Weibull cannot be fitted."
+
+msgid "Todos los conteos son 0; no se puede estimar la carta G."
+msgstr "All counts are 0; the G chart cannot be estimated."
+
+msgid "Todos los datos son iguales; no se puede probar normalidad."
+msgstr "All data are equal; normality cannot be tested."
+
+msgid "Una carta multivariada necesita al menos 2 variables."
+msgstr "A multivariate chart needs at least 2 variables."
+
+msgid "diagnose requiere al menos 4 observaciones."
+msgstr "diagnose requires at least 4 observations."
+
+msgid "lsl debe ser menor que usl."
+msgstr "lsl must be less than usl."
+
+msgid "method debe ser 'anderson', 'shapiro' o 'dagostino'."
+msgstr "method must be 'anderson', 'shapiro' or 'dagostino'."
+
+#, python-brace-format
+msgid "mode debe ser 'auto', 'cli' o 'widget'; se recibió {mode!r}."
+msgstr "mode must be 'auto', 'cli' or 'widget'; received {mode!r}."
+
+#, python-brace-format
+msgid "n={n} insuficiente para el intervalo no paramétrico solicitado."
+msgstr "n={n} is insufficient for the requested nonparametric interval."
+
+msgid ""
+"openpyxl es necesario para exportar a Excel. Instálalo con:\n"
+"    pip install openpyxl\n"
+"o con la dependencia opcional de pccpy:\n"
+"    pip install pccpy[excel]"
+msgstr ""
+"openpyxl is required to export to Excel. Install it with:\n"
+"    pip install openpyxl\n"
+"or with the optional pccpy dependency:\n"
+"    pip install pccpy[excel]"
+
+msgid "run_chart requiere al menos 3 observaciones."
+msgstr "run_chart requires at least 3 observations."
+
+msgid "sigma_method debe ser 'mr', 'median_mr' o 'mssd'."
+msgstr "sigma_method must be 'mr', 'median_mr' or 'mssd'."
+
+msgid "sigma_method debe ser 'rbar', 'sbar' o 'pooled'."
+msgstr "sigma_method must be 'rbar', 'sbar' or 'pooled'."
+
+#, python-brace-format
+msgid "{rows} filas no se pueden dividir en subgrupos de {subgroup_size}."
+msgstr "{rows} rows cannot be divided into subgroups of {subgroup_size}."
+
+#, python-brace-format
+msgid ""
+"{size} observaciones no forman un número exacto de subgrupos de tamaño {m}. El último subgrupo tiene {remainder} de "
+"{m} observaciones: se incluye en la gráfica pero NO en el cálculo de los límites de control."
+msgstr ""
+"{size} observations do not form an exact number of subgroups of size {m}. The last subgroup has {remainder} of {m} "
+"observations: it is included in the plot but NOT in the calculation of the control limits."
+
+#, python-brace-format
+msgid "{what} debe ser uno de {allowed} (recibido: {method!r})."
+msgstr "{what} must be one of {allowed} (received: {method!r})."
+
+#~ msgid "Longitud de datos ({n_data}) ≠ parts*operators*replicates ({parts}×{operators}×{replicates}={parts_operators_re})."
+#~ msgstr ""
 

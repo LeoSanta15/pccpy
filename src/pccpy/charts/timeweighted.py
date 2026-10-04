@@ -4,6 +4,7 @@ from __future__ import annotations
 import numpy as np
 
 from .._data import as_1d, to_subgroups
+from .._i18n import tr
 from .._sigma import sigma_individuals, sigma_subgroups
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
@@ -18,7 +19,7 @@ def _series(data, subgroup_size, subgroup, value=None):
     g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
     # Verificar subgrupos completos (el incompleto tiene NaN por diseño)
     if np.isnan(g[:n_complete]).any():
-        raise ValueError("EWMA/CUSUM/MA requieren subgrupos de igual tamaño (sin valores faltantes).")
+        raise ValueError(tr("EWMA/CUSUM/MA requieren subgrupos de igual tamaño (sin valores faltantes)."))
     n = g.shape[1]
     g_lim = g[:n_complete]
     sigma = sigma_subgroups(g_lim, "rbar") if n > 1 else sigma_individuals(g_lim[:, 0], "mr", 2)
@@ -48,7 +49,7 @@ def ewma_chart(
     vector 1-D + ``subgroup_size``, o DataFrame largo con ``subgroup`` + ``value``).
     """
     if not 0 < weight <= 1:
-        raise ValueError("'weight' debe estar en (0, 1].")
+        raise ValueError(tr("'weight' debe estar en (0, 1]."))
     means, n, sigma_est, grand = _series(data, subgroup_size, subgroup, value=value)
     s = float(sigma) if sigma is not None else sigma_est
     t0 = float(target) if target is not None else grand
@@ -92,7 +93,7 @@ def cusum_chart(
     Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
     """
     if h <= 0 or k < 0:
-        raise ValueError("'h' debe ser > 0 y 'k' >= 0.")
+        raise ValueError(tr("'h' debe ser > 0 y 'k' >= 0."))
     means, n, sigma_est, grand = _series(data, subgroup_size, subgroup, value=value)
     s = float(sigma) if sigma is not None else sigma_est
     t0 = float(target) if target is not None else grand

@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from ._i18n import tr
+
 
 def pareto(categories, counts=None, *, other_below: float | None = None) -> pd.DataFrame:
     """Tabla de Pareto ordenada de mayor a menor frecuencia.
@@ -21,14 +23,14 @@ def pareto(categories, counts=None, *, other_below: float | None = None) -> pd.D
     else:
         vals = np.asarray(counts, dtype=float)
         if vals.shape != cats.shape:
-            raise ValueError("'categories' y 'counts' deben tener la misma longitud.")
+            raise ValueError(tr("'categories' y 'counts' deben tener la misma longitud."))
         if np.any(vals < 0):
-            raise ValueError("Las frecuencias no pueden ser negativas.")
+            raise ValueError(tr("Las frecuencias no pueden ser negativas."))
         table = pd.Series(vals, index=cats.values, name="conteo").groupby(level=0).sum()
     table = table.sort_values(ascending=False, kind="stable")
     total = table.sum()
     if total <= 0:
-        raise ValueError("La suma de frecuencias debe ser positiva.")
+        raise ValueError(tr("La suma de frecuencias debe ser positiva."))
 
     if other_below is not None:
         small = table / total * 100 < other_below

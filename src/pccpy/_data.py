@@ -6,6 +6,8 @@ import warnings
 import numpy as np
 import pandas as pd
 
+from ._i18n import tr
+
 
 def _excel_writer(path):
     """Abre un ``pd.ExcelWriter`` con openpyxl; da mensaje claro si no está instalado."""
@@ -13,10 +15,10 @@ def _excel_writer(path):
         return pd.ExcelWriter(path, engine="openpyxl")
     except ImportError:
         raise ImportError(
-            "openpyxl es necesario para exportar a Excel. Instálalo con:\n"
+            tr("openpyxl es necesario para exportar a Excel. Instálalo con:\n"
             "    pip install openpyxl\n"
             "o con la dependencia opcional de pccpy:\n"
-            "    pip install pccpy[excel]"
+            "    pip install pccpy[excel]")
         ) from None
 
 
@@ -30,23 +32,28 @@ def as_1d(x, name: str = "x", allow_nan: bool = False) -> np.ndarray:
     if arr.ndim == 0:
         arr = arr.reshape(1)
     if arr.ndim != 1:
-        raise ValueError(f"'{name}' debe ser unidimensional (recibido: {arr.ndim}-D).")
+        raise ValueError(tr(
+            "'{name}' debe ser unidimensional (recibido: {ndim}-D)."
+        ).format(name=name, ndim=arr.ndim))
     if arr.size == 0:
-        raise ValueError(f"'{name}' está vacío.")
+        raise ValueError(tr("'{name}' está vacío.").format(name=name))
     if not allow_nan:
         bad = ~np.isfinite(arr)
         if bad.any():
             n_bad = int(bad.sum())
             warnings.warn(
-                f"'{name}' contiene {n_bad} valor(es) no finito(s) (NaN/inf) "
-                f"en las posiciones {np.where(bad)[0].tolist()}. "
-                "Se excluyen del análisis.",
+                tr(
+                    "'{name}' contiene {n_bad} valor(es) no finito(s) (NaN/inf) en las posiciones "
+                    "{positions}. Se excluyen del análisis."
+                ).format(name=name, n_bad=n_bad, positions=np.where(bad)[0].tolist()),
                 UserWarning,
                 stacklevel=3,
             )
             arr = arr[~bad]
             if arr.size == 0:
-                raise ValueError(f"'{name}' no tiene valores válidos tras eliminar NaN/inf.")
+                raise ValueError(tr(
+                    "'{name}' no tiene valores válidos tras eliminar NaN/inf."
+                ).format(name=name))
     return arr
 
 
@@ -93,9 +100,11 @@ def to_subgroups(
                 col_val = numeric_cols[0]
             else:
                 raise ValueError(
-                    "Con DataFrame en formato largo y 'subgroup' como nombre de columna, "
-                    "especifica también 'value' con el nombre de la columna de valores "
-                    f"(columnas numéricas disponibles: {numeric_cols})."
+                    tr(
+                        "Con DataFrame en formato largo y 'subgroup' como nombre de columna, "
+                        "especifica también 'value' con el nombre de la columna de valores (columnas "
+                        "numéricas disponibles: {numeric_cols})."
+                    ).format(numeric_cols=numeric_cols)
                 )
         vals = data[col_val].to_numpy(dtype=float)
         ids = data[col_sub].to_numpy()
@@ -109,9 +118,11 @@ def to_subgroups(
         dropped = [c for c in data.columns if c not in numeric_cols]
         if dropped:
             warnings.warn(
-                f"Se ignoraron {len(dropped)} columna(s) no numéricas del DataFrame: "
-                f"{dropped}. Si querías usar una como identificador de subgrupo, "
-                "pasa subgroup='nombre_columna'.",
+                tr(
+                    "Se ignoraron {n_dropped} columna(s) no numéricas del DataFrame: {dropped}. "
+                    "Si querías usar una como identificador de subgrupo, pasa "
+                    "subgroup='nombre_columna'."
+                ).format(n_dropped=len(dropped), dropped=dropped),
                 UserWarning,
                 stacklevel=3,
             )
@@ -122,7 +133,7 @@ def to_subgroups(
     if arr.ndim == 2:
         if subgroup_size is not None or subgroup is not None:
             raise ValueError(
-                "Con datos 2-D no se debe indicar 'subgroup_size' ni 'subgroup'."
+                tr("Con datos 2-D no se debe indicar 'subgroup_size' ni 'subgroup'.")
             )
         mat = arr
         n_complete = mat.shape[0]
@@ -131,7 +142,7 @@ def to_subgroups(
         if subgroup is not None:
             ids = np.asarray(subgroup)
             if ids.shape != arr.shape:
-                raise ValueError("'subgroup' debe tener la misma longitud que los datos.")
+                raise ValueError(tr("'subgroup' debe tener la misma longitud que los datos."))
             groups = [g.to_numpy(dtype=float) for _, g in pd.Series(arr).groupby(ids, sort=False)]
             m = max(len(g) for g in groups)
             mat = np.full((len(groups), m), np.nan)
@@ -142,12 +153,12 @@ def to_subgroups(
         elif subgroup_size is not None:
             m = int(subgroup_size)
             if m < 1:
-                raise ValueError("'subgroup_size' debe ser >= 1.")
+                raise ValueError(tr("'subgroup_size' debe ser >= 1."))
             if m == 1 and not _allow_size_1:
                 raise ValueError(
-                    "'subgroup_size=1' da subgrupos de un solo elemento; no se puede "
+                    tr("'subgroup_size=1' da subgrupos de un solo elemento; no se puede "
                     "estimar la variación dentro de subgrupos. "
-                    "Para datos individuales usa imr_chart() en lugar de xbar_r_chart()."
+                    "Para datos individuales usa imr_chart() en lugar de xbar_r_chart().")
                 )
             remainder = arr.size % m
             if remainder != 0:
@@ -157,10 +168,11 @@ def to_subgroups(
                 padded[: arr.size] = arr
                 mat = padded.reshape(-1, m)
                 warnings.warn(
-                    f"{arr.size} observaciones no forman un número exacto de subgrupos "
-                    f"de tamaño {m}. El último subgrupo tiene {remainder} de {m} "
-                    f"observaciones: se incluye en la gráfica pero NO en el cálculo de "
-                    f"los límites de control.",
+                    tr(
+                        "{size} observaciones no forman un número exacto de subgrupos de tamaño {m}. "
+                        "El último subgrupo tiene {remainder} de {m} observaciones: se incluye en la "
+                        "gráfica pero NO en el cálculo de los límites de control."
+                    ).format(size=arr.size, m=m, remainder=remainder),
                     UserWarning,
                     stacklevel=3,
                 )
@@ -169,17 +181,17 @@ def to_subgroups(
                 n_complete = mat.shape[0]
         else:
             raise ValueError(
-                "Datos 1-D: indique 'subgroup_size' o 'subgroup', o pase una matriz 2-D."
+                tr("Datos 1-D: indique 'subgroup_size' o 'subgroup', o pase una matriz 2-D.")
             )
     else:
-        raise ValueError("Los datos deben ser 1-D o 2-D.")
+        raise ValueError(tr("Los datos deben ser 1-D o 2-D."))
 
     if mat.shape[0] == 0 or mat.shape[1] == 0:
-        raise ValueError("No hay datos.")
+        raise ValueError(tr("No hay datos."))
     if np.any(np.isinf(mat)):
-        raise ValueError("Los datos contienen valores infinitos.")
+        raise ValueError(tr("Los datos contienen valores infinitos."))
     if np.any(np.all(np.isnan(mat), axis=1)):
-        raise ValueError("Hay subgrupos sin ninguna observación válida.")
+        raise ValueError(tr("Hay subgrupos sin ninguna observación válida."))
     return mat, n_complete
 
 
@@ -193,8 +205,10 @@ def stage_slices(n_points: int, stages) -> list:
     st = np.asarray(stages)
     if st.shape != (n_points,):
         raise ValueError(
-            f"'stages' debe tener una etiqueta por punto graficado ({n_points}); "
-            f"recibido: {st.shape}."
+            tr(
+                "'stages' debe tener una etiqueta por punto graficado ({n_points}); recibido: "
+                "{shape}."
+            ).format(n_points=n_points, shape=st.shape)
         )
     out, seen = [], set()
     start = 0
@@ -203,8 +217,9 @@ def stage_slices(n_points: int, stages) -> list:
             label = st[start].item() if hasattr(st[start], "item") else st[start]
             if label in seen:
                 raise ValueError(
-                    f"La etapa {label!r} aparece en bloques separados; "
-                    "cada etapa debe ser contigua."
+                    tr(
+                        "La etapa {label!r} aparece en bloques separados; cada etapa debe ser contigua."
+                    ).format(label=label)
                 )
             seen.add(label)
             out.append((label, np.arange(start, i)))

@@ -7,6 +7,7 @@ import numpy as np
 import pandas as pd
 
 from ._data import _excel_writer
+from ._i18n import tr
 from .rules import DEFAULT_K, describe
 
 
@@ -70,7 +71,9 @@ class ControlChart:
         for p in self.panels:
             if p.name == name:
                 return p
-        raise KeyError(f"No existe el panel {name!r}. Disponibles: {[p.name for p in self.panels]}")
+        raise KeyError(tr(
+            "No existe el panel {name!r}. Disponibles: {available}"
+        ).format(name=name, available=[p.name for p in self.panels]))
 
     def to_frame(self) -> pd.DataFrame:
         """Tabla ancha: una fila por punto, columnas por panel."""
@@ -193,16 +196,16 @@ class MultivariateChart(ControlChart):
         media y la covarianza de la etapa a la que pertenece ese punto.
         """
         if self.points is None or self.kind != "T²":
-            raise ValueError("Las contribuciones solo están disponibles para la carta T².")
+            raise ValueError(tr("Las contribuciones solo están disponibles para la carta T²."))
         m = self.points.shape[0]
         if not 1 <= point <= m:
-            raise ValueError(f"'point' debe estar entre 1 y {m}.")
+            raise ValueError(tr("'point' debe estar entre 1 y {m}.").format(m=m))
         label = self.panels[0].stage[point - 1]
         mean = self.stage_mean.get(label, self.mean)
         cov = self.stage_cov.get(label, self.cov)
         scale = self.stage_scale.get(label, self.scale)
         if mean is None or cov is None:
-            raise ValueError("La carta no tiene media/covarianza calculadas para este punto.")
+            raise ValueError(tr("La carta no tiene media/covarianza calculadas para este punto."))
         d = self.points[point - 1] - mean
         p = d.size
         t2 = scale * d @ np.linalg.solve(cov, d)

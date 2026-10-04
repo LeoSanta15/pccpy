@@ -5,6 +5,7 @@ import numpy as np
 
 from .._constants import c4, c5, d2, d3
 from .._data import as_1d, to_subgroups
+from .._i18n import tr
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, check_method, full
@@ -43,7 +44,7 @@ def imr_chart(
     """
     x = as_1d(x)
     if span < 2:
-        raise ValueError("'span' debe ser >= 2.")
+        raise ValueError(tr("'span' debe ser >= 2."))
     check_method(sigma_method, ("mr", "median_mr", "mssd"))
     dd2, dd3 = d2(span), d3(span)
 

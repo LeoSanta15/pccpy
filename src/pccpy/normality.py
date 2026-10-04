@@ -8,6 +8,7 @@ from scipy import stats
 from scipy.special import log_ndtr
 
 from ._data import as_1d
+from ._i18n import tr
 
 
 @dataclass
@@ -32,7 +33,7 @@ def anderson_darling_statistic(x: np.ndarray) -> float:
     y = np.sort(x)
     s = y.std(ddof=1)
     if s == 0:
-        raise ValueError("Todos los datos son iguales; no se puede probar normalidad.")
+        raise ValueError(tr("Todos los datos son iguales; no se puede probar normalidad."))
     z = (y - y.mean()) / s
     i = np.arange(1, n + 1)
     a2 = -n - np.sum((2 * i - 1) * (log_ndtr(z) + log_ndtr(-z[::-1]))) / n
@@ -62,7 +63,7 @@ def normality_test(data, method: str = "anderson") -> NormalityResult:
     x = as_1d(data, "data")
     n = x.size
     if n < 3:
-        raise ValueError("Se necesitan al menos 3 observaciones.")
+        raise ValueError(tr("Se necesitan al menos 3 observaciones."))
     m = method.lower()
     if m == "anderson":
         a2 = anderson_darling_statistic(x)
@@ -72,7 +73,7 @@ def normality_test(data, method: str = "anderson") -> NormalityResult:
         return NormalityResult("Shapiro-Wilk", float(st), float(p), n)
     if m == "dagostino":
         if n < 8:
-            raise ValueError("D'Agostino-Pearson requiere al menos 8 observaciones.")
+            raise ValueError(tr("D'Agostino-Pearson requiere al menos 8 observaciones."))
         st, p = stats.normaltest(x)
         return NormalityResult("D'Agostino-Pearson", float(st), float(p), n)
-    raise ValueError("method debe ser 'anderson', 'shapiro' o 'dagostino'.")
+    raise ValueError(tr("method debe ser 'anderson', 'shapiro' o 'dagostino'."))
