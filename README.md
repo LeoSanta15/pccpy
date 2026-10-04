@@ -17,6 +17,7 @@ documenta Minitab.
 ## Índice
 
 1. [Instalación](#instalación)
+   - [Idioma de los mensajes](#idioma-de-los-mensajes)
 2. [Inicio rápido](#inicio-rápido)
 3. [Cartas de variables](#cartas-de-variables)
    - [I-MR](#carta-i-mr)
@@ -67,6 +68,17 @@ pip install git+https://github.com/LeoSanta15/pccpy.git
 ```
 
 Requiere Python ≥ 3.9 con NumPy, SciPy, pandas y matplotlib.
+
+### Idioma de los mensajes
+
+Los textos de pccpy están en español. El idioma se puede cambiar (en desarrollo: por ahora solo se traducen los mensajes del propio sistema de idioma; el resto llega por fases):
+
+```python
+import pccpy as pp
+
+pp.available_languages()   # ['en', 'es']
+pp.set_language("en")      # o PCCPY_LANG=en; también: with pp.language("en"): ...
+```
 
 ---
 

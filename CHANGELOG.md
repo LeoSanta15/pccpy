@@ -1,5 +1,16 @@
 # Registro de cambios
 
+## [Sin publicar] - idioma de los mensajes (fase 0 de 5)
+
+### Añadido
+- Mecanismo de idioma basado en `gettext`: `set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable de entorno `PCCPY_LANG`. El idioma fuente es el español y `en` es el primer idioma adicional.
+- Infraestructura de traducción: `make i18n-extract/update/compile/check`, `scripts/i18n_check.py` (catálogos al día, sin textos sin traducir ni marcadores distintos) y catálogos `.mo` empaquetados.
+- `babel` en el extra `dev` (solo desarrollo; en ejecución se usa `gettext` de la biblioteca estándar).
+- Plan completo en `docs/planes/PLAN_MULTILENGUAJE.md`.
+
+### Nota
+- Todavía **no** se traducen los mensajes de las funciones, los `summary()`, `to_frame()` ni los gráficos: llegan en las fases 1 a 3. El comportamiento por defecto (español) no cambia.
+
 ## [0.10.8] - documentación de referencia completa
 
 ### Añadido

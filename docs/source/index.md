@@ -29,6 +29,7 @@ tolerance
 acceptance
 faq
 wizard
+idioma
 ```
 
 ```{toctree}
