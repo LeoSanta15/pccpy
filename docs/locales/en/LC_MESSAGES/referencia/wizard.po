@@ -1,0 +1,93 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Asistente de selección"
+msgstr "Selection assistant"
+
+msgid "Asistente interactivo para seleccionar el análisis SPC correcto."
+msgstr "Interactive assistant for choosing the right SPC analysis."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Datos del proceso. Solo se usan en modo ``'auto'``."
+msgstr "Process data. Only used in ``'auto'`` mode."
+
+msgid "Modo de operación:  * ``'auto'``   — analiza *x* y devuelve una recomendación sin interacción. * ``'cli'``    — menú de preguntas con opciones numeradas en la terminal. * ``'widget'`` — interfaz gráfica para Jupyter (requiere ipywidgets).  Si se omite y *x* se proporciona, usa ``'auto'``. Si se omite y *x* es ``None``, usa ``'cli'``."
+msgstr "Operating mode:  * ``'auto'``   — analyzes *x* and returns a recommendation without interaction. * ``'cli'``    — menu of questions with numbered options in the terminal. * ``'widget'`` — graphical interface for Jupyter (requires ipywidgets).  If omitted and *x* is given, uses ``'auto'``. If omitted and *x* is ``None``, uses ``'cli'``."
+
+msgid "Modo de operación:"
+msgstr "Operating mode:"
+
+msgid "``'auto'``   — analiza *x* y devuelve una recomendación sin interacción."
+msgstr "``'auto'``   — analyzes *x* and returns a recommendation without interaction."
+
+msgid "``'cli'``    — menú de preguntas con opciones numeradas en la terminal."
+msgstr "``'cli'``    — menu of questions with numbered options in the terminal."
+
+msgid "``'widget'`` — interfaz gráfica para Jupyter (requiere ipywidgets)."
+msgstr "``'widget'`` — graphical interface for Jupyter (requires ipywidgets)."
+
+msgid "Si se omite y *x* se proporciona, usa ``'auto'``. Si se omite y *x* es ``None``, usa ``'cli'``."
+msgstr "If omitted and *x* is given, uses ``'auto'``. If omitted and *x* is ``None``, uses ``'cli'``."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "* *WizardResult* -- En modos ``'auto'`` y ``'cli'``. * *WidgetSession* -- En modo ``'widget'``. El atributo ``.result`` se llena con el   :class:`WizardResult` cuando el usuario completa la navegación."
+msgstr "* *WizardResult* -- In ``'auto'`` and ``'cli'`` modes. * *WidgetSession* -- In ``'widget'`` mode. The ``.result`` attribute is filled with the   :class:`WizardResult` when the user completes the navigation."
+
+msgid "*WizardResult* -- En modos ``'auto'`` y ``'cli'``."
+msgstr "*WizardResult* -- In ``'auto'`` and ``'cli'`` modes."
+
+msgid "*WidgetSession* -- En modo ``'widget'``. El atributo ``.result`` se llena con el :class:`WizardResult` cuando el usuario completa la navegación."
+msgstr "*WidgetSession* -- In ``'widget'`` mode. The ``.result`` attribute is filled with the :class:`WizardResult` when the user completes the navigation."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Recomendación de análisis devuelta por el asistente."
+msgstr "Analysis recommendation returned by the assistant."
+
+msgid "Fragmento de código listo para usar."
+msgstr "Ready-to-use code snippet."
+
+msgid "Ejecuta el análisis recomendado con los datos dados."
+msgstr "Runs the recommended analysis with the given data."
+
+msgid "Sesión activa del wizard en modo widget."
+msgstr "Active wizard session in widget mode."
+
+msgid "El atributo :attr:`result` es ``None`` hasta que el usuario completa la navegación; después contiene el :class:`WizardResult` seleccionado."
+msgstr "The :attr:`result` attribute is ``None`` until the user completes the navigation; afterwards it holds the selected :class:`WizardResult`."
+
+msgid "Recomendación seleccionada por el usuario. ``None`` mientras la sesión está abierta."
+msgstr "Recommendation selected by the user. ``None`` while the session is open."
+
+msgid "type"
+msgstr "type"
+
+msgid "WizardResult or None"
+msgstr "WizardResult or None"
+
+msgid "Ejemplos"
+msgstr "Examples"
+

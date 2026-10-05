@@ -1,0 +1,117 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Tutorial: de Excel a carta de control"
+msgstr "Tutorial: from Excel to control chart"
+
+msgid "Este tutorial muestra el flujo completo de trabajo con datos reales: leer un archivo CSV, diagnosticar el proceso, hacer la carta de control y exportar los resultados, todo con pccpy."
+msgstr "This tutorial shows the complete workflow with real data: read a CSV file, diagnose the process, build the control chart and export the results, all with pccpy."
+
+#, python-brace-format
+msgid "Puedes descargar el archivo de datos de ejemplo: {download}`diametros_moldeo.csv <_static/diametros_moldeo.csv>`"
+msgstr "You can download the example data file: {download}`diametros_moldeo.csv <_static/diametros_moldeo.csv>`"
+
+msgid "El escenario"
+msgstr "The scenario"
+
+msgid "Una planta de moldeo por inyección mide el diámetro (mm) de una pieza en 4 cavidades por lote durante 30 lotes consecutivos (120 mediciones en total). Las especificaciones son LSL = 49.75 mm, USL = 50.25 mm, objetivo = 50.00 mm."
+msgstr "An injection molding plant measures the diameter (mm) of a part in 4 cavities per lot over 30 consecutive lots (120 measurements in total). The specifications are LSL = 49.75 mm, USL = 50.25 mm, target = 50.00 mm."
+
+msgid "Se sospecha que el proceso se desplazó a partir del lote 21."
+msgstr "The process is suspected to have shifted starting at lot 21."
+
+msgid "Paso 1 — Leer los datos"
+msgstr "Step 1 — Read the data"
+
+msgid "Paso 2 — Diagnóstico rápido"
+msgstr "Step 2 — Quick diagnosis"
+
+msgid "Antes de elegir la carta, deja que `diagnose()` evalúe los datos:"
+msgstr "Before choosing the chart, let `diagnose()` evaluate the data:"
+
+msgid "El diagnóstico detecta la tendencia. Pasamos a la carta por subgrupos porque tenemos 4 mediciones por lote."
+msgstr "The diagnosis detects the trend. We move on to the subgroup chart because we have 4 measurements per lot."
+
+msgid "Paso 3 — Carta Xbar-R por subgrupos"
+msgstr "Step 3 — Xbar-R chart by subgroups"
+
+msgid "Los datos están en formato largo (una medición por fila). pccpy acepta este formato directamente:"
+msgstr "The data are in long format (one measurement per row). pccpy accepts this format directly:"
+
+msgid "También puedes convertir a matriz 2-D:"
+msgstr "You can also convert to a 2-D matrix:"
+
+msgid "Ver las señales detectadas:"
+msgstr "See the detected signals:"
+
+msgid "Guardar el gráfico:"
+msgstr "Save the plot:"
+
+msgid "Paso 4 — Análisis de capacidad"
+msgstr "Step 4 — Capability analysis"
+
+msgid "Una vez que verificamos el estado del proceso (idealmente en control), calculamos los índices de capacidad:"
+msgstr "Once we have verified the state of the process (ideally in control), we compute the capability indices:"
+
+msgid "Para ver la carta y la capacidad juntas (Sixpack):"
+msgstr "To see the chart and the capability together (Sixpack):"
+
+msgid "Paso 5 — Análisis de Fase I y Fase II"
+msgstr "Step 5 — Phase I and Phase II analysis"
+
+msgid "La señal detectada en el lote 21 sugiere un cambio de proceso. El flujo estándar es calcular los límites con los datos \"estables\" (Fase I) y aplicarlos a los datos nuevos (Fase II):"
+msgstr "The signal detected at lot 21 suggests a process change. The standard flow is to compute the limits with the \"stable\" data (Phase I) and apply them to the new data (Phase II):"
+
+msgid "Los parámetros `mu` y `sigma_within` fijan los límites de control usando las estimaciones de Fase I, en lugar de recalcularlos con los datos de Fase II."
+msgstr "The parameters `mu` and `sigma_within` fix the control limits using the Phase I estimates, instead of recomputing them with the Phase II data."
+
+msgid "Paso 6 — Intervalo de tolerancia"
+msgstr "Step 6 — Tolerance interval"
+
+#, python-format
+msgid "¿Qué rango cubre el 99 % de la producción con 95 % de confianza?"
+msgstr "What range covers 99 % of the production with 95 % confidence?"
+
+msgid "Paso 7 — Exportar todo a un solo Excel"
+msgstr "Step 7 — Export everything to a single Excel file"
+
+msgid "Resumen del flujo"
+msgstr "Summary of the workflow"
+
+msgid "Ver también"
+msgstr "See also"
+
+#, python-brace-format
+msgid "{doc}`guia_seleccion` — elegir la carta correcta"
+msgstr "{doc}`guia_seleccion` — choosing the right chart"
+
+#, python-brace-format
+msgid "{doc}`capacidad_indices` — interpretar Cp, Cpk, Pp, Ppk"
+msgstr "{doc}`capacidad_indices` — interpreting Cp, Cpk, Pp, Ppk"
+
+#, python-brace-format
+msgid "{doc}`inicio_rapido` — más ejemplos rápidos"
+msgstr "{doc}`inicio_rapido` — more quick examples"
+
+#, python-brace-format
+msgid "{doc}`minitab` — equivalencias con Minitab"
+msgstr "{doc}`minitab` — equivalences with Minitab"
+

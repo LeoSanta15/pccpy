@@ -1,0 +1,321 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Intervalos de tolerancia (`tolerance_interval`)"
+msgstr "Tolerance intervals (`tolerance_interval`)"
+
+msgid "Un **intervalo de tolerancia** (L, U) garantiza que, con confianza `1 − α`, al menos una fracción `p` de la población cae dentro del intervalo. Es diferente de un intervalo de confianza para la media y diferente de un intervalo de predicción: cubre una fracción de la *distribución*, no solo el valor esperado."
+msgstr "A **tolerance interval** (L, U) guarantees that, with confidence `1 − α`, at least a fraction `p` of the population falls inside the interval. It is different from a confidence interval for the mean and from a prediction interval: it covers a fraction of the *distribution*, not just the expected value."
+
+msgid "`pccpy` implementa dos métodos:"
+msgstr "`pccpy` implements two methods:"
+
+msgid "**Normal** — asume distribución normal; usa el factor k de Howe (1969) para bilateral y la distribución t no central exacta para unilateral."
+msgstr "**Normal** — assumes a normal distribution; uses Howe's (1969) k factor for two-sided and the exact noncentral t distribution for one-sided."
+
+msgid "**No paramétrico** — libre de distribución; se basa en estadísticos de orden; requiere muestras más grandes para la misma cobertura y confianza."
+msgstr "**Nonparametric** — distribution-free; based on order statistics; requires larger samples for the same coverage and confidence."
+
+msgid "Uso básico"
+msgstr "Basic usage"
+
+msgid "Salida:"
+msgstr "Output:"
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Parámetro"
+msgstr "Parameter"
+
+msgid "Tipo"
+msgstr "Type"
+
+msgid "Predeterminado"
+msgstr "Default"
+
+msgid "Descripción"
+msgstr "Description"
+
+msgid "`data`"
+msgstr "`data`"
+
+msgid "array-like"
+msgstr "array-like"
+
+msgid "—"
+msgstr "—"
+
+msgid "Vector 1-D de observaciones."
+msgstr "1-D vector of observations."
+
+msgid "`coverage`"
+msgstr "`coverage`"
+
+msgid "`float`"
+msgstr "`float`"
+
+msgid "`0.95`"
+msgstr "`0.95`"
+
+msgid "Fracción mínima de la población a cubrir (p)."
+msgstr "Minimum fraction of the population to cover (p)."
+
+msgid "`confidence`"
+msgstr "`confidence`"
+
+msgid "Nivel de confianza 1 − α."
+msgstr "Confidence level 1 − α."
+
+msgid "`sides`"
+msgstr "`sides`"
+
+msgid "`str`"
+msgstr "`str`"
+
+msgid "`'two'`"
+msgstr "`'two'`"
+
+msgid "`'two'` (bilateral), `'lower'` (cota inferior) o `'upper'` (cota superior)."
+msgstr "`'two'` (two-sided), `'lower'` (lower bound) or `'upper'` (upper bound)."
+
+msgid "`method`"
+msgstr "`method`"
+
+msgid "`'normal'`"
+msgstr "`'normal'`"
+
+msgid "`'normal'` o `'nonparametric'`."
+msgstr "`'normal'` or `'nonparametric'`."
+
+msgid "Ejemplos adicionales"
+msgstr "Additional examples"
+
+msgid "Cota unilateral (solo límite superior)"
+msgstr "One-sided bound (upper limit only)"
+
+msgid "Intervalo no paramétrico"
+msgstr "Nonparametric interval"
+
+msgid "El método no paramétrico puede no ser factible para muestras pequeñas. Si `n` es insuficiente, `tolerance_interval` lanza `ValueError`."
+msgstr "The nonparametric method may not be feasible for small samples. If `n` is insufficient, `tolerance_interval` raises `ValueError`."
+
+msgid "Desde estadísticos resumen"
+msgstr "From summary statistics"
+
+msgid "Cuando solo dispones de media, desviación estándar y n (sin datos crudos):"
+msgstr "When you only have the mean, standard deviation and n (no raw data):"
+
+msgid "Gráfico"
+msgstr "Plot"
+
+msgid "El gráfico muestra un histograma con la curva normal ajustada y las cotas del intervalo marcadas, junto con anotaciones de cobertura y confianza."
+msgstr "The plot shows a histogram with the fitted normal curve and the interval bounds marked, together with coverage and confidence annotations."
+
+msgid "Exportar a Excel"
+msgstr "Export to Excel"
+
+msgid "Referencia de `ToleranceResult`"
+msgstr "`ToleranceResult` reference"
+
+msgid "Resultado de :func:`tolerance_interval`."
+msgstr "Result of {func}`tolerance_interval`."
+
+msgid "Atributos"
+msgstr "Attributes"
+
+msgid "n"
+msgstr "n"
+
+msgid "int"
+msgstr "int"
+
+msgid "Número de observaciones."
+msgstr "Number of observations."
+
+msgid "mean, std"
+msgstr "mean, std"
+
+msgid "float"
+msgstr "float"
+
+msgid "Media y desviación estándar muestrales."
+msgstr "Sample mean and standard deviation."
+
+msgid "coverage"
+msgstr "coverage"
+
+msgid "Fracción mínima de la población cubierta (p)."
+msgstr "Minimum fraction of the population covered (p)."
+
+msgid "confidence"
+msgstr "confidence"
+
+msgid "Nivel de confianza (1−α)."
+msgstr "Confidence level (1−α)."
+
+msgid "sides"
+msgstr "sides"
+
+msgid "str"
+msgstr "str"
+
+msgid "``'two'``, ``'lower'`` o ``'upper'``."
+msgstr "``'two'``, ``'lower'`` or ``'upper'``."
+
+msgid "method"
+msgstr "method"
+
+msgid "``'normal'`` o ``'nonparametric'``."
+msgstr "``'normal'`` or ``'nonparametric'``."
+
+msgid "lower, upper"
+msgstr "lower, upper"
+
+msgid "float o None"
+msgstr "float or None"
+
+msgid "Cotas del intervalo."
+msgstr "Interval bounds."
+
+msgid "k_factor"
+msgstr "k_factor"
+
+msgid "Factor k (solo para el método normal)."
+msgstr "k factor (normal method only)."
+
+msgid "achieved_confidence"
+msgstr "achieved_confidence"
+
+msgid "Confianza alcanzada (solo para el método no paramétrico)."
+msgstr "Achieved confidence (nonparametric method only)."
+
+msgid "Tabla resumen de una fila por estadístico (con ``stable=True``, claves canónicas en inglés)."
+msgstr "One-row-per-statistic summary table (with ``stable=True``, canonical English keys)."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Exporta el intervalo de tolerancia a un archivo Excel (.xlsx)."
+msgstr "Exports the tolerance interval to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``)."
+
+msgid "Histograma con el intervalo de tolerancia superpuesto."
+msgstr "Histogram with the tolerance interval overlaid."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Atributos principales"
+msgstr "Main attributes"
+
+msgid "Atributo"
+msgstr "Attribute"
+
+msgid "`n`"
+msgstr "`n`"
+
+msgid "`int`"
+msgstr "`int`"
+
+msgid "`mean`, `std`"
+msgstr "`mean`, `std`"
+
+msgid "Fracción de cobertura solicitada (p)."
+msgstr "Requested coverage fraction (p)."
+
+msgid "Nivel de confianza solicitado (1 − α)."
+msgstr "Requested confidence level (1 − α)."
+
+msgid "`'two'`, `'lower'` o `'upper'`."
+msgstr "`'two'`, `'lower'` or `'upper'`."
+
+msgid "`lower`, `upper`"
+msgstr "`lower`, `upper`"
+
+msgid "`float | None`"
+msgstr "`float | None`"
+
+msgid "`k_factor`"
+msgstr "`k_factor`"
+
+msgid "Factor k (solo método normal)."
+msgstr "k factor (normal method only)."
+
+msgid "`achieved_confidence`"
+msgstr "`achieved_confidence`"
+
+msgid "Confianza alcanzada (solo método no paramétrico)."
+msgstr "Achieved confidence (nonparametric method only)."
+
+msgid "Referencia de función"
+msgstr "Function reference"
+
+msgid "Intervalo de tolerancia estadístico."
+msgstr "Statistical tolerance interval."
+
+msgid "Calcula un intervalo (L, U) tal que, con confianza ``confidence``, al menos una fracción ``coverage`` de la población cae en (L, U)."
+msgstr "Computes an interval (L, U) such that, with confidence ``confidence``, at least a fraction ``coverage`` of the population falls in (L, U)."
+
+msgid "Fracción mínima de la población a cubrir (p). Por defecto 0.95."
+msgstr "Minimum fraction of the population to cover (p). Default 0.95."
+
+msgid "Nivel de confianza 1−α. Por defecto 0.95."
+msgstr "Confidence level 1−α. Default 0.95."
+
+msgid "``'two'`` (bilateral), ``'lower'`` (cota inferior) o ``'upper'`` (cota superior). Por defecto ``'two'``."
+msgstr "``'two'`` (two-sided), ``'lower'`` (lower bound) or ``'upper'`` (upper bound). Default ``'two'``."
+
+msgid "``'normal'`` — asume distribución normal; usa la aproximación de Howe (1969) para bilateral y la t no central exacta para unilateral.  ``'nonparametric'`` — libre de distribución; se basa en estadísticos de orden; requiere muestras más grandes para la misma cobertura y confianza."
+msgstr "``'normal'`` — assumes a normal distribution; uses Howe's approximation (1969) for two-sided and the exact noncentral t for one-sided.  ``'nonparametric'`` — distribution-free; based on order statistics; requires larger samples for the same coverage and confidence."
+
+msgid "``'normal'`` — asume distribución normal; usa la aproximación de Howe (1969) para bilateral y la t no central exacta para unilateral."
+msgstr "``'normal'`` — assumes a normal distribution; uses Howe's approximation (1969) for two-sided and the exact noncentral t for one-sided."
+
+msgid "``'nonparametric'`` — libre de distribución; se basa en estadísticos de orden; requiere muestras más grandes para la misma cobertura y confianza."
+msgstr "``'nonparametric'`` — distribution-free; based on order statistics; requires larger samples for the same coverage and confidence."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*ToleranceResult*"
+msgstr "*ToleranceResult*"
+
+msgid "Ejemplos"
+msgstr "Examples"
+
+msgid "Intervalo de tolerancia normal a partir de estadísticos resumen."
+msgstr "Normal tolerance interval from summary statistics."
+
+msgid "Equivalente a :func:`tolerance_interval` con ``method='normal'``, pero acepta la media, desviación estándar y tamaño de muestra directamente en lugar de datos crudos."
+msgstr "Equivalent to {func}`tolerance_interval` with ``method='normal'``, but it accepts the mean, standard deviation and sample size directly instead of raw data."
+
+msgid "Media muestral."
+msgstr "Sample mean."
+
+msgid "Desviación estándar muestral (ddof=1)."
+msgstr "Sample standard deviation (ddof=1)."
+
+msgid "``'two'``, ``'lower'`` o ``'upper'``. Por defecto ``'two'``."
+msgstr "``'two'``, ``'lower'`` or ``'upper'``. Default ``'two'``."
+

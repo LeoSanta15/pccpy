@@ -1,4 +1,4 @@
-.PHONY: install test cov lint types build docs examples i18n-extract i18n-update i18n-compile i18n-check check-fast check release-check
+.PHONY: install test cov lint types build docs docs-en docs-update docs-check examples i18n-extract i18n-update i18n-compile i18n-check check-fast check release-check
 
 install:
 	python -m pip install -e ".[dev,docs,excel]"
@@ -21,6 +21,17 @@ build:
 docs:
 	sphinx-build -b html -W docs/source docs/build
 
+docs-en:
+	sphinx-build -b html -W -D language=en docs/source docs/build/en
+
+# Extrae los textos de la documentación y actualiza los catálogos (docs/locales/<idioma>); después, traducir los msgstr.
+docs-update:
+	sphinx-build -b gettext docs/source docs/_gettext
+	sphinx-intl update -p docs/_gettext -d docs/locales -l en
+
+docs-check:
+	python scripts/docs_i18n_check.py
+
 examples:
 	@for f in examples/*.py; do MPLBACKEND=Agg python "$$f" >/dev/null || { echo "FALLA $$f"; exit 1; }; done; echo "ejemplos OK"
 
@@ -38,7 +49,7 @@ i18n-check:
 
 check-fast: lint types test i18n-check
 
-check: check-fast build docs examples
+check: check-fast build docs docs-en docs-check examples
 
 # Uso: make release-check TAG=v0.10.9  (el wheel construido debe tener la versión del tag)
 release-check:

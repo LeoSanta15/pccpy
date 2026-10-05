@@ -1,0 +1,537 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Para usuarios de Minitab"
+msgstr "For Minitab users"
+
+msgid "¿Conoces Minitab y quieres usar pccpy? Esta página mapea cada menú y procedimiento de Minitab a la función equivalente en pccpy."
+msgstr "Do you know Minitab and want to use pccpy? This page maps each Minitab menu and procedure to the equivalent function in pccpy."
+
+msgid "Stat → Control Charts"
+msgstr "Stat → Control Charts"
+
+msgid "Variables Charts for Individuals"
+msgstr "Variables Charts for Individuals"
+
+msgid "Minitab"
+msgstr "Minitab"
+
+msgid "pccpy"
+msgstr "pccpy"
+
+msgid "Notas"
+msgstr "Notes"
+
+msgid "I-MR"
+msgstr "I-MR"
+
+msgid "`imr_chart(x)`"
+msgstr "`imr_chart(x)`"
+
+msgid "Carta de individuos y rango móvil"
+msgstr "Individuals and moving range chart"
+
+msgid "I-MR-R/S (Between/Within)"
+msgstr "I-MR-R/S (Between/Within)"
+
+msgid "`imr_rs_chart(g)`"
+msgstr "`imr_rs_chart(g)`"
+
+msgid "Requiere subgrupos como matriz 2-D"
+msgstr "Requires subgroups as a 2-D matrix"
+
+msgid "Z-MR"
+msgstr "Z-MR"
+
+msgid "`zmr_chart(x)`"
+msgstr "`zmr_chart(x)`"
+
+msgid "Para distribuciones no normales"
+msgstr "For non-normal distributions"
+
+msgid "Moving Average"
+msgstr "Moving Average"
+
+msgid "`ma_chart(x, length=3)`"
+msgstr "`ma_chart(x, length=3)`"
+
+msgid "Variables Charts for Subgroups"
+msgstr "Variables Charts for Subgroups"
+
+msgid "Xbar-R"
+msgstr "Xbar-R"
+
+msgid "`xbar_r_chart(g)`"
+msgstr "`xbar_r_chart(g)`"
+
+msgid "Subgrupos 2–9"
+msgstr "Subgroups 2–9"
+
+msgid "Xbar-S"
+msgstr "Xbar-S"
+
+msgid "`xbar_s_chart(g)`"
+msgstr "`xbar_s_chart(g)`"
+
+msgid "Subgrupos ≥10 o n variable"
+msgstr "Subgroups ≥10 or variable n"
+
+msgid "Attributes Charts"
+msgstr "Attributes Charts"
+
+msgid "P"
+msgstr "P"
+
+msgid "`p_chart(d, n)`"
+msgstr "`p_chart(d, n)`"
+
+msgid "n puede ser array para tamaño variable"
+msgstr "n can be an array for variable size"
+
+msgid "NP"
+msgstr "NP"
+
+msgid "`np_chart(d, n)`"
+msgstr "`np_chart(d, n)`"
+
+msgid "n debe ser escalar (tamaño fijo)"
+msgstr "n must be a scalar (fixed size)"
+
+msgid "C"
+msgstr "C"
+
+msgid "`c_chart(d)`"
+msgstr "`c_chart(d)`"
+
+msgid "U"
+msgstr "U"
+
+msgid "`u_chart(d, n)`"
+msgstr "`u_chart(d, n)`"
+
+msgid "n puede ser array"
+msgstr "n can be an array"
+
+msgid "Laney P′"
+msgstr "Laney P′"
+
+msgid "`laney_p_chart(d, n)`"
+msgstr "`laney_p_chart(d, n)`"
+
+msgid "Ajustado por sobredispersión"
+msgstr "Adjusted for overdispersion"
+
+msgid "Laney U′"
+msgstr "Laney U′"
+
+msgid "`laney_u_chart(d, n)`"
+msgstr "`laney_u_chart(d, n)`"
+
+msgid "Time-Weighted Charts"
+msgstr "Time-Weighted Charts"
+
+msgid "EWMA"
+msgstr "EWMA"
+
+msgid "`ewma_chart(x)`"
+msgstr "`ewma_chart(x)`"
+
+msgid "Parámetros: `lam`, `L`"
+msgstr "Parameters: `lam`, `L`"
+
+msgid "CUSUM"
+msgstr "CUSUM"
+
+msgid "`cusum_chart(x)`"
+msgstr "`cusum_chart(x)`"
+
+msgid "Parámetros: `k`, `h`"
+msgstr "Parameters: `k`, `h`"
+
+msgid "EWMA Attributes (P)"
+msgstr "EWMA Attributes (P)"
+
+msgid "`ewma_p_chart(d, n)`"
+msgstr "`ewma_p_chart(d, n)`"
+
+msgid "EWMA Attributes (U)"
+msgstr "EWMA Attributes (U)"
+
+msgid "`ewma_u_chart(d, n)`"
+msgstr "`ewma_u_chart(d, n)`"
+
+msgid "CUSUM Attributes (P)"
+msgstr "CUSUM Attributes (P)"
+
+msgid "`cusum_p_chart(d, n)`"
+msgstr "`cusum_p_chart(d, n)`"
+
+msgid "CUSUM Attributes (U)"
+msgstr "CUSUM Attributes (U)"
+
+msgid "`cusum_u_chart(d, n)`"
+msgstr "`cusum_u_chart(d, n)`"
+
+msgid "CUSUM Attributes (C)"
+msgstr "CUSUM Attributes (C)"
+
+msgid "`cusum_c_chart(d)`"
+msgstr "`cusum_c_chart(d)`"
+
+msgid "Other Charts"
+msgstr "Other Charts"
+
+msgid "Zone"
+msgstr "Zone"
+
+msgid "`zone_chart(x)`"
+msgstr "`zone_chart(x)`"
+
+msgid "Pesos 0-2-4-8"
+msgstr "Weights 0-2-4-8"
+
+msgid "G Chart"
+msgstr "G Chart"
+
+msgid "`g_chart(counts)`"
+msgstr "`g_chart(counts)`"
+
+msgid "Entre eventos raros"
+msgstr "Between rare events"
+
+msgid "T Chart"
+msgstr "T Chart"
+
+msgid "`t_chart(times)`"
+msgstr "`t_chart(times)`"
+
+msgid "Tiempo entre eventos"
+msgstr "Time between events"
+
+msgid "Run Chart"
+msgstr "Run Chart"
+
+msgid "`run_chart(x)`"
+msgstr "`run_chart(x)`"
+
+msgid "Pruebas de aleatoriedad"
+msgstr "Randomness tests"
+
+msgid "Stat → Quality Tools"
+msgstr "Stat → Quality Tools"
+
+msgid "4 pruebas de aleatoriedad"
+msgstr "4 randomness tests"
+
+msgid "Pareto Chart"
+msgstr "Pareto Chart"
+
+msgid "`plot_pareto(pareto(categorias))`"
+msgstr "`plot_pareto(pareto(categories))`"
+
+msgid "Probability Plot"
+msgstr "Probability Plot"
+
+msgid "`probability_plot(x)`"
+msgstr "`probability_plot(x)`"
+
+msgid "Anderson-Darling incluido"
+msgstr "Anderson-Darling included"
+
+msgid "Normality Test"
+msgstr "Normality Test"
+
+msgid "`normality_test(x)`"
+msgstr "`normality_test(x)`"
+
+msgid "Devuelve `NormalityResult`"
+msgstr "Returns `NormalityResult`"
+
+msgid "Pre-Control Chart"
+msgstr "Pre-Control Chart"
+
+msgid "`precontrol(x, lsl, usl)`"
+msgstr "`precontrol(x, lsl, usl)`"
+
+msgid "Semáforo Shainin"
+msgstr "Shainin traffic light"
+
+msgid "Stat → Capability Analysis"
+msgstr "Stat → Capability Analysis"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "`capability_analysis(x, lsl, usl)`"
+msgstr "`capability_analysis(x, lsl, usl)`"
+
+msgid "Cp, Cpk, Pp, Ppk, DPMO"
+msgstr "Cp, Cpk, Pp, Ppk, DPMO"
+
+msgid "Nonnormal"
+msgstr "Nonnormal"
+
+msgid "`capability_nonnormal(x, lsl, usl, dist=\"weibull\")`"
+msgstr "`capability_nonnormal(x, lsl, usl, dist=\"weibull\")`"
+
+msgid "Varias distribuciones"
+msgstr "Several distributions"
+
+msgid "Between/Within"
+msgstr "Between/Within"
+
+msgid "`capability_analysis(x, lsl, usl, subgroup_size=n)`"
+msgstr "`capability_analysis(x, lsl, usl, subgroup_size=n)`"
+
+msgid "Capability Sixpack"
+msgstr "Capability Sixpack"
+
+msgid "`capability_sixpack(x, lsl, usl)`"
+msgstr "`capability_sixpack(x, lsl, usl)`"
+
+msgid "6 gráficos en uno"
+msgstr "6 plots in one"
+
+msgid "Box-Cox Transformation"
+msgstr "Box-Cox Transformation"
+
+msgid "`capability_boxcox(x, lsl, usl)`"
+msgstr "`capability_boxcox(x, lsl, usl)`"
+
+msgid "Transforma y calcula"
+msgstr "Transforms and computes"
+
+msgid "desde estadísticos"
+msgstr "from statistics"
+
+msgid "`capability_analysis_summary(mean, std_overall, n, lsl, usl)`"
+msgstr "`capability_analysis_summary(mean, std_overall, n, lsl, usl)`"
+
+msgid "Stat → Multivariate"
+msgstr "Stat → Multivariate"
+
+msgid "T² Hotelling (individual)"
+msgstr "T² Hotelling (individual)"
+
+msgid "`t2_chart(data)`"
+msgstr "`t2_chart(data)`"
+
+msgid "MEWMA"
+msgstr "MEWMA"
+
+msgid "`mewma_chart(data)`"
+msgstr "`mewma_chart(data)`"
+
+msgid "MCUSUM"
+msgstr "MCUSUM"
+
+msgid "`mcusum_chart(data)`"
+msgstr "`mcusum_chart(data)`"
+
+msgid "Generalized Variance"
+msgstr "Generalized Variance"
+
+msgid "`generalized_variance_chart(data)`"
+msgstr "`generalized_variance_chart(data)`"
+
+msgid "Stat → Quality Tools → Gage Study"
+msgstr "Stat → Quality Tools → Gage Study"
+
+msgid "Gage R&R Study (Crossed)"
+msgstr "Gage R&R Study (Crossed)"
+
+msgid "`gage_rr(data, parts, operators, replicates, method='anova')`"
+msgstr "`gage_rr(data, parts, operators, replicates, method='anova')`"
+
+msgid "Gage R&R Study (Nested)"
+msgstr "Gage R&R Study (Nested)"
+
+msgid "`gage_rr_nested(data, parts, operators, replicates)`"
+msgstr "`gage_rr_nested(data, parts, operators, replicates)`"
+
+msgid "Gage R&R Study (Xbar-R)"
+msgstr "Gage R&R Study (Xbar-R)"
+
+msgid "`gage_rr(data, ..., method='xbar_r')`"
+msgstr "`gage_rr(data, ..., method='xbar_r')`"
+
+msgid "Type 1 Gage Study"
+msgstr "Type 1 Gage Study"
+
+msgid "`gage_type1(data, reference)`"
+msgstr "`gage_type1(data, reference)`"
+
+msgid "Cg, Cgk"
+msgstr "Cg, Cgk"
+
+msgid "Gage Linearity and Bias"
+msgstr "Gage Linearity and Bias"
+
+msgid "`gage_linearity(measurements, references)`"
+msgstr "`gage_linearity(measurements, references)`"
+
+msgid "Attribute Agreement Analysis"
+msgstr "Attribute Agreement Analysis"
+
+msgid "`attribute_agreement(df)`"
+msgstr "`attribute_agreement(df)`"
+
+msgid "Kappa"
+msgstr "Kappa"
+
+msgid "Stat → Reliability → Acceptance Sampling"
+msgstr "Stat → Reliability → Acceptance Sampling"
+
+msgid "By Attributes (Z1.4)"
+msgstr "By Attributes (Z1.4)"
+
+msgid "`acceptance_sampling_attributes(N, aql)`"
+msgstr "`acceptance_sampling_attributes(N, aql)`"
+
+msgid "By Variables (Z1.9)"
+msgstr "By Variables (Z1.9)"
+
+msgid "`acceptance_sampling_variables(N, aql)`"
+msgstr "`acceptance_sampling_variables(N, aql)`"
+
+msgid "Dodge-Romig"
+msgstr "Dodge-Romig"
+
+msgid "`dodge_romig(N, ltpd=…)` o `dodge_romig(N, aoql=…)`"
+msgstr "`dodge_romig(N, ltpd=…)` or `dodge_romig(N, aoql=…)`"
+
+msgid "Stat → Basic Statistics"
+msgstr "Stat → Basic Statistics"
+
+msgid "Anderson-Darling"
+msgstr "Anderson-Darling"
+
+msgid "(sin equivalente directo)"
+msgstr "(no direct equivalent)"
+
+msgid "`diagnose(x, lsl, usl)`"
+msgstr "`diagnose(x, lsl, usl)`"
+
+msgid "Diagnóstico completo de proceso"
+msgstr "Complete process diagnosis"
+
+msgid "Diferencias de convención"
+msgstr "Convention differences"
+
+msgid "Concepto"
+msgstr "Concept"
+
+msgid "Límite superior de control"
+msgstr "Upper control limit"
+
+msgid "UCL"
+msgstr "UCL"
+
+msgid "`ucl` / LCS"
+msgstr "`ucl`"
+
+msgid "Límite inferior de control"
+msgstr "Lower control limit"
+
+msgid "LCL"
+msgstr "LCL"
+
+msgid "`lcl` / LCI"
+msgstr "`lcl`"
+
+msgid "Límite superior de especificación"
+msgstr "Upper specification limit"
+
+msgid "USL"
+msgstr "USL"
+
+msgid "`usl` / LES"
+msgstr "`usl`"
+
+msgid "Límite inferior de especificación"
+msgstr "Lower specification limit"
+
+msgid "LSL"
+msgstr "LSL"
+
+msgid "`lsl` / LEI"
+msgstr "`lsl`"
+
+msgid "Número de pruebas de Nelson"
+msgstr "Number of Nelson tests"
+
+msgid "8"
+msgstr "8"
+
+msgid "8 (tests 1–8)"
+msgstr "8 (tests 1–8)"
+
+msgid "Sigma dentro de subgrupos"
+msgstr "Within-subgroup sigma"
+
+msgid "Within σ"
+msgstr "Within σ"
+
+msgid "`sigma_within`"
+msgstr "`sigma_within`"
+
+msgid "Sigma global"
+msgstr "Overall sigma"
+
+msgid "Overall σ"
+msgstr "Overall σ"
+
+msgid "`sigma_overall`"
+msgstr "`sigma_overall`"
+
+msgid "Flujo típico de trabajo comparado"
+msgstr "Typical workflow compared"
+
+msgid "En Minitab"
+msgstr "In Minitab"
+
+msgid "Stat → Control Charts → Variables Charts for Individuals → I-MR"
+msgstr "Stat → Control Charts → Variables Charts for Individuals → I-MR"
+
+msgid "Stat → Quality Tools → Capability Analysis → Normal"
+msgstr "Stat → Quality Tools → Capability Analysis → Normal"
+
+msgid "Copiar tabla de resultados a Word/Excel manualmente"
+msgstr "Copy the results table to Word/Excel manually"
+
+msgid "En pccpy"
+msgstr "In pccpy"
+
+msgid "Ver también"
+msgstr "See also"
+
+#, python-brace-format
+msgid "{doc}`guia_seleccion` — árbol de decisión para elegir la carta correcta"
+msgstr "{doc}`guia_seleccion` — decision tree for choosing the right chart"
+
+#, python-brace-format
+msgid "{doc}`inicio_rapido` — ejemplos con código listo para copiar"
+msgstr "{doc}`inicio_rapido` — examples with ready-to-copy code"
+
+#, python-brace-format
+msgid "{doc}`tutorial_real` — tutorial completo con datos reales en CSV"
+msgstr "{doc}`tutorial_real` — complete tutorial with real data in CSV"
+

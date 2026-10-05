@@ -8,6 +8,8 @@ build:
   tools:
     python: "3.12"
 
+# Documentación en inglés: crear en Read the Docs un segundo proyecto «pccpy-en», añadirlo como traducción (idioma English)
+# del proyecto principal y apuntarlo a este mismo repositorio; docs/source/conf.py lee el idioma de READTHEDOCS_LANGUAGE.
 sphinx:
   configuration: docs/source/conf.py
   fail_on_warning: true

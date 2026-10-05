@@ -1,0 +1,303 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Carta de corridas, pre-control y EWMA/CUSUM atributos"
+msgstr "Run chart, pre-control and attribute EWMA/CUSUM"
+
+msgid "Carta de corridas"
+msgstr "Run chart"
+
+msgid "Carta de corridas con las 4 pruebas de aleatoriedad de Minitab."
+msgstr "Run chart with Minitab's 4 randomness tests."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Vector 1-D de observaciones individuales en orden de producción."
+msgstr "1-D vector of individual observations in production order."
+
+msgid "Nivel de significancia para señalar las pruebas (por defecto 0.05)."
+msgstr "Significance level for flagging the tests (default 0.05)."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "* *RunChartResult* -- Resultado con estadísticos, p-valores y método ``.plot()``. * *Pruebas* * *-------* * **1. **Agrupamiento** (clustering)** (*pocas rachas sobre/bajo la mediana → datos agrupados.*) * **2. **Mezclas** (mixtures)** (*muchas rachas sobre/bajo la mediana → mezcla de procesos.*) * **3. **Tendencias** (trends)** (*pocas rachas arriba/abajo → tendencia sostenida.*) * **4. **Oscilación** (oscillation)** (*muchas rachas arriba/abajo → zigzag sistemático.*)"
+msgstr "* *RunChartResult* -- Result with statistics, p-values and a ``.plot()`` method. * *Tests* * *-------* * **1. **Clustering** (clustering)** (*few runs above/below the median → clustered data.*) * **2. **Mixtures** (mixtures)** (*many runs above/below the median → mixture of processes.*) * **3. **Trends** (trends)** (*few runs up/down → sustained trend.*) * **4. **Oscillation** (oscillation)** (*many runs up/down → systematic zigzag.*)"
+
+msgid "*RunChartResult* -- Resultado con estadísticos, p-valores y método ``.plot()``."
+msgstr "*RunChartResult* -- Result with statistics, p-values and a ``.plot()`` method."
+
+msgid "*Pruebas*"
+msgstr "*Tests*"
+
+msgid "*-------*"
+msgstr "*-------*"
+
+msgid "**1. **Agrupamiento** (clustering)** (*pocas rachas sobre/bajo la mediana → datos agrupados.*)"
+msgstr "**1. **Clustering** (clustering)** (*few runs above/below the median → clustered data.*)"
+
+msgid "**2. **Mezclas** (mixtures)** (*muchas rachas sobre/bajo la mediana → mezcla de procesos.*)"
+msgstr "**2. **Mixtures** (mixtures)** (*many runs above/below the median → mixture of processes.*)"
+
+msgid "**3. **Tendencias** (trends)** (*pocas rachas arriba/abajo → tendencia sostenida.*)"
+msgstr "**3. **Trends** (trends)** (*few runs up/down → sustained trend.*)"
+
+msgid "**4. **Oscilación** (oscillation)** (*muchas rachas arriba/abajo → zigzag sistemático.*)"
+msgstr "**4. **Oscillation** (oscillation)** (*many runs up/down → systematic zigzag.*)"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Gráfico de la carta de corridas con la mediana y anotaciones de p-valores."
+msgstr "Run chart plot with the median and p-value annotations."
+
+msgid "Devuelve la figura de matplotlib."
+msgstr "Returns the matplotlib figure."
+
+msgid "Resultado de :func:`run_chart` con las 4 pruebas de aleatoriedad."
+msgstr "Result of :func:`run_chart` with the 4 randomness tests."
+
+msgid "Tabla con los estadísticos de las 4 pruebas."
+msgstr "Table with the statistics of the 4 tests."
+
+msgid "Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma."
+msgstr "With ``stable=True`` the rows carry canonical English keys that do not change with the language."
+
+msgid "Gráfico de la carta de corridas. Ver :func:`pccpy.plotting.plot_run_chart`."
+msgstr "Run chart plot. See :func:`pccpy.plotting.plot_run_chart`."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Pre-control (Shainin)"
+msgstr "Pre-control (Shainin)"
+
+msgid "Análisis de pre-control (semáforo de Shainin)."
+msgstr "Pre-control analysis (Shainin traffic light)."
+
+msgid "Divide la tolerancia (LES − LEI) en tres zonas:"
+msgstr "Divides the tolerance (USL − LSL) into three zones:"
+
+msgid "**Verde** — centro ± tolerancia/4 (la mitad central de la banda)."
+msgstr "**Green** — center ± tolerance/4 (the central half of the band)."
+
+msgid "**Amarillo** — entre el borde verde y el límite de especificación."
+msgstr "**Yellow** — between the green edge and the specification limit."
+
+msgid "**Rojo** — fuera de especificaciones."
+msgstr "**Red** — outside specifications."
+
+msgid "Señales detectadas"
+msgstr "Detected signals"
+
+msgid "**red**: cualquier punto fuera de especificaciones."
+msgstr "**red**: any point outside specifications."
+
+msgid "**two_yellow_same**: dos amarillas consecutivas en el mismo lado (posible deriva)."
+msgstr "**two_yellow_same**: two consecutive yellows on the same side (possible drift)."
+
+msgid "**two_yellow_opp**: dos amarillas consecutivas en lados opuestos (posible aumento de varianza)."
+msgstr "**two_yellow_opp**: two consecutive yellows on opposite sides (possible increase in variance)."
+
+msgid "param data"
+msgstr "param data"
+
+msgid "type data"
+msgstr "type data"
+
+msgid "array-like"
+msgstr "array-like"
+
+msgid "param lsl"
+msgstr "param lsl"
+
+msgid "Límites de especificación inferior y superior."
+msgstr "Lower and upper specification limits."
+
+msgid "type lsl"
+msgstr "type lsl"
+
+msgid "float"
+msgstr "float"
+
+msgid "param usl"
+msgstr "param usl"
+
+msgid "type usl"
+msgstr "type usl"
+
+msgid "param target"
+msgstr "param target"
+
+msgid "Valor objetivo (centro de la zona verde). Si no se indica, se usa el punto medio (lsl + usl) / 2."
+msgstr "Target value (center of the green zone). If not given, the midpoint (lsl + usl) / 2 is used."
+
+msgid "type target"
+msgstr "type target"
+
+msgid "float, opcional"
+msgstr "float, optional"
+
+msgid "returns"
+msgstr "returns"
+
+msgid "*PreControlResult*"
+msgstr "*PreControlResult*"
+
+msgid "Gráfico de pre-control con zonas verde/amarillo/rojo."
+msgstr "Pre-control plot with green/yellow/red zones."
+
+msgid "Resultado de :func:`precontrol`."
+msgstr "Result of :func:`precontrol`."
+
+msgid "Atributos"
+msgstr "Attributes"
+
+msgid "values"
+msgstr "values"
+
+msgid "np.ndarray"
+msgstr "np.ndarray"
+
+msgid "Datos originales."
+msgstr "Original data."
+
+msgid "lsl, usl"
+msgstr "lsl, usl"
+
+msgid "center"
+msgstr "center"
+
+msgid "Centro de la tolerancia (objetivo o punto medio)."
+msgstr "Center of the tolerance (target or midpoint)."
+
+msgid "green_lo, green_hi"
+msgstr "green_lo, green_hi"
+
+msgid "Fronteras de la zona verde (centro ± tolerancia/4)."
+msgstr "Boundaries of the green zone (center ± tolerance/4)."
+
+msgid "zones"
+msgstr "zones"
+
+msgid "list[str]"
+msgstr "list[str]"
+
+msgid "Zona de cada observación: ``'G'`` verde, ``'Y-'`` amarilla baja, ``'Y+'`` amarilla alta, ``'R-'`` roja baja, ``'R+'`` roja alta."
+msgstr "Zone of each observation: ``'G'`` green, ``'Y-'`` low yellow, ``'Y+'`` high yellow, ``'R-'`` low red, ``'R+'`` high red."
+
+msgid "signals"
+msgstr "signals"
+
+msgid "list[tuple[int, str]]"
+msgstr "list[tuple[int, str]]"
+
+msgid "Índices y códigos de las señales detectadas."
+msgstr "Indices and codes of the detected signals."
+
+msgid "DataFrame con zona y señal para cada observación."
+msgstr "DataFrame with zone and signal for each observation."
+
+msgid "Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma."
+msgstr "With ``stable=True`` the columns carry canonical English keys that do not change with the language."
+
+msgid "Gráfico de pre-control. Ver :func:`pccpy.plotting.plot_precontrol`."
+msgstr "Pre-control plot. See :func:`pccpy.plotting.plot_precontrol`."
+
+msgid "EWMA para atributos"
+msgstr "EWMA for attributes"
+
+msgid "EWMA para la proporción de defectuosos (equivalente a carta P suavizada)."
+msgstr "EWMA for the proportion of defectives (equivalent to a smoothed P chart)."
+
+msgid "Conteo de unidades defectuosas por muestra."
+msgstr "Count of defective units per sample."
+
+msgid "Tamaño de muestra (constante o variable)."
+msgstr "Sample size (constant or variable)."
+
+msgid "Proporción de referencia. Si no se da, se estima de los datos."
+msgstr "Reference proportion. If not given, it is estimated from the data."
+
+msgid "Factor de suavizado λ ∈ (0, 1]. Por defecto 0.2 (igual que Minitab)."
+msgstr "Smoothing factor λ ∈ (0, 1]. Default 0.2 (same as Minitab)."
+
+msgid "Ancho de los límites en sigmas. Por defecto 3.0."
+msgstr "Width of the limits in sigmas. Default 3.0."
+
+msgid "EWMA para el número de defectos por unidad de inspección (carta C suavizada)."
+msgstr "EWMA for the number of defects per inspection unit (smoothed C chart)."
+
+msgid "Número de defectos por unidad."
+msgstr "Number of defects per unit."
+
+msgid "Tasa media de defectos. Si no se da, se estima de los datos."
+msgstr "Mean defect rate. If not given, it is estimated from the data."
+
+msgid "Factor de suavizado λ. Por defecto 0.2."
+msgstr "Smoothing factor λ. Default 0.2."
+
+msgid "EWMA para los defectos por unidad con tamaño de muestra variable (carta U suavizada)."
+msgstr "EWMA for defects per unit with variable sample size (smoothed U chart)."
+
+msgid "Conteo de defectos por muestra."
+msgstr "Count of defects per sample."
+
+msgid "Área de oportunidad o tamaño de muestra."
+msgstr "Opportunity area or sample size."
+
+msgid "Tasa media de defectos por unidad. Si no se da, se estima de los datos."
+msgstr "Mean defect rate per unit. If not given, it is estimated from the data."
+
+msgid "CUSUM para atributos"
+msgstr "CUSUM for attributes"
+
+msgid "CUSUM tabular estandarizado para la proporción de defectuosos."
+msgstr "Standardized tabular CUSUM for the proportion of defectives."
+
+msgid "Transforma cada observación a puntaje z = (p_i − p̄) / σ_i antes de acumular, lo que permite manejar tamaños de muestra variables. ``h`` y ``k`` están en unidades de σ (por defecto h=4, k=0.5)."
+msgstr "Transforms each observation into a z score = (p_i − p̄) / σ_i before accumulating, which allows handling variable sample sizes. ``h`` and ``k`` are in units of σ (default h=4, k=0.5)."
+
+msgid "Tamaño de muestra."
+msgstr "Sample size."
+
+msgid "Límite de decisión en unidades de σ. Por defecto 4.0."
+msgstr "Decision limit in units of σ. Default 4.0."
+
+msgid "Holgura de referencia en unidades de σ. Por defecto 0.5."
+msgstr "Reference slack in units of σ. Default 0.5."
+
+msgid "CUSUM tabular estandarizado para el número de defectos (carta C)."
+msgstr "Standardized tabular CUSUM for the number of defects (C chart)."
+
+msgid "Número de defectos por unidad de inspección."
+msgstr "Number of defects per inspection unit."
+
+msgid "Límite de decisión en σ. Por defecto 4.0."
+msgstr "Decision limit in σ. Default 4.0."
+
+msgid "Holgura en σ. Por defecto 0.5."
+msgstr "Slack in σ. Default 0.5."
+
+msgid "CUSUM tabular estandarizado para defectos por unidad (carta U)."
+msgstr "Standardized tabular CUSUM for defects per unit (U chart)."
+

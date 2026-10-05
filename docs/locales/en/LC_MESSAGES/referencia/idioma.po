@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Idioma de los mensajes"
+msgstr "Message language"
+
+msgid "Fija el idioma de todo el proceso (visible desde cualquier hilo)."
+msgstr "Sets the language for the whole process (visible from any thread)."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Código del idioma: ``'es'`` o ``'en'`` (se aceptan variantes como ``'en_US'``)."
+msgstr "Language code: ``'es'`` or ``'en'`` (variants such as ``'en_US'`` are accepted)."
+
+msgid "Muestra"
+msgstr "Raises"
+
+msgid "Si el idioma no está disponible (ver :func:`available_languages`)."
+msgstr "If the language is not available (see :func:`available_languages`)."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Idioma activo (la sobrescritura local de :func:`language` si existe; si no, el global)."
+msgstr "Active language (the local override of :func:`language` if there is one; otherwise the global one)."
+
+msgid "Cambia el idioma solo dentro del bloque ``with`` (en el contexto actual)."
+msgstr "Changes the language only inside the ``with`` block (in the current context)."
+
+msgid "Un hilo creado dentro del bloque no hereda este idioma: usa el global."
+msgstr "A thread created inside the block does not inherit this language: it uses the global one."
+
+msgid "Si el idioma no está disponible."
+msgstr "If the language is not available."
+
+msgid "Idiomas disponibles: el español (idioma fuente) y los que tengan catálogo compilado."
+msgstr "Available languages: Spanish (the source language) and those that have a compiled catalog."
+

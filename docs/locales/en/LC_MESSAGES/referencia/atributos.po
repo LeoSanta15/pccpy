@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Cartas de atributos"
+msgstr "Attribute charts"
+
+msgid "Carta P: proporción de unidades defectuosas (n constante o variable)."
+msgstr "P chart: proportion of defective units (constant or variable n)."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Carta NP: número de defectuosos (n constante)."
+msgstr "NP chart: number of defectives (constant n)."
+
+msgid "Carta C: número de defectos por unidad de inspección (tamaño constante)."
+msgstr "C chart: number of defects per inspection unit (constant size)."
+
+msgid "Carta U: defectos por unidad (tamaño de muestra constante o variable)."
+msgstr "U chart: defects per unit (constant or variable sample size)."
+
+msgid "Carta P' de Laney: corrige la sobredispersión/subdispersión de la carta P."
+msgstr "Laney P' chart: corrects the over/underdispersion of the P chart."
+
+msgid "Los límites se multiplican por sigma_z, estimada con el rango móvil promedio de los puntajes z estandarizados."
+msgstr "The limits are multiplied by sigma_z, estimated with the average moving range of the standardized z scores."
+
+msgid "Carta U' de Laney: corrige la sobredispersión/subdispersión de la carta U."
+msgstr "Laney U' chart: corrects the over/underdispersion of the U chart."
+

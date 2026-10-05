@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Normalidad y herramientas de calidad"
+msgstr "Normality and quality tools"
+
+msgid "Prueba de normalidad."
+msgstr "Normality test."
+
+msgid "``method``: ``'anderson'`` (por defecto, la de Minitab), ``'shapiro'`` o ``'dagostino'`` (requiere n >= 8)."
+msgstr "``method``: ``'anderson'`` (default, Minitab's), ``'shapiro'`` or ``'dagostino'`` (requires n >= 8)."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Gráfico de probabilidad normal (rangos medianos de Benard) con prueba de Anderson-Darling."
+msgstr "Normal probability plot (Benard median ranks) with the Anderson-Darling test."
+
+msgid "Tabla de Pareto ordenada de mayor a menor frecuencia."
+msgstr "Pareto table sorted from highest to lowest frequency."
+
+msgid "``categories`` con ``counts``: una categoría por elemento con su frecuencia."
+msgstr "``categories`` with ``counts``: one category per element with its frequency."
+
+msgid "``categories`` sin ``counts``: lista de ocurrencias crudas (se cuentan)."
+msgstr "``categories`` without ``counts``: list of raw occurrences (they are counted)."
+
+msgid "``other_below``: porcentaje (p. ej. 5) por debajo del cual las categorías se agrupan en \"Otros\" (que siempre queda al final, como en Minitab; el nombre se traduce al idioma activo)."
+msgstr "``other_below``: percentage (e.g. 5) below which categories are grouped into \"Others\" (which always stays last, as in Minitab; the name is translated into the active language)."
+
+msgid "Las columnas salen en el idioma activo; con ``stable=True`` son ``category``, ``count``, ``percent`` y ``cumulative_percent`` (no cambian con el idioma)."
+msgstr "The columns come out in the active language; with ``stable=True`` they are ``category``, ``count``, ``percent`` and ``cumulative_percent`` (they do not change with the language)."
+
+msgid "Dibuja el diagrama de Pareto a partir de la tabla de :func:`pareto`."
+msgstr "Draws the Pareto chart from the table returned by :func:`pareto`."
+

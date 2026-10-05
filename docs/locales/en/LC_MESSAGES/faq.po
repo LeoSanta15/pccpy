@@ -1,0 +1,264 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Preguntas frecuentes (FAQ)"
+msgstr "Frequently asked questions (FAQ)"
+
+msgid "Cartas de control"
+msgstr "Control charts"
+
+msgid "¿Por qué el límite inferior de la carta P no aparece?"
+msgstr "Why doesn't the lower limit of the P chart appear?"
+
+msgid "La carta P calcula el LCI como `p̄ − 3√(p̄(1−p̄)/n)`. Cuando este valor es negativo, se establece en 0 y no se dibuja línea (no tendría sentido una fracción defectuosa negativa). Esto es comportamiento normal cuando el AQL es bajo o los subgrupos son pequeños."
+msgstr "The P chart computes the LCL as `p̄ − 3√(p̄(1−p̄)/n)`. When this value is negative, it is set to 0 and no line is drawn (a negative fraction defective would make no sense). This is normal behavior when the AQL is low or the subgroups are small."
+
+msgid "¿Por qué Cp es NaN en mis resultados?"
+msgstr "Why is Cp NaN in my results?"
+
+msgid "`capability_analysis` calcula Cp/Cpk usando la desviación estándar **dentro de subgrupos** (`sigma_within`). Si pasas datos individuales sin `subgroup_size`, pccpy usa R̄/d₂ de rangos móviles para estimar σ_dentro."
+msgstr "`capability_analysis` computes Cp/Cpk using the standard deviation **within subgroups** (`sigma_within`). If you pass individual data without `subgroup_size`, pccpy uses R̄/d₂ of moving ranges to estimate σ_within."
+
+msgid "`Cp = NaN` puede ocurrir en `capability_analysis_summary` si no pasas `std_within`:"
+msgstr "`Cp = NaN` can occur in `capability_analysis_summary` if you do not pass `std_within`:"
+
+msgid "¿Qué diferencia hay entre Cp y Cpk?"
+msgstr "What is the difference between Cp and Cpk?"
+
+msgid "**Cp** mide si el proceso es suficientemente estrecho para caber en la especificación (ignorando si está centrado)."
+msgstr "**Cp** measures whether the process is narrow enough to fit within the specification (ignoring whether it is centered)."
+
+msgid "**Cpk** mide tanto el ancho como el centrado. Si el proceso está perfectamente centrado, Cp = Cpk."
+msgstr "**Cpk** measures both the width and the centering. If the process is perfectly centered, Cp = Cpk."
+
+#, python-brace-format
+msgid "Un proceso con Cp = 1.5 pero Cpk = 0.8 es un proceso capaz pero mal centrado. Ver {doc}`capacidad_indices` para la explicación completa."
+msgstr "A process with Cp = 1.5 but Cpk = 0.8 is a capable but poorly centered process. See {doc}`capacidad_indices` for the full explanation."
+
+msgid "¿Qué diferencia hay entre p_chart y laney_p_chart?"
+msgstr "What is the difference between p_chart and laney_p_chart?"
+
+msgid "La carta P asume que los datos siguen exactamente una distribución binomial. Cuando los tamaños de subgrupo son grandes o hay correlación entre subgrupos, los datos muestran **sobredispersión** (más variabilidad de la esperada). En ese caso, `laney_p_chart` ajusta los límites con un factor σ_z calculado con una regresión de Laney, evitando falsas alarmas."
+msgstr "The P chart assumes the data follow exactly a binomial distribution. When subgroup sizes are large or there is correlation between subgroups, the data show **overdispersion** (more variability than expected). In that case, `laney_p_chart` adjusts the limits with a σ_z factor computed with a Laney regression, avoiding false alarms."
+
+msgid "Regla práctica: si `laney_p_chart` da límites mucho más amplios que `p_chart` con los mismos datos, hay sobredispersión y Laney es la opción correcta."
+msgstr "Rule of thumb: if `laney_p_chart` gives much wider limits than `p_chart` with the same data, there is overdispersion and Laney is the right choice."
+
+msgid "¿Por qué mis límites de control son diferentes a los de Minitab?"
+msgstr "Why are my control limits different from Minitab's?"
+
+msgid "Las diferencias más comunes:"
+msgstr "The most common differences:"
+
+msgid "**Método de estimación de σ** — pccpy usa `R̄/d₂` por defecto para datos individuales. Puedes cambiar con `sigma_method='s'` (usa S̄/c₄)."
+msgstr "**σ estimation method** — pccpy uses `R̄/d₂` by default for individual data. You can change it with `sigma_method='s'` (uses S̄/c₄)."
+
+msgid "**Constantes** — pccpy y Minitab usan las mismas tablas de constantes (c₄, d₂, d₃)."
+msgstr "**Constants** — pccpy and Minitab use the same constant tables (c₄, d₂, d₃)."
+
+msgid "**Subgrupos incompletos** — si el último subgrupo tiene menos observaciones de las esperadas, pccpy lo incluye en el gráfico pero lo excluye del cálculo de límites (igual que Minitab). Verás una advertencia (`UserWarning`)."
+msgstr "**Incomplete subgroups** — if the last subgroup has fewer observations than expected, pccpy includes it in the plot but excludes it from the limit calculation (same as Minitab). You will see a warning (`UserWarning`)."
+
+msgid "¿Cómo aplico los límites de Fase I a nuevos datos (Fase II)?"
+msgstr "How do I apply Phase I limits to new data (Phase II)?"
+
+msgid "Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma_within=...)`."
+msgstr "For subgroup charts use `xbar_r_chart(g, mu=..., sigma_within=...)`."
+
+msgid "¿Cómo uso etapas (stages) para marcar un cambio en el proceso?"
+msgstr "How do I use stages to mark a change in the process?"
+
+msgid "Distribución y normalidad"
+msgstr "Distribution and normality"
+
+msgid "¿Qué hago si mis datos no son normales?"
+msgstr "What do I do if my data are not normal?"
+
+msgid "Tienes tres opciones:"
+msgstr "You have three options:"
+
+msgid "**Transformación Box-Cox** (recomendada como primer paso):"
+msgstr "**Box-Cox transformation** (recommended as a first step):"
+
+msgid "**Ajuste a una distribución no normal** (Weibull, lognormal, gamma, etc.):"
+msgstr "**Fit a non-normal distribution** (Weibull, lognormal, gamma, etc.):"
+
+msgid "**Índices no paramétricos** (percentiles observados):"
+msgstr "**Nonparametric indices** (observed percentiles):"
+
+msgid "Las cartas I-MR y Xbar-R son robustas a la no normalidad si n > 4 por subgrupo (por el teorema central del límite)."
+msgstr "The I-MR and Xbar-R charts are robust to non-normality if n > 4 per subgroup (because of the central limit theorem)."
+
+msgid "¿Cuántas observaciones necesito para que la prueba de normalidad sea válida?"
+msgstr "How many observations do I need for the normality test to be valid?"
+
+msgid "`diagnose()` y `normality_test()` usan `scipy.stats.normaltest` (D'Agostino- Pearson). Se necesitan **al menos 8 observaciones**; con menos, la función devuelve `is_normal=True` y `normality_p=NaN` para evitar resultados engañosos."
+msgstr "`diagnose()` and `normality_test()` use `scipy.stats.normaltest` (D'Agostino-Pearson). **At least 8 observations** are needed; with fewer, the function returns `is_normal=True` and `normality_p=NaN` to avoid misleading results."
+
+msgid "Compatibilidad con seaborn, plotly y otras librerías"
+msgstr "Compatibility with seaborn, plotly and other libraries"
+
+msgid "¿Puedo usar pccpy junto a seaborn?"
+msgstr "Can I use pccpy together with seaborn?"
+
+#, python-brace-format
+msgid "Sí. pccpy usa matplotlib internamente y sus funciones `plot()` están aisladas con `plt.rc_context({})`, de modo que los estilos de seaborn no afectan el aspecto de los gráficos de pccpy."
+msgstr "Yes. pccpy uses matplotlib internally and its `plot()` functions are isolated with `plt.rc_context({})`, so seaborn styles do not affect the look of pccpy plots."
+
+msgid "¿Los gráficos de pccpy acumulan figuras abiertas?"
+msgstr "Do pccpy plots accumulate open figures?"
+
+msgid "`plot()` crea una figura nueva cada vez que se llama y **no la cierra**. En un bucle largo esto genera la advertencia `More than 20 figures have been opened`."
+msgstr "`plot()` creates a new figure every time it is called and **does not close it**. In a long loop this produces the warning `More than 20 figures have been opened`."
+
+msgid "Opciones para evitarlo:"
+msgstr "Options to avoid it:"
+
+msgid "¿Puedo combinar pccpy con plotly?"
+msgstr "Can I combine pccpy with plotly?"
+
+msgid "Plotly y matplotlib son sistemas independientes. `plot()` devuelve un `matplotlib.figure.Figure` que no se puede insertar directamente en plotly."
+msgstr "Plotly and matplotlib are independent systems. `plot()` returns a `matplotlib.figure.Figure` that cannot be inserted directly into plotly."
+
+msgid "Para integrar en una app Dash o Plotly puedes convertir la figura:"
+msgstr "To integrate it into a Dash or Plotly app you can convert the figure:"
+
+msgid "O exportar como imagen PNG y usarla en plotly con `plotly.graph_objects.Image`."
+msgstr "Or export it as a PNG image and use it in plotly with `plotly.graph_objects.Image`."
+
+msgid "Exportación y visualización"
+msgstr "Export and display"
+
+msgid "¿Cómo guardo el gráfico en un archivo?"
+msgstr "How do I save the plot to a file?"
+
+msgid "Todos los objetos de resultado tienen `save_plot()`:"
+msgstr "All the result objects have `save_plot()`:"
+
+msgid "¿Cómo exporto a Excel?"
+msgstr "How do I export to Excel?"
+
+msgid "Requiere `openpyxl`: `pip install pccpy[excel]`"
+msgstr "Requires `openpyxl`: `pip install pccpy[excel]`"
+
+msgid "¿Cómo muestro los gráficos en un Jupyter Notebook?"
+msgstr "How do I display the plots in a Jupyter Notebook?"
+
+msgid "O si prefieres mostrar explícitamente:"
+msgstr "Or if you prefer to display explicitly:"
+
+msgid "¿Puedo personalizar el aspecto del gráfico?"
+msgstr "Can I customize the look of the plot?"
+
+msgid "`plot()` devuelve un objeto `matplotlib.figure.Figure` estándar que puedes modificar después:"
+msgstr "`plot()` returns a standard `matplotlib.figure.Figure` object that you can modify afterwards:"
+
+msgid "Datos de entrada"
+msgstr "Input data"
+
+msgid "¿Mis datos tienen valores faltantes (NaN) o infinitos?"
+msgstr "Does my data have missing (NaN) or infinite values?"
+
+msgid "pccpy **no cancela el análisis**: filtra automáticamente los valores no finitos y emite un `UserWarning` indicando cuántos y en qué posiciones. El análisis continúa con los valores válidos restantes."
+msgstr "pccpy **does not abort the analysis**: it automatically filters out non-finite values and emits a `UserWarning` stating how many and at which positions. The analysis continues with the remaining valid values."
+
+msgid "Si quieres que los valores faltantes **sí detengan** el análisis, filtra el array antes de pasarlo: `x = x[np.isfinite(x)]` + comprueba que `len(x) > 0`."
+msgstr "If you want missing values to **stop** the analysis, filter the array before passing it: `x = x[np.isfinite(x)]` + check that `len(x) > 0`."
+
+msgid "¿Por qué aparece un `UserWarning` sobre columnas no numéricas en mi DataFrame?"
+msgstr "Why does a `UserWarning` about non-numeric columns appear in my DataFrame?"
+
+msgid "Cuando pasas un DataFrame ancho con columnas de texto (etiquetas, categorías, fechas), pccpy las ignora automáticamente y emite una advertencia:"
+msgstr "When you pass a wide DataFrame with text columns (labels, categories, dates), pccpy ignores them automatically and emits a warning:"
+
+msgid "¿Puedo hacer `capability_analysis()` sin límites de especificación?"
+msgstr "Can I run `capability_analysis()` without specification limits?"
+
+msgid "Sí. Desde v0.10.7 ya no es obligatorio pasar `lsl` o `usl`. Los índices que dependen de especificaciones (Cp, Cpk, Pp, Ppk…) se devuelven como `NaN` y `summary()` los marca con `*`."
+msgstr "Yes. Since v0.10.7 it is no longer mandatory to pass `lsl` or `usl`. The indices that depend on specifications (Cp, Cpk, Pp, Ppk…) are returned as `NaN` and `summary()` marks them with `*`."
+
+msgid "¿Qué pasa si todos mis datos son iguales (variación cero)?"
+msgstr "What happens if all my data are equal (zero variation)?"
+
+msgid "Si la desviación estándar del proceso es cero (todos los valores idénticos), pccpy emite un `UserWarning` y devuelve `NaN` para todos los índices de capacidad en vez de lanzar `ZeroDivisionError`."
+msgstr "If the process standard deviation is zero (all values identical), pccpy emits a `UserWarning` and returns `NaN` for all capability indices instead of raising `ZeroDivisionError`."
+
+msgid "Errores comunes"
+msgstr "Common errors"
+
+msgid "`ValueError: Datos 1-D: indique 'subgroup_size' o 'subgroup'`"
+msgstr "`ValueError: 1-D data: give 'subgroup_size' or 'subgroup', or pass a 2-D matrix.`"
+
+msgid "Las cartas de subgrupos (`xbar_r_chart`, `xbar_s_chart`, `imr_rs_chart`, `zone_chart`, `ma_chart`) requieren datos en forma de subgrupos. Soluciones:"
+msgstr "Subgroup charts (`xbar_r_chart`, `xbar_s_chart`, `imr_rs_chart`, `zone_chart`, `ma_chart`) require data in the form of subgroups. Solutions:"
+
+msgid "`ValueError: 'subgroup_size=1' da subgrupos de un solo elemento`"
+msgstr "`ValueError: 'subgroup_size=1' gives single-element subgroups`"
+
+msgid "`xbar_r_chart` y otras cartas de subgrupos no pueden estimar la variación **dentro** del subgrupo si cada subgrupo tiene una sola observación. Para datos individuales usa `imr_chart` en su lugar:"
+msgstr "`xbar_r_chart` and other subgroup charts cannot estimate the **within**-subgroup variation if each subgroup has a single observation. For individual data use `imr_chart` instead:"
+
+msgid "`ValueError: diagnose requiere al menos 4 observaciones`"
+msgstr "`ValueError: diagnose requires at least 4 observations`"
+
+msgid "`diagnose()` necesita mínimo 4 datos para calcular estadísticos básicos."
+msgstr "`diagnose()` needs at least 4 data points to compute basic statistics."
+
+msgid "`ValueError: Combinación AQL=X% y letra=Y no disponible en la tabla Z1.9`"
+msgstr "`ValueError: AQL=X% and letter=Y combination not available in the Z1.9 table`"
+
+msgid "Las tablas Z1.9 (muestreo por variables) no cubren todas las combinaciones de AQL y tamaño de lote. Prueba:"
+msgstr "The Z1.9 tables (sampling by variables) do not cover every combination of AQL and lot size. Try:"
+
+msgid "Reducir el tamaño del lote N"
+msgstr "Reducing the lot size N"
+
+msgid "Cambiar el nivel de inspección: `inspection_level=1`"
+msgstr "Changing the inspection level: `inspection_level=1`"
+
+msgid "Usar muestreo por atributos: `acceptance_sampling_attributes(N, aql)`"
+msgstr "Using sampling by attributes: `acceptance_sampling_attributes(N, aql)`"
+
+msgid "`ModuleNotFoundError: No module named 'openpyxl'`"
+msgstr "`ModuleNotFoundError: No module named 'openpyxl'`"
+
+msgid "`openpyxl` es una dependencia opcional. Instálala con:"
+msgstr "`openpyxl` is an optional dependency. Install it with:"
+
+msgid "Ver también"
+msgstr "See also"
+
+#, python-brace-format
+msgid "{doc}`guia_seleccion` — árbol de decisión para elegir la carta"
+msgstr "{doc}`guia_seleccion` — decision tree for choosing the chart"
+
+#, python-brace-format
+msgid "{doc}`capacidad_indices` — Cp, Cpk, Pp, Ppk explicados"
+msgstr "{doc}`capacidad_indices` — Cp, Cpk, Pp, Ppk explained"
+
+#, python-brace-format
+msgid "{doc}`tutorial_real` — flujo completo con datos reales"
+msgstr "{doc}`tutorial_real` — complete workflow with real data"
+
+#, python-brace-format
+msgid "{doc}`minitab` — equivalencias con Minitab"
+msgstr "{doc}`minitab` — equivalences with Minitab"
+

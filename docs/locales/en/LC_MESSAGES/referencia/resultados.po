@@ -1,0 +1,156 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Objetos de resultado"
+msgstr "Result objects"
+
+msgid "Toda carta de control devuelve un :class:`~pccpy.ControlChart` (las multivariadas devuelven la subclase :class:`~pccpy.MultivariateChart`), con un :class:`~pccpy.Panel` por cada gráfico que la compone (por ejemplo, el panel ``\"I\"`` y el panel ``\"MR\"`` de una carta I-MR)."
+msgstr "Every control chart returns a :class:`~pccpy.ControlChart` (multivariate ones return the subclass :class:`~pccpy.MultivariateChart`), with one :class:`~pccpy.Panel` for each plot that makes it up (for example, the ``\"I\"`` panel and the ``\"MR\"`` panel of an I-MR chart)."
+
+msgid "Dibuja todos los paneles de la carta, apilados. Devuelve la figura."
+msgstr "Draws all the panels of the chart, stacked. Returns the figure."
+
+msgid "``zones=True`` (por defecto) agrega las líneas de 1 y 2 sigma en todos los paneles, igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI. Los puntos que fallan una prueba se marcan en rojo con el número de la prueba."
+msgstr "``zones=True`` (default) adds the 1 and 2 sigma lines to all the panels, just like Minitab. Pass ``zones=False`` to show only UCL, CL and LCL. Points that fail a test are marked in red with the test number."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Resultado de una carta de control: paneles, parámetros por etapa y pruebas."
+msgstr "Result of a control chart: panels, per-stage parameters and tests."
+
+msgid "Tabla ancha: una fila por punto, columnas por panel."
+msgstr "Wide table: one row per point, columns per panel."
+
+msgid "Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma."
+msgstr "With ``stable=True`` the columns carry canonical English keys that do not change with the language."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Tabla de puntos que fallan pruebas: panel, punto (base 1), prueba, valor y descripción."
+msgstr "Table of points that fail tests: panel, point (1-based), test, value and description."
+
+msgid "True si ninguna prueba solicitada falló en ningún panel."
+msgstr "True if no requested test failed in any panel."
+
+msgid "Exporta la carta a un archivo Excel (.xlsx)."
+msgstr "Exports the chart to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``). Cada panel ocupa una hoja; las violaciones van en una hoja adicional."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``). Each panel takes one sheet; the violations go in an additional sheet."
+
+msgid "Dibuja la carta con matplotlib. Ver :func:`pccpy.plotting.plot_control_chart`."
+msgstr "Draws the chart with matplotlib. See :func:`pccpy.plotting.plot_control_chart`."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Ruta de destino, p. ej. ``\"carta_imr.png\"`` o ``\"carta.pdf\"``."
+msgstr "Destination path, e.g. ``\"imr_chart.png\"`` or ``\"chart.pdf\"``."
+
+msgid "Resolución en puntos por pulgada (solo relevante para formatos de mapa de bits). Por defecto 150."
+msgstr "Resolution in dots per inch (only relevant for bitmap formats). Default 150."
+
+msgid "Argumentos adicionales para :meth:`plot`."
+msgstr "Additional arguments for :meth:`plot`."
+
+msgid "Carta multivariada: agrega los datos necesarios para diagnosticar una señal."
+msgstr "Multivariate chart: adds the data needed to diagnose a signal."
+
+msgid "Contribución de cada variable al T² de un punto (``point`` en base 1)."
+msgstr "Contribution of each variable to the T² of a point (``point`` is 1-based)."
+
+msgid "Para cada variable j se calcula ``d_j = T² - T²_(-j)``, donde ``T²_(-j)`` es el T² del mismo punto sin la variable j (Runger, Alt y Montgomery, 1996). Un valor grande señala la variable que más aporta a la señal; las contribuciones no suman T². Si la carta se calculó con ``stages``, usa la media y la covarianza de la etapa a la que pertenece ese punto."
+msgstr "For each variable j, ``d_j = T² - T²_(-j)`` is computed, where ``T²_(-j)`` is the T² of the same point without variable j (Runger, Alt and Montgomery, 1996). A large value points to the variable that contributes most to the signal; the contributions do not add up to T². If the chart was computed with ``stages``, it uses the mean and covariance of the stage that point belongs to."
+
+msgid "Un gráfico individual dentro de una carta (p. ej. el gráfico I o el MR)."
+msgstr "An individual plot within a chart (e.g. the I or the MR plot)."
+
+msgid "Índices (base 0) de todos los puntos con alguna prueba fallida."
+msgstr "Indices (0-based) of all the points with any failed test."
+
+msgid "Tabla del panel: una fila por punto."
+msgstr "Panel table: one row per point."
+
+msgid "Capacidad y normalidad devuelven, respectivamente:"
+msgstr "Capability and normality return, respectively:"
+
+msgid "Resultado de un análisis de capacidad para datos normales."
+msgstr "Result of a capability analysis for normal data."
+
+msgid "Defectos por millón de oportunidades (PPM esperado general)."
+msgstr "Defects per million opportunities (overall expected PPM)."
+
+msgid "Z.bench general = Φ⁻¹(1 − P(defecto total))."
+msgstr "Overall Z.bench = Φ⁻¹(1 − P(total defect))."
+
+msgid "type"
+msgstr "type"
+
+msgid "Nivel sigma del proceso"
+msgstr "Process sigma level"
+
+msgid "Tabla resumen (una fila por estadístico)."
+msgstr "Summary table (one row per statistic)."
+
+msgid "Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma."
+msgstr "With ``stable=True`` the rows carry canonical English keys that do not change with the language."
+
+msgid "Exporta el análisis de capacidad a un archivo Excel (.xlsx)."
+msgstr "Exports the capability analysis to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``)."
+
+msgid "Histograma de capacidad. Ver :func:`pccpy.plotting.plot_capability`."
+msgstr "Capability histogram. See :func:`pccpy.plotting.plot_capability`."
+
+msgid "Capacidad por el método de percentiles (Minitab, distribuciones no normales)."
+msgstr "Capability by the percentile method (Minitab, non-normal distributions)."
+
+msgid "Exporta el análisis de capacidad no normal a un archivo Excel (.xlsx)."
+msgstr "Exports the non-normal capability analysis to an Excel (.xlsx) file."
+
+msgid "True si se rechaza la normalidad al nivel ``alpha``."
+msgstr "True if normality is rejected at level ``alpha``."
+
+msgid "Herramientas de análisis de proceso"
+msgstr "Process analysis tools"
+
+msgid "Los demás módulos devuelven objetos propios documentados en sus páginas de referencia:"
+msgstr "The other modules return their own objects, documented in their reference pages:"
+
+msgid ":class:`~pccpy.RunChartResult` — véase :doc:`run_chart_y_precontrol`."
+msgstr ":class:`~pccpy.RunChartResult` — see :doc:`run_chart_y_precontrol`."
+
+msgid ":class:`~pccpy.PreControlResult` — véase :doc:`run_chart_y_precontrol`."
+msgstr ":class:`~pccpy.PreControlResult` — see :doc:`run_chart_y_precontrol`."
+
+msgid ":class:`~pccpy.ToleranceResult` — véase :doc:`tolerancia`."
+msgstr ":class:`~pccpy.ToleranceResult` — see :doc:`tolerancia`."
+
+msgid ":class:`~pccpy.SamplingPlanAttributes`, :class:`~pccpy.SamplingPlanVariables`, :class:`~pccpy.DodgeRomigPlan` — véase :doc:`muestreo_aceptacion`."
+msgstr ":class:`~pccpy.SamplingPlanAttributes`, :class:`~pccpy.SamplingPlanVariables`, :class:`~pccpy.DodgeRomigPlan` — see :doc:`muestreo_aceptacion`."
+
+msgid ":class:`~pccpy.GageRRResult`, :class:`~pccpy.Type1Result`, :class:`~pccpy.LinearityResult`, :class:`~pccpy.AttributeAgreementResult` — véase :doc:`msa`."
+msgstr ":class:`~pccpy.GageRRResult`, :class:`~pccpy.Type1Result`, :class:`~pccpy.LinearityResult`, :class:`~pccpy.AttributeAgreementResult` — see :doc:`msa`."
+

@@ -1,0 +1,79 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Cartas de variables"
+msgstr "Variables charts"
+
+msgid "Carta de valores individuales y rango móvil (Stat > Control Charts > I-MR)."
+msgstr "Individual values and moving range chart (Stat > Control Charts > I-MR)."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Observaciones individuales en orden temporal."
+msgstr "Individual observations in time order."
+
+msgid "Longitud del rango móvil (por defecto 2, como Minitab)."
+msgstr "Moving range length (default 2, as in Minitab)."
+
+msgid "Estimador de sigma: rango móvil promedio (por defecto), mediana del rango móvil (solo span=2) o raíz de la media de diferencias cuadradas sucesivas."
+msgstr "Sigma estimator: average moving range (default), median moving range (span=2 only) or square root of the mean of successive squared differences."
+
+msgid "Parámetros históricos; si se dan, no se estiman de los datos."
+msgstr "Historical parameters; if given, they are not estimated from the data."
+
+msgid "Etiqueta de etapa por observación; los límites se calculan por etapa."
+msgstr "Stage label per observation; the limits are computed per stage."
+
+msgid "Pruebas de causas especiales (1-8). Por defecto solo la prueba 1, igual que Minitab."
+msgstr "Special-cause tests (1-8). By default only test 1, as in Minitab."
+
+#, python-brace-format
+msgid "Valor K por prueba, p. ej. ``{2: 8}``."
+msgstr "K value per test, e.g. ``{2: 8}``."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Carta X-barra y R (Stat > Control Charts > Xbar-R)."
+msgstr "X-bar and R chart (Stat > Control Charts > Xbar-R)."
+
+msgid "Acepta tres formatos de entrada:"
+msgstr "Accepts three input formats:"
+
+msgid "``data`` 2-D (array o DataFrame ancho): cada fila es un subgrupo."
+msgstr "2-D ``data`` (array or wide DataFrame): each row is a subgroup."
+
+msgid "``data`` 1-D (array o Series) + ``subgroup_size``: se parte en subgrupos de tamaño fijo. Si el total no es divisible, el último subgrupo incompleto se grafica con sus propios límites pero no entra en el cálculo de sigma ni media."
+msgstr "1-D ``data`` (array or Series) + ``subgroup_size``: it is split into subgroups of fixed size. If the total is not divisible, the last incomplete subgroup is plotted with its own limits but does not enter the computation of sigma or the mean."
+
+msgid "``data`` DataFrame largo + ``subgroup`` (nombre de la columna de grupos) + ``value`` (nombre de la columna de valores; opcional si hay solo una columna numérica): convierte automáticamente al formato matricial."
+msgstr "Long DataFrame ``data`` + ``subgroup`` (name of the group column) + ``value`` (name of the value column; optional if there is only one numeric column): automatically converted to the matrix format."
+
+msgid "``sigma_method``: ``'rbar'`` (por defecto) o ``'pooled'``. Con tamaños desiguales, sigma se estima promediando R_i/d2(n_i) (ver README)."
+msgstr "``sigma_method``: ``'rbar'`` (default) or ``'pooled'``. With unequal sizes, sigma is estimated by averaging R_i/d2(n_i) (see README)."
+
+msgid "Carta X-barra y S (Stat > Control Charts > Xbar-S)."
+msgstr "X-bar and S chart (Stat > Control Charts > Xbar-S)."
+
+msgid "Acepta los mismos formatos de entrada que :func:`xbar_r_chart`. ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``."
+msgstr "Accepts the same input formats as :func:`xbar_r_chart`. ``sigma_method``: ``'sbar'`` (default) or ``'pooled'``."
+

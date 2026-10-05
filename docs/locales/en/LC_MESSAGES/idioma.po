@@ -1,0 +1,68 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:42+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Idioma de los mensajes"
+msgstr "Message language"
+
+msgid "**Estado: disponible desde la versión 0.11.0; el inglés está pendiente de revisión por una persona del dominio SPC.** Se traducen al inglés los **mensajes de error y de aviso**, los **`summary()`** y las **etiquetas de `to_frame()`** de los resultados, los **gráficos** y el asistente (`wizard`); también `pareto()`, las curvas OC/AOQ, las tablas ANOVA y de kappa (con `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()`) y las hojas de `to_excel()`: todas aceptan `stable=True` para claves fijas, salvo los atributos `anova_table`, `kappa_within` y `kappa_vs_reference`, que conservan siempre las cabeceras en español."
+msgstr "**Status: available since version 0.11.0; the English text is awaiting review by a person with SPC domain knowledge.** The following are translated into English: **error and warning messages**, the **`summary()`** output and the **`to_frame()` labels** of the results, the **plots** and the assistant (`wizard`); also `pareto()`, the OC/AOQ curves, the ANOVA and kappa tables (through `anova_frame()`, `kappa_within_frame()` and `kappa_vs_reference_frame()`) and the `to_excel()` sheets. All of them accept `stable=True` for fixed keys, except the attributes `anova_table`, `kappa_within` and `kappa_vs_reference`, which always keep their Spanish headers."
+
+msgid "pccpy escribe sus textos en **español**, que es el idioma fuente: si un idioma no tiene traducción para un texto, se muestra el original. La documentación y el README también están en inglés ([Cómo traducir](traducir.md)). Idiomas disponibles: `es` y `en` (cómo corregir o añadir uno: [Cómo traducir](traducir.md))."
+msgstr "pccpy writes its texts in **Spanish**, which is the source language: if a language has no translation for a text, the original is shown. The documentation and the README are also available in English ([How to translate](traducir.md)). Available languages: `es` and `en` (how to fix or add one: [How to translate](traducir.md))."
+
+msgid "Elegir el idioma"
+msgstr "Choosing the language"
+
+msgid "Un idioma que no existe lanza `ValueError` (con la lista de idiomas disponibles)."
+msgstr "A language that does not exist raises `ValueError` (with the list of available languages)."
+
+msgid "Solo dentro de un bloque"
+msgstr "Only inside a block"
+
+#, python-brace-format
+msgid "Un hilo creado **dentro** de `with pp.language(...)` no hereda ese idioma: usa el global. Para que lo vea cualquier hilo, usa {func}`~pccpy.set_language`."
+msgstr "A thread created **inside** `with pp.language(...)` does not inherit that language: it uses the global one. To make it visible to every thread, use {func}`~pccpy.set_language`."
+
+msgid "Tablas (`to_frame`) con claves que no cambian con el idioma"
+msgstr "Tables (`to_frame`) with keys that do not change with the language"
+
+msgid "Las cabeceras de `to_frame()` y `violations()` son **presentación**: salen en el idioma activo, como `summary()`. Para código que indexa la tabla por nombre, usa `stable=True`: devuelve claves canónicas en inglés (`snake_case`) que son iguales en cualquier idioma."
+msgstr "The headers of `to_frame()` and `violations()` are **presentation**: they appear in the active language, like `summary()`. For code that indexes the table by name, use `stable=True`: it returns canonical English keys (`snake_case`) that are the same in every language."
+
+msgid "Las tablas de estadísticos tienen el índice `statistic` y la columna `value`; las de puntos (`ControlChart.to_frame`, `violations`) usan `point`, `stage`, `value`, `cl`, `ucl`, `lcl`, `test`, `description`…"
+msgstr "The statistics tables have the index `statistic` and the column `value`; the point tables (`ControlChart.to_frame`, `violations`) use `point`, `stage`, `value`, `cl`, `ucl`, `lcl`, `test`, `description`…"
+
+msgid "Los valores de datos (p. ej. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`, o los nombres de parámetros como `chart.params[0][\"media\"]`) **no se traducen**: solo se muestran traducidos en `summary()`. Los textos que un resultado guarda al crearse (p. ej. `DiagnoseResult.issues`) quedan en el idioma activo en ese momento."
+msgstr "Data values (e.g. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`, or parameter names such as `chart.params[0][\"media\"]`) are **not translated**: they are only displayed translated in `summary()`. Texts that a result stores when it is created (e.g. `DiagnoseResult.issues`) stay in the language that was active at that moment."
+
+msgid "Variable de entorno"
+msgstr "Environment variable"
+
+msgid "`PCCPY_LANG=en` fija el idioma inicial al importar `pccpy`. Si el valor no es un idioma disponible, se muestra un aviso y se usa `es`; nunca impide importar la librería."
+msgstr "`PCCPY_LANG=en` sets the initial language when `pccpy` is imported. If the value is not an available language, a warning is shown and `es` is used; it never prevents the library from being imported."
+
+msgid "Para quien contribuye con traducciones"
+msgstr "For translation contributors"
+
+#, python-brace-format
+msgid "El código marca los textos con `tr(\"…\")` (se traducen al mostrarse) o `N_(\"…\")` (constantes de módulo, que se traducen al usarlas con `tr()`). Los f-strings **no** se pueden traducir: usa `tr(\"'{name}' está vacío.\").format(name=name)`. Comandos:"
+msgstr "The code marks texts with `tr(\"…\")` (translated when displayed) or `N_(\"…\")` (module-level constants, translated with `tr()` when used). f-strings **cannot** be translated: use `tr(\"'{name}' está vacío.\").format(name=name)`. Commands:"
+

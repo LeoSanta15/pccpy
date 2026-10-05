@@ -1,0 +1,57 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Instalación"
+msgstr "Installation"
+
+msgid "Desde PyPI (recomendado):"
+msgstr "From PyPI (recommended):"
+
+msgid "Desde GitHub:"
+msgstr "From GitHub:"
+
+msgid "Desarrollo local (incluye las pruebas y las herramientas de calidad):"
+msgstr "Local development (includes the tests and the quality tools):"
+
+msgid "Para generar esta documentación en tu máquina:"
+msgstr "To build this documentation on your machine:"
+
+msgid "Abre `docs/build/index.html` en el navegador."
+msgstr "Open `docs/build/index.html` in your browser."
+
+msgid "Requisitos"
+msgstr "Requirements"
+
+msgid "Python ≥ 3.9. Las dependencias `numpy`, `scipy`, `pandas` y `matplotlib` se instalan automáticamente al hacer `pip install pccpy` — no es necesario instalarlas por separado ni importarlas antes de usar la librería."
+msgstr "Python ≥ 3.9. The dependencies `numpy`, `scipy`, `pandas` and `matplotlib` are installed automatically by `pip install pccpy` — you do not need to install them separately or import them before using the library."
+
+msgid "Dependencia opcional: `ipywidgets`"
+msgstr "Optional dependency: `ipywidgets`"
+
+msgid "`ipywidgets` es necesaria **solo** si quieres usar `pp.wizard(mode='widget')` en Jupyter Notebook o JupyterLab. Si no está instalada, el modo degrada automáticamente a `'cli'` (preguntas en la terminal) sin lanzar ningún error."
+msgstr "`ipywidgets` is required **only** if you want to use `pp.wizard(mode='widget')` in Jupyter Notebook or JupyterLab. If it is not installed, the mode automatically falls back to `'cli'` (questions in the terminal) without raising any error."
+
+msgid "Para habilitarlo:"
+msgstr "To enable it:"
+
+msgid "En JupyterLab < 3 puede requerir además:"
+msgstr "On JupyterLab < 3 it may additionally require:"
+

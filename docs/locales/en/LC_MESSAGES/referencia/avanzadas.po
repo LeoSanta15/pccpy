@@ -1,0 +1,113 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Cartas avanzadas"
+msgstr "Advanced charts"
+
+msgid "Carta de media móvil (Stat > Control Charts > Time-Weighted > Moving Average)."
+msgstr "Moving average chart (Stat > Control Charts > Time-Weighted > Moving Average)."
+
+msgid "El punto *i* es el promedio de las últimas ``length`` observaciones (o subgrupos); en los primeros ``length - 1`` puntos se promedian las que haya y los límites son más anchos, como en Minitab. Después los límites son constantes."
+msgstr "Point *i* is the average of the last ``length`` observations (or subgroups); in the first ``length - 1`` points the available ones are averaged and the limits are wider, as in Minitab. After that the limits are constant."
+
+msgid "``mu`` y ``sigma`` se estiman de los datos si no se dan. Solo aplica la prueba 1. Acepta los mismos formatos de entrada que :func:`xbar_r_chart`."
+msgstr "``mu`` and ``sigma`` are estimated from the data if not given. Only test 1 applies. Accepts the same input formats as :func:`xbar_r_chart`."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Carta Z-MR para producción de corridas cortas (Variables Charts for Individuals > Z-MR)."
+msgstr "Z-MR chart for short-run production (Variables Charts for Individuals > Z-MR)."
+
+msgid "Cada observación se estandariza con la media de su parte/producto y una sigma, de modo que partes con medias o variaciones distintas se grafican juntas: ``z = (x - mu_parte) / sigma``. Se grafica z (LC = 0, límites en ±3) y el rango móvil de los z (LC = d2(2) = 1.128, LCS = 3.686)."
+msgstr "Each observation is standardized with the mean of its part/product and a sigma, so that parts with different means or variation are plotted together: ``z = (x - mu_part) / sigma``. The chart shows z (CL = 0, limits at ±3) and the moving range of the z values (CL = d2(2) = 1.128, UCL = 3.686)."
+
+msgid "Observaciones en orden temporal."
+msgstr "Observations in time order."
+
+msgid "Parte o producto de cada observación. Una *corrida* es un bloque de observaciones consecutivas de la misma parte."
+msgstr "Part or product of each observation. A *run* is a block of consecutive observations of the same part."
+
+msgid "* ``'constant'``: una sigma común para todas las partes (rango móvil   promedio dentro de las corridas / d2). * ``'relative'``: igual, pero sobre ln(x); útil si la variación crece con el   tamaño de la medición. * ``'by_part'``: una sigma por parte (junta todas sus corridas). * ``'by_run'``: una sigma por corrida (cada corrida necesita >= 2 observaciones)."
+msgstr "* ``'constant'``: one common sigma for all parts (average moving range   within runs / d2). * ``'relative'``: same, but on ln(x); useful if the variation grows with   the size of the measurement. * ``'by_part'``: one sigma per part (pools all its runs). * ``'by_run'``: one sigma per run (each run needs >= 2 observations)."
+
+msgid "``'constant'``: una sigma común para todas las partes (rango móvil promedio dentro de las corridas / d2)."
+msgstr "``'constant'``: one common sigma for all parts (average moving range within runs / d2)."
+
+msgid "``'relative'``: igual, pero sobre ln(x); útil si la variación crece con el tamaño de la medición."
+msgstr "``'relative'``: same, but on ln(x); useful if the variation grows with the size of the measurement."
+
+msgid "``'by_part'``: una sigma por parte (junta todas sus corridas)."
+msgstr "``'by_part'``: one sigma per part (pools all its runs)."
+
+msgid "``'by_run'``: una sigma por corrida (cada corrida necesita >= 2 observaciones)."
+msgstr "``'by_run'``: one sigma per run (each run needs >= 2 observations)."
+
+#, python-brace-format
+msgid "Media (o valor nominal) por parte, ``{parte: valor}``. Con ``'relative'`` debe estar en escala logarítmica. Si no se da, se estima."
+msgstr "Mean (or nominal value) per part, ``{part: value}``. With ``'relative'`` it must be on a logarithmic scale. If not given, it is estimated."
+
+#, python-brace-format
+msgid "Sigma histórica: un número para todas las partes o ``{parte: valor}``."
+msgstr "Historical sigma: one number for all parts or ``{part: value}``."
+
+msgid "Carta I-MR-R/S (Between/Within): variación entre y dentro de subgrupos."
+msgstr "I-MR-R/S chart (Between/Within): variation between and within subgroups."
+
+msgid "Grafica las medias de subgrupo como valores individuales (I) con su rango móvil (MR), más el rango (R) o la desviación estándar (S) dentro de los subgrupos. Los límites de I y MR usan la variación **total** de las medias (rango móvil de las medias), de modo que la variación entre subgrupos no genera falsas alarmas como en una Xbar-R."
+msgstr "Plots the subgroup means as individual values (I) with their moving range (MR), plus the range (R) or the standard deviation (S) within the subgroups. The limits of I and MR use the **total** variation of the means (moving range of the means), so that the variation between subgroups does not produce false alarms as it would in an Xbar-R."
+
+msgid "``within``: ``'r'`` o ``'s'``. ``sigma_method`` (sigma dentro): ``'rbar'`` o ``'pooled'`` para R; ``'sbar'`` o ``'pooled'`` para S (por defecto rbar / sbar)."
+msgstr "``within``: ``'r'`` or ``'s'``. ``sigma_method`` (within sigma): ``'rbar'`` or ``'pooled'`` for R; ``'sbar'`` or ``'pooled'`` for S (default rbar / sbar)."
+
+msgid "Los parámetros ``params`` incluyen las desviaciones estándar *dentro*, *entre* y *entre/dentro* (sigma_entre = sqrt(max(0, sigma_med² - sigma_dentro²/n)), con n el tamaño de subgrupo más frecuente, que debe darse en más de la mitad de los subgrupos; si no, se reportan como NaN). Con ``sigma_between`` histórica, la sigma de las medias es sqrt(sigma_entre² + sigma_dentro²/n)."
+msgstr "The ``params`` include the standard deviations *within*, *between* and *between/within* (sigma_entre = sqrt(max(0, sigma_med² - sigma_dentro²/n)), with n the most frequent subgroup size, which must occur in more than half of the subgroups; otherwise they are reported as NaN). With a historical ``sigma_between``, the sigma of the means is sqrt(sigma_entre² + sigma_dentro²/n)."
+
+msgid "Acepta los mismos formatos de entrada que :func:`xbar_r_chart`."
+msgstr "Accepts the same input formats as :func:`xbar_r_chart`."
+
+msgid "Carta de zona (Stat > Control Charts > Variables Charts for Subgroups > Zone)."
+msgstr "Zone chart (Stat > Control Charts > Variables Charts for Subgroups > Zone)."
+
+msgid "Sustituye las pruebas de causas especiales por un puntaje acumulado (Davis, Homer y Woodall, 1990): la zona 1 (0-1σ) pesa 0, la 2 (1-2σ) pesa 2, la 3 (2-3σ) pesa 4 y la 4 (más de 3σ) pesa 8. Los pesos se suman mientras los puntos sigan del mismo lado de la línea central y se reinician al cruzarla; hay señal cuando el puntaje llega al peso de la zona 4 (8 por defecto). Un punto justo en la frontera entre dos zonas se asigna a la zona más lejana."
+msgstr "Replaces the special-cause tests with a cumulative score (Davis, Homer and Woodall, 1990): zone 1 (0-1σ) weighs 0, zone 2 (1-2σ) weighs 2, zone 3 (2-3σ) weighs 4 and zone 4 (beyond 3σ) weighs 8. The weights are added up while the points stay on the same side of the center line and are reset when it is crossed; there is a signal when the score reaches the weight of zone 4 (8 by default). A point exactly on the boundary between two zones is assigned to the farther zone."
+
+msgid "``data``: observaciones individuales (vector) o subgrupos (matriz 2-D, o vector con ``subgroup_size`` / ``subgroup``). ``sigma_method``: ``'mr'`` (por defecto), ``'median_mr'`` o ``'mssd'`` para individuales; ``'rbar'`` (por defecto) o ``'pooled'`` para subgrupos. ``reset=True`` reinicia el puntaje tras cada señal."
+msgstr "``data``: individual observations (vector) or subgroups (2-D matrix, or vector with ``subgroup_size`` / ``subgroup``). ``sigma_method``: ``'mr'`` (default), ``'median_mr'`` or ``'mssd'`` for individuals; ``'rbar'`` (default) or ``'pooled'`` for subgroups. ``reset=True`` resets the score after each signal."
+
+msgid "El resultado tiene el panel ``\"Zona\"`` (medias y límites) y el panel ``\"Puntaje\"`` (puntaje acumulado y su umbral). Las señales se marcan en ``\"Zona\"``."
+msgstr "The result has the ``\"Zona\"`` panel (means and limits) and the ``\"Puntaje\"`` panel (cumulative score and its threshold). Signals are marked on ``\"Zona\"``."
+
+msgid "Carta G para eventos raros: número de casos (u oportunidades) entre eventos."
+msgstr "G chart for rare events: number of cases (or opportunities) between events."
+
+msgid "Se basa en la distribución geométrica. ``p`` es la probabilidad de evento; si no se da, se estima como 1 / (1 + media). La línea central es la mediana, el LCS es el percentil que corresponde a ``k`` sigmas de una normal (0.99865 con k=3) y el LCI es 0. La prueba 1 marca los puntos sobre el LCS; las pruebas 2-4 son las usuales. No incluye la prueba de Benneyan."
+msgstr "Based on the geometric distribution. ``p`` is the event probability; if not given, it is estimated as 1 / (1 + mean). The center line is the median, the UCL is the percentile corresponding to ``k`` sigmas of a normal (0.99865 with k=3) and the LCL is 0. Test 1 flags the points above the UCL; tests 2-4 are the usual ones. It does not include Benneyan's test."
+
+msgid "Carta T para eventos raros: tiempo entre eventos (Weibull o exponencial)."
+msgstr "T chart for rare events: time between events (Weibull or exponential)."
+
+msgid "Los parámetros se estiman por máxima verosimilitud (o se dan con ``shape`` y ``scale``). La línea central es la mediana y los límites son los percentiles Phi(-k) y Phi(k) de la distribución (0.00135 y 0.99865 con k=3). Las duraciones deben ser > 0. ``distribution``: ``'weibull'`` o ``'exponential'``."
+msgstr "The parameters are estimated by maximum likelihood (or given with ``shape`` and ``scale``). The center line is the median and the limits are the Phi(-k) and Phi(k) percentiles of the distribution (0.00135 and 0.99865 with k=3). Durations must be > 0. ``distribution``: ``'weibull'`` or ``'exponential'``."
+

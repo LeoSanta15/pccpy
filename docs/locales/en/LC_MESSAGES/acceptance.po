@@ -1,0 +1,436 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Muestreo de aceptación (`acceptance_sampling`)"
+msgstr "Acceptance sampling (`acceptance_sampling`)"
+
+msgid "El muestreo de aceptación define un plan de muestreo estadístico para decidir si aceptar o rechazar un lote de producción basándose en una muestra. `pccpy` implementa tres esquemas:"
+msgstr "Acceptance sampling defines a statistical sampling plan to decide whether to accept or reject a production lot based on a sample. `pccpy` implements three schemes:"
+
+msgid "Función"
+msgstr "Function"
+
+msgid "Norma"
+msgstr "Standard"
+
+msgid "Criterio"
+msgstr "Criterion"
+
+msgid "`acceptance_sampling_attributes`"
+msgstr "`acceptance_sampling_attributes`"
+
+msgid "ANSI/ASQ Z1.4"
+msgstr "ANSI/ASQ Z1.4"
+
+msgid "Por atributos (defectos contados)"
+msgstr "By attributes (counted defects)"
+
+msgid "`acceptance_sampling_variables`"
+msgstr "`acceptance_sampling_variables`"
+
+msgid "ANSI/ASQ Z1.9"
+msgstr "ANSI/ASQ Z1.9"
+
+msgid "Por variables (medición continua)"
+msgstr "By variables (continuous measurement)"
+
+msgid "`dodge_romig`"
+msgstr "`dodge_romig`"
+
+msgid "Dodge-Romig"
+msgstr "Dodge-Romig"
+
+msgid "LTPD o AOQL fijo"
+msgstr "Fixed LTPD or AOQL"
+
+msgid "Por atributos — Z1.4"
+msgstr "By attributes — Z1.4"
+
+msgid "Uso básico"
+msgstr "Basic usage"
+
+msgid "Salida:"
+msgstr "Output:"
+
+msgid "El plan dice: toma 80 muestras; acepta si encuentras ≤ 2 defectuosas."
+msgstr "The plan says: take 80 samples; accept if you find ≤ 2 defectives."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Parámetro"
+msgstr "Parameter"
+
+msgid "Tipo"
+msgstr "Type"
+
+msgid "Predeterminado"
+msgstr "Default"
+
+msgid "Descripción"
+msgstr "Description"
+
+msgid "`N`"
+msgstr "`N`"
+
+msgid "`int`"
+msgstr "`int`"
+
+msgid "—"
+msgstr "—"
+
+msgid "Tamaño del lote."
+msgstr "Lot size."
+
+msgid "`aql`"
+msgstr "`aql`"
+
+msgid "`float`"
+msgstr "`float`"
+
+msgid "AQL en porcentaje (p.ej. `1.0` para 1 %)."
+msgstr "AQL in percent (e.g. `1.0` for 1 %)."
+
+msgid "`inspection_level`"
+msgstr "`inspection_level`"
+
+msgid "`2`"
+msgstr "`2`"
+
+msgid "Nivel de inspección (I, II o III)."
+msgstr "Inspection level (I, II or III)."
+
+msgid "`n`"
+msgstr "`n`"
+
+msgid "`None`"
+msgstr "`None`"
+
+msgid "Tamaño de muestra fijo (anula la tabla)."
+msgstr "Fixed sample size (overrides the table)."
+
+msgid "`c`"
+msgstr "`c`"
+
+msgid "Número de aceptación fijo (anula la tabla)."
+msgstr "Fixed acceptance number (overrides the table)."
+
+msgid "Gráfico"
+msgstr "Plot"
+
+msgid "Por variables — Z1.9"
+msgstr "By variables — Z1.9"
+
+msgid "Usa la media y desviación estándar de la muestra para estimar la fracción no conforme y compararla con el AQL."
+msgstr "Uses the sample mean and standard deviation to estimate the nonconforming fraction and compare it with the AQL."
+
+msgid "AQL en porcentaje."
+msgstr "AQL in percent."
+
+msgid "`spec_type`"
+msgstr "`spec_type`"
+
+msgid "`str`"
+msgstr "`str`"
+
+msgid "`'one'`"
+msgstr "`'one'`"
+
+msgid "`'one'` (unilateral) o `'two'` (bilateral)."
+msgstr "`'one'` (one-sided) or `'two'` (two-sided)."
+
+msgid "Nivel de inspección."
+msgstr "Inspection level."
+
+msgid "Tamaño de muestra fijo."
+msgstr "Fixed sample size."
+
+msgid "`k`"
+msgstr "`k`"
+
+msgid "Constante k fija."
+msgstr "Fixed k constant."
+
+msgid "Diseñado para minimizar la inspección total promedio (ATI) dado un LTPD o un AOQL objetivo, asumiendo un proceso promedio conocido."
+msgstr "Designed to minimize the average total inspection (ATI) given a target LTPD or AOQL, assuming a known process average."
+
+msgid "`ltpd`"
+msgstr "`ltpd`"
+
+msgid "LTPD en fracción (p.ej. `0.05` para 5 %)."
+msgstr "LTPD as a fraction (e.g. `0.05` for 5 %)."
+
+msgid "`aoql`"
+msgstr "`aoql`"
+
+msgid "AOQL en fracción. Se debe pasar exactamente uno de los dos."
+msgstr "AOQL as a fraction. Exactly one of the two must be passed."
+
+msgid "`process_avg`"
+msgstr "`process_avg`"
+
+msgid "`0.01`"
+msgstr "`0.01`"
+
+msgid "Fracción defectuosa promedio del proceso."
+msgstr "Average defective fraction of the process."
+
+msgid "Exportar a Excel"
+msgstr "Export to Excel"
+
+msgid "Referencia de funciones"
+msgstr "Function reference"
+
+msgid "Plan de muestreo de aceptación por atributos (ANSI/ASQ Z1.4)."
+msgstr "Acceptance sampling plan by attributes (ANSI/ASQ Z1.4)."
+
+msgid "AQL en porcentaje (p.ej. 1.0 para 1%). Valores válidos de Z1.4: 0.010, 0.015, 0.025, 0.040, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.0, 1.5, 2.5, 4.0, 6.5, 10.0."
+msgstr "AQL in percent (e.g. 1.0 for 1%). Valid Z1.4 values: 0.010, 0.015, 0.025, 0.040, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.0, 1.5, 2.5, 4.0, 6.5, 10.0."
+
+msgid "Nivel de inspección general (1, 2 o 3). Por defecto 2."
+msgstr "General inspection level (1, 2 or 3). Default 2."
+
+msgid "Tamaño de muestra personalizado (omite la tabla Z1.4)."
+msgstr "Custom sample size (skips the Z1.4 table)."
+
+msgid "Número de aceptación personalizado."
+msgstr "Custom acceptance number."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*SamplingPlanAttributes*"
+msgstr "*SamplingPlanAttributes*"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Plan de muestreo de aceptación por variables (ANSI/ASQ Z1.9)."
+msgstr "Acceptance sampling plan by variables (ANSI/ASQ Z1.9)."
+
+msgid "AQL en porcentaje. Valores Z1.9: 0.10, 0.25, 0.65, 1.0, 2.5, 4.0."
+msgstr "AQL in percent. Z1.9 values: 0.10, 0.25, 0.65, 1.0, 2.5, 4.0."
+
+msgid "``'one'`` (una especificación, unilateral) o ``'two'`` (bilateral)."
+msgstr "``'one'`` (one specification, one-sided) or ``'two'`` (two-sided)."
+
+msgid "Tamaño de muestra personalizado."
+msgstr "Custom sample size."
+
+msgid "Factor k personalizado."
+msgstr "Custom k factor."
+
+msgid "*SamplingPlanVariables*"
+msgstr "*SamplingPlanVariables*"
+
+msgid "Plan de muestreo Dodge-Romig por atributos."
+msgstr "Dodge-Romig sampling plan by attributes."
+
+msgid "Proporciona protección al consumidor (LTPD) o calidad media de salida máxima (AOQL), minimizando el número promedio de inspección total (ATI)."
+msgstr "Provides consumer protection (LTPD) or maximum average outgoing quality (AOQL), minimizing the average total inspection (ATI)."
+
+msgid "LTPD objetivo en fracción (p.ej. 0.03 para 3%). Exactamente uno de ``ltpd`` o ``aoql`` debe especificarse."
+msgstr "Target LTPD as a fraction (e.g. 0.03 for 3%). Exactly one of ``ltpd`` or ``aoql`` must be specified."
+
+msgid "AOQL objetivo en fracción."
+msgstr "Target AOQL as a fraction."
+
+msgid "Promedio de proceso (fracción defectiva) estimado. Por defecto 0.01."
+msgstr "Estimated process average (defective fraction). Default 0.01."
+
+msgid "*DodgeRomigPlan*"
+msgstr "*DodgeRomigPlan*"
+
+msgid "Objetos de resultado"
+msgstr "Result objects"
+
+msgid "Plan de muestreo de aceptación por atributos."
+msgstr "Acceptance sampling plan by attributes."
+
+msgid "Atributos"
+msgstr "Attributes"
+
+msgid "N"
+msgstr "N"
+
+msgid "int"
+msgstr "int"
+
+msgid "n"
+msgstr "n"
+
+msgid "Tamaño de la muestra."
+msgstr "Sample size."
+
+msgid "c"
+msgstr "c"
+
+msgid "Número de aceptación."
+msgstr "Acceptance number."
+
+msgid "aql"
+msgstr "aql"
+
+msgid "float"
+msgstr "float"
+
+#, python-format
+msgid "AQL usado (% o fracción)."
+msgstr "AQL used (% or fraction)."
+
+msgid "alpha"
+msgstr "alpha"
+
+msgid "Riesgo del productor (P(rechazar | AQL))."
+msgstr "Producer's risk (P(reject | AQL))."
+
+msgid "beta"
+msgstr "beta"
+
+msgid "Riesgo del consumidor (P(aceptar | LTPD))."
+msgstr "Consumer's risk (P(accept | LTPD))."
+
+msgid "ltpd"
+msgstr "ltpd"
+
+msgid "LTPD real del plan."
+msgstr "Actual LTPD of the plan."
+
+msgid "aoq_max"
+msgstr "aoq_max"
+
+msgid "AOQL (calidad media de salida máxima)."
+msgstr "AOQL (maximum average outgoing quality)."
+
+msgid "method"
+msgstr "method"
+
+msgid "str"
+msgstr "str"
+
+msgid "``'z1.4'`` o ``'custom'``."
+msgstr "``'z1.4'`` or ``'custom'``."
+
+msgid "Probabilidad de aceptar para fracción defectiva p."
+msgstr "Probability of acceptance for defective fraction p."
+
+msgid "Curva OC: fracción defectiva vs probabilidad de aceptación."
+msgstr "OC curve: defective fraction vs probability of acceptance."
+
+msgid "Con ``stable=True`` las columnas son ``defective_fraction`` y ``p_accept`` (no cambian con el idioma)."
+msgstr "With ``stable=True`` the columns are ``defective_fraction`` and ``p_accept`` (they do not change with the language)."
+
+msgid "Curva de calidad media de salida (AOQ) vs fracción defectiva entrante."
+msgstr "Average outgoing quality (AOQ) curve vs incoming defective fraction."
+
+msgid "Con ``stable=True`` las columnas son ``defective_fraction`` y ``aoq``."
+msgstr "With ``stable=True`` the columns are ``defective_fraction`` and ``aoq``."
+
+msgid "Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."
+msgstr "Summary table (one row per statistic; with ``stable=True``, canonical English keys)."
+
+msgid "Exporta el plan de muestreo a un archivo Excel (.xlsx)."
+msgstr "Exports the sampling plan to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``)."
+
+msgid "Curva OC y curva AOQ."
+msgstr "OC curve and AOQ curve."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Plan de muestreo de aceptación por variables (ANSI/ASQ Z1.9 / método k)."
+msgstr "Acceptance sampling plan by variables (ANSI/ASQ Z1.9 / k method)."
+
+msgid "k"
+msgstr "k"
+
+msgid "Factor de aceptabilidad k."
+msgstr "Acceptability constant k."
+
+msgid "AQL en %."
+msgstr "AQL in %."
+
+msgid "spec_type"
+msgstr "spec_type"
+
+msgid "``'one'`` (unilateral) o ``'two'`` (bilateral)."
+msgstr "``'one'`` (one-sided) or ``'two'`` (two-sided)."
+
+msgid "Riesgo del productor."
+msgstr "Producer's risk."
+
+msgid "LTPD (p en % a beta=0.10)."
+msgstr "LTPD (p in % at beta=0.10)."
+
+msgid "``'z1.9'`` o ``'custom'``."
+msgstr "``'z1.9'`` or ``'custom'``."
+
+msgid "P(aceptar | fracción defectiva p) — aproximación normal."
+msgstr "P(accept | defective fraction p) — normal approximation."
+
+msgid "Curva OC del plan (``stable=True``: columnas ``defective_fraction`` y ``p_accept``)."
+msgstr "OC curve of the plan (``stable=True``: columns ``defective_fraction`` and ``p_accept``)."
+
+msgid "Exporta el plan de muestreo por variables a un archivo Excel (.xlsx)."
+msgstr "Exports the variables sampling plan to an Excel (.xlsx) file."
+
+msgid "Evalúa si aceptar el lote a partir de la muestra."
+msgstr "Evaluates whether to accept the lot based on the sample."
+
+msgid "Returns dict con keys: xbar, s, Q_usl, Q_lsl, accept, criterion."
+msgstr "Returns dict with keys: xbar, s, Q_usl, Q_lsl, accept, criterion."
+
+msgid "Plan Dodge-Romig por atributos."
+msgstr "Dodge-Romig plan by attributes."
+
+msgid "plan_type"
+msgstr "plan_type"
+
+msgid "``'LTPD'`` o ``'AOQL'``."
+msgstr "``'LTPD'`` or ``'AOQL'``."
+
+msgid "target"
+msgstr "target"
+
+msgid "LTPD o AOQL objetivo (fracción, no %)."
+msgstr "Target LTPD or AOQL (fraction, not %)."
+
+msgid "process_avg"
+msgstr "process_avg"
+
+msgid "Promedio de proceso asumido (fracción defectiva)."
+msgstr "Assumed process average (defective fraction)."
+
+msgid "aoql"
+msgstr "aoql"
+
+msgid "AOQL real del plan."
+msgstr "Actual AOQL of the plan."
+
+msgid "Curva AOQ del plan (``stable=True``: columnas ``defective_fraction`` y ``aoq``)."
+msgstr "AOQ curve of the plan (``stable=True``: columns ``defective_fraction`` and ``aoq``)."
+
+msgid "Exporta el plan Dodge-Romig a un archivo Excel (.xlsx)."
+msgstr "Exports the Dodge-Romig plan to an Excel (.xlsx) file."
+
