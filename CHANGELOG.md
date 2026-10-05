@@ -2,6 +2,8 @@
 
 ## [Sin publicar]
 
+## [0.12.1] - enlaces del README en PyPI
+
 ### Corregido
 - Los enlaces relativos del README (versión en inglés, CHANGELOG, CONTRIBUTING, LICENSE) daban 404 en la página de PyPI; ahora son URLs absolutas al repositorio.
 
