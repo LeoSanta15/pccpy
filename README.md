@@ -2,11 +2,11 @@
 
 [![PyPI version](https://img.shields.io/pypi/v/pccpy.svg)](https://pypi.org/project/pccpy/)
 [![Python](https://img.shields.io/pypi/pyversions/pccpy.svg)](https://pypi.org/project/pccpy/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/LeoSanta15/pccpy/blob/main/LICENSE)
 
 **Control Estadístico de Procesos (SPC) en Python, al estilo Minitab.**
 
-> 🇬🇧 [English version](README_en.md)
+> 🇬🇧 [English version](https://github.com/LeoSanta15/pccpy/blob/main/README_en.md)
 
 `pccpy` es una librería de SPC en español diseñada para ingenieros y técnicos que conocen
 Minitab y quieren hacer el mismo análisis desde Python. Todas las convenciones de
@@ -1265,11 +1265,11 @@ sphinx-build -b html docs/source docs/build
 # Abrir docs/build/index.html
 ```
 
-Ver [`CHANGELOG.md`](CHANGELOG.md) para el historial de versiones y
-[`CONTRIBUTING.md`](CONTRIBUTING.md) para las normas de contribución.
+Ver [`CHANGELOG.md`](https://github.com/LeoSanta15/pccpy/blob/main/CHANGELOG.md) para el historial de versiones y
+[`CONTRIBUTING.md`](https://github.com/LeoSanta15/pccpy/blob/main/CONTRIBUTING.md) para las normas de contribución.
 
 ---
 
 ## Licencia
 
-MIT — ver [LICENSE](LICENSE).
+MIT — ver [LICENSE](https://github.com/LeoSanta15/pccpy/blob/main/LICENSE).

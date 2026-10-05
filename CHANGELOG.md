@@ -2,6 +2,9 @@
 
 ## [Sin publicar]
 
+### Corregido
+- Los enlaces relativos del README (versión en inglés, CHANGELOG, CONTRIBUTING, LICENSE) daban 404 en la página de PyPI; ahora son URLs absolutas al repositorio.
+
 ## [0.12.0] - validación, capacidad para atributos y Fase I
 
 ### Añadido
