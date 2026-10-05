@@ -21,8 +21,9 @@
 |---|---|---|---|
 | 0 Andamiaje | `feat/i18n-fase-0-andamiaje` | [#7](https://github.com/LeoSanta15/pccpy/pull/7) | en revisión |
 | 1 Errores y avisos | `feat/i18n-fase-1-errores` | _(se completa al abrir el PR)_ | en revisión |
-| 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | — | pendiente |
-| 3 Gráficos y constantes de módulo | `feat/i18n-fase-3-graficos` | — | pendiente |
+| 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | _(se completa al abrir el PR)_ | en revisión |
+| 3 Gráficos y constantes de módulo (`wizard`) | `feat/i18n-fase-3-graficos` | — | pendiente |
+| 3b Otras tablas con columnas en español (`pareto`, curvas OC/AOQ, ANOVA, `kappa_vs_reference`) | `feat/i18n-fase-3b-tablas` | — | pendiente (hallazgo de la fase 2) |
 | 4 Documentación multilingüe | — | — | diferida |
 | 5 Glosario y release `0.11.0` | `feat/i18n-fase-5-release` | — | pendiente |
 
@@ -140,3 +141,11 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 ❔ **No verificado:** migración real de los módulos grandes (`msa`, `capability`, `wizard`); Python 3.9–3.10 y 3.12–3.13 (la matriz de CI lo comprobaría); Windows/macOS; `sphinx-intl`; compilación del catálogo en el build; la calidad de las traducciones al inglés (solo se tradujeron 4 textos de prueba).
 
 ---
+
+## Desviaciones y hallazgos de la fase 2
+
+- **Movido de la fase 3 a la 2:** `rules.TEST_DESCRIPTIONS` y los textos de la prueba 1 de las cartas (`test1_text`, ahora una plantilla `N_()` con `test1_params`): `ControlChart.summary()` los muestra, así que sin ellos el resumen en inglés quedaba mezclado.
+- **Hallazgo:** 6 funciones más devuelven DataFrames con columnas en español (`violations` —hecha—, `pareto`, `oc_curve`, `aoq_curve`, tablas ANOVA de Gage R&R, `kappa_vs_reference`). No estaban en el plan; propuesta de **fase 3b** (misma solución: etiquetas traducibles + `stable=True`).
+- **Hallazgo:** algunas cartas guardan parámetros con **clave en español** (`media`, `forma`, `n_puntos`, `sigma_dentro`…); son datos públicos y no se traducen: solo se muestran traducidos en `summary()`.
+- **Hallazgo:** `tr()` dentro de un f-string se extrae solo en Python >= 3.12; ahora un test lo prohíbe (el catálogo no debe depender de la versión de Python).
+- **Semántica a documentar:** los textos que un resultado guarda al crearse (`DiagnoseResult.issues`, `recommended_snippet`, `WizardResult.rationale`) quedan en el idioma activo en ese momento.
