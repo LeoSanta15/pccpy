@@ -1,0 +1,138 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 22:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Validación de la instalación"
+msgstr "Installation validation"
+
+msgid "`pccpy` incluye una validación que **comprueba la biblioteca contra referencias independientes**: tablas publicadas, fórmulas escritas aparte con NumPy y SciPy, definiciones y simulaciones con semilla fija. Sirve para documentar que la versión instalada calcula bien (por ejemplo, en un sistema de calidad regulado) y para detectar regresiones."
+msgstr "`pccpy` includes a validation that **checks the library against independent references**: published tables, formulas written separately with NumPy and SciPy, definitions and simulations with a fixed seed. It documents that the installed version computes correctly (for example, in a regulated quality system) and detects regressions."
+
+msgid "Desde la línea de órdenes, con un informe en Markdown (devuelve código de salida 0 si todo es correcto):"
+msgstr "From the command line, with a Markdown report (the exit code is 0 if everything is correct):"
+
+msgid "Qué se comprueba"
+msgstr "What is checked"
+
+msgid "Área"
+msgstr "Area"
+
+msgid "Referencia"
+msgstr "Reference"
+
+msgid "Constantes d2, d3, c4, A2, A3, D3, D4, B3, B4"
+msgstr "Constants d2, d3, c4, A2, A3, D3, D4, B3, B4"
+
+msgid "Tabla de factores de Montgomery (n = 2, 5, 10)"
+msgstr "Montgomery's table of factors (n = 2, 5, 10)"
+
+msgid "Límites de I-MR, Xbar-R, Xbar-S, P, NP, C y U"
+msgstr "I-MR, Xbar-R, Xbar-S, P, NP, C and U limits"
+
+msgid "Fórmulas manuales; d2 y d3 por integración numérica"
+msgstr "Manual formulas; d2 and d3 by numerical integration"
+
+msgid "Pruebas de causas especiales 1 a 8"
+msgstr "Special-cause tests 1 to 8"
+
+msgid "Patrones construidos a mano; tasa de falsas alarmas por simulación"
+msgstr "Hand-built patterns; false-alarm rate by simulation"
+
+msgid "Cp, Cpk, Pp, Ppk, Z.Bench y PPM"
+msgstr "Cp, Cpk, Pp, Ppk, Z.Bench and PPM"
+
+msgid "Fórmulas con la distribución normal"
+msgstr "Formulas with the normal distribution"
+
+msgid "Anderson-Darling"
+msgstr "Anderson-Darling"
+
+msgid "Estadístico A² calculado por separado"
+msgstr "A² statistic computed separately"
+
+msgid "Intervalos de tolerancia"
+msgstr "Tolerance intervals"
+
+msgid "Factores k conocidos (n = 10, 95/95)"
+msgstr "Known k factors (n = 10, 95/95)"
+
+msgid "Muestreo de aceptación"
+msgstr "Acceptance sampling"
+
+msgid "Celdas de la tabla II-A de Z1.4; probabilidad binomial acumulada"
+msgstr "Cells of Z1.4 table II-A; cumulative binomial probability"
+
+msgid "Gage R&R, Tipo 1, linealidad, kappa"
+msgstr "Gage R&R, Type 1, linearity, kappa"
+
+msgid "Cuadrados medios del ANOVA, fórmulas de Cg/Cgk, regresión exacta, definición de κ"
+msgstr "ANOVA mean squares, Cg/Cgk formulas, exact regression, definition of κ"
+
+msgid "T² de Hotelling y MEWMA"
+msgstr "Hotelling's T² and MEWMA"
+
+msgid "Fórmulas y límites conocidos"
+msgstr "Known formulas and limits"
+
+msgid "Qué no es"
+msgstr "What it is not"
+
+msgid "**No es una comparación con Minitab** ni con otro programa: usa referencias independientes, no otro software."
+msgstr "**It is not a comparison with Minitab** or any other program: it uses independent references, not other software."
+
+msgid "No sustituye la validación del proceso de quien la usa: demuestra que los cálculos de `pccpy` son correctos, no que los datos o su uso lo sean."
+msgstr "It does not replace the validation of the user's own process: it shows that `pccpy`'s calculations are correct, not that the data or their use are."
+
+msgid "Cada comprobación tiene una tolerancia numérica documentada en el informe."
+msgstr "Each check has a numerical tolerance documented in the report."
+
+msgid "Ejecuta las comprobaciones de validación y devuelve el informe."
+msgstr "Runs the validation checks and returns the report."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Solo las comprobaciones con estos identificadores (por defecto, todas; ver ``ValidationReport.to_frame()``)."
+msgstr "Only the checks with these identifiers (by default, all; see ``ValidationReport.to_frame()``)."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*ValidationReport* -- ``report.passed`` es ``True`` si todo coincide con las referencias."
+msgstr "*ValidationReport* -- ``report.passed`` is ``True`` if everything matches the references."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Resultado de ``run_validation``: las comprobaciones y el entorno en que se ejecutaron."
+msgstr "Result of ``run_validation``: the checks and the environment they ran in."
+
+msgid "``True`` si todas las comprobaciones son correctas."
+msgstr "``True`` if all checks pass."
+
+msgid "Una fila por comprobación (con ``stable=True``, columnas con claves en inglés)."
+msgstr "One row per check (with ``stable=True``, columns with English keys)."
+
+msgid "Resumen en texto: comprobaciones correctas y, si las hay, las fallidas."
+msgstr "Text summary: passed checks and, if any, the failed ones."
+
+msgid "Informe completo en Markdown: entorno, resultado de cada comprobación y referencias."
+msgstr "Full report in Markdown: environment, result of each check and references."
+

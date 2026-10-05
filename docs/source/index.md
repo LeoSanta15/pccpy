@@ -31,6 +31,7 @@ faq
 wizard
 idioma
 traducir
+validacion
 ```
 
 ```{toctree}
