@@ -35,6 +35,27 @@ def tabla_estadisticos(filas, stable: bool = False) -> pd.DataFrame:
     return pd.DataFrame({columna: [v for _c, _e, v in filas]}, index=indice)
 
 
+def renombrar(frame: pd.DataFrame, columnas: dict, stable: bool, indice=None, filas=None) -> pd.DataFrame:
+    """Devuelve ``frame`` (con columnas/índice en español) con las cabeceras del idioma activo o con claves estables.
+
+    Parameters
+    ----------
+    columnas : dict
+        ``{columna en español (N_): clave estable}``.
+    indice : tuple, optional
+        ``(nombre del índice en español (N_), clave estable)``.
+    filas : dict, optional
+        ``{etiqueta de fila en español (N_): clave estable}`` (solo para tablas cuyas filas son conceptos, no datos).
+    """
+    salida = frame.rename(columns={es: (clave if stable else tr(es)) for es, clave in columnas.items()})
+    if indice is not None:
+        es, clave = indice
+        salida.index.name = clave if stable else tr(es)
+    if filas:
+        salida = salida.rename(index={es: (clave if stable else tr(es)) for es, clave in filas.items()})
+    return salida
+
+
 def etiquetas(mapa: dict, stable: bool) -> dict:
     """Clave estable → nombre de columna (la propia clave con ``stable=True``; si no, el texto traducido)."""
     return {k: (k if stable else tr(v)) for k, v in mapa.items()}

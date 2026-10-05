@@ -23,8 +23,17 @@ import pandas as pd
 from scipy import stats
 
 from ._data import _excel_writer, as_1d
-from ._frames import tabla_estadisticos
+from ._frames import renombrar, tabla_estadisticos
 from ._i18n import N_, tr
+
+_COLUMNAS_ANOVA = {
+    N_("GL"): "df", N_("SC"): "ss", N_("CM"): "ms", N_("F"): "f", N_("p-valor"): "p_value",
+}
+_FILAS_ANOVA = {
+    N_("Partes"): "parts", N_("Operadores"): "operators", N_("Partes×Operadores"): "parts_x_operators",
+    N_("Error (Repetibilidad)"): "error_repeatability", N_("Partes(Operadores)"): "parts_nested", N_("Error"): "error",
+}
+_COLUMNAS_KAPPA = {N_("kappa"): "kappa", N_("p_valor"): "p_value", N_("% acuerdo"): "pct_agreement"}
 
 NAN = float("nan")
 
@@ -185,8 +194,20 @@ class GageRRResult:
         """
         with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name=tr("Resumen"))
-            if self.anova_table is not None:
-                self.anova_table.to_excel(writer, sheet_name="ANOVA")
+            anova = self.anova_frame()
+            if anova is not None:
+                anova.to_excel(writer, sheet_name="ANOVA")
+
+    def anova_frame(self, stable: bool = False) -> pd.DataFrame | None:
+        """Tabla ANOVA con las cabeceras del idioma activo (``None`` si el método no usa ANOVA).
+
+        ``anova_table`` conserva siempre las cabeceras en español; con ``stable=True`` esta tabla usa el índice
+        ``source`` y las columnas ``df``, ``ss``, ``ms``, ``f`` y ``p_value``, y las filas ``parts``, ``operators``,
+        ``parts_x_operators``, ``error_repeatability`` (cruzado) o ``parts_nested``, ``error`` (anidado).
+        """
+        if self.anova_table is None:
+            return None
+        return renombrar(self.anova_table, _COLUMNAS_ANOVA, stable, indice=(N_("Fuente"), "source"), filas=_FILAS_ANOVA)
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
@@ -926,6 +947,17 @@ class AttributeAgreementResult:
                 operator=op, kappa=row["kappa"], p=row["p_valor"], agreement=row["% acuerdo"]))
         return "\n".join(lines)
 
+    def kappa_within_frame(self, stable: bool = False) -> pd.DataFrame:
+        """``kappa_within`` con las cabeceras del idioma activo (``stable=True``: índice ``operator`` y columnas
+        ``kappa``, ``p_value``, ``pct_agreement``). El atributo conserva siempre las cabeceras en español."""
+        return renombrar(self.kappa_within, _COLUMNAS_KAPPA, stable, indice=(N_("operador"), "operator"))
+
+    def kappa_vs_reference_frame(self, stable: bool = False) -> pd.DataFrame:
+        """``kappa_vs_reference`` con las cabeceras del idioma activo (igual que :meth:`kappa_within_frame`)."""
+        if self.kappa_vs_reference.empty:
+            return self.kappa_vs_reference
+        return renombrar(self.kappa_vs_reference, _COLUMNAS_KAPPA, stable, indice=(N_("operador"), "operator"))
+
     def to_excel(self, path) -> None:
         """Exporta la concordancia por atributos a un archivo Excel (.xlsx).
 
@@ -935,7 +967,7 @@ class AttributeAgreementResult:
         with _excel_writer(path) as writer:
             self.to_frame().to_excel(writer, sheet_name=tr("Resumen"))
             if not self.kappa_vs_reference.empty:
-                self.kappa_vs_reference.to_excel(writer, sheet_name="KappaVsReferencia")
+                self.kappa_vs_reference_frame().to_excel(writer, sheet_name=tr("KappaVsReferencia"))
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()

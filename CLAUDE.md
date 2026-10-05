@@ -97,7 +97,7 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - **R-15 No repetir bugs:** antes de tocar validación de entrada, casos borde,
   imports opcionales, autodoc o releases, lee `docs/retrospectiva/BUG_CATALOG.md`.
   Si un bug reaparece: test de regresión, actualizar catálogo, reforzar la regla.
-- **R-17 Texto visible traducible `[test]`.** Todo mensaje de `raise`/`warnings.warn` es `tr("texto literal")` o `tr("… {x} …").format(x=x)` (marcadores con nombre, iguales en todos los idiomas; nunca un f-string dentro de `tr()`); nadie asigna `tr`/`N_`. Tras cambiar un texto: `make i18n-update`, traducir en `locale/en/…/pccpy.po`, `make i18n-compile` (`make i18n-check` lo exige el CI). Comprobado por `tests/test_i18n_errores.py`.
+- **R-17 Texto visible traducible `[test]`.** Todo mensaje de `raise`/`warnings.warn` es `tr("texto literal")` o `tr("… {x} …").format(x=x)` (marcadores con nombre, iguales en todos los idiomas; nunca un f-string dentro de `tr()`); nadie asigna `tr`/`N_`. Tras cambiar un texto: `make i18n-update`, traducir en `locale/en/…/pccpy.po`, `make i18n-compile` (`make i18n-check` lo exige el CI). Comprobado por `tests/test_i18n_errores.py`. Los tests no pueden depender de extras opcionales (`openpyxl`): el CI no instala `excel`; usa `pytest.importorskip` o `find_spec` (la fase 3b lo rompió en CI porque local sí tenía `openpyxl`; verifica con `pip install -e .` sin extras).
 - **R-16 Reglas probadas:** antes de añadir una regla a este archivo, ejecuta su
   comando contra este repo y registra el resultado (una regla propuesta con
   `ruff --select F,E9,B,I,S` falló: `S101` en `acceptance.py:692`).
@@ -115,8 +115,8 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - API: `pccpy.set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable `PCCPY_LANG`. Un idioma inexistente lanza `ValueError`.
 - Textos: `tr("…")` se traduce al mostrar; `N_("…")` marca constantes de módulo (se traducen con `tr()` al usarlas). Los f-strings **no** se pueden traducir: usa `tr("… {x} …").format(x=x)`.
 - Comandos: `make i18n-update` (extraer + actualizar `.po`), `make i18n-compile` (los `.mo` se versionan) y `make i18n-check` (lo exige el CI).
-- Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Fases 0 a 3 hechas (mecanismo, errores/avisos, `summary()` y `to_frame()`, gráficos y `wizard`); otras tablas (`pareto`, curvas OC/AOQ, ANOVA, `kappa_vs_reference`) siguen solo en español hasta la fase 3b.
-- `to_frame(stable=True)` da claves canónicas en inglés (no cambian con el idioma); sin `stable`, cabeceras en el idioma activo. Al añadir filas o columnas, define su clave estable (los tests comparan con `tests/golden/i18n_stable.json`).
+- Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Fases 0 a 3b hechas (mecanismo, errores/avisos, `summary()` y `to_frame()`, gráficos y `wizard`, otras tablas); falta la fase 5 (revisión humana del inglés y release).
+- `to_frame(stable=True)` da claves canónicas en inglés (no cambian con el idioma); sin `stable`, cabeceras en el idioma activo. Lo mismo vale para `pareto`, `oc_curve`, `aoq_curve`, `anova_frame` y `kappa_*_frame` (golden `tests/golden/i18n_tablas_es.json`). Al añadir filas o columnas, define su clave estable (los tests comparan con `tests/golden/i18n_stable.json`).
 - Los textos de `summary()` se comprueban contra `tests/golden/i18n_es.json` (generado con el código previo a la migración; **no se regenera** salvo cambio deliberado del español) y con invariantes es/en (`tests/test_i18n_resumenes.py`).
 - No pongas `tr()` dentro de un f-string: Babel solo lo extrae en Python >= 3.12 (el catálogo cambiaría según la versión).
 - El marcador se llama `tr`, no `_`: 8 funciones usan `_` como variable y lanzan errores (un `_("…")` ahí fallaría solo en la ruta de error).

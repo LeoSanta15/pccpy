@@ -18,8 +18,11 @@ from scipy import stats
 from scipy.optimize import brentq
 
 from ._data import _excel_writer
-from ._frames import tabla_estadisticos
+from ._frames import renombrar, tabla_estadisticos
 from ._i18n import N_, tr
+
+_COLUMNAS_OC = {N_("p_defectivo"): "defective_fraction", N_("P(aceptar)"): "p_accept"}
+_COLUMNAS_AOQ = {N_("p_defectivo"): "defective_fraction", N_("AOQ"): "aoq"}
 
 
 # ──────────────────────────────────────────────────── curva OC (binomial) ────
@@ -135,14 +138,20 @@ class SamplingPlanAttributes:
         """Probabilidad de aceptar para fracción defectiva p."""
         return _pa_binomial(self.n, self.c, p)
 
-    def oc_curve(self) -> pd.DataFrame:
-        """Curva OC: fracción defectiva vs probabilidad de aceptación."""
-        return pd.DataFrame({"p_defectivo": self._p_arr, "P(aceptar)": self._pa_arr})
+    def oc_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva OC: fracción defectiva vs probabilidad de aceptación.
 
-    def aoq_curve(self) -> pd.DataFrame:
-        """Curva de calidad media de salida (AOQ) vs fracción defectiva entrante."""
+        Con ``stable=True`` las columnas son ``defective_fraction`` y ``p_accept`` (no cambian con el idioma).
+        """
+        return renombrar(pd.DataFrame({"p_defectivo": self._p_arr, "P(aceptar)": self._pa_arr}), _COLUMNAS_OC, stable)
+
+    def aoq_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva de calidad media de salida (AOQ) vs fracción defectiva entrante.
+
+        Con ``stable=True`` las columnas son ``defective_fraction`` y ``aoq``.
+        """
         aoq = self._pa_arr * self._p_arr * (self.N - self.n) / self.N
-        return pd.DataFrame({"p_defectivo": self._p_arr, "AOQ": aoq})
+        return renombrar(pd.DataFrame({"p_defectivo": self._p_arr, "AOQ": aoq}), _COLUMNAS_AOQ, stable)
 
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
@@ -313,10 +322,11 @@ class SamplingPlanVariables:
         """P(aceptar | fracción defectiva p) — aproximación normal."""
         return _pa_variables(self.n, self.k, p, self.spec_type)
 
-    def oc_curve(self) -> pd.DataFrame:
+    def oc_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva OC del plan (``stable=True``: columnas ``defective_fraction`` y ``p_accept``)."""
         p_arr = np.linspace(0, min(0.5, self.ltpd * 3), 300)
         pa_arr = np.array([self.pa(p) for p in p_arr])
-        return pd.DataFrame({"p_defectivo": p_arr, "P(aceptar)": pa_arr})
+        return renombrar(pd.DataFrame({"p_defectivo": p_arr, "P(aceptar)": pa_arr}), _COLUMNAS_OC, stable)
 
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
@@ -555,12 +565,14 @@ class DodgeRomigPlan:
     def pa(self, p: float) -> float:
         return _pa_binomial(self.n, self.c, p)
 
-    def oc_curve(self) -> pd.DataFrame:
-        return pd.DataFrame({"p_defectivo": self._p_arr, "P(aceptar)": self._pa_arr})
+    def oc_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva OC del plan (``stable=True``: columnas ``defective_fraction`` y ``p_accept``)."""
+        return renombrar(pd.DataFrame({"p_defectivo": self._p_arr, "P(aceptar)": self._pa_arr}), _COLUMNAS_OC, stable)
 
-    def aoq_curve(self) -> pd.DataFrame:
+    def aoq_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva AOQ del plan (``stable=True``: columnas ``defective_fraction`` y ``aoq``)."""
         aoq = self._pa_arr * self._p_arr * (self.N - self.n) / self.N
-        return pd.DataFrame({"p_defectivo": self._p_arr, "AOQ": aoq})
+        return renombrar(pd.DataFrame({"p_defectivo": self._p_arr, "AOQ": aoq}), _COLUMNAS_AOQ, stable)
 
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""

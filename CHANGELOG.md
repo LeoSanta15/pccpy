@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - idioma de los mensajes (fases 0 a 3 de 5)
+## [Sin publicar] - idioma de los mensajes (fases 0 a 3b de 5)
 
 ### Añadido
 - Mecanismo de idioma basado en `gettext`: `set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable de entorno `PCCPY_LANG`. El idioma fuente es el español y `en` es el primer idioma adicional.
@@ -17,8 +17,11 @@
 - Fase 3: los **textos de todos los gráficos** (títulos, ejes, leyendas, anotaciones, etiquetas de los paneles de las cartas) y el **asistente `wizard()`** completo (árbol de preguntas, justificaciones, fragmentos de código, modos CLI y widget) pasan por `tr()`/`N_()` con traducción al inglés (444 → 742 textos). Los fragmentos de código de ejemplo se muestran con nombres de variable en inglés.
 - Referencia en español **sin cambios**: figuras (textos de cada gráfico del corpus) y asistente (árbol, CLI, resultados, widget) coinciden con las referencias generadas antes de migrar; tests es/en de gráficos y asistente (sin palabras españolas, misma estructura, código de ejemplo válido, marco del CLI con el mismo ancho).
 
+- Fase 3b: `pareto()` (`stable=`; el grupo «Otros» usa el idioma activo), `oc_curve()`/`aoq_curve()` (`stable=`), las tablas ANOVA y de kappa mediante los métodos nuevos `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()` (los atributos `anova_table`, `kappa_within` y `kappa_vs_reference` no cambian: siguen en español), y las hojas de `to_excel()` (`KappaVsReferencia` → `KappaVsReference` en inglés). 742 → 767 textos. Español sin cambios (20 tablas de referencia generadas antes de migrar).
+- `plot_pareto()` acepta tablas de cualquier idioma o con `stable=True` (usa las columnas por posición).
+
 ### Nota
-- Todavía **no** se traducen las tablas `pareto`, curvas OC/AOQ, tablas ANOVA y `kappa_vs_reference`: fases siguientes. El comportamiento por defecto (español) no cambia.
+- Quedan por traducir, si se decide: `pareto`, curvas OC/AOQ, tablas ANOVA y `kappa_vs_reference`: fases siguientes. El comportamiento por defecto (español) no cambia.
 
 ## [0.10.8] - documentación de referencia completa
 
