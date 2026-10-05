@@ -167,3 +167,4 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 - **Hojas de Excel:** `KappaVsReferencia` se traduce; la hoja `ANOVA` conserva el nombre. Los tests comparan las hojas por posición, no por nombre.
 - **Mutaciones comprobadas:** no traducir columnas, filas, el nombre «Otros» o la hoja de kappa hace fallar los tests.
 - **Fallo de CI corregido:** los tests de tablas generaban las hojas de Excel sin comprobar que `openpyxl` (extra opcional) estuviera instalado; en local pasaban y en CI fallaban 62 tests. Ahora las hojas se omiten sin `openpyxl`. Se verificó con una instalación `pip install -e .` sin extras (1840 pasan, 13 omitidos).
+- **Segundo fallo de CI corregido:** `kappa_*` difería en el último dígito decimal entre versiones de numpy/scipy (Python 3.10/3.11 vs local); las referencias de tablas comparan ahora etiquetas exactas y números con tolerancia relativa 1e-9 (con control negativo).

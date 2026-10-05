@@ -29,9 +29,28 @@ def _tablas(lang: str) -> dict:
     return _CACHE[lang]
 
 
+def _aproximadamente_igual(a: dict, b: dict) -> bool:
+    """Etiquetas (índice, columnas) exactas; números con tolerancia (los últimos dígitos varían entre versiones de numpy/scipy)."""
+    if {k: a[k] for k in ("index_name", "columns", "index")} != {k: b[k] for k in ("index_name", "columns", "index")}:
+        return False
+    if len(a["data"]) != len(b["data"]):
+        return False
+    return all(
+        (x == pytest.approx(y, rel=1e-9) if isinstance(x, float) and isinstance(y, float) else x == y)
+        for fa, fb in zip(a["data"], b["data"]) for x, y in zip(fa, fb)
+    )
+
+
 @pytest.mark.parametrize("nombre", CLAVES_CORPUS)
 def test_el_espanol_de_las_tablas_no_cambia(nombre):
-    assert _tablas("es")[nombre] == TABLAS_ES[nombre]
+    assert _aproximadamente_igual(_tablas("es")[nombre], TABLAS_ES[nombre])
+
+
+def test_el_comparador_de_tablas_distingue_etiquetas_y_numeros():
+    base = {"index_name": "i", "columns": ["a"], "index": [0], "data": [[1.0]]}
+    assert _aproximadamente_igual(base, {**base, "data": [[1.0 + 1e-13]]})
+    assert not _aproximadamente_igual(base, {**base, "data": [[1.1]]})
+    assert not _aproximadamente_igual(base, {**base, "columns": ["b"]})
 
 
 def test_las_tablas_del_corpus_son_las_de_la_referencia():
