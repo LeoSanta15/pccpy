@@ -948,8 +948,8 @@ plan.ltpd       # LTPD (fracción que da Pa ≈ 0.10)
 plan.aoq_max    # AOQL
 
 plan.pa(0.01)   # P(aceptar | p=1%) — curva OC
-plan.oc_curve() # DataFrame con columnas p_defectivo, P(aceptar)
-plan.aoq_curve()# DataFrame con columnas p_defectivo, AOQ
+plan.oc_curve() # DataFrame con columnas p_defectivo, P(aceptar) (stable=True: defective_fraction, p_accept)
+plan.aoq_curve()# DataFrame con columnas p_defectivo, AOQ (stable=True: defective_fraction, aoq)
 plan.plot()     # curva OC + curva AOQ en una figura
 ```
 
@@ -1015,7 +1015,8 @@ grr.var_reproducibility # varianza de reproducibilidad
 grr.var_part            # varianza de partes
 grr.var_total           # total (suma de los tres anteriores)
 grr.ndc                 # número de categorías distintas
-grr.anova_table         # DataFrame con GL, SC, CM, F, p-valor
+grr.anova_table         # DataFrame con GL, SC, CM, F, p-valor (siempre en español)
+grr.anova_frame()       # la misma tabla en el idioma activo (stable=True: df, ss, ms, f, p_value)
 grr.to_frame()
 grr.plot()
 

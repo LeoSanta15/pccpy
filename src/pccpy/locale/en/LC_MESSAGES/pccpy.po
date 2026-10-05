@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 00:44+0000\n"
+"POT-Creation-Date: 2026-10-05 00:53+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1008,6 +1008,9 @@ msgstr " (within)"
 msgid "% Acuerdo global vs referencia"
 msgstr "% Overall agreement vs reference"
 
+msgid "% acuerdo"
+msgstr "% agreement"
+
 msgid "%Contribución"
 msgstr "%Contribution"
 
@@ -1209,6 +1212,9 @@ msgstr ""
 "p-value {ptxt}\n"
 "N = {n}"
 
+msgid "AOQ"
+msgstr "AOQ"
+
 msgid "AOQ (%)"
 msgstr "AOQ (%)"
 
@@ -1279,6 +1285,9 @@ msgstr "Box-Cox requires strictly positive data."
 #, python-brace-format
 msgid "Box-Cox requiere que {name} sea positivo."
 msgstr "Box-Cox requires {name} to be positive."
+
+msgid "CM"
+msgstr "MS"
 
 msgid "CPL"
 msgstr "CPL"
@@ -1579,6 +1588,12 @@ msgstr "The subgroup size ({n}) must be greater than the number of variables ({p
 msgid "El tamaño de subgrupo debe ser >= 2 (recibido: {n})."
 msgstr "The subgroup size must be >= 2 (received: {n})."
 
+msgid "Error"
+msgstr "Error"
+
+msgid "Error (Repetibilidad)"
+msgstr "Error (Repeatability)"
+
 msgid "Espec."
 msgstr "Spec."
 
@@ -1620,6 +1635,9 @@ msgstr "Rare events — number of units between events (geometric distribution)"
 msgid "Eventos raros — tiempo entre eventos (Weibull o exponencial)"
 msgstr "Rare events — time between events (Weibull or exponential)"
 
+msgid "F"
+msgstr "F"
+
 msgid "Factor k"
 msgstr "k factor"
 
@@ -1649,8 +1667,14 @@ msgstr "Fraction defective with variable sample size"
 msgid "Frecuencia"
 msgstr "Frequency"
 
+msgid "Fuente"
+msgstr "Source"
+
 msgid "Función recomendada"
 msgstr "Recommended function"
+
+msgid "GL"
+msgstr "DF"
 
 #, python-brace-format, python-format
 msgid ""
@@ -1763,6 +1787,9 @@ msgstr "Overall kappa vs reference"
 
 msgid "Kappa vs referencia"
 msgstr "Kappa vs reference"
+
+msgid "KappaVsReferencia"
+msgstr "KappaVsReference"
 
 msgid "LC"
 msgstr "CL"
@@ -2174,11 +2201,20 @@ msgstr "Observed"
 msgid "Operador"
 msgstr "Operator"
 
+msgid "Operadores"
+msgstr "Operators"
+
 msgid "Operadores (o)"
 msgstr "Operators (o)"
 
 msgid "Oscilación"
 msgstr "Oscillation"
+
+msgid "Otros"
+msgstr "Other"
+
+msgid "P(aceptar)"
+msgstr "P(accept)"
 
 msgid "P(aceptar) (%)"
 msgstr "P(accept) (%)"
@@ -2222,8 +2258,17 @@ msgstr "Part"
 msgid "Parte a parte"
 msgstr "Part-to-part"
 
+msgid "Partes"
+msgstr "Parts"
+
 msgid "Partes (p)"
 msgstr "Parts (p)"
+
+msgid "Partes(Operadores)"
+msgstr "Parts(Operators)"
+
+msgid "Partes×Operadores"
+msgstr "Parts×Operators"
 
 msgid "Pendiente"
 msgstr "Slope"
@@ -2366,6 +2411,9 @@ msgstr "R²"
 
 msgid "Réplicas (r)"
 msgstr "Replicates (r)"
+
+msgid "SC"
+msgstr "SS"
 
 #, python-brace-format
 msgid "Se detectó tendencia {direction}. Verifica causas asignables antes de calcular capacidad."
@@ -2616,14 +2664,23 @@ msgstr "Z.Bench (within)"
 msgid "Z.Bench (general)"
 msgstr "Z.Bench (overall)"
 
+msgid "acumulado"
+msgstr "cumulative"
+
 msgid "alfa"
 msgstr "alpha"
 
 msgid "c (número de aceptación)"
 msgstr "c (acceptance number)"
 
+msgid "categoría"
+msgstr "category"
+
 msgid "centro"
 msgstr "center"
+
+msgid "conteo"
+msgstr "count"
 
 msgid "corridas"
 msgstr "runs"
@@ -2708,6 +2765,9 @@ msgstr ""
 msgid "k (factor de aceptabilidad)"
 msgstr "k (acceptability factor)"
 
+msgid "kappa"
+msgstr "kappa"
+
 msgid "longitud"
 msgstr "length"
 
@@ -2757,6 +2817,9 @@ msgstr ""
 "or with the optional pccpy dependency:\n"
 "    pip install pccpy[excel]"
 
+msgid "operador"
+msgstr "operator"
+
 msgid "p Agrupamiento (clustering)"
 msgstr "p Clustering"
 
@@ -2773,6 +2836,9 @@ msgstr "p Trends"
 msgid "p {name}={p:.4f}{marca}"
 msgstr "p {name}={p:.4f}{marca}"
 
+msgid "p-valor"
+msgstr "p-value"
+
 msgid "p-valor (intercepto=0)"
 msgstr "p-value (intercept=0)"
 
@@ -2784,6 +2850,12 @@ msgstr "p-value (bias=0)"
 
 msgid "p-valor normalidad"
 msgstr "Normality p-value"
+
+msgid "p_defectivo"
+msgstr "p_defective"
+
+msgid "p_valor"
+msgstr "p_value"
 
 msgid "panel"
 msgstr "panel"
@@ -2799,6 +2871,9 @@ msgstr "weight"
 
 msgid "pesos"
 msgstr "weights"
+
+msgid "porcentaje"
+msgstr "percent"
 
 msgid "prueba"
 msgstr "test"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 00:44+0000\n"
+"POT-Creation-Date: 2026-10-05 00:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -798,6 +798,9 @@ msgstr ""
 msgid "% Acuerdo global vs referencia"
 msgstr ""
 
+msgid "% acuerdo"
+msgstr ""
+
 msgid "%Contribución"
 msgstr ""
 
@@ -1001,6 +1004,9 @@ msgid ""
 "N = {n}"
 msgstr ""
 
+msgid "AOQ"
+msgstr ""
+
 msgid "AOQ (%)"
 msgstr ""
 
@@ -1070,6 +1076,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "Box-Cox requiere que {name} sea positivo."
+msgstr ""
+
+msgid "CM"
 msgstr ""
 
 msgid "CPL"
@@ -1369,6 +1378,12 @@ msgstr ""
 msgid "El tamaño de subgrupo debe ser >= 2 (recibido: {n})."
 msgstr ""
 
+msgid "Error"
+msgstr ""
+
+msgid "Error (Repetibilidad)"
+msgstr ""
+
 msgid "Espec."
 msgstr ""
 
@@ -1410,6 +1425,9 @@ msgstr ""
 msgid "Eventos raros — tiempo entre eventos (Weibull o exponencial)"
 msgstr ""
 
+msgid "F"
+msgstr ""
+
 msgid "Factor k"
 msgstr ""
 
@@ -1439,7 +1457,13 @@ msgstr ""
 msgid "Frecuencia"
 msgstr ""
 
+msgid "Fuente"
+msgstr ""
+
 msgid "Función recomendada"
+msgstr ""
+
+msgid "GL"
 msgstr ""
 
 #, python-brace-format, python-format
@@ -1545,6 +1569,9 @@ msgid "Kappa global vs referencia"
 msgstr ""
 
 msgid "Kappa vs referencia"
+msgstr ""
+
+msgid "KappaVsReferencia"
 msgstr ""
 
 msgid "LC"
@@ -1960,10 +1987,19 @@ msgstr ""
 msgid "Operador"
 msgstr ""
 
+msgid "Operadores"
+msgstr ""
+
 msgid "Operadores (o)"
 msgstr ""
 
 msgid "Oscilación"
+msgstr ""
+
+msgid "Otros"
+msgstr ""
+
+msgid "P(aceptar)"
 msgstr ""
 
 msgid "P(aceptar) (%)"
@@ -2008,7 +2044,16 @@ msgstr ""
 msgid "Parte a parte"
 msgstr ""
 
+msgid "Partes"
+msgstr ""
+
 msgid "Partes (p)"
+msgstr ""
+
+msgid "Partes(Operadores)"
+msgstr ""
+
+msgid "Partes×Operadores"
 msgstr ""
 
 msgid "Pendiente"
@@ -2151,6 +2196,9 @@ msgid "R²"
 msgstr ""
 
 msgid "Réplicas (r)"
+msgstr ""
+
+msgid "SC"
 msgstr ""
 
 #, python-brace-format
@@ -2403,13 +2451,22 @@ msgstr ""
 msgid "Z.Bench (general)"
 msgstr ""
 
+msgid "acumulado"
+msgstr ""
+
 msgid "alfa"
 msgstr ""
 
 msgid "c (número de aceptación)"
 msgstr ""
 
+msgid "categoría"
+msgstr ""
+
 msgid "centro"
+msgstr ""
+
+msgid "conteo"
 msgstr ""
 
 msgid "corridas"
@@ -2482,6 +2539,9 @@ msgstr ""
 msgid "k (factor de aceptabilidad)"
 msgstr ""
 
+msgid "kappa"
+msgstr ""
+
 msgid "longitud"
 msgstr ""
 
@@ -2527,6 +2587,9 @@ msgid ""
 "    pip install pccpy[excel]"
 msgstr ""
 
+msgid "operador"
+msgstr ""
+
 msgid "p Agrupamiento (clustering)"
 msgstr ""
 
@@ -2543,6 +2606,9 @@ msgstr ""
 msgid "p {name}={p:.4f}{marca}"
 msgstr ""
 
+msgid "p-valor"
+msgstr ""
+
 msgid "p-valor (intercepto=0)"
 msgstr ""
 
@@ -2553,6 +2619,12 @@ msgid "p-valor (sesgo=0)"
 msgstr ""
 
 msgid "p-valor normalidad"
+msgstr ""
+
+msgid "p_defectivo"
+msgstr ""
+
+msgid "p_valor"
 msgstr ""
 
 msgid "panel"
@@ -2568,6 +2640,9 @@ msgid "peso"
 msgstr ""
 
 msgid "pesos"
+msgstr ""
+
+msgid "porcentaje"
 msgstr ""
 
 msgid "prueba"

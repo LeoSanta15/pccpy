@@ -396,9 +396,9 @@ def plot_sampling_attributes(result, *, figsize=None, title: str | None = None):
     with plt.rc_context({}):
         fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize or (11, 4.5))
 
-    oc = result.oc_curve()
-    p = oc["p_defectivo"].to_numpy()
-    pa = oc["P(aceptar)"].to_numpy()
+    oc = result.oc_curve(stable=True)
+    p = oc["defective_fraction"].to_numpy()
+    pa = oc["p_accept"].to_numpy()
 
     ax1.plot(p * 100, pa * 100, color=BLUE, lw=2)
     ax1.axhline(95, color=GRAY, ls=":", lw=0.8)
@@ -417,8 +417,7 @@ def plot_sampling_attributes(result, *, figsize=None, title: str | None = None):
                     label=tr("LTPD={v:.3g}%").format(v=result.ltpd * 100))
     ax1.legend(fontsize=8)
 
-    aoq_df = result.aoq_curve()
-    aoq = aoq_df["AOQ"].to_numpy()
+    aoq = result.aoq_curve(stable=True)["aoq"].to_numpy()
     ax2.plot(p * 100, aoq * 100, color=ORANGE, lw=2)
     if hasattr(result, "aoql") and not math.isnan(result.aoql):
         ax2.axhline(result.aoql * 100, color=RED, ls="--", lw=1.2,
@@ -442,9 +441,9 @@ def plot_sampling_variables(result, *, figsize=None, title: str | None = None):
 
     Devuelve la figura de matplotlib.
     """
-    oc = result.oc_curve()
-    p = oc["p_defectivo"].to_numpy()
-    pa = oc["P(aceptar)"].to_numpy()
+    oc = result.oc_curve(stable=True)
+    p = oc["defective_fraction"].to_numpy()
+    pa = oc["p_accept"].to_numpy()
 
     with plt.rc_context({}):
         fig, ax = plt.subplots(figsize=figsize or (7, 4.5))

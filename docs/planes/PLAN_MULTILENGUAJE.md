@@ -23,7 +23,7 @@
 | 1 Errores y avisos | `feat/i18n-fase-1-errores` | [#8](https://github.com/LeoSanta15/pccpy/pull/8) | en revisión |
 | 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | [#9](https://github.com/LeoSanta15/pccpy/pull/9) | en revisión |
 | 3 Gráficos y constantes de módulo (`wizard`) | `feat/i18n-fase-3-graficos` | [#10](https://github.com/LeoSanta15/pccpy/pull/10) | en revisión |
-| 3b Otras tablas con columnas en español (`pareto`, curvas OC/AOQ, ANOVA, `kappa_vs_reference`) | `feat/i18n-fase-3b-tablas` | — | pendiente (hallazgo de la fase 2) |
+| 3b Otras tablas con columnas en español (`pareto`, curvas OC/AOQ, ANOVA, `kappa_vs_reference`) | `feat/i18n-fase-3b-tablas` | _(se completa al abrir el PR)_ | en revisión |
 | 4 Documentación multilingüe | — | — | diferida |
 | 5 Glosario y release `0.11.0` | `feat/i18n-fase-5-release` | — | pendiente |
 
@@ -159,3 +159,10 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 - **Fragmentos de código en inglés:** los nombres de variable de ejemplo (`datos`, `carta`…) pasan a `data`, `chart`…; los tests exigen que sean Python válido y que llamen a la función recomendada.
 - **Detector útil:** el test «sin palabras españolas» de los gráficos encontró dos etiquetas de panel (`Cantidad entre eventos`, `Puntaje acumulado`) que se habían escapado de la migración.
 - **Mutaciones comprobadas:** quitar `tr()` de una etiqueta de eje, del botón «Volver» o del estado `pendiente` hace fallar los tests; quitar `N_()` lo detecta `make i18n-check` (catálogo desactualizado).
+
+## Desviaciones y hallazgos de la fase 3b
+
+- **Atributos vs métodos:** `anova_table`, `kappa_within` y `kappa_vs_reference` son campos guardados; convertirlos en métodos rompería la API. Se dejan **siempre en español** (datos públicos) y se añaden métodos `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()` con cabeceras traducidas y `stable=True`.
+- **`pareto()`:** el grupo «Otros» es un valor de los datos; se traduce al crear la tabla (idioma activo en ese momento). `plot_pareto()` lee las columnas por posición para aceptar cualquier idioma.
+- **Hojas de Excel:** `KappaVsReferencia` se traduce; la hoja `ANOVA` conserva el nombre. Los tests comparan las hojas por posición, no por nombre.
+- **Mutaciones comprobadas:** no traducir columnas, filas, el nombre «Otros» o la hoja de kappa hace fallar los tests.

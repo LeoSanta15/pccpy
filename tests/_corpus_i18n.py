@@ -235,6 +235,38 @@ def construir_estables() -> dict:
 
 
 
+# ── otras tablas (fase 3b): pareto, curvas OC/AOQ, ANOVA, kappa y las hojas de Excel ──
+
+def tablas_sueltas() -> dict:
+    """Tablas devueltas por métodos que no son ``to_frame()`` (la referencia en español se generó antes de la fase 3b)."""
+    import tempfile
+
+    d = {}
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        d["pareto_conteo"] = pp.pareto(["a", "b", "a", "c", "a", "b"])
+        d["pareto_con_otros"] = pp.pareto(["x", "y", "z", "w"], [50, 30, 3, 2], other_below=5)
+        atr = pp.acceptance_sampling_attributes(N=1000, aql=1.0)
+        var = pp.acceptance_sampling_variables(N=1000, aql=1.0)
+        dr = pp.dodge_romig(N=1000, ltpd=0.05, process_avg=0.01)
+        d["oc_atributos"], d["aoq_atributos"] = atr.oc_curve(), atr.aoq_curve()
+        d["oc_variables"] = var.oc_curve()
+        d["oc_dodge_romig"], d["aoq_dodge_romig"] = dr.oc_curve(), dr.aoq_curve()
+        cruzado = pp.gage_rr(_msa_datos()[0], parts=10, operators=3, replicates=2, tolerance=20.0)
+        anidado = pp.gage_rr_nested(_msa_datos()[0], parts=10, operators=3, replicates=2)
+        d["anova_cruzado"], d["anova_anidado"] = cruzado.anova_frame(), anidado.anova_frame()
+        acuerdo = pp.attribute_agreement(_desde_df_atributos()[0], reference=_desde_df_atributos()[1], replicates=2)
+        d["kappa_dentro"], d["kappa_vs_referencia"] = acuerdo.kappa_within_frame(), acuerdo.kappa_vs_reference_frame()
+        with tempfile.TemporaryDirectory() as tmp:
+            for nombre, res in (("gage_rr", cruzado), ("gage_rr_anidado", anidado), ("acuerdo", acuerdo),
+                                ("muestreo_atributos", atr), ("muestreo_variables", var), ("dodge_romig", dr)):
+                ruta = f"{tmp}/{nombre}.xlsx"
+                res.to_excel(ruta)
+                for i, df in enumerate(pd.read_excel(ruta, sheet_name=None, index_col=0).values()):  # por posición: el nombre de la hoja se traduce
+                    d[f"excel_{nombre}__{i}"] = df
+    return {k: tabla(v) for k, v in d.items()}
+
+
 # ── gráficos: todo el texto de una figura ────────────────────────────────────
 
 def textos_de_figura(fig) -> list[str]:
@@ -407,3 +439,5 @@ if __name__ == "__main__":  # python tests/_corpus_i18n.py  → regenera tests/g
     print(f"{len(figs)} figuras → tests/golden/i18n_plots_es.json")
     (Path(__file__).parent / "golden" / "i18n_wizard_es.json").write_text(json.dumps(textos_wizard(), ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print("asistente → tests/golden/i18n_wizard_es.json")
+    (Path(__file__).parent / "golden" / "i18n_tablas_es.json").write_text(json.dumps(tablas_sueltas(), ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    print("otras tablas → tests/golden/i18n_tablas_es.json")
