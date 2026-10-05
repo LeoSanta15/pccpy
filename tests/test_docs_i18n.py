@@ -89,8 +89,17 @@ def test_el_readme_en_ingles_tiene_la_misma_estructura_que_el_espanol():
 
 
 def test_los_dos_readme_se_enlazan_entre_si():
-    assert "(README_en.md)" in (RAIZ / "README.md").read_text(encoding="utf-8")
-    assert "(README.md)" in (RAIZ / "README_en.md").read_text(encoding="utf-8")
+    # URLs absolutas: en la página de PyPI los enlaces relativos dan 404
+    base = "https://github.com/LeoSanta15/pccpy/blob/main/"
+    assert f"({base}README_en.md)" in (RAIZ / "README.md").read_text(encoding="utf-8")
+    assert f"({base}README.md)" in (RAIZ / "README_en.md").read_text(encoding="utf-8")
+
+
+def test_los_readme_no_tienen_enlaces_relativos_a_archivos():
+    for nombre in ("README.md", "README_en.md"):
+        texto = (RAIZ / nombre).read_text(encoding="utf-8")
+        relativos = re.findall(r"\]\((?!https?://|#|mailto:)([^)\s]+)\)", texto)
+        assert not relativos, f"{nombre}: enlaces relativos (rotos en PyPI): {relativos}"
 
 
 def test_los_enlaces_internos_del_readme_en_ingles_apuntan_a_titulos_existentes():
