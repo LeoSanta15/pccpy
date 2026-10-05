@@ -1,12 +1,12 @@
 # Idioma de los mensajes
 
 ```{note}
-**Estado: en desarrollo (fase 3b de 5).** Hoy se traducen al inglés los **mensajes de error y de aviso**, los
-**`summary()`** y las **etiquetas de `to_frame()`** de los resultados. También los **gráficos** y el asistente (`wizard`). También `pareto()`, las curvas OC/AOQ, las tablas ANOVA y de kappa (con `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()`) y las hojas de `to_excel()`: todas aceptan `stable=True` para claves fijas, salvo los atributos `anova_table`, `kappa_within` y `kappa_vs_reference`, que conservan siempre las cabeceras en español.
+**Estado: disponible desde la versión 0.11.0; el inglés está pendiente de revisión por una persona del dominio SPC.** Se traducen al inglés los **mensajes de error y de aviso**, los
+**`summary()`** y las **etiquetas de `to_frame()`** de los resultados, los **gráficos** y el asistente (`wizard`); también `pareto()`, las curvas OC/AOQ, las tablas ANOVA y de kappa (con `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()`) y las hojas de `to_excel()`: todas aceptan `stable=True` para claves fijas, salvo los atributos `anova_table`, `kappa_within` y `kappa_vs_reference`, que conservan siempre las cabeceras en español.
 ```
 
 pccpy escribe sus textos en **español**, que es el idioma fuente: si un idioma no tiene traducción para un texto,
-se muestra el original. Idiomas disponibles: `es` y `en` (`en` irá completándose por fases).
+se muestra el original. Idiomas disponibles: `es` y `en` (cómo corregir o añadir uno: [Cómo traducir](traducir.md)).
 
 ```python
 import pccpy as pp

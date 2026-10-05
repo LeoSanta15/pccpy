@@ -14,7 +14,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 
 ## Estado actual (verificado el 2026-10-02)
 
-- Versión **0.10.8** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
+- Versión **0.11.0** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
 - **344 pruebas** pasando, **90 %** de cobertura global, Python `>=3.9`.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.13, calidad = ruff + mypy,
@@ -115,7 +115,7 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - API: `pccpy.set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable `PCCPY_LANG`. Un idioma inexistente lanza `ValueError`.
 - Textos: `tr("…")` se traduce al mostrar; `N_("…")` marca constantes de módulo (se traducen con `tr()` al usarlas). Los f-strings **no** se pueden traducir: usa `tr("… {x} …").format(x=x)`.
 - Comandos: `make i18n-update` (extraer + actualizar `.po`), `make i18n-compile` (los `.mo` se versionan) y `make i18n-check` (lo exige el CI).
-- Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Fases 0 a 3b hechas (mecanismo, errores/avisos, `summary()` y `to_frame()`, gráficos y `wizard`, otras tablas); falta la fase 5 (revisión humana del inglés y release).
+- Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Fases 0 a 3b hechas (mecanismo, errores/avisos, `summary()` y `to_frame()`, gráficos y `wizard`, otras tablas); fase 5 preparada (glosario, guía `docs/source/traducir.md`, versión 0.11.0); falta la revisión humana del inglés y el tag.
 - `to_frame(stable=True)` da claves canónicas en inglés (no cambian con el idioma); sin `stable`, cabeceras en el idioma activo. Lo mismo vale para `pareto`, `oc_curve`, `aoq_curve`, `anova_frame` y `kappa_*_frame` (golden `tests/golden/i18n_tablas_es.json`). Al añadir filas o columnas, define su clave estable (los tests comparan con `tests/golden/i18n_stable.json`).
 - Los textos de `summary()` se comprueban contra `tests/golden/i18n_es.json` (generado con el código previo a la migración; **no se regenera** salvo cambio deliberado del español) y con invariantes es/en (`tests/test_i18n_resumenes.py`).
 - No pongas `tr()` dentro de un f-string: Babel solo lo extrae en Python >= 3.12 (el catálogo cambiaría según la versión).
