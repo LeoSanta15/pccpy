@@ -1026,6 +1026,8 @@ plan.plot()     # OC curve + AOQ curve in one figure
 
 ### Z1.9 — Variables (ANSI/ASQ Z1.9)
 
+> ⚠️ The built-in Z1.9 table **does not reproduce the standard** and the function emits a `UserWarning`. To decide with Z1.9, pass `n=` and `k=` taken from your copy of the standard.
+
 Requires the characteristic to be normally distributed; it uses the mean and standard deviation
 to estimate the fraction defective through the quality statistic Q:
 

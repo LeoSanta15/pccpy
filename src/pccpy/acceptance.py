@@ -10,6 +10,7 @@ Referencias
 from __future__ import annotations
 
 import math
+import warnings
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -42,21 +43,30 @@ def _pa_binomial_arr(n: int, c: int, p_arr: np.ndarray) -> np.ndarray:
 #   501-1200, 1201-3200, 3201-10000, 10001-35000, 35001-150000, 150001-500000, >500000
 _LOTE_LIMITES = [8, 15, 25, 50, 90, 150, 280, 500, 1200, 3200, 10000, 35000, 150000, 500000]
 
-# Letra de código según tamaño de lote e inspección general nivel II
-_LETRAS_CODIGO = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q"]
+# Tabla I de Z1.4: letra de código por tamaño de lote y nivel de inspección general (I, II, III).
+_LETRAS_CODIGO = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R"]
+_TABLA_I = [  # una fila por tramo de lote (_LOTE_LIMITES, más ">500000"): (nivel I, nivel II, nivel III)
+    ("A", "A", "B"), ("A", "B", "C"), ("B", "C", "D"), ("C", "D", "E"), ("C", "E", "F"), ("D", "F", "G"),
+    ("E", "G", "H"), ("F", "H", "J"), ("G", "J", "K"), ("H", "K", "L"), ("J", "L", "M"), ("K", "M", "N"),
+    ("L", "N", "P"), ("M", "P", "Q"), ("N", "Q", "R"),
+]
 
-def _letra_codigo(N: int) -> str:
-    for lim, letra in zip(_LOTE_LIMITES, _LETRAS_CODIGO):
+
+def _letra_codigo(N: int, inspection_level: int = 2) -> str:
+    """Letra de código de la tabla I de Z1.4 para el tamaño de lote y el nivel general de inspección (1, 2 o 3)."""
+    if inspection_level not in (1, 2, 3):
+        raise ValueError(tr("'inspection_level' debe ser 1, 2 o 3."))
+    for lim, fila in zip(_LOTE_LIMITES, _TABLA_I):
         if N <= lim:
-            return letra
-    return "Q"
+            return fila[inspection_level - 1]
+    return _TABLA_I[-1][inspection_level - 1]
 
 
 # Tabla II-A de Z1.4 (inspección normal, muestreo simple). Cada letra tiene un tamaño de muestra; el número de
 # aceptación depende de la diagonal i + j (i = posición de la letra, j = posición del AQL): la diagonal 14 es Ac = 0 y
 # a partir de la 17 sigue la serie 1, 2, 3, 5, 7, 10, 14, 21. Entre ambas diagonales (y fuera de ellas) la norma usa
 # flechas: se aplica el plan al que apuntan, con otro tamaño de muestra.
-_N_LETRA = [2, 3, 5, 8, 13, 20, 32, 50, 80, 125, 200, 315, 500, 800, 1250]
+_N_LETRA = [2, 3, 5, 8, 13, 20, 32, 50, 80, 125, 200, 315, 500, 800, 1250, 2000]
 _AC_DIAGONAL = {14: 0, 17: 1, 18: 2, 19: 3, 20: 5, 21: 7, 22: 10, 23: 14, 24: 21}
 
 
@@ -248,15 +258,8 @@ def acceptance_sampling_attributes(
         return _build_attr_plan(N, n, c, aql_frac, "custom")
 
     # Use Z1.4 table
-    # Adjust letter for inspection level (level I shifts left 2, level III shifts right 2)
-    letra = _letra_codigo(N)
-    letters = _LETRAS_CODIGO
-    idx = letters.index(letra)
-    if inspection_level == 1:
-        idx = max(0, idx - 2)
-    elif inspection_level == 3:
-        idx = min(len(letters) - 1, idx + 2)
-    letra = letters[idx]
+    # Letra de código según la tabla I (nivel de inspección general I, II o III)
+    letra = _letra_codigo(N, inspection_level)
 
     aql_key = _nearest_aql(aql)
     n_plan, c_plan = _plan_z14(letra, aql_key)
@@ -495,6 +498,10 @@ def acceptance_sampling_variables(
         ).format(aql_key=aql_key, letra=letra))
 
     n_plan, k_plan = _Z19_TABLE[key]
+    warnings.warn(
+        tr("La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los planes que da pueden aceptar "
+           "casi cualquier lote). Use los valores n y k de su ejemplar de ANSI/ASQ Z1.9 con n= y k=."),
+        UserWarning, stacklevel=2)
     alpha = 1.0 - _pa_variables(n_plan, k_plan, aql_key / 100.0, spec_type)
     try:
         ltpd = brentq(lambda p: _pa_variables(n_plan, k_plan, p, spec_type) - 0.10,

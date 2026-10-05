@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 22:48+0000\n"
+"POT-Creation-Date: 2026-10-05 23:42+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1179,6 +1179,9 @@ msgstr "'h' must be > 0 and 'k' >= 0."
 msgid "'h' debe ser > 0."
 msgstr "'h' must be > 0."
 
+msgid "'inspection_level' debe ser 1, 2 o 3."
+msgstr "'inspection_level' must be 1, 2 or 3."
+
 msgid "'k' debe ser >= 0."
 msgstr "'k' must be >= 0."
 
@@ -2147,6 +2150,13 @@ msgstr ""
 msgid "La suma de frecuencias debe ser positiva."
 msgstr "The sum of the frequencies must be positive."
 
+msgid ""
+"La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los planes que da pueden aceptar casi cualquier"
+" lote). Use los valores n y k de su ejemplar de ANSI/ASQ Z1.9 con n= y k=."
+msgstr ""
+"The built-in Z1.9 table is an approximation that does not reproduce the standard (the plans it gives may accept "
+"almost any lot). Use the n and k values from your copy of ANSI/ASQ Z1.9 with n= and k=."
+
 #, python-brace-format
 msgid "La variable PCCPY_LANG={valor!r} no es un idioma disponible; se usa {defecto!r}."
 msgstr "The PCCPY_LANG={valor!r} variable is not an available language; {defecto!r} is used."
@@ -2182,6 +2192,9 @@ msgid ""
 msgstr ""
 "The references are published tables, formulas written separately with NumPy/SciPy, or simulations with a fixed seed. "
 "This is not a comparison with Minitab."
+
+msgid "Letras de código de la tabla I de Z1.4 (niveles de inspección I, II y III) y su plan"
+msgstr "Z1.4 table I code letters (inspection levels I, II and III) and their plan"
 
 msgid "Linealidad"
 msgstr "Linearity"

@@ -1023,6 +1023,8 @@ plan.plot()     # curva OC + curva AOQ en una figura
 
 ### Z1.9 — Variables (ANSI/ASQ Z1.9)
 
+> ⚠️ La tabla Z1.9 incluida **no reproduce la norma** y la función avisa con un `UserWarning`. Para decidir con Z1.9, pase `n=` y `k=` tomados de su ejemplar de la norma.
+
 Requiere que la característica se distribuya normalmente; usa la media y la desviación
 para estimar la fracción defectuosa mediante el estadístico de calidad Q:
 

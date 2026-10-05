@@ -176,6 +176,6 @@ reimplementes el bucle de etapas.
 
 - Sin test de regresión: BUG-01 (zonas en cartas R/S/MR), BUG-07 (openpyxl ausente), BUG-12 (aislamiento de `rcParams`). Recetas probadas en `BUG_CATALOG.md`.
 - Cobertura total 97 % (ningún módulo bajo 90 %). Lo menos cubierto: `_wizard.py` (94 %, ramas del widget), `acceptance.py` (96 %, búsquedas Dodge-Romig sin solución) y las rutas de `openpyxl` ausente en `_data.py`.
-- La tabla Z1.9 incluida es simplificada: pedir una combinación AQL/letra que no trae (p. ej. nivel III con lote 1000) lanza un error claro; los niveles de inspección I y III de Z1.4/Z1.9 desplazan la letra ±2, que no es exactamente la norma.
+- Z1.9: la tabla incluida NO reproduce la norma (planes que aceptan casi todo; `acceptance_sampling_variables` avisa). Falta sustituirla por las tablas A-2 y B-1 de ANSI/ASQ Z1.9, que no se pudieron obtener (sin acceso a la norma). Z1.4 usa ya la tabla I (niveles I/II/III) y II-A; no incluye los niveles especiales S-1 a S-4 ni inspección rigurosa/reducida ni doble/múltiple.
 - `publish.yml` no verifica que la versión del wheel coincida con el release ni corre `twine check`.
 - `ruff --select ...,S` falla por `assert` en `acceptance.py:692` (S101).
