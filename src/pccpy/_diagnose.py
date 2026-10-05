@@ -181,18 +181,18 @@ class DiagnoseResult:
                  edgecolor="white", linewidth=0.5)
         xgrid = np.linspace(self._x.min(), self._x.max(), 200)
         ax1.plot(xgrid, stats.norm.pdf(xgrid, self.mean, self.std),
-                 color="#E74C3C", linewidth=1.8, label="Normal ajustada")
+                 color="#E74C3C", linewidth=1.8, label=tr("Normal ajustada"))
         if self.lsl is not None:
-            ax1.axvline(self.lsl, color="#E67E22", ls="--", lw=1.2, label=f"LIE={self.lsl}")
+            ax1.axvline(self.lsl, color="#E67E22", ls="--", lw=1.2, label=tr("LIE={v}").format(v=self.lsl))
         if self.usl is not None:
-            ax1.axvline(self.usl, color="#E67E22", ls="--", lw=1.2, label=f"LSE={self.usl}")
+            ax1.axvline(self.usl, color="#E67E22", ls="--", lw=1.2, label=tr("LSE={v}").format(v=self.usl))
         if self.target is not None:
-            ax1.axvline(self.target, color="#27AE60", ls=":", lw=1.2, label=f"Objetivo={self.target}")
-        ax1.set_title("Histograma", fontsize=10)
-        ax1.set_xlabel("Valor")
-        ax1.set_ylabel("Densidad")
+            ax1.axvline(self.target, color="#27AE60", ls=":", lw=1.2, label=tr("Objetivo={v}").format(v=self.target))
+        ax1.set_title(tr("Histograma"), fontsize=10)
+        ax1.set_xlabel(tr("Valor"))
+        ax1.set_ylabel(tr("Densidad"))
         ax1.legend(fontsize=8)
-        norm_str = "Normal" if self.is_normal else "No normal"
+        norm_str = tr("Normal") if self.is_normal else tr("No normal")
         ax1.text(0.98, 0.97, f"p = {self.normality_p:.3f}  ({norm_str})",
                  transform=ax1.transAxes, ha="right", va="top", fontsize=8,
                  color="#555")
@@ -201,15 +201,15 @@ class DiagnoseResult:
         ax2 = fig.add_subplot(gs[1])
         ax2.plot(self._x, color="#5B9BD5", linewidth=1, marker="o",
                  markersize=3, markerfacecolor="white", markeredgewidth=0.8)
-        ax2.axhline(self.mean, color="#E74C3C", linewidth=1.2, label=f"Media={self.mean:.3f}")
+        ax2.axhline(self.mean, color="#E74C3C", linewidth=1.2, label=tr("Media={v:.3f}").format(v=self.mean))
         if self.outlier_indices:
             ax2.scatter(self.outlier_indices, self._x[self.outlier_indices],
-                        color="#E74C3C", zorder=5, s=40, label="Atípicos")
-        ax2.set_title("Gráfico de secuencia", fontsize=10)
-        ax2.set_xlabel("Observación")
-        ax2.set_ylabel("Valor")
+                        color="#E74C3C", zorder=5, s=40, label=tr("Atípicos"))
+        ax2.set_title(tr("Gráfico de secuencia"), fontsize=10)
+        ax2.set_xlabel(tr("Observación"))
+        ax2.set_ylabel(tr("Valor"))
         ax2.legend(fontsize=8)
-        fig.suptitle("Diagnóstico rápido del proceso", fontsize=11, fontweight="bold")
+        fig.suptitle(tr("Diagnóstico rápido del proceso"), fontsize=11, fontweight="bold")
         return fig
 
     # interno: guardamos x para plot() — se asigna tras la construcción

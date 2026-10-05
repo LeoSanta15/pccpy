@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 
 from .._data import as_1d, to_subgroups
-from .._i18n import tr
+from .._i18n import N_, tr
 from .._sigma import sigma_individuals, sigma_subgroups
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
@@ -112,7 +112,7 @@ def cusum_chart(
         flagged = np.flatnonzero((up > ucl) | (lo < lcl))
         panel = StagePanel(
             "CUSUM", up, full(0.0, N), full(ucl, N), full(lcl, N), full(s_x, N),
-            "Suma acumulada", "only1", secondary=lo, violations={1: flagged},
+            N_("Suma acumulada"), "only1", secondary=lo, violations={1: flagged},
         )
         return [panel], {"objetivo": t0, "sigma": s, "h": h, "k": k, "n_subgrupo": n}
 

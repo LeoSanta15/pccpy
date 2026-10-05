@@ -8,8 +8,11 @@ from __future__ import annotations
 import re
 import warnings
 
-import numpy as np
-import pandas as pd
+import matplotlib
+
+matplotlib.use("Agg")
+import numpy as np  # noqa: E402
+import pandas as pd  # noqa: E402
 
 import pccpy as pp
 
@@ -231,6 +234,160 @@ def construir_estables() -> dict:
     return estables
 
 
+
+# ── gráficos: todo el texto de una figura ────────────────────────────────────
+
+def textos_de_figura(fig) -> list[str]:
+    """Textos visibles de una figura (títulos, ejes, leyendas, anotaciones, marcas categóricas), con los números enmascarados."""
+    import matplotlib.text as mtext
+
+    salida = []
+    for t in fig.findobj(mtext.Text):
+        s = t.get_text().strip()
+        if not s or re.fullmatch(r"[-+−0-9.,eE %]+", s):   # marcas numéricas de los ejes: no son texto traducible
+            continue
+        salida.append(enmascarar(s))
+    return sorted(salida)
+
+
+# Resultados construidos desde estadísticos (sin los datos): no se pueden dibujar.
+SIN_DATOS_PARA_GRAFICAR = {"capability_resumen"}
+
+
+def graficos() -> dict:
+    """nombre → función que devuelve la ``Figure`` (entradas del corpus con ``.plot()`` y funciones de graficado sueltas)."""
+    import matplotlib.pyplot as plt
+
+    g: dict = {}
+    for nombre, f in entradas().items():
+        if nombre not in SIN_DATOS_PARA_GRAFICAR:
+            g[f"plot_{nombre}"] = f
+    g["plot_probabilidad"] = lambda: pp.probability_plot(_normales(40))
+    g["plot_pareto"] = lambda: pp.plot_pareto(pp.pareto(["Rayón", "Abolladura", "Rayón", "Mancha", "Rayón", "Abolladura", "Otro"]))
+    g["plot_sixpack"] = lambda: pp.capability_sixpack(_subgrupos(), 6, 14, 10)[0]
+    g["plot_capability_funcion"] = lambda: pp.plot_capability(pp.capability_analysis(_normales(), lsl=44, usl=56, target=50))
+
+    def construir(nombre, f):
+        obj = f()
+        fig = obj if isinstance(obj, plt.Figure) else (obj.plot() if hasattr(obj, "plot") else None)
+        return fig
+    return {n: (lambda n=n, f=f: construir(n, f)) for n, f in g.items()}
+
+
+def construir_graficos() -> tuple[dict, dict]:
+    import matplotlib.pyplot as plt
+
+    res, err = {}, {}
+    for nombre, f in graficos().items():
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                fig = f()
+            if fig is None:
+                continue
+            res[nombre] = textos_de_figura(fig)
+            plt.close(fig)
+        except Exception as e:  # noqa: BLE001
+            err[nombre] = f"{type(e).__name__}: {str(e)[:100]}"
+    return res, err
+
+
+
+# ── asistente (wizard): árbol, resultados, CLI y widget ──────────────────────
+
+def _widget_falso():
+    """Módulos ``ipywidgets`` e ``IPython.display`` mínimos: registran HTML y botones y permiten pulsarlos."""
+    import types
+
+    class Base:
+        def __init__(self, *a, **k):
+            self.a, self.k, self.children, self._on_click = a, k, [], None
+
+        def on_click(self, fn):
+            self._on_click = fn
+
+    class HTML(Base):
+        pass
+
+    class Button(Base):
+        pass
+
+    w = types.SimpleNamespace(HTML=HTML, Button=Button, VBox=Base, Layout=lambda **k: dict(k))
+    mod_display = types.ModuleType("IPython.display")
+    mod_display.display = lambda *_a, **_k: None
+    mod_ipython = types.ModuleType("IPython")
+    mod_ipython.display = mod_display
+    return w, {"ipywidgets": w, "IPython": mod_ipython, "IPython.display": mod_display}
+
+
+def _textos_hijos(contenedor) -> list[str]:
+    out = []
+    for h in contenedor.children:
+        out.append(h.a[0] if h.a else h.k.get("description", ""))
+    return out
+
+
+def textos_wizard() -> dict:
+    """Todos los textos visibles del asistente en el idioma activo."""
+    import builtins
+    import io
+    import sys
+    from contextlib import redirect_stdout
+
+    from pccpy import _wizard as W
+
+    salida: dict = {}
+    salida["arbol"] = {n: [p, [o for o, _d in ops]] for n, (p, ops) in W._TREE.items()}
+    salida["resultados"] = {n: {"summary": r.summary(), "snippet": r.snippet()} for n, r in W._RESULTS.items()}
+
+    def cli(respuestas):
+        it = iter(respuestas)
+        original = builtins.input
+        builtins.input = lambda prompt="": (print(prompt, end=""), next(it))[1]
+        try:
+            buf = io.StringIO()
+            with redirect_stdout(buf):
+                W._run_cli()
+            return buf.getvalue()
+        finally:
+            builtins.input = original
+
+    salida["cli"] = cli(["x", "99", "1", "1", "1"])
+
+    w, modulos = _widget_falso()
+    previos = {k: sys.modules.get(k) for k in modulos}
+    sys.modules.update(modulos)
+    try:
+        pasos = []
+        capturado = {}
+        contenedor_original = w.VBox
+
+        def vbox(*a, **k):
+            capturado["c"] = contenedor_original(*a, **k)
+            return capturado["c"]
+
+        w.VBox = vbox
+        sesion = W._run_widget()
+        c = capturado["c"]
+        pasos.append(_textos_hijos(c))
+        for _ in range(3):                      # root → cartas → cartas_ind → hoja
+            boton = next(h for h in c.children if h.k.get("description", "").startswith("1."))
+            boton._on_click(boton)
+            pasos.append(_textos_hijos(c))
+        volver = next(h for h in c.children if "description" in h.k and not h.k["description"][:1].isdigit())
+        volver._on_click(volver)
+        pasos.append(_textos_hijos(c))
+        salida["widget"] = pasos
+        salida["widget_repr_inicial"] = repr(W.WidgetSession())
+        assert sesion is not None
+    finally:
+        for k, v in previos.items():
+            if v is None:
+                sys.modules.pop(k, None)
+            else:
+                sys.modules[k] = v
+    return salida
+
 if __name__ == "__main__":  # python tests/_corpus_i18n.py  → regenera tests/golden/i18n_es.json (solo con el código de referencia)
     import json
     from pathlib import Path
@@ -244,3 +401,9 @@ if __name__ == "__main__":  # python tests/_corpus_i18n.py  → regenera tests/g
     estable = Path(__file__).parent / "golden" / "i18n_stable.json"
     estable.write_text(json.dumps(construir_estables(), ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
     print(f"claves estables → {estable}")
+    figs, errs = construir_graficos()
+    assert not errs, errs
+    (Path(__file__).parent / "golden" / "i18n_plots_es.json").write_text(json.dumps(figs, ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    print(f"{len(figs)} figuras → tests/golden/i18n_plots_es.json")
+    (Path(__file__).parent / "golden" / "i18n_wizard_es.json").write_text(json.dumps(textos_wizard(), ensure_ascii=False, indent=1, sort_keys=True) + "\n", encoding="utf-8")
+    print("asistente → tests/golden/i18n_wizard_es.json")
