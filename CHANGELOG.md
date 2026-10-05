@@ -2,6 +2,8 @@
 
 ## [Sin publicar]
 
+## [0.12.2] - niveles de inspección de Z1.4 y aviso en Z1.9
+
 ### Corregido
 - **Z1.4: niveles de inspección I y III.** Se desplazaba la letra de código ±2 en vez de usar la tabla I de la norma (el nivel III correspondía a +1 letra y los extremos no coincidían). `acceptance_sampling_attributes(inspection_level=1|2|3)` usa ahora la tabla I completa, incluida la letra R (n = 2000) para lotes de más de 500 000 unidades, y rechaza otros niveles. Cambian los planes de los niveles I y III.
 - **Z1.9: la tabla incluida no reproduce la norma** (con ella, p. ej. n = 15, k = 0,797 para AQL 1 %, el plan aceptaba casi cualquier lote: riesgo del productor ≈ 0 y LTPD ≈ 34 %). Sin los valores de la norma a mano no se pudo sustituir, así que `acceptance_sampling_variables` ahora **avisa** (`UserWarning`) cuando usa esa tabla y la documentación recomienda pasar `n=` y `k=` de su ejemplar de Z1.9.
