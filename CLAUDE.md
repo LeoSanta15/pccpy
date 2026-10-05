@@ -25,7 +25,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 ## Comandos estándar (los mismos que corre CI)
 
 Atajo: `make check` corre todo lo de abajo (lint, tipos, tests, build, docs, ejemplos);
-`make check-fast` = lint + tipos + tests; `make release-check TAG=vX.Y.Z` verifica tag == versión del wheel.
+`make check-fast` = lint + tipos + tests + catálogos de traducción; `make release-check TAG=vX.Y.Z` verifica tag == versión del wheel.
 
 ```bash
 pip install -e ".[dev,docs,excel]"
@@ -108,6 +108,14 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - `.claude/hooks/verify-before-stop.sh` (hook `Stop`): si hay cambios en `src/`, `tests/` o `pyproject.toml`, corre `make check-fast`; si falla, bloquea el cierre (exit 2) y devuelve el error. Respeta `stop_hook_active` para no entrar en bucle.
 - `AGENTS.md` apunta a este archivo; `.github/PULL_REQUEST_TEMPLATE.md` y `CODEOWNERS`; `py.typed` incluido en el wheel.
 
+## Internacionalización (en curso; plan en `docs/planes/PLAN_MULTILENGUAJE.md`)
+
+- Idioma fuente: **español**; adicional: `en`. Mecanismo: `gettext` de la biblioteca estándar (`src/pccpy/_i18n.py`); `babel` solo en desarrollo.
+- API: `pccpy.set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable `PCCPY_LANG`. Un idioma inexistente lanza `ValueError`.
+- Textos: `tr("…")` se traduce al mostrar; `N_("…")` marca constantes de módulo (se traducen con `tr()` al usarlas). Los f-strings **no** se pueden traducir: usa `tr("… {x} …").format(x=x)`.
+- Comandos: `make i18n-update` (extraer + actualizar `.po`), `make i18n-compile` (los `.mo` se versionan) y `make i18n-check` (lo exige el CI).
+- Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Hasta terminar las fases 1–3, los textos de funciones, `summary()`, `to_frame()` y gráficos siguen solo en español.
+
 ## Mapa del código
 
 ```
@@ -117,6 +125,7 @@ src/pccpy/
   _data.py           # as_1d, to_subgroups, stage_slices, _excel_writer
   _sigma.py          # estimadores de sigma
   _diagnose.py       # diagnose() y DiagnoseResult
+  _i18n.py           # idioma: tr(), N_(), set_language(), language()… (catálogos en locale/)
   _wizard.py         # wizard(), WizardResult, WidgetSession
   rules.py           # las 8 pruebas de causas especiales de Minitab
   results.py         # Panel, ControlChart, MultivariateChart

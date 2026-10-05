@@ -1,6 +1,7 @@
 """pccpy - Control Estadístico de Procesos (SPC) en Python, al estilo Minitab."""
 from ._constants import c4, c5, control_chart_constants, d2, d3
 from ._diagnose import DiagnoseResult, diagnose
+from ._i18n import available_languages, get_language, language, set_language
 from ._wizard import WidgetSession, WizardResult, wizard
 from .acceptance import (
     DodgeRomigPlan,
@@ -111,6 +112,7 @@ __all__ = [
     "acceptance_sampling_attributes",
     "acceptance_sampling_variables",
     "attribute_agreement",
+    "available_languages",
     "c4",
     "c5",
     "c_chart",
@@ -139,10 +141,12 @@ __all__ = [
     "gage_type1",
     "gage_type1_summary",
     "generalized_variance_chart",
+    "get_language",
     "imr_chart",
     "imr_rs_chart",
     "laney_p_chart",
     "laney_u_chart",
+    "language",
     "ma_chart",
     "mcusum_chart",
     "mcusum_limit",
@@ -167,6 +171,7 @@ __all__ = [
     "precontrol",
     "probability_plot",
     "run_chart",
+    "set_language",
     "t2_chart",
     "t_chart",
     "tolerance_interval",

@@ -35,7 +35,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.6", "mypy>=1.10"]
+dev = ["pytest>=7", "pytest-cov>=4", "ruff>=0.6", "mypy>=1.10", "babel>=2.12"]
 docs = ["sphinx>=7", "sphinx-rtd-theme>=2", "myst-parser>=2"]
 excel = ["openpyxl>=3.0"]
 
@@ -48,7 +48,7 @@ Changelog = "https://github.com/LeoSanta15/pccpy/blob/main/CHANGELOG.md"
 where = ["src"]
 
 [tool.setuptools.package-data]
-pccpy = ["py.typed"]
+pccpy = ["py.typed", "locale/*/LC_MESSAGES/*.mo"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

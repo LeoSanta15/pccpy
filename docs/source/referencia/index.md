@@ -16,6 +16,7 @@ msa
 normalidad_y_herramientas
 diagnose
 wizard
+idioma
 constantes
 resultados
 ```
