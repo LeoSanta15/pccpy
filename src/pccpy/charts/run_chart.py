@@ -9,6 +9,7 @@ import pandas as pd
 from scipy import stats
 
 from .._data import as_1d
+from .._i18n import tr
 
 NAN = float("nan")
 
@@ -160,7 +161,7 @@ def run_chart(data, *, alpha: float = 0.05) -> RunChartResult:
     """
     x = as_1d(data, "data")
     if len(x) < 3:
-        raise ValueError("run_chart requiere al menos 3 observaciones.")
+        raise ValueError(tr("run_chart requiere al menos 3 observaciones."))
     med = float(np.median(x))
     r_med, n1, n2, er_med, _, p_clust, p_mix, lr_med = _runs_about_median(x)
     r_ud, er_ud, _, p_trends, p_osc, lr_ud = _runs_updown(x)

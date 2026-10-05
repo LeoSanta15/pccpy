@@ -22,6 +22,7 @@ import pandas as pd
 from scipy import stats
 
 from ._data import _excel_writer, as_1d
+from ._i18n import tr
 
 NAN = float("nan")
 
@@ -228,15 +229,15 @@ def tolerance_interval(
     x = as_1d(data, "data")
     n = len(x)
     if n < 2:
-        raise ValueError("Se necesitan al menos 2 observaciones.")
+        raise ValueError(tr("Se necesitan al menos 2 observaciones."))
     if not 0 < coverage < 1:
-        raise ValueError("'coverage' debe estar en (0, 1).")
+        raise ValueError(tr("'coverage' debe estar en (0, 1)."))
     if not 0 < confidence < 1:
-        raise ValueError("'confidence' debe estar en (0, 1).")
+        raise ValueError(tr("'confidence' debe estar en (0, 1)."))
     if sides not in ("two", "lower", "upper"):
-        raise ValueError("'sides' debe ser 'two', 'lower' o 'upper'.")
+        raise ValueError(tr("'sides' debe ser 'two', 'lower' o 'upper'."))
     if method not in ("normal", "nonparametric"):
-        raise ValueError("'method' debe ser 'normal' o 'nonparametric'.")
+        raise ValueError(tr("'method' debe ser 'normal' o 'nonparametric'."))
 
     xbar, s = float(x.mean()), float(x.std(ddof=1))
 
@@ -262,19 +263,25 @@ def tolerance_interval(
         r, ach = _nonparam_indices(n, coverage, confidence, "two")
         if r is None:
             raise ValueError(
-                f"El tamaño de muestra n={n} es insuficiente para el intervalo "
-                f"no paramétrico con cobertura={coverage} y confianza={confidence}."
+                tr(
+                    "El tamaño de muestra n={n} es insuficiente para el intervalo no paramétrico "
+                    "con cobertura={coverage} y confianza={confidence}."
+                ).format(n=n, coverage=coverage, confidence=confidence)
             )
         lower, upper = float(xs[r - 1]), float(xs[n - r])
     elif sides == "lower":
         r, ach = _nonparam_indices(n, coverage, confidence, "lower")
         if r is None:
-            raise ValueError(f"n={n} insuficiente para el intervalo no paramétrico solicitado.")
+            raise ValueError(tr(
+                "n={n} insuficiente para el intervalo no paramétrico solicitado."
+            ).format(n=n))
         lower, upper = float(xs[r - 1]), None
     else:
         r, ach = _nonparam_indices(n, coverage, confidence, "upper")
         if r is None:
-            raise ValueError(f"n={n} insuficiente para el intervalo no paramétrico solicitado.")
+            raise ValueError(tr(
+                "n={n} insuficiente para el intervalo no paramétrico solicitado."
+            ).format(n=n))
         lower, upper = None, float(xs[n - r])
 
     return ToleranceResult(
@@ -325,15 +332,15 @@ def tolerance_interval_summary(
     >>> print(res.summary())
     """
     if std <= 0:
-        raise ValueError("'std' debe ser positivo.")
+        raise ValueError(tr("'std' debe ser positivo."))
     if n < 2:
-        raise ValueError("'n' debe ser ≥ 2.")
+        raise ValueError(tr("'n' debe ser ≥ 2."))
     if not 0 < coverage < 1:
-        raise ValueError("'coverage' debe estar en (0, 1).")
+        raise ValueError(tr("'coverage' debe estar en (0, 1)."))
     if not 0 < confidence < 1:
-        raise ValueError("'confidence' debe estar en (0, 1).")
+        raise ValueError(tr("'confidence' debe estar en (0, 1)."))
     if sides not in ("two", "lower", "upper"):
-        raise ValueError("'sides' debe ser 'two', 'lower' o 'upper'.")
+        raise ValueError(tr("'sides' debe ser 'two', 'lower' o 'upper'."))
 
     xbar, s = float(mean), float(std)
     if sides == "two":

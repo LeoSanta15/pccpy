@@ -13,6 +13,8 @@ from typing import Any
 
 import numpy as np
 
+from ._i18n import tr
+
 __all__ = ["WidgetSession", "WizardResult", "wizard"]
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -833,7 +835,7 @@ def _run_cli() -> WizardResult:
             print(result.summary())
             return result
         if node not in _TREE:
-            raise RuntimeError(f"Nodo desconocido en el árbol: {node!r}")
+            raise RuntimeError(tr("Nodo desconocido en el árbol: {node!r}").format(node=node))
         question, options = _TREE[node]
         node = _ask(question, options)
 
@@ -855,7 +857,7 @@ def _run_auto(x: np.ndarray) -> WizardResult:
         return _RESULTS["r:xbar_s"]
 
     if x.ndim != 1 or len(x) < 2:
-        raise ValueError("'x' debe ser un array 1-D o 2-D con al menos 2 elementos.")
+        raise ValueError(tr("'x' debe ser un array 1-D o 2-D con al menos 2 elementos."))
 
     n = len(x)
 
@@ -1071,7 +1073,7 @@ def wizard(
 
     if mode == "auto":
         if x is None:
-            raise ValueError("'x' es obligatorio en mode='auto'.")
+            raise ValueError(tr("'x' es obligatorio en mode='auto'."))
         return _run_auto(np.asarray(x, dtype=float))
 
     if mode == "cli":
@@ -1080,4 +1082,4 @@ def wizard(
     if mode == "widget":
         return _run_widget()
 
-    raise ValueError(f"mode debe ser 'auto', 'cli' o 'widget'; se recibió {mode!r}.")
+    raise ValueError(tr("mode debe ser 'auto', 'cli' o 'widget'; se recibió {mode!r}.").format(mode=mode))

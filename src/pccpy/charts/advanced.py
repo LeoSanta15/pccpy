@@ -10,6 +10,7 @@ from scipy import optimize, stats
 from .. import rules
 from .._constants import c4, c5, d2, d3
 from .._data import as_1d, to_subgroups
+from .._i18n import tr
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, check_method, full
@@ -38,7 +39,7 @@ def ma_chart(
     Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
     """
     if int(length) != length or length < 2:
-        raise ValueError("'length' debe ser un entero >= 2.")
+        raise ValueError(tr("'length' debe ser un entero >= 2."))
     length = int(length)
     means, n, sigma_est, grand = _series(data, subgroup_size, subgroup, value=value)
     s = float(sigma) if sigma is not None else sigma_est
@@ -116,11 +117,11 @@ def zmr_chart(
     y_raw = as_1d(x)
     parts = np.asarray(parts)
     if parts.shape != y_raw.shape:
-        raise ValueError("'parts' debe tener una etiqueta por observación.")
+        raise ValueError(tr("'parts' debe tener una etiqueta por observación."))
     check_method(sigma_method, ("constant", "relative", "by_part", "by_run"))
     if sigma_method == "relative":
         if np.any(y_raw <= 0):
-            raise ValueError("El método 'relative' requiere datos positivos (usa ln).")
+            raise ValueError(tr("El método 'relative' requiere datos positivos (usa ln)."))
         y = np.log(y_raw)
     else:
         y = y_raw
@@ -131,15 +132,17 @@ def zmr_chart(
     for lab in labels:
         if mu is not None:
             if lab not in mu:
-                raise ValueError(f"Falta la media histórica de la parte {lab!r} en 'mu'.")
+                raise ValueError(tr("Falta la media histórica de la parte {lab!r} en 'mu'.").format(lab=lab))
             mu_of[lab] = float(mu[lab])
         else:
             mu_of[lab] = float(y[parts == lab].mean())
 
     def est(mr: np.ndarray, what: str) -> float:
         if mr.size == 0:
-            raise ValueError(f"No hay rangos móviles para estimar sigma ({what}); "
-                             "se necesitan al menos 2 observaciones consecutivas de la misma parte.")
+            raise ValueError(tr(
+                "No hay rangos móviles para estimar sigma ({what}); se necesitan al menos 2 "
+                "observaciones consecutivas de la misma parte."
+            ).format(what=what))
         return float(mr.mean() / d2(2))
 
     run_sigma: list[float | None] = [None] * len(runs)
@@ -160,7 +163,7 @@ def zmr_chart(
             run_sigma[j] = est(_mr_values(y[a:b]), f"corrida {j + 1} (parte {lab!r})")
 
     if any(s is None or s <= 0 for s in run_sigma):
-        raise ValueError("Se obtuvo una sigma igual a cero (datos sin variación).")
+        raise ValueError(tr("Se obtuvo una sigma igual a cero (datos sin variación)."))
     sigmas: list[float] = run_sigma  # type: ignore[assignment]  # ya se validó que no queda ningún None
     z = np.empty(y.size)
     for (lab, a, b), s in zip(runs, sigmas):
@@ -224,7 +227,7 @@ def imr_rs_chart(
     """
     within = within.lower()
     if within not in ("r", "s"):
-        raise ValueError("'within' debe ser 'r' o 's'.")
+        raise ValueError(tr("'within' debe ser 'r' o 's'."))
     default = "rbar" if within == "r" else "sbar"
     sigma_method = sigma_method or default
     check_method(sigma_method, (default, "pooled"))
@@ -236,7 +239,7 @@ def imr_rs_chart(
         n_i, means, rng, s_i = subgroup_stats(gs_all)
         k = len(idx)
         if k < 2:
-            raise ValueError("Cada etapa necesita al menos 2 subgrupos.")
+            raise ValueError(tr("Cada etapa necesita al menos 2 subgrupos."))
         idx_complete = idx[idx < n_complete] if n_complete < total else idx
         gs_lim = g[idx_complete] if idx_complete.size > 1 else gs_all
         m = float(np.nanmean(np.nanmean(gs_lim, axis=1))) if mu is None else float(mu)
@@ -318,9 +321,9 @@ def g_chart(
     """
     x = as_1d(x)
     if np.any(x < 0):
-        raise ValueError("Los conteos entre eventos no pueden ser negativos.")
+        raise ValueError(tr("Los conteos entre eventos no pueden ser negativos."))
     if p is not None and not 0 < p < 1:
-        raise ValueError("'p' debe estar en (0, 1).")
+        raise ValueError(tr("'p' debe estar en (0, 1)."))
     tests_n = rules.normalize_tests(tests)
     q_hi = float(stats.norm.cdf(k))
 
@@ -328,7 +331,7 @@ def g_chart(
         xs = x[idx]
         mean = float(xs.mean())
         if p is None and mean <= 0:
-            raise ValueError("Todos los conteos son 0; no se puede estimar la carta G.")
+            raise ValueError(tr("Todos los conteos son 0; no se puede estimar la carta G."))
         pe = float(p) if p is not None else 1.0 / (1.0 + mean)
         n = xs.size
         center, ucl = _geom_quantile(pe, 0.5) - 1, _geom_quantile(pe, q_hi) - 1
@@ -347,7 +350,7 @@ def _weibull_mle(x: np.ndarray):
     """Máxima verosimilitud de la Weibull de 2 parámetros: (forma, escala)."""
     lx = np.log(x)
     if np.ptp(lx) == 0:
-        raise ValueError("Todas las duraciones son iguales; no se puede ajustar la Weibull.")
+        raise ValueError(tr("Todas las duraciones son iguales; no se puede ajustar la Weibull."))
 
     def score(c):
         w = np.exp(c * (lx - lx.max()))  # estable numéricamente
@@ -378,9 +381,9 @@ def t_chart(
     x = as_1d(x)
     check_method(distribution, ("weibull", "exponential"), "distribution")
     if np.any(x <= 0):
-        raise ValueError("Las duraciones deben ser positivas (no se admiten duraciones iguales a 0).")
+        raise ValueError(tr("Las duraciones deben ser positivas (no se admiten duraciones iguales a 0)."))
     if distribution == "weibull" and (shape is None) != (scale is None):
-        raise ValueError("Para parámetros históricos Weibull indique 'shape' y 'scale' juntos.")
+        raise ValueError(tr("Para parámetros históricos Weibull indique 'shape' y 'scale' juntos."))
     tests_n = rules.normalize_tests(tests)
     q_lo, q_hi = float(stats.norm.cdf(-k)), float(stats.norm.cdf(k))
 
@@ -470,7 +473,7 @@ def zone_chart(
     """
     w = tuple(float(v) for v in weights)
     if len(w) != 4 or min(w) < 0 or any(b < a for a, b in zip(w, w[1:])) or w[3] <= 0:
-        raise ValueError("'weights' debe tener 4 pesos no negativos, no decrecientes y con el último > 0.")
+        raise ValueError(tr("'weights' debe tener 4 pesos no negativos, no decrecientes y con el último > 0."))
     arr = np.asarray(data, dtype=float)
     individuals = arr.ndim == 1 and subgroup_size is None and subgroup is None and value is None
     if individuals:

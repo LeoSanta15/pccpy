@@ -18,6 +18,7 @@ from scipy import stats
 from scipy.optimize import brentq
 
 from ._data import _excel_writer
+from ._i18n import tr
 
 
 # ──────────────────────────────────────────────────── curva OC (binomial) ────
@@ -242,9 +243,9 @@ def acceptance_sampling_attributes(
     SamplingPlanAttributes
     """
     if N < 2:
-        raise ValueError("N debe ser ≥ 2.")
+        raise ValueError(tr("N debe ser ≥ 2."))
     if not 0 < aql <= 10:
-        raise ValueError("'aql' debe estar en (0, 10] %.")
+        raise ValueError(tr("'aql' debe estar en (0, 10] %."))
 
     if n is not None and c is not None:
         aql_frac = aql / 100.0
@@ -263,7 +264,9 @@ def acceptance_sampling_attributes(
 
     aql_key = _nearest_aql(aql)
     if letra not in _Z14_TABLE or aql_key not in _Z14_TABLE[letra]:
-        raise ValueError(f"Combinación de letra={letra} y AQL={aql_key} no disponible en la tabla.")
+        raise ValueError(tr(
+            "Combinación de letra={letra} y AQL={aql_key} no disponible en la tabla."
+        ).format(letra=letra, aql_key=aql_key))
 
     n_plan, c_plan = _Z14_TABLE[letra][aql_key]
     aql_frac = aql_key / 100.0
@@ -464,11 +467,11 @@ def acceptance_sampling_variables(
     SamplingPlanVariables
     """
     if N < 2:
-        raise ValueError("N debe ser ≥ 2.")
+        raise ValueError(tr("N debe ser ≥ 2."))
     if not 0 < aql <= 10:
-        raise ValueError("'aql' debe estar en (0, 10] %.")
+        raise ValueError(tr("'aql' debe estar en (0, 10] %."))
     if spec_type not in ("one", "two"):
-        raise ValueError("'spec_type' debe ser 'one' o 'two'.")
+        raise ValueError(tr("'spec_type' debe ser 'one' o 'two'."))
 
     aql_frac = aql / 100.0
 
@@ -494,7 +497,9 @@ def acceptance_sampling_variables(
     aql_key = min(_AQL_Z19, key=lambda a: abs(a - aql))
     key = (aql_key, letra)
     if key not in _Z19_TABLE:
-        raise ValueError(f"Combinación AQL={aql_key}% y letra={letra} no disponible en la tabla Z1.9.")
+        raise ValueError(tr(
+            "Combinación AQL={aql_key}% y letra={letra} no disponible en la tabla Z1.9."
+        ).format(aql_key=aql_key, letra=letra))
 
     n_plan, k_plan = _Z19_TABLE[key]
     alpha = 1.0 - _pa_variables(n_plan, k_plan, aql_key / 100.0, spec_type)
@@ -676,22 +681,22 @@ def dodge_romig(
     DodgeRomigPlan
     """
     if (ltpd is None) == (aoql is None):
-        raise ValueError("Especifica exactamente uno de 'ltpd' o 'aoql'.")
+        raise ValueError(tr("Especifica exactamente uno de 'ltpd' o 'aoql'."))
     if N < 2:
-        raise ValueError("N debe ser ≥ 2.")
+        raise ValueError(tr("N debe ser ≥ 2."))
     if not 0 < process_avg < 1:
-        raise ValueError("'process_avg' debe estar en (0, 1).")
+        raise ValueError(tr("'process_avg' debe estar en (0, 1)."))
 
     if ltpd is not None:
         if not 0 < ltpd < 1:
-            raise ValueError("'ltpd' debe estar en (0, 1).")
+            raise ValueError(tr("'ltpd' debe estar en (0, 1)."))
         n, c = _dodge_romig_ltpd(N, ltpd, process_avg)
         plan_type = "LTPD"
         target = ltpd
     else:
         assert aoql is not None
         if not 0 < aoql < 1:
-            raise ValueError("'aoql' debe estar en (0, 1).")
+            raise ValueError(tr("'aoql' debe estar en (0, 1)."))
         n, c = _dodge_romig_aoql(N, aoql, process_avg)
         plan_type = "AOQL"
         target = aoql

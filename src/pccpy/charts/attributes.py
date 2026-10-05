@@ -5,6 +5,7 @@ import numpy as np
 
 from .._constants import d2
 from .._data import as_1d
+from .._i18n import tr
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
 
@@ -12,18 +13,18 @@ from ._engine import StagePanel, build_chart, full
 def _prep(counts, n, need_n: bool):
     c = as_1d(counts, "conteos")
     if np.any(c < 0):
-        raise ValueError("Los conteos no pueden ser negativos.")
+        raise ValueError(tr("Los conteos no pueden ser negativos."))
     if not need_n:
         return c, np.ones_like(c)
     if n is None:
-        raise ValueError("Falta el tamaño de la muestra 'n'.")
+        raise ValueError(tr("Falta el tamaño de la muestra 'n'."))
     n_arr = np.asarray(n, dtype=float)
     if n_arr.ndim == 0:
         n_arr = np.full(c.shape, float(n_arr))
     elif n_arr.shape != c.shape:
-        raise ValueError("'n' debe ser un escalar o tener la misma longitud que los conteos.")
+        raise ValueError(tr("'n' debe ser un escalar o tener la misma longitud que los conteos."))
     if np.any(n_arr <= 0) or not np.all(np.isfinite(n_arr)):
-        raise ValueError("Los tamaños de muestra deben ser positivos.")
+        raise ValueError(tr("Los tamaños de muestra deben ser positivos."))
     return c, n_arr
 
 
@@ -31,9 +32,9 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
                      historical, laney) -> ControlChart:
     c, n_arr = _prep(counts, n, need_n=code != "c")
     if code in ("p", "np") and np.any(c > n_arr):
-        raise ValueError("Hay conteos de defectuosos mayores que el tamaño de la muestra.")
+        raise ValueError(tr("Hay conteos de defectuosos mayores que el tamaño de la muestra."))
     if code == "np" and not np.all(n_arr == n_arr[0]):
-        raise ValueError("La carta NP requiere tamaño de muestra constante; use la carta P.")
+        raise ValueError(tr("La carta NP requiere tamaño de muestra constante; use la carta P."))
 
     def stage_fn(idx):
         d, ni = c[idx], n_arr[idx]
@@ -59,7 +60,7 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
         params = {"centro": float(ctr), "n_puntos": k}
         if laney:
             if k < 2:
-                raise ValueError("Laney requiere al menos 2 puntos por etapa.")
+                raise ValueError(tr("Laney requiere al menos 2 puntos por etapa."))
             with np.errstate(divide="ignore", invalid="ignore"):
                 z = (y - ctr) / sig
             sigma_z = float(np.mean(np.abs(np.diff(z))) / d2(2))

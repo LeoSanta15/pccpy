@@ -22,6 +22,7 @@ from scipy import stats
 from scipy.special import boxcox as _boxcox
 
 from ._data import _excel_writer, as_1d, to_subgroups
+from ._i18n import tr
 from ._sigma import sigma_individuals, sigma_subgroups
 
 NAN = float("nan")
@@ -33,7 +34,7 @@ def _fmt(v, nd: int = 2) -> str:
 
 def _check_specs(lsl, usl):
     if lsl is not None and usl is not None and lsl >= usl:
-        raise ValueError("El límite inferior (lsl) debe ser menor que el superior (usl).")
+        raise ValueError(tr("El límite inferior (lsl) debe ser menor que el superior (usl)."))
 
 
 def _indices(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float, float]:
@@ -42,8 +43,8 @@ def _indices(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float, 
     if not sigma > 0:
         import warnings
         warnings.warn(
-            "La variación del proceso es cero (desviación estándar = 0). "
-            "Los índices de capacidad no están definidos y se devuelven como NaN.",
+            tr("La variación del proceso es cero (desviación estándar = 0). "
+            "Los índices de capacidad no están definidos y se devuelven como NaN."),
             UserWarning,
             stacklevel=4,
         )
@@ -228,7 +229,7 @@ def capability_analysis(
     """
     _check_specs(lsl, usl)
     if not 0 < ci_level < 1:
-        raise ValueError("'ci_level' debe estar entre 0 y 1.")
+        raise ValueError(tr("'ci_level' debe estar entre 0 y 1."))
 
     arr = np.asarray(data, dtype=float)
     grouped = arr.ndim == 2 or subgroup is not None or (subgroup_size is not None and subgroup_size > 1)
@@ -237,19 +238,19 @@ def capability_analysis(
         x = g[~np.isnan(g)]
         method = within_method or "pooled"
         if method not in ("pooled", "rbar", "sbar"):
-            raise ValueError("Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'.")
+            raise ValueError(tr("Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."))
         g_lim = g[:n_complete]
         sw = float(sigma_within) if sigma_within is not None else sigma_subgroups(g_lim, method)
     else:
         x = as_1d(arr)
         method = within_method or "mr"
         if method not in ("mr", "median_mr", "mssd"):
-            raise ValueError("Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'.")
+            raise ValueError(tr("Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'."))
         sw = float(sigma_within) if sigma_within is not None else sigma_individuals(x, method)
     if sigma_within is not None:
         method = "especificada"
     if x.size < 2:
-        raise ValueError("Se necesitan al menos 2 observaciones.")
+        raise ValueError(tr("Se necesitan al menos 2 observaciones."))
 
     n, mean = x.size, float(x.mean())
     so = float(x.std(ddof=1))
@@ -334,11 +335,11 @@ def capability_analysis_summary(
     """
     _check_specs(lsl, usl)
     if std_overall <= 0:
-        raise ValueError("'std_overall' debe ser positivo.")
+        raise ValueError(tr("'std_overall' debe ser positivo."))
     if n < 2:
-        raise ValueError("'n' debe ser ≥ 2.")
+        raise ValueError(tr("'n' debe ser ≥ 2."))
     if not 0 < ci_level < 1:
-        raise ValueError("'ci_level' debe estar entre 0 y 1.")
+        raise ValueError(tr("'ci_level' debe estar entre 0 y 1."))
 
     sw = float(std_within) if std_within is not None else float(std_overall)
     so = float(std_overall)
@@ -401,10 +402,10 @@ def capability_boxcox(
     """
     x = as_1d(data, "data")
     if x.min() <= 0:
-        raise ValueError("Box-Cox requiere datos estrictamente positivos.")
+        raise ValueError(tr("Box-Cox requiere datos estrictamente positivos."))
     for name, v in (("lsl", lsl), ("usl", usl), ("target", target)):
         if v is not None and v <= 0:
-            raise ValueError(f"Box-Cox requiere que {name} sea positivo.")
+            raise ValueError(tr("Box-Cox requiere que {name} sea positivo.").format(name=name))
     if lam is None:
         _, lam = stats.boxcox(x)
         if round_lambda:
@@ -533,13 +534,15 @@ def capability_nonnormal(
     _check_specs(lsl, usl)
     key = distribution.lower()
     if key not in _DISTS:
-        raise ValueError(f"Distribución no soportada: {distribution!r}. Opciones: {sorted(_DISTS)}")
+        raise ValueError(tr(
+            "Distribución no soportada: {distribution!r}. Opciones: {options}"
+        ).format(distribution=distribution, options=sorted(_DISTS)))
     dist, fit_kw, positive = _DISTS[key]
     x = as_1d(data, "data")
     if x.size < 3:
-        raise ValueError("Se necesitan al menos 3 observaciones.")
+        raise ValueError(tr("Se necesitan al menos 3 observaciones."))
     if positive and x.min() <= 0:
-        raise ValueError(f"La distribución {key} requiere datos estrictamente positivos.")
+        raise ValueError(tr("La distribución {key} requiere datos estrictamente positivos.").format(key=key))
 
     params = dist.fit(x, **fit_kw)
     frozen = dist(*params)

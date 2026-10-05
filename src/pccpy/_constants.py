@@ -13,6 +13,8 @@ import numpy as np
 from scipy import integrate
 from scipy.special import gammaln
 
+from ._i18n import tr
+
 _SQRT2PI = math.sqrt(2.0 * math.pi)
 
 
@@ -27,7 +29,7 @@ def _Phi(t: float) -> float:
 def _check_n(n: int) -> int:
     n = int(n)
     if n < 2:
-        raise ValueError(f"El tamaño de subgrupo debe ser >= 2 (recibido: {n}).")
+        raise ValueError(tr("El tamaño de subgrupo debe ser >= 2 (recibido: {n}).").format(n=n))
     return n
 
 

@@ -15,6 +15,7 @@ import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 
 from ._constants import c4, d2
+from ._i18n import tr
 
 MEDIAN_MR_CONSTANT = 0.954  # constante que usa Minitab para span = 2
 
@@ -31,7 +32,7 @@ def vec(func: Callable[[int], float], n_i: np.ndarray) -> np.ndarray:
 def moving_range(x: np.ndarray, span: int = 2) -> np.ndarray:
     """Rangos móviles de ventana ``span``; los primeros span-1 valores son NaN."""
     if span < 2:
-        raise ValueError("'span' debe ser >= 2.")
+        raise ValueError(tr("'span' debe ser >= 2."))
     out = np.full(x.shape, np.nan)
     if x.size >= span:
         w = sliding_window_view(x, span)
@@ -42,18 +43,20 @@ def moving_range(x: np.ndarray, span: int = 2) -> np.ndarray:
 def sigma_individuals(x: np.ndarray, method: str = "mr", span: int = 2) -> float:
     """Sigma a partir de observaciones individuales."""
     if x.size < 2:
-        raise ValueError("Se necesitan al menos 2 observaciones para estimar sigma.")
+        raise ValueError(tr("Se necesitan al menos 2 observaciones para estimar sigma."))
     if method == "mr":
         if x.size < span:
-            raise ValueError(f"Se necesitan al menos {span} observaciones (span={span}).")
+            raise ValueError(tr(
+                "Se necesitan al menos {span} observaciones (span={span})."
+            ).format(span=span))
         return float(np.nanmean(moving_range(x, span)) / d2(span))
     if method == "median_mr":
         if span != 2:
-            raise ValueError("'median_mr' solo está disponible con span = 2.")
+            raise ValueError(tr("'median_mr' solo está disponible con span = 2."))
         return float(np.nanmedian(moving_range(x, 2)) / MEDIAN_MR_CONSTANT)
     if method == "mssd":
         return float(np.sqrt(np.sum(np.diff(x) ** 2) / (2.0 * (x.size - 1))))
-    raise ValueError("sigma_method debe ser 'mr', 'median_mr' o 'mssd'.")
+    raise ValueError(tr("sigma_method debe ser 'mr', 'median_mr' o 'mssd'."))
 
 
 def subgroup_stats(g: np.ndarray):
@@ -75,7 +78,7 @@ def sigma_subgroups(g: np.ndarray, method: str = "pooled") -> float:
     valid = n_i >= 2
     if not valid.any():
         raise ValueError(
-            "Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma."
+            tr("Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma.")
         )
     if method == "rbar":
         return float(np.mean(rng[valid] / vec(d2, n_i)[valid]))
@@ -85,4 +88,4 @@ def sigma_subgroups(g: np.ndarray, method: str = "pooled") -> float:
         dof = float(np.sum(n_i[valid] - 1))
         sp = np.sqrt(np.sum((n_i[valid] - 1) * s[valid] ** 2) / dof)
         return float(sp / c4(int(dof) + 1))
-    raise ValueError("sigma_method debe ser 'rbar', 'sbar' o 'pooled'.")
+    raise ValueError(tr("sigma_method debe ser 'rbar', 'sbar' o 'pooled'."))

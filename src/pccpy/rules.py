@@ -17,6 +17,8 @@ from collections.abc import Iterable
 
 import numpy as np
 
+from ._i18n import tr
+
 TEST_DESCRIPTIONS: dict[int, str] = {
     1: "1 punto a más de {k} desviaciones estándar de la línea central",
     2: "{k} puntos consecutivos del mismo lado de la línea central",
@@ -52,13 +54,13 @@ def normalize_tests(tests) -> tuple:
     if isinstance(tests, str):
         if tests.lower() == "all":
             return tuple(range(1, 9))
-        raise ValueError("'tests' debe ser 'all', None o una lista de enteros 1-8.")
+        raise ValueError(tr("'tests' debe ser 'all', None o una lista de enteros 1-8."))
     if isinstance(tests, (int, np.integer)):
         tests = [tests]
     out = sorted({int(t) for t in tests})
     bad = [t for t in out if t not in TEST_DESCRIPTIONS]
     if bad:
-        raise ValueError(f"Pruebas no válidas: {bad}. Use enteros entre 1 y 8.")
+        raise ValueError(tr("Pruebas no válidas: {bad}. Use enteros entre 1 y 8.").format(bad=bad))
     return tuple(out)
 
 

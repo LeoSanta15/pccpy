@@ -9,6 +9,7 @@ import numpy as np
 
 from .. import rules
 from .._data import stage_slices
+from .._i18n import tr
 from ..results import ControlChart, Panel
 
 
@@ -99,4 +100,6 @@ def build_chart(
 
 def check_method(method: str, allowed: Sequence[str], what: str = "sigma_method") -> None:
     if method not in allowed:
-        raise ValueError(f"{what} debe ser uno de {tuple(allowed)} (recibido: {method!r}).")
+        raise ValueError(tr(
+            "{what} debe ser uno de {allowed} (recibido: {method!r})."
+        ).format(what=what, allowed=tuple(allowed), method=method))

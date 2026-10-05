@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import numpy as np
 
+from .._i18n import tr
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
 from .attributes import _prep
@@ -40,9 +41,9 @@ def _ewma_attr(code: str, kind: str, ylabel: str,
                counts, n, historical, weight: float, k: float) -> ControlChart:
     c, n_arr = _prep(counts, n, need_n=code != "c")
     if code in ("p", "np") and np.any(c > n_arr):
-        raise ValueError("Hay conteos mayores que el tamaño de muestra.")
+        raise ValueError(tr("Hay conteos mayores que el tamaño de muestra."))
     if not 0 < weight <= 1:
-        raise ValueError("'weight' debe estar en (0, 1].")
+        raise ValueError(tr("'weight' debe estar en (0, 1]."))
 
     ctr = _baseline(code, c, n_arr, historical)
     y = c / n_arr if code in ("p", "u") else c.astype(float)
@@ -150,9 +151,9 @@ def _cusum_attr(code: str, kind: str, ylabel: str,
                 counts, n, historical, h: float, k: float) -> ControlChart:
     c, n_arr = _prep(counts, n, need_n=code != "c")
     if code in ("p", "np") and np.any(c > n_arr):
-        raise ValueError("Hay conteos mayores que el tamaño de muestra.")
+        raise ValueError(tr("Hay conteos mayores que el tamaño de muestra."))
     if h <= 0 or k < 0:
-        raise ValueError("'h' debe ser > 0 y 'k' >= 0.")
+        raise ValueError(tr("'h' debe ser > 0 y 'k' >= 0."))
 
     ctr = _baseline(code, c, n_arr, historical)
     y = c / n_arr if code in ("p", "u") else c.astype(float)

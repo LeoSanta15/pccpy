@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - idioma de los mensajes (fase 0 de 5)
+## [Sin publicar] - idioma de los mensajes (fases 0 y 1 de 5)
 
 ### Añadido
 - Mecanismo de idioma basado en `gettext`: `set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable de entorno `PCCPY_LANG`. El idioma fuente es el español y `en` es el primer idioma adicional.
@@ -8,8 +8,10 @@
 - `babel` en el extra `dev` (solo desarrollo; en ejecución se usa `gettext` de la biblioteca estándar).
 - Plan completo en `docs/planes/PLAN_MULTILENGUAJE.md`.
 
+- Fase 1: los **151 mensajes de error y aviso** (134 textos únicos) pasan por `tr()` y tienen traducción al inglés; los 34 f-strings se convierten en plantillas con `.format()`. Tests estáticos (AST) comprueban que todo `raise`/`warnings.warn` usa `tr()`, que los marcadores `{…}` coinciden con los argumentos de `.format()` y que nadie ocupa los nombres `tr`/`N_`; otro test detecta palabras españolas en las traducciones.
+
 ### Nota
-- Todavía **no** se traducen los mensajes de las funciones, los `summary()`, `to_frame()` ni los gráficos: llegan en las fases 1 a 3. El comportamiento por defecto (español) no cambia.
+- Todavía **no** se traducen los `summary()`, `to_frame()` ni los gráficos: llegan en las fases 2 y 3. El comportamiento por defecto (español) no cambia.
 
 ## [0.10.8] - documentación de referencia completa
 
