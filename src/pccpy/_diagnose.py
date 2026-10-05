@@ -9,13 +9,19 @@ import numpy as np
 from scipy import stats
 
 from ._data import _excel_writer
-from ._i18n import tr
+from ._frames import tabla_estadisticos
+from ._i18n import N_, tr
 
 if TYPE_CHECKING:
     import matplotlib.pyplot as plt
     import pandas as pd
 
 __all__ = ["DiagnoseResult", "diagnose"]
+
+
+def _tendencia(direccion: str) -> str:
+    """Texto de la dirección de la tendencia; el valor guardado en el resultado ('creciente'/'decreciente') no se traduce."""
+    return {"creciente": tr("creciente"), "decreciente": tr("decreciente")}.get(direccion, direccion)
 
 
 @dataclass
@@ -59,26 +65,28 @@ class DiagnoseResult:
     cpk: float | None = None
 
     # ══════════════════════════════════════════════════════════════════════
-    def to_frame(self) -> pd.DataFrame:
-        """Tabla resumen (una fila por estadístico)."""
-        import pandas as pd
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico).
 
+        Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
         o = self
         rows = [
-            ("N", o.n), ("Media", o.mean), ("Desv.Est.", o.std), ("CV (%)", o.cv),
-            ("Mínimo", o.min_val), ("Máximo", o.max_val), ("Mediana", o.median),
-            ("Asimetría", o.skewness), ("Curtosis", o.kurtosis),
-            ("Estadístico normalidad", o.normality_stat),
-            ("p-valor normalidad", o.normality_p),
-            ("Distribución normal", o.is_normal),
-            ("Tiene tendencia", o.has_trend),
-            ("Dirección tendencia", o.trend_direction),
-            ("Valores atípicos (IQR)", o.outlier_count),
-            ("LEI", o.lsl), ("LES", o.usl), ("Objetivo", o.target),
-            ("Cp estimado", o.cp), ("Cpk estimado", o.cpk),
-            ("Función recomendada", o.recommended_function),
+            ("n", N_("N"), o.n), ("mean", N_("Media"), o.mean), ("std", N_("Desv.Est."), o.std),
+            ("cv_pct", N_("CV (%)"), o.cv),
+            ("min", N_("Mínimo"), o.min_val), ("max", N_("Máximo"), o.max_val), ("median", N_("Mediana"), o.median),
+            ("skewness", N_("Asimetría"), o.skewness), ("kurtosis", N_("Curtosis"), o.kurtosis),
+            ("normality_stat", N_("Estadístico normalidad"), o.normality_stat),
+            ("normality_p", N_("p-valor normalidad"), o.normality_p),
+            ("is_normal", N_("Distribución normal"), o.is_normal),
+            ("has_trend", N_("Tiene tendencia"), o.has_trend),
+            ("trend_direction", N_("Dirección tendencia"), o.trend_direction),
+            ("outlier_count", N_("Valores atípicos (IQR)"), o.outlier_count),
+            ("lsl", N_("LEI"), o.lsl), ("usl", N_("LES"), o.usl), ("target", N_("Objetivo"), o.target),
+            ("cp_estimated", N_("Cp estimado"), o.cp), ("cpk_estimated", N_("Cpk estimado"), o.cpk),
+            ("recommended_function", N_("Función recomendada"), o.recommended_function),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def to_excel(self, path) -> None:
         """Exporta el diagnóstico a un archivo Excel (.xlsx).
@@ -86,58 +94,59 @@ class DiagnoseResult:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Diagnóstico")
+            self.to_frame().to_excel(writer, sheet_name=tr("Diagnóstico"))
 
     def summary(self) -> str:
         """Resumen en texto al estilo sesión de Minitab."""
         sep = "═" * 60
+        distribucion = tr("Normal (p > 0.05)") if self.is_normal else tr("No normal (p ≤ 0.05)")
         lines = [
             sep,
-            "  DIAGNÓSTICO RÁPIDO DEL PROCESO",
+            tr("  DIAGNÓSTICO RÁPIDO DEL PROCESO"),
             sep,
-            f"  N               : {self.n}",
-            f"  Media           : {self.mean:.4f}",
-            f"  Desv. estándar  : {self.std:.4f}",
-            f"  CV              : {self.cv:.2f} %",
-            f"  Mínimo / Máximo : {self.min_val:.4f}  /  {self.max_val:.4f}",
-            f"  Mediana         : {self.median:.4f}",
-            f"  Asimetría       : {self.skewness:.4f}",
-            f"  Curtosis        : {self.kurtosis:.4f}",
+            tr("  N               : {n}").format(n=self.n),
+            tr("  Media           : {mean:.4f}").format(mean=self.mean),
+            tr("  Desv. estándar  : {std:.4f}").format(std=self.std),
+            tr("  CV              : {cv:.2f} %").format(cv=self.cv),
+            tr("  Mínimo / Máximo : {low:.4f}  /  {high:.4f}").format(low=self.min_val, high=self.max_val),
+            tr("  Mediana         : {median:.4f}").format(median=self.median),
+            tr("  Asimetría       : {skewness:.4f}").format(skewness=self.skewness),
+            tr("  Curtosis        : {kurtosis:.4f}").format(kurtosis=self.kurtosis),
             "",
-            "  ── Normalidad (prueba de normalidad) ──",
-            f"  Estadístico     : {self.normality_stat:.4f}",
-            f"  Valor p         : {self.normality_p:.4f}",
-            f"  Distribución    : {'Normal (p > 0.05)' if self.is_normal else 'No normal (p ≤ 0.05)'}",
+            tr("  ── Normalidad (prueba de normalidad) ──"),
+            tr("  Estadístico     : {stat:.4f}").format(stat=self.normality_stat),
+            tr("  Valor p         : {p:.4f}").format(p=self.normality_p),
+            tr("  Distribución    : {distribution}").format(distribution=distribucion),
         ]
         if self.has_trend:
             lines += [
                 "",
-                "  ── Tendencia ──",
-                f"  Se detectó tendencia {self.trend_direction}.",
+                tr("  ── Tendencia ──"),
+                tr("  Se detectó tendencia {direction}.").format(direction=_tendencia(self.trend_direction)),
             ]
         if self.outlier_count:
             lines += [
                 "",
-                "  ── Valores atípicos (IQR) ──",
-                f"  Cantidad : {self.outlier_count}",
-                f"  Índices  : {self.outlier_indices[:10]}"
+                tr("  ── Valores atípicos (IQR) ──"),
+                tr("  Cantidad : {count}").format(count=self.outlier_count),
+                tr("  Índices  : {indices}").format(indices=self.outlier_indices[:10])
                 + (" …" if len(self.outlier_indices) > 10 else ""),
             ]
         if self.cp is not None:
             lines += [
                 "",
-                "  ── Capacidad (estimada) ──",
-                f"  Cp  : {self.cp:.3f}",
-                f"  Cpk : {self.cpk:.3f}",
+                tr("  ── Capacidad (estimada) ──"),
+                tr("  Cp  : {cp:.3f}").format(cp=self.cp),
+                tr("  Cpk : {cpk:.3f}").format(cpk=self.cpk),
             ]
         if self.issues:
-            lines += ["", "  ── Alertas ──"]
+            lines += ["", tr("  ── Alertas ──")]
             for issue in self.issues:
                 lines.append(f"  ⚠  {issue}")
         lines += [
             "",
-            "  ── Análisis recomendado ──",
-            f"  Función : {self.recommended_function}",
+            tr("  ── Análisis recomendado ──"),
+            tr("  Función : {function}").format(function=self.recommended_function),
             "",
             textwrap.indent(self.recommended_snippet, "  "),
             sep,
@@ -287,7 +296,7 @@ def diagnose(
     # ── Recomendación ──────────────────────────────────────────────────────
     if has_trend:
         rec_fn = "run_chart"
-        rec_snippet = "import pccpy as pp\nresultado = pp.run_chart(datos)"
+        rec_snippet = tr("import pccpy as pp\nresultado = pp.run_chart(datos)")
     elif lsl is not None or usl is not None:
         if is_normal:
             rec_fn = "capability_analysis"
@@ -296,7 +305,7 @@ def diagnose(
                 for k, v in [("lsl", lsl), ("usl", usl), ("target", target)]
                 if v is not None
             )
-            rec_snippet = f"import pccpy as pp\nresultado = pp.capability_analysis(datos, {args})"
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_analysis(datos, {args})").format(args=args)
         else:
             rec_fn = "capability_boxcox"
             args = ", ".join(
@@ -304,13 +313,13 @@ def diagnose(
                 for k, v in [("lsl", lsl), ("usl", usl)]
                 if v is not None
             )
-            rec_snippet = f"import pccpy as pp\nresultado = pp.capability_boxcox(datos, {args})"
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_boxcox(datos, {args})").format(args=args)
     elif n >= 30 and is_normal or n >= 30:
         rec_fn = "imr_chart"
-        rec_snippet = "import pccpy as pp\nresultado = pp.imr_chart(datos)"
+        rec_snippet = tr("import pccpy as pp\nresultado = pp.imr_chart(datos)")
     else:
         rec_fn = "imr_chart"
-        rec_snippet = "import pccpy as pp\nresultado = pp.imr_chart(datos)"
+        rec_snippet = tr("import pccpy as pp\nresultado = pp.imr_chart(datos)")
 
     # ── Capacidad estimada ─────────────────────────────────────────────────
     cp = cpk = None
@@ -321,15 +330,17 @@ def diagnose(
     # ── Alertas ────────────────────────────────────────────────────────────
     issues: list[str] = []
     if not is_normal:
-        issues.append("La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico.")
+        issues.append(tr("La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico."))
     if has_trend:
-        issues.append(f"Se detectó tendencia {trend_dir}. Verifica causas asignables antes de calcular capacidad.")
+        issues.append(tr(
+            "Se detectó tendencia {direction}. Verifica causas asignables antes de calcular capacidad."
+        ).format(direction=_tendencia(trend_dir)))
     if outlier_idx:
-        issues.append(f"{len(outlier_idx)} valor(es) atípico(s) detectado(s). Investiga su origen.")
+        issues.append(tr("{count} valor(es) atípico(s) detectado(s). Investiga su origen.").format(count=len(outlier_idx)))
     if cp is not None and cp < 1.0:
-        issues.append(f"Cp = {cp:.2f} < 1.0: el proceso no es capaz con las especificaciones dadas.")
+        issues.append(tr("Cp = {cp:.2f} < 1.0: el proceso no es capaz con las especificaciones dadas.").format(cp=cp))
     if cpk is not None and cpk < 1.0:
-        issues.append(f"Cpk = {cpk:.2f} < 1.0: el proceso no está centrado o no es capaz.")
+        issues.append(tr("Cpk = {cpk:.2f} < 1.0: el proceso no está centrado o no es capaz.").format(cpk=cpk))
 
     result = DiagnoseResult(
         n=n, mean=mean, std=std, cv=cv,

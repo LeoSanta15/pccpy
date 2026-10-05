@@ -21,14 +21,14 @@ import numpy as np
 import pandas as pd
 from scipy import optimize, stats
 
-from ._i18n import tr
+from ._i18n import N_, tr
 from .charts._engine import StagePanel, build_chart, full
 from .results import MultivariateChart
 
 #: Probabilidad de cola superior que usa Minitab en los límites de T²: 1 - Phi(3).
 ALPHA = 0.00134989803156746
 
-_OUT_OF_LIMIT = "1 punto fuera de los límites de control"
+_OUT_OF_LIMIT = N_("1 punto fuera de los límites de control")
 
 
 # ------------------------------------------------------------------------- datos

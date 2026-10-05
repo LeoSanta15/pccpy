@@ -22,7 +22,8 @@ import pandas as pd
 from scipy import stats
 
 from ._data import _excel_writer, as_1d
-from ._i18n import tr
+from ._frames import tabla_estadisticos
+from ._i18n import N_, tr
 
 NAN = float("nan")
 
@@ -111,47 +112,44 @@ class ToleranceResult:
     achieved_confidence: float | None = None
     data: np.ndarray = None  # type: ignore[assignment]
 
-    def to_frame(self) -> pd.DataFrame:
-        """Tabla resumen de una fila por estadístico."""
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen de una fila por estadístico (con ``stable=True``, claves canónicas en inglés)."""
         rows = [
-            ("N", self.n),
-            ("Media", self.mean),
-            ("Desv.Est.", self.std),
-            ("Cobertura (p)", self.coverage),
-            ("Confianza (1−α)", self.confidence),
-            ("Método", self.method),
-            ("Lados", self.sides),
+            ("n", N_("N"), self.n),
+            ("mean", N_("Media"), self.mean),
+            ("std", N_("Desv.Est."), self.std),
+            ("coverage", N_("Cobertura (p)"), self.coverage),
+            ("confidence", N_("Confianza (1−α)"), self.confidence),
+            ("method", N_("Método"), self.method),
+            ("sides", N_("Lados"), self.sides),
         ]
         if self.k_factor is not None:
-            rows.append(("Factor k", round(self.k_factor, 5)))
+            rows.append(("k_factor", N_("Factor k"), round(self.k_factor, 5)))
         if self.achieved_confidence is not None:
-            rows.append(("Confianza alcanzada", round(self.achieved_confidence, 5)))
+            rows.append(("achieved_confidence", N_("Confianza alcanzada"), round(self.achieved_confidence, 5)))
         if self.lower is not None:
-            rows.append(("Límite inferior", self.lower))
+            rows.append(("lower", N_("Límite inferior"), self.lower))
         if self.upper is not None:
-            rows.append(("Límite superior", self.upper))
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+            rows.append(("upper", N_("Límite superior"), self.upper))
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
         o = self
         p100, g100 = round(o.coverage * 100, 1), round(o.confidence * 100, 1)
-        achieved = (f"  Confianza alcanzada: {o.achieved_confidence * 100:.2f}%"
-                    if o.achieved_confidence is not None else "")
-        k_txt = f"  Factor k = {o.k_factor:.5f}" if o.k_factor is not None else ""
         lines = [
-            f"Intervalo de tolerancia ({o.method}, {o.sides})",
-            f"  N={o.n}  Cobertura≥{p100}%  Confianza={g100}%",
-            f"  Media={o.mean:.5g}  Desv.Est.={o.std:.5g}",
+            tr("Intervalo de tolerancia ({method}, {sides})").format(method=o.method, sides=o.sides),
+            tr("  N={n}  Cobertura≥{coverage}%  Confianza={confidence}%").format(n=o.n, coverage=p100, confidence=g100),
+            tr("  Media={mean:.5g}  Desv.Est.={std:.5g}").format(mean=o.mean, std=o.std),
         ]
-        if k_txt:
-            lines.append(k_txt)
-        if achieved:
-            lines.append(achieved)
+        if o.k_factor is not None:
+            lines.append(tr("  Factor k = {k:.5f}").format(k=o.k_factor))
+        if o.achieved_confidence is not None:
+            lines.append(tr("  Confianza alcanzada: {confidence:.2f}%").format(confidence=o.achieved_confidence * 100))
         interval = []
         if o.lower is not None:
-            interval.append(f"LI = {o.lower:.5g}")
+            interval.append(tr("LI = {lower:.5g}").format(lower=o.lower))
         if o.upper is not None:
-            interval.append(f"LS = {o.upper:.5g}")
+            interval.append(tr("LS = {upper:.5g}").format(upper=o.upper))
         lines.append("  " + "   ".join(interval))
         return "\n".join(lines)
 
@@ -161,7 +159,7 @@ class ToleranceResult:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Tolerancia")
+            self.to_frame().to_excel(writer, sheet_name=tr("Tolerancia"))
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()

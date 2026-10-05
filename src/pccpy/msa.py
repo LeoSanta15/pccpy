@@ -23,7 +23,8 @@ import pandas as pd
 from scipy import stats
 
 from ._data import _excel_writer, as_1d
-from ._i18n import tr
+from ._frames import tabla_estadisticos
+from ._i18n import N_, tr
 
 NAN = float("nan")
 
@@ -126,54 +127,53 @@ class GageRRResult:
     anova_table: pd.DataFrame | None = None
     _data: np.ndarray = field(repr=False, default=None)  # type: ignore[assignment, arg-type]
 
-    def to_frame(self) -> pd.DataFrame:
-        K = self.study_variation
-        sv = K
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` sin filas separadoras y con claves canónicas en inglés)."""
+        sv = self.study_variation
         rows = [
-            ("Método", self.method),
-            ("Partes (p)", self.parts),
-            ("Operadores (o)", self.operators),
-            ("Réplicas (r)", self.replicates),
-            ("Mult. estudio (K)", sv),
-            ("", ""),
-            ("Varianza repetibilidad (EV²)", round(self.var_repeatability, 6)),
-            ("Varianza operador (AV²)", round(self.var_operator, 6)),
-            ("Varianza interacción (IA²)", round(self.var_interaction, 6)),
-            ("Varianza reproducibilidad", round(self.var_reproducibility, 6)),
-            ("Varianza Gage R&R", round(self.var_gage, 6)),
-            ("Varianza parte a parte (PV²)", round(self.var_part, 6)),
-            ("Varianza total", round(self.var_total, 6)),
-            ("", ""),
-            ("%Contribución Gage R&R", round(self.pct_gage, 2)),
-            ("%Contribución repetibilidad", round(self.pct_repeatability, 2)),
-            ("%Contribución reproducibilidad", round(self.pct_reproducibility, 2)),
-            ("%Contribución parte a parte", round(self.pct_part, 2)),
-            ("", ""),
-            ("Var. estudio Gage R&R", round(self.study_var_gage, 6)),
-            ("Var. estudio total", round(self.study_var_total, 6)),
-            ("%Var. estudio Gage R&R", round(self.pct_study_var, 2)),
-            ("NDC (núm. categorías distintas)", self.ndc),
+            ("method", N_("Método"), self.method),
+            ("parts", N_("Partes (p)"), self.parts),
+            ("operators", N_("Operadores (o)"), self.operators),
+            ("replicates", N_("Réplicas (r)"), self.replicates),
+            ("study_variation", N_("Mult. estudio (K)"), sv),
+            (None, "", ""),
+            ("var_repeatability", N_("Varianza repetibilidad (EV²)"), round(self.var_repeatability, 6)),
+            ("var_operator", N_("Varianza operador (AV²)"), round(self.var_operator, 6)),
+            ("var_interaction", N_("Varianza interacción (IA²)"), round(self.var_interaction, 6)),
+            ("var_reproducibility", N_("Varianza reproducibilidad"), round(self.var_reproducibility, 6)),
+            ("var_gage", N_("Varianza Gage R&R"), round(self.var_gage, 6)),
+            ("var_part", N_("Varianza parte a parte (PV²)"), round(self.var_part, 6)),
+            ("var_total", N_("Varianza total"), round(self.var_total, 6)),
+            (None, "", ""),
+            ("pct_contribution_gage", N_("%Contribución Gage R&R"), round(self.pct_gage, 2)),
+            ("pct_contribution_repeatability", N_("%Contribución repetibilidad"), round(self.pct_repeatability, 2)),
+            ("pct_contribution_reproducibility", N_("%Contribución reproducibilidad"), round(self.pct_reproducibility, 2)),
+            ("pct_contribution_part", N_("%Contribución parte a parte"), round(self.pct_part, 2)),
+            (None, "", ""),
+            ("study_var_gage", N_("Var. estudio Gage R&R"), round(self.study_var_gage, 6)),
+            ("study_var_total", N_("Var. estudio total"), round(self.study_var_total, 6)),
+            ("pct_study_var", N_("%Var. estudio Gage R&R"), round(self.pct_study_var, 2)),
+            ("ndc", N_("NDC (núm. categorías distintas)"), self.ndc),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
         lines = [
-            (
-                f"Gage R&R ({self.method}) — {self.parts} partes × "
-                f"{self.operators} operadores × {self.replicates} réplicas"
-            ),
-            f"  K = {self.study_variation}  (variación de estudio = K·σ)",
+            tr("Gage R&R ({method}) — {parts} partes × {operators} operadores × {replicates} réplicas").format(
+                method=self.method, parts=self.parts, operators=self.operators, replicates=self.replicates),
+            tr("  K = {k}  (variación de estudio = K·σ)").format(k=self.study_variation),
             "",
-            "  Fuente              Var          %Contribución",
-            f"  Repetibilidad       {self.var_repeatability:10.5f}   {self.pct_repeatability:6.2f}%",
-            f"  Reproducibilidad    {self.var_reproducibility:10.5f}   {self.pct_reproducibility:6.2f}%",
-            f"    Operador          {self.var_operator:10.5f}",
-            f"    Interacción       {self.var_interaction:10.5f}",
-            f"  Gage R&R            {self.var_gage:10.5f}   {self.pct_gage:6.2f}%",
-            f"  Parte a parte       {self.var_part:10.5f}   {self.pct_part:6.2f}%",
-            f"  Total               {self.var_total:10.5f}  100.00%",
+            tr("  Fuente              Var          %Contribución"),
+            tr("  Repetibilidad       {var:10.5f}   {pct:6.2f}%").format(var=self.var_repeatability, pct=self.pct_repeatability),
+            tr("  Reproducibilidad    {var:10.5f}   {pct:6.2f}%").format(
+                var=self.var_reproducibility, pct=self.pct_reproducibility),
+            tr("    Operador          {var:10.5f}").format(var=self.var_operator),
+            tr("    Interacción       {var:10.5f}").format(var=self.var_interaction),
+            tr("  Gage R&R            {var:10.5f}   {pct:6.2f}%").format(var=self.var_gage, pct=self.pct_gage),
+            tr("  Parte a parte       {var:10.5f}   {pct:6.2f}%").format(var=self.var_part, pct=self.pct_part),
+            tr("  Total               {var:10.5f}  100.00%").format(var=self.var_total),
             "",
-            f"  %Var. estudio Gage R&R = {self.pct_study_var:.2f}%   NDC = {self.ndc}",
+            tr("  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}").format(pct=self.pct_study_var, ndc=self.ndc),
         ]
         return "\n".join(lines)
 
@@ -184,7 +184,7 @@ class GageRRResult:
         Hojas: Resumen, ANOVA (si está disponible).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Resumen")
+            self.to_frame().to_excel(writer, sheet_name=tr("Resumen"))
             if self.anova_table is not None:
                 self.anova_table.to_excel(writer, sheet_name="ANOVA")
 
@@ -532,34 +532,35 @@ class Type1Result:
     study_variation: float
     tolerance: float | None
 
-    def to_frame(self) -> pd.DataFrame:
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
         rows = [
-            ("N", self.n),
-            ("Media", round(self.mean, 6)),
-            ("Desv.Est.", round(self.std, 6)),
-            ("Referencia", self.reference),
-            ("Sesgo", round(self.bias, 6)),
-            ("Sesgo (%)", round(self.bias_pct, 3)),
-            ("t", round(self.t_stat, 4)),
-            ("p-valor (sesgo=0)", round(self.p_value, 5)),
-            ("Cg", round(self.cg, 3) if not math.isnan(self.cg) else "—"),
-            ("Cgk", round(self.cgk, 3) if not math.isnan(self.cgk) else "—"),
-            ("Variación de estudio", round(self.study_variation, 6)),
+            ("n", N_("N"), self.n),
+            ("mean", N_("Media"), round(self.mean, 6)),
+            ("std", N_("Desv.Est."), round(self.std, 6)),
+            ("reference", N_("Referencia"), self.reference),
+            ("bias", N_("Sesgo"), round(self.bias, 6)),
+            ("bias_pct", N_("Sesgo (%)"), round(self.bias_pct, 3)),
+            ("t", N_("t"), round(self.t_stat, 4)),
+            ("p_value", N_("p-valor (sesgo=0)"), round(self.p_value, 5)),
+            ("cg", N_("Cg"), round(self.cg, 3) if not math.isnan(self.cg) else "—"),
+            ("cgk", N_("Cgk"), round(self.cgk, 3) if not math.isnan(self.cgk) else "—"),
+            ("study_variation", N_("Variación de estudio"), round(self.study_variation, 6)),
         ]
         if self.tolerance is not None:
-            rows.append(("Tolerancia", self.tolerance))
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+            rows.append(("tolerance", N_("Tolerancia"), self.tolerance))
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
-        cg_s = f"{self.cg:.3f}" if not math.isnan(self.cg) else "N/D"
-        cgk_s = f"{self.cgk:.3f}" if not math.isnan(self.cgk) else "N/D"
-        return (
-            f"Estudio Tipo 1  (N={self.n}  Ref={self.reference})\n"
-            f"  Media={self.mean:.5g}  Desv.Est.={self.std:.5g}\n"
-            f"  Sesgo={self.bias:.5g} ({self.bias_pct:.2f}%)  "
-            f"t={self.t_stat:.4f}  p={self.p_value:.5f}\n"
-            f"  Cg={cg_s}  Cgk={cgk_s}"
-        )
+        cg_s = f"{self.cg:.3f}" if not math.isnan(self.cg) else tr("N/D")
+        cgk_s = f"{self.cgk:.3f}" if not math.isnan(self.cgk) else tr("N/D")
+        return "\n".join([
+            tr("Estudio Tipo 1  (N={n}  Ref={reference})").format(n=self.n, reference=self.reference),
+            tr("  Media={mean:.5g}  Desv.Est.={std:.5g}").format(mean=self.mean, std=self.std),
+            tr("  Sesgo={bias:.5g} ({bias_pct:.2f}%)  t={t:.4f}  p={p:.5f}").format(
+                bias=self.bias, bias_pct=self.bias_pct, t=self.t_stat, p=self.p_value),
+            tr("  Cg={cg}  Cgk={cgk}").format(cg=cg_s, cgk=cgk_s),
+        ])
 
     def to_excel(self, path) -> None:
         """Exporta el Estudio Tipo 1 a un archivo Excel (.xlsx).
@@ -567,7 +568,7 @@ class Type1Result:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Tipo1")
+            self.to_frame().to_excel(writer, sheet_name=tr("Tipo1"))
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
@@ -750,29 +751,30 @@ class LinearityResult:
     _all_refs: np.ndarray = field(repr=False)
     _all_biases: np.ndarray = field(repr=False)
 
-    def to_frame(self) -> pd.DataFrame:
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
         rows = [
-            ("Nº de valores referencia", len(self.references)),
-            ("Pendiente", round(self.slope, 6)),
-            ("Intercepto", round(self.intercept, 6)),
-            ("R²", round(self.r_squared, 5)),
-            ("p-valor (pendiente=0)", round(self.p_slope, 5)),
-            ("p-valor (intercepto=0)", round(self.p_intercept, 5)),
-            ("Linealidad", round(self.linearity, 6)),
-            ("Linealidad (%)", round(self.linearity_pct, 3)),
-            ("Sesgo promedio", round(self.avg_bias, 6)),
-            ("Sesgo promedio (%)", round(self.avg_bias_pct, 3)),
+            ("n_references", N_("Nº de valores referencia"), len(self.references)),
+            ("slope", N_("Pendiente"), round(self.slope, 6)),
+            ("intercept", N_("Intercepto"), round(self.intercept, 6)),
+            ("r_squared", N_("R²"), round(self.r_squared, 5)),
+            ("p_slope", N_("p-valor (pendiente=0)"), round(self.p_slope, 5)),
+            ("p_intercept", N_("p-valor (intercepto=0)"), round(self.p_intercept, 5)),
+            ("linearity", N_("Linealidad"), round(self.linearity, 6)),
+            ("linearity_pct", N_("Linealidad (%)"), round(self.linearity_pct, 3)),
+            ("avg_bias", N_("Sesgo promedio"), round(self.avg_bias, 6)),
+            ("avg_bias_pct", N_("Sesgo promedio (%)"), round(self.avg_bias_pct, 3)),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
-        return (
-            f"Linealidad y sesgo\n"
-            f"  Pendiente={self.slope:.5g}  Intercepto={self.intercept:.5g}\n"
-            f"  R²={self.r_squared:.4f}  p(pendiente=0)={self.p_slope:.5f}\n"
-            f"  Linealidad={self.linearity:.5g} ({self.linearity_pct:.2f}%)\n"
-            f"  Sesgo promedio={self.avg_bias:.5g} ({self.avg_bias_pct:.2f}%)"
-        )
+        return "\n".join([
+            tr("Linealidad y sesgo"),
+            tr("  Pendiente={slope:.5g}  Intercepto={intercept:.5g}").format(slope=self.slope, intercept=self.intercept),
+            tr("  R²={r2:.4f}  p(pendiente=0)={p:.5f}").format(r2=self.r_squared, p=self.p_slope),
+            tr("  Linealidad={linearity:.5g} ({pct:.2f}%)").format(linearity=self.linearity, pct=self.linearity_pct),
+            tr("  Sesgo promedio={bias:.5g} ({pct:.2f}%)").format(bias=self.avg_bias, pct=self.avg_bias_pct),
+        ])
 
     def to_excel(self, path) -> None:
         """Exporta el análisis de linealidad a un archivo Excel (.xlsx).
@@ -780,7 +782,7 @@ class LinearityResult:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Linealidad")
+            self.to_frame().to_excel(writer, sheet_name=tr("Linealidad"))
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
@@ -901,26 +903,27 @@ class AttributeAgreementResult:
     categories: list
     _data: pd.DataFrame = field(repr=False)
 
-    def to_frame(self) -> pd.DataFrame:
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
         rows: list[tuple] = [
-            ("Kappa global vs referencia", round(self.kappa_overall, 5)),
-            ("Kappa de Fleiss (entre operadores)", round(self.fleiss_kappa, 5)),
-            ("% Acuerdo global vs referencia", round(self.pct_agreement_overall, 2)),
+            ("kappa_overall", N_("Kappa global vs referencia"), round(self.kappa_overall, 5)),
+            ("fleiss_kappa", N_("Kappa de Fleiss (entre operadores)"), round(self.fleiss_kappa, 5)),
+            ("pct_agreement_overall", N_("% Acuerdo global vs referencia"), round(self.pct_agreement_overall, 2)),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
         lines = [
-            "Análisis de concordancia por atributos",
-            f"  Kappa global vs referencia = {self.kappa_overall:.4f}",
-            f"  Kappa de Fleiss             = {self.fleiss_kappa:.4f}",
-            f"  % Acuerdo global vs ref     = {self.pct_agreement_overall:.1f}%",
+            tr("Análisis de concordancia por atributos"),
+            tr("  Kappa global vs referencia = {kappa:.4f}").format(kappa=self.kappa_overall),
+            tr("  Kappa de Fleiss             = {kappa:.4f}").format(kappa=self.fleiss_kappa),
+            tr("  % Acuerdo global vs ref     = {pct:.1f}%").format(pct=self.pct_agreement_overall),
             "",
-            "  Kappa por operador vs referencia:",
+            tr("  Kappa por operador vs referencia:"),
         ]
         for op, row in self.kappa_vs_reference.iterrows():
-            lines.append(f"    {op}: κ={row['kappa']:.4f}  p-valor={row['p_valor']:.5f}  "
-                         f"Acuerdo={row['% acuerdo']:.1f}%")
+            lines.append(tr("    {operator}: κ={kappa:.4f}  p-valor={p:.5f}  Acuerdo={agreement:.1f}%").format(
+                operator=op, kappa=row["kappa"], p=row["p_valor"], agreement=row["% acuerdo"]))
         return "\n".join(lines)
 
     def to_excel(self, path) -> None:
@@ -930,7 +933,7 @@ class AttributeAgreementResult:
         Hojas: Resumen, KappaVsReferencia (si hay más de un operador).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Resumen")
+            self.to_frame().to_excel(writer, sheet_name=tr("Resumen"))
             if not self.kappa_vs_reference.empty:
                 self.kappa_vs_reference.to_excel(writer, sheet_name="KappaVsReferencia")
 

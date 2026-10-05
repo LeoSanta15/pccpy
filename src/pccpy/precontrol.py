@@ -6,7 +6,13 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
-from ._i18n import tr
+from ._frames import etiquetas
+from ._i18n import N_, tr
+
+# Claves estables (inglés) → texto de la columna en español, marcado para traducir.
+_COLUMNAS = {
+    "observation": N_("observación"), "value": N_("valor"), "zone": N_("zona"), "signal": N_("señal"),
+}
 
 
 @dataclass
@@ -64,39 +70,42 @@ class PreControlResult:
         init=False, repr=False,
     )
 
-    def to_frame(self) -> pd.DataFrame:
-        """DataFrame con zona y señal para cada observación."""
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """DataFrame con zona y señal para cada observación.
+
+        Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
+        col = etiquetas(_COLUMNAS, stable)
         rows = []
         sig_idx = {i: code for i, code in self.signals}
         for i, (v, z) in enumerate(zip(self.values, self.zones)):
             rows.append({
-                "observación": i + 1,
-                "valor": v,
-                "zona": z,
-                "señal": sig_idx.get(i, ""),
+                col["observation"]: i + 1,
+                col["value"]: v,
+                col["zone"]: z,
+                col["signal"]: sig_idx.get(i, ""),
             })
-        return pd.DataFrame(rows).set_index("observación")
+        return pd.DataFrame(rows).set_index(col["observation"])
 
     def summary(self) -> str:
         L = [
-            (
-                f"Pre-control  N={len(self.values)}  LEI={self.lsl:.5g}  LES={self.usl:.5g}"
-                f"  Centro={self.center:.5g}"
-            ),
-            f"  Zona verde: [{self.green_lo:.5g}, {self.green_hi:.5g}]",
-            f"  Verde={self.n_green}  Amarillo={self.n_yellow}  Rojo={self.n_red}",
+            tr("Pre-control  N={n}  LEI={lsl:.5g}  LES={usl:.5g}  Centro={center:.5g}").format(
+                n=len(self.values), lsl=self.lsl, usl=self.usl, center=self.center),
+            tr("  Zona verde: [{low:.5g}, {high:.5g}]").format(low=self.green_lo, high=self.green_hi),
+            tr("  Verde={green}  Amarillo={yellow}  Rojo={red}").format(
+                green=self.n_green, yellow=self.n_yellow, red=self.n_red),
         ]
         if self.signals:
-            L.append("  Señales:")
+            L.append(tr("  Señales:"))
             for i, code in self.signals:
                 label = {
-                    "red": "Punto rojo — detener y corregir",
-                    "two_yellow_same": "Dos amarillas consecutivas en el mismo lado — ajustar",
-                    "two_yellow_opp": "Dos amarillas consecutivas en lados opuestos — varianza",
+                    "red": tr("Punto rojo — detener y corregir"),
+                    "two_yellow_same": tr("Dos amarillas consecutivas en el mismo lado — ajustar"),
+                    "two_yellow_opp": tr("Dos amarillas consecutivas en lados opuestos — varianza"),
                 }.get(code, code)
-                L.append(f"    Obs {i + 1}: {label}")
+                L.append(tr("    Obs {obs}: {label}").format(obs=i + 1, label=label))
         else:
-            L.append("  Sin señales detectadas.")
+            L.append(tr("  Sin señales detectadas."))
         return "\n".join(L)
 
     def __str__(self) -> str:  # pragma: no cover

@@ -9,7 +9,8 @@ import pandas as pd
 from scipy import stats
 
 from .._data import as_1d
-from .._i18n import tr
+from .._frames import tabla_estadisticos
+from .._i18n import N_, tr
 
 NAN = float("nan")
 
@@ -81,41 +82,46 @@ class RunChartResult:
     def _flag(self, p: float) -> str:
         return " *" if not math.isnan(p) and p < self.alpha else ""
 
-    def to_frame(self) -> pd.DataFrame:
-        """Tabla con los estadísticos de las 4 pruebas."""
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla con los estadísticos de las 4 pruebas.
+
+        Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
         rows = [
-            ("Mediana", self.median),
-            ("N sobre mediana", self.n_above),
-            ("N bajo mediana", self.n_below),
-            ("Rachas sobre/bajo mediana", self.n_runs_about_median),
-            ("Rachas esperadas (mediana)", round(self.expected_runs_about_median, 3)),
-            ("p Agrupamiento (clustering)", round(self.p_clustering, 4)),
-            ("p Mezclas (mixtures)", round(self.p_mixtures, 4)),
-            ("Racha más larga (mediana)", self.longest_run_about_median),
-            ("Rachas arriba/abajo", self.n_runs_updown),
-            ("Rachas esperadas (arriba/abajo)", round(self.expected_runs_updown, 3)),
-            ("p Tendencias (trends)", round(self.p_trends, 4)),
-            ("p Oscilación (oscillation)", round(self.p_oscillation, 4)),
-            ("Racha más larga (arriba/abajo)", self.longest_run_updown),
+            ("median", N_("Mediana"), self.median),
+            ("n_above", N_("N sobre mediana"), self.n_above),
+            ("n_below", N_("N bajo mediana"), self.n_below),
+            ("runs_about_median", N_("Rachas sobre/bajo mediana"), self.n_runs_about_median),
+            ("expected_runs_about_median", N_("Rachas esperadas (mediana)"), round(self.expected_runs_about_median, 3)),
+            ("p_clustering", N_("p Agrupamiento (clustering)"), round(self.p_clustering, 4)),
+            ("p_mixtures", N_("p Mezclas (mixtures)"), round(self.p_mixtures, 4)),
+            ("longest_run_about_median", N_("Racha más larga (mediana)"), self.longest_run_about_median),
+            ("runs_updown", N_("Rachas arriba/abajo"), self.n_runs_updown),
+            ("expected_runs_updown", N_("Rachas esperadas (arriba/abajo)"), round(self.expected_runs_updown, 3)),
+            ("p_trends", N_("p Tendencias (trends)"), round(self.p_trends, 4)),
+            ("p_oscillation", N_("p Oscilación (oscillation)"), round(self.p_oscillation, 4)),
+            ("longest_run_updown", N_("Racha más larga (arriba/abajo)"), self.longest_run_updown),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
         o = self
         a = round(o.alpha * 100)
         L = [
-            f"Carta de corridas  N={len(o.values)}  Mediana={o.median:.5g}",
-            f"  Pruebas de aleatoriedad (α={a}%); * = señal",
-            "  Sobre/bajo la mediana:",
-            (f"    Rachas={o.n_runs_about_median}  Esperadas={o.expected_runs_about_median:.2f}"
-             f"  Racha más larga={o.longest_run_about_median}"),
-            (f"    p Agrupamiento={o.p_clustering:.4f}{o._flag(o.p_clustering)}"
-             f"  p Mezclas={o.p_mixtures:.4f}{o._flag(o.p_mixtures)}"),
-            "  Arriba/abajo:",
-            (f"    Rachas={o.n_runs_updown}  Esperadas={o.expected_runs_updown:.2f}"
-             f"  Racha más larga={o.longest_run_updown}"),
-            (f"    p Tendencias={o.p_trends:.4f}{o._flag(o.p_trends)}"
-             f"  p Oscilación={o.p_oscillation:.4f}{o._flag(o.p_oscillation)}"),
+            tr("Carta de corridas  N={n}  Mediana={median:.5g}").format(n=len(o.values), median=o.median),
+            tr("  Pruebas de aleatoriedad (α={alpha}%); * = señal").format(alpha=a),
+            tr("  Sobre/bajo la mediana:"),
+            tr("    Rachas={runs}  Esperadas={expected:.2f}  Racha más larga={longest}").format(
+                runs=o.n_runs_about_median, expected=o.expected_runs_about_median, longest=o.longest_run_about_median),
+            tr("    p Agrupamiento={p_clustering:.4f}{flag_clustering}  p Mezclas={p_mixtures:.4f}{flag_mixtures}").format(
+                p_clustering=o.p_clustering, flag_clustering=o._flag(o.p_clustering),
+                p_mixtures=o.p_mixtures, flag_mixtures=o._flag(o.p_mixtures)),
+            tr("  Arriba/abajo:"),
+            tr("    Rachas={runs}  Esperadas={expected:.2f}  Racha más larga={longest}").format(
+                runs=o.n_runs_updown, expected=o.expected_runs_updown, longest=o.longest_run_updown),
+            tr("    p Tendencias={p_trends:.4f}{flag_trends}  p Oscilación={p_oscillation:.4f}{flag_oscillation}").format(
+                p_trends=o.p_trends, flag_trends=o._flag(o.p_trends),
+                p_oscillation=o.p_oscillation, flag_oscillation=o._flag(o.p_oscillation)),
         ]
         return "\n".join(L)
 
