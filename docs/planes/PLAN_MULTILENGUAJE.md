@@ -24,7 +24,7 @@
 | 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | [#9](https://github.com/LeoSanta15/pccpy/pull/9) | en revisión |
 | 3 Gráficos y constantes de módulo (`wizard`) | `feat/i18n-fase-3-graficos` | [#10](https://github.com/LeoSanta15/pccpy/pull/10) | en revisión |
 | 3b Otras tablas con columnas en español (`pareto`, curvas OC/AOQ, ANOVA, `kappa_vs_reference`) | `feat/i18n-fase-3b-tablas` | [#11](https://github.com/LeoSanta15/pccpy/pull/11) | en revisión |
-| 4 Documentación multilingüe | `feat/i18n-fase-4-docs` | _(se completa al abrir el PR)_ | en revisión |
+| 4 Documentación multilingüe | `feat/i18n-fase-4-docs` | [#13](https://github.com/LeoSanta15/pccpy/pull/13) | en revisión |
 | 5 Glosario y release `0.11.0` | `feat/i18n-fase-5-release` | _(se completa al abrir el PR)_ | en revisión (falta la revisión humana del inglés; el tag lo crea la persona responsable) |
 
 ---
