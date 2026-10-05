@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-05 23:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -115,8 +115,8 @@ msgstr "`inspection_level`"
 msgid "`2`"
 msgstr "`2`"
 
-msgid "Nivel de inspección (I, II o III)."
-msgstr "Inspection level (I, II or III)."
+msgid "Nivel de inspección general (1, 2 o 3), con la letra de código de la tabla I de Z1.4."
+msgstr "General inspection level (1, 2 or 3), with the code letter from Z1.4 table I."
 
 msgid "`n`"
 msgstr "`n`"
@@ -141,6 +141,9 @@ msgstr "By variables — Z1.9"
 
 msgid "Usa la media y desviación estándar de la muestra para estimar la fracción no conforme y compararla con el AQL."
 msgstr "Uses the sample mean and standard deviation to estimate the nonconforming fraction and compare it with the AQL."
+
+msgid "La tabla Z1.9 incluida **no reproduce la norma** (sus planes pueden aceptar casi cualquier lote) y la función avisa con un `UserWarning`. Para decidir con Z1.9, tome `n` y `k` de su ejemplar de la norma y páselos con `n=` y `k=`: `pp.acceptance_sampling_variables(N=500, aql=1.0, n=20, k=1.7)`."
+msgstr "The built-in Z1.9 table **does not reproduce the standard** (its plans may accept almost any lot) and the function emits a `UserWarning`. To decide with Z1.9, take `n` and `k` from your copy of the standard and pass them with `n=` and `k=`: `pp.acceptance_sampling_variables(N=500, aql=1.0, n=20, k=1.7)`."
 
 msgid "AQL en porcentaje."
 msgstr "AQL in percent."
@@ -206,7 +209,7 @@ msgid "AQL en porcentaje (p.ej. 1.0 para 1%). Valores válidos de Z1.4: 0.010, 0
 msgstr "AQL in percent (e.g. 1.0 for 1%). Valid Z1.4 values: 0.010, 0.015, 0.025, 0.040, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.0, 1.5, 2.5, 4.0, 6.5, 10.0."
 
 msgid "Nivel de inspección general (1, 2 o 3). Por defecto 2."
-msgstr "General inspection level (1, 2 or 3). Default 2."
+msgstr "General inspection level (1, 2 or 3), with the code letter from Z1.4 table I."
 
 msgid "Tamaño de muestra personalizado (omite la tabla Z1.4)."
 msgstr "Custom sample size (skips the Z1.4 table)."
@@ -433,4 +436,7 @@ msgstr "AOQ curve of the plan (``stable=True``: columns ``defective_fraction`` a
 
 msgid "Exporta el plan Dodge-Romig a un archivo Excel (.xlsx)."
 msgstr "Exports the Dodge-Romig plan to an Excel (.xlsx) file."
+
+#~ msgid "Nivel de inspección (I, II o III)."
+#~ msgstr "Inspection level (I, II or III)."
 

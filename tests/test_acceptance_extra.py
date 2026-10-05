@@ -114,3 +114,43 @@ def test_dodge_romig_cumple_su_objetivo():
     assert aoql.plan_type == "AOQL" and aoql.aoql <= 0.02 * 1.05 + 1e-6
     assert ltpd.pa(0.01) == pytest.approx(stats.binom.cdf(ltpd.c, ltpd.n, 0.01))
     assert not ltpd.oc_curve().empty and str(ltpd.n) in ltpd.summary()
+
+
+# Tabla I de Z1.4: letra de código por tamaño de lote y nivel general de inspección
+_TABLA_I = {  # lote → (nivel I, nivel II, nivel III)
+    5: "AAB", 12: "ABC", 20: "BCD", 40: "CDE", 70: "CEF", 120: "DFG", 200: "EGH", 400: "FHJ", 1000: "GJK",
+    2000: "HKL", 5000: "JLM", 20000: "KMN", 100000: "LNP", 300000: "MPQ", 600000: "NQR",
+}
+
+
+@pytest.mark.parametrize("lote, letras", list(_TABLA_I.items()))
+def test_tabla_i_letras_de_codigo(lote, letras):
+    from pccpy.acceptance import _letra_codigo
+
+    assert [_letra_codigo(lote, nivel) for nivel in (1, 2, 3)] == list(letras)
+
+
+@pytest.mark.parametrize("nivel, n, c", [(1, 13, 0), (2, 80, 2), (3, 125, 3)])
+def test_niveles_de_inspeccion_lote_1000_aql_1(nivel, n, c):
+    plan = pp.acceptance_sampling_attributes(N=1000, aql=1.0, inspection_level=nivel)
+    assert (plan.n, plan.c) == (n, c)
+
+
+def test_nivel_de_inspeccion_invalido():
+    with pytest.raises(ValueError, match="inspection_level"):
+        pp.acceptance_sampling_attributes(N=1000, aql=1.0, inspection_level=4)
+
+
+def test_letra_r_para_lotes_muy_grandes():
+    plan = pp.acceptance_sampling_attributes(N=1_000_000, aql=0.65, inspection_level=3)
+    assert (plan.n, plan.c) == (2000, 21)
+
+
+def test_tabla_z19_avisa_que_no_es_la_norma():
+    with pytest.warns(UserWarning, match="Z1.9"):
+        pp.acceptance_sampling_variables(N=500, aql=1.0)
+    import warnings
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        pp.acceptance_sampling_variables(N=500, aql=1.0, n=20, k=1.7)  # con n y k propios no avisa

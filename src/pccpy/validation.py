@@ -292,6 +292,21 @@ def _z14_tabla():
     return esperado, obtenido
 
 
+@_comprobacion("z14-niveles", N_("Letras de código de la tabla I de Z1.4 (niveles de inspección I, II y III) y su plan"),
+               "ANSI/ASQ Z1.4, tablas I y II-A", 0.0)
+def _z14_niveles():
+    from .acceptance import acceptance_sampling_attributes
+
+    celdas = [  # (N del lote, nivel, AQL %, n, Ac): solo celdas con número de aceptación propio (sin flechas)
+        (1000, 1, 2.5, 32, 2), (1000, 2, 1.0, 80, 2), (1000, 3, 1.0, 125, 3), (200, 3, 2.5, 50, 3),
+        (10000, 1, 1.0, 80, 2), (10000, 3, 1.0, 315, 7), (100000, 2, 1.0, 500, 10), (600000, 3, 0.65, 2000, 21),
+    ]
+    esperado = np.array([(n, ac) for *_, n, ac in celdas], dtype=float)
+    obtenido = np.array([(p.n, p.c) for p in (acceptance_sampling_attributes(N=N, aql=a, inspection_level=nv)
+                                              for N, nv, a, _, _ in celdas)], dtype=float)
+    return esperado, obtenido
+
+
 @_comprobacion("curva-oc", N_("Probabilidad de aceptación del plan (n = 80, c = 2) para p = 0,5 %, 1 % y 3 %"),
                "Distribución binomial acumulada; SciPy", 1e-12)
 def _oc():

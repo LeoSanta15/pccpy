@@ -30,7 +30,7 @@ python -m pccpy.validation --markdown validacion.md
 | Capacidad binomial y Poisson | Intervalos exactos de SciPy (Clopper-Pearson) y cuantiles de la gamma (Garwood) |
 | Anderson-Darling | Estadístico A² calculado por separado |
 | Intervalos de tolerancia | Factores k conocidos (n = 10, 95/95) |
-| Muestreo de aceptación | Celdas de la tabla II-A de Z1.4; probabilidad binomial acumulada |
+| Muestreo de aceptación | Celdas de las tablas I y II-A de Z1.4 (niveles I, II y III); probabilidad binomial acumulada |
 | Gage R&R, Tipo 1, linealidad, kappa | Cuadrados medios del ANOVA, fórmulas de Cg/Cgk, regresión exacta, definición de κ |
 | T² de Hotelling y MEWMA | Fórmulas y límites conocidos |
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 22:48+0000\n"
+"POT-Creation-Date: 2026-10-05 23:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -969,6 +969,9 @@ msgid "'h' debe ser > 0 y 'k' >= 0."
 msgstr ""
 
 msgid "'h' debe ser > 0."
+msgstr ""
+
+msgid "'inspection_level' debe ser 1, 2 o 3."
 msgstr ""
 
 msgid "'k' debe ser >= 0."
@@ -1949,6 +1952,12 @@ msgstr ""
 msgid "La suma de frecuencias debe ser positiva."
 msgstr ""
 
+msgid ""
+"La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los"
+" planes que da pueden aceptar casi cualquier lote). Use los valores n y k"
+" de su ejemplar de ANSI/ASQ Z1.9 con n= y k=."
+msgstr ""
+
 #, python-brace-format
 msgid ""
 "La variable PCCPY_LANG={valor!r} no es un idioma disponible; se usa "
@@ -1984,6 +1993,11 @@ msgid ""
 "Las referencias son tablas publicadas, fórmulas escritas aparte con "
 "NumPy/SciPy o simulaciones con semilla fija. No es una comparación con "
 "Minitab."
+msgstr ""
+
+msgid ""
+"Letras de código de la tabla I de Z1.4 (niveles de inspección I, II y "
+"III) y su plan"
 msgstr ""
 
 msgid "Linealidad"

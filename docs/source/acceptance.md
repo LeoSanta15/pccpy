@@ -41,7 +41,7 @@ El plan dice: toma 80 muestras; acepta si encuentras ≤ 2 defectuosas.
 |-----------|------|----------------|-------------|
 | `N` | `int` | — | Tamaño del lote. |
 | `aql` | `float` | — | AQL en porcentaje (p.ej. `1.0` para 1 %). |
-| `inspection_level` | `int` | `2` | Nivel de inspección (I, II o III). |
+| `inspection_level` | `int` | `2` | Nivel de inspección general (1, 2 o 3), con la letra de código de la tabla I de Z1.4. |
 | `n` | `int` | `None` | Tamaño de muestra fijo (anula la tabla). |
 | `c` | `int` | `None` | Número de aceptación fijo (anula la tabla). |
 
@@ -57,6 +57,12 @@ plan.plot()   # Curva OC + curva AOQ
 
 Usa la media y desviación estándar de la muestra para estimar la fracción no
 conforme y compararla con el AQL.
+
+```{warning}
+La tabla Z1.9 incluida **no reproduce la norma** (sus planes pueden aceptar casi cualquier lote) y la función avisa
+con un `UserWarning`. Para decidir con Z1.9, tome `n` y `k` de su ejemplar de la norma y páselos con `n=` y `k=`:
+`pp.acceptance_sampling_variables(N=500, aql=1.0, n=20, k=1.7)`.
+```
 
 ### Uso básico
 
