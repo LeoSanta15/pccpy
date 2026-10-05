@@ -2,6 +2,8 @@
 
 ## [Sin publicar]
 
+## [0.12.0] - validación, capacidad para atributos y Fase I
+
 ### Añadido
 - **Fase I iterativa:** `phase_one(chart, data, …)` calcula la carta, excluye los puntos con señal, recalcula los límites y repite hasta que no queda ninguna; devuelve un `PhaseOneResult` con la carta final, el historial de pasadas (`to_frame()`), los puntos excluidos (`excluded`, `excluded_labels`), `summary()` y `phase2(datos_nuevos)`, que aplica los límites congelados a la Fase II. Soporta `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` y `u_chart`. Salvaguardas: `max_iterations`, `min_points` y `max_excluded` (si saltan, no converge y avisa). En `imr_chart` solo cuenta el panel I por defecto (`exclude_panels=`).
 - **Fechas (y etiquetas) en el eje x:** las cartas conservan el índice de fechas (o de texto) de una serie/DataFrame de pandas (también con `subgroup_size=`, `subgroup=` y formato largo): el gráfico rotula el eje x con ellas («Fecha»), `to_frame()` y `violations()` añaden la columna `etiqueta` (`label` con `stable=True`) y `summary()` muestra la fecha junto al punto. `ControlChart.with_labels()` asocia etiquetas propias. Sin fechas, nada cambia.

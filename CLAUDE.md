@@ -14,7 +14,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 
 ## Estado actual (verificado el 2026-10-02)
 
-- Versión **0.11.0** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
+- Versión **0.12.0** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
 - **344 pruebas** pasando, **90 %** de cobertura global, Python `>=3.9`.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.13, calidad = ruff + mypy,
