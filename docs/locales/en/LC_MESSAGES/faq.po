@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -80,8 +80,21 @@ msgstr "**Incomplete subgroups** — if the last subgroup has fewer observations
 msgid "¿Cómo aplico los límites de Fase I a nuevos datos (Fase II)?"
 msgstr "How do I apply Phase I limits to new data (Phase II)?"
 
-msgid "Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma_within=...)`."
-msgstr "For subgroup charts use `xbar_r_chart(g, mu=..., sigma_within=...)`."
+msgid "También se puede hacer a mano: `pp.imr_chart(x_nuevo, mu=carta_i.params[0][\"media\"], sigma=carta_i.params[0][\"sigma\"])`. Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma=...)`."
+msgstr "It can also be done by hand: `pp.imr_chart(x_new, mu=chart_i.params[0][\"media\"], sigma=chart_i.params[0][\"sigma\"])`. For subgroup charts use `xbar_r_chart(g, mu=..., sigma=...)`."
+
+msgid "¿Excluir puntos en la Fase I es siempre correcto?"
+msgstr "Is excluding points in Phase I always correct?"
+
+#, python-format
+msgid "No. Solo tiene sentido si has encontrado y corregido la **causa especial** de cada punto; si no, los límites quedan artificialmente estrechos y la Fase II dará falsas alarmas. Por eso `phase_one()` se detiene (y avisa) si tendría que excluir más del 25 % de los puntos (`max_excluded`), si quedarían menos de 20 puntos (`min_points`) o si no converge en `max_iterations` pasadas: en esos casos el proceso no es estable y hay que investigarlo."
+msgstr "No. It only makes sense if you have found and corrected the **special cause** of each point; otherwise the limits become artificially narrow and Phase II will give false alarms. That is why `phase_one()` stops (and warns) if it would have to exclude more than 25 % of the points (`max_excluded`), if fewer than 20 points would remain (`min_points`) or if it does not converge within `max_iterations` passes: in those cases the process is not stable and must be investigated."
+
+msgid "¿Cómo muestro fechas en el eje x de la carta?"
+msgstr "How do I show dates on the x axis of the chart?"
+
+msgid "Pasa una serie de pandas con índice de fechas (`pd.Series(x, index=fechas)`): la carta rotula el eje con ellas. Para otras etiquetas (lotes, turnos) usa `carta.with_labels(etiquetas)`."
+msgstr "Pass a pandas Series with a date index (`pd.Series(x, index=dates)`): the chart labels the axis with them. For other labels (lots, shifts) use `chart.with_labels(labels)`."
 
 msgid "¿Cómo uso etapas (stages) para marcar un cambio en el proceso?"
 msgstr "How do I use stages to mark a change in the process?"
@@ -261,4 +274,7 @@ msgstr "{doc}`tutorial_real` — complete workflow with real data"
 #, python-brace-format
 msgid "{doc}`minitab` — equivalencias con Minitab"
 msgstr "{doc}`minitab` — equivalences with Minitab"
+
+#~ msgid "Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma_within=...)`."
+#~ msgstr "For subgroup charts use `xbar_r_chart(g, mu=..., sigma_within=...)`."
 

@@ -78,16 +78,31 @@ Las diferencias más comunes:
 ### ¿Cómo aplico los límites de Fase I a nuevos datos (Fase II)?
 
 ```python
-# Calcular límites con datos históricos (Fase I)
-carta_i = pp.imr_chart(x_historico, tests="all")
-mu_i    = carta_i.params[0]["mu"]
-sigma_i = carta_i.params[0]["sigma"]
+# Fase I iterativa: excluye los puntos con señal y recalcula hasta que no quede ninguna
+fase1 = pp.phase_one(pp.imr_chart, x_historico, tests=(1, 2, 3))
 
-# Aplicar esos límites a datos nuevos (Fase II)
-carta_ii = pp.imr_chart(x_nuevo, mu=mu_i, sigma_within=sigma_i, tests=(1,))
+# Fase II: aplicar esos límites congelados a datos nuevos
+carta_ii = fase1.phase2(x_nuevo, tests=(1,))
 ```
 
-Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma_within=...)`.
+También se puede hacer a mano: `pp.imr_chart(x_nuevo, mu=carta_i.params[0]["media"], sigma=carta_i.params[0]["sigma"])`.
+Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma=...)`.
+
+---
+
+### ¿Excluir puntos en la Fase I es siempre correcto?
+
+No. Solo tiene sentido si has encontrado y corregido la **causa especial** de cada punto; si no, los límites
+quedan artificialmente estrechos y la Fase II dará falsas alarmas. Por eso `phase_one()` se detiene (y avisa)
+si tendría que excluir más del 25 % de los puntos (`max_excluded`), si quedarían menos de 20 puntos
+(`min_points`) o si no converge en `max_iterations` pasadas: en esos casos el proceso no es estable y hay que investigarlo.
+
+---
+
+### ¿Cómo muestro fechas en el eje x de la carta?
+
+Pasa una serie de pandas con índice de fechas (`pd.Series(x, index=fechas)`): la carta rotula el eje con ellas.
+Para otras etiquetas (lotes, turnos) usa `carta.with_labels(etiquetas)`.
 
 ---
 

@@ -232,28 +232,40 @@ En un estudio de **Fase I** calculas los límites con datos históricos y verifi
 que el proceso estaba bajo control. En **Fase II** aplicas esos mismos límites a
 producción nueva para detectar cambios.
 
+`phase_one()` hace la Fase I **de forma iterativa**: calcula la carta, excluye los puntos con señal,
+recalcula los límites y repite hasta que no quede ninguna señal. Con `phase2()` aplicas los límites
+resultantes a los datos nuevos:
+
 ```python
 import numpy as np, pccpy as pp
 
-# ── Fase I: datos históricos (solo lotes 1-20) ─────────────────
-x_historico = x[:80]
-carta_i = pp.imr_chart(x_historico, tests="all")
-mu_i    = carta_i.params[0]["mu"]           # media estimada
-sigma_i = carta_i.params[0]["sigma"]        # sigma dentro estimado
-print(f"Fase I:  μ = {mu_i:.4f}  σ = {sigma_i:.4f}")
+# ── Fase I: datos históricos ────────────────────────────────────
+fase1 = pp.phase_one(pp.imr_chart, x_historico, tests=(1, 2, 3))
+print(fase1.summary())        # puntos excluidos, límites congelados y cada pasada
+fase1.excluded                # posiciones (base 0) de los puntos excluidos
+fase1.chart.plot()            # carta con los límites definitivos
 
-# ── Fase II: nuevos datos con límites fijos ─────────────────────
-x_nuevo = x[80:]
-carta_ii = pp.imr_chart(x_nuevo, mu=mu_i, sigma_within=sigma_i, tests=(1, 2))
+# ── Fase II: datos nuevos con los límites congelados ────────────
+carta_ii = fase1.phase2(x_nuevo, tests=(1, 2))
 carta_ii.plot()
 ```
 
-Para cartas de subgrupos usa los mismos parámetros:
+Funciona con `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` y `u_chart`
+(en las de atributos, pasa `n=`). Tres salvaguardas evitan «limpiar» un proceso que no es estable:
+`max_iterations`, `min_points` y `max_excluded` (por defecto no se excluye más del 25 % de los puntos);
+si saltan, el resultado no converge y se avisa. **Excluye puntos solo si has encontrado y corregido su causa especial.**
+
+Si prefieres hacerlo a mano, fija la media y la sigma estimadas (las claves de `params` son
+`'media'` y `'sigma'`):
 
 ```python
+carta_i = pp.imr_chart(x_historico, tests="all")
+mu_i    = carta_i.params[0]["media"]
+sigma_i = carta_i.params[0]["sigma"]
+carta_ii = pp.imr_chart(x_nuevo, mu=mu_i, sigma=sigma_i, tests=(1, 2))
+
 # Xbar-R con límites fijados
-g_nuevo = x_nuevo.reshape(-1, 4)
-carta_ii = pp.xbar_r_chart(g_nuevo, mu=mu_i, sigma_within=sigma_i)
+carta_ii = pp.xbar_r_chart(g_nuevo, mu=mu_i, sigma=sigma_i)
 ```
 
 Para marcar múltiples etapas dentro de un mismo gráfico (Minitab "stages"):
@@ -263,6 +275,26 @@ etapas = np.r_[np.ones(50), np.full(50, 2)]   # 50 puntos en cada etapa
 carta = pp.imr_chart(x, stages=etapas, tests="all")
 # Cada etapa tiene sus propios límites calculados por separado
 ```
+
+## Fechas (o lotes) en el eje x
+
+Si los datos son una serie de pandas con **índice de fechas** (o de texto, como números de lote), la carta
+las conserva: el eje x se rotula con ellas, `to_frame()` y `violations()` añaden la columna `etiqueta` y
+`summary()` muestra la fecha junto a cada punto. Los puntos siguen graficándose por orden de muestreo
+(como Minitab); las fechas solo rotulan el eje.
+
+```python
+import pandas as pd
+
+serie = pd.Series(x, index=pd.date_range("2026-03-01", periods=len(x), freq="D"))
+carta = pp.imr_chart(serie, tests=(1, 2))
+carta.plot()                 # eje «Fecha»
+carta.violations()           # incluye la columna «etiqueta» con la fecha de cada señal
+```
+
+También funciona con subgrupos (`subgroup_size=`, un DataFrame con fechas en las filas, o `subgroup=` con
+fechas) y con las cartas de atributos y multivariadas. Para otras etiquetas, usa
+`carta.with_labels([...])` (una por punto graficado).
 
 ## Guardar gráficos
 

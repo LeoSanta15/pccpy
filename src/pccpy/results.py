@@ -15,10 +15,11 @@ from .rules import DEFAULT_K, describe
 _COLUMNAS_PANEL = {
     "point": N_("punto"), "stage": N_("etapa"), "value": N_("valor"), "cl": N_("LC"), "ucl": N_("LCS"),
     "lcl": N_("LCI"), "lower_value": N_("valor_inferior"), "failed_tests": N_("pruebas_fallidas"),
+    "label": N_("etiqueta"),
 }
 _COLUMNAS_VIOLACIONES = {
     "panel": N_("panel"), "point": N_("punto"), "test": N_("prueba"), "value": N_("valor"),
-    "description": N_("descripcion"),
+    "description": N_("descripcion"), "label": N_("etiqueta"),
 }
 # Algunas cartas guardan parámetros con clave en español: son datos y no se traducen; solo se muestran traducidos.
 _PARAMETROS = {
@@ -31,6 +32,14 @@ _PARAMETROS = {
     "sigma_entre": N_("sigma_entre"), "sigma_entre_dentro": N_("sigma_entre_dentro"), "variables": N_("variables"),
     "LCS": N_("LCS"),
 }
+
+
+def _texto_etiqueta(valor) -> str:
+    """Texto de una etiqueta de punto: las fechas sin hora se muestran como ``2026-01-03``."""
+    if isinstance(valor, (pd.Timestamp, np.datetime64)):
+        ts = pd.Timestamp(valor)
+        return ts.strftime("%Y-%m-%d") if ts == ts.normalize() else ts.strftime("%Y-%m-%d %H:%M")
+    return str(valor)
 
 
 def _nombre_parametro(clave) -> str:
@@ -98,6 +107,26 @@ class ControlChart:
     test_params: dict[int, float] = field(default_factory=dict)
     test1_text: str | None = None  # plantilla (msgid) de la descripción propia de la prueba 1; se traduce al mostrarla
     test1_params: dict = field(default_factory=dict)  # valores de los marcadores de test1_text
+    labels: np.ndarray | None = None  # etiqueta de cada punto graficado (fechas, lotes…); ver :meth:`with_labels`
+
+    def with_labels(self, labels) -> ControlChart:
+        """Asocia una etiqueta a cada punto graficado (fechas, lotes…) y devuelve la propia carta.
+
+        Las cartas calculadas con una serie de pandas con índice de fechas (o de texto) ya las traen. Con etiquetas, el
+        gráfico rotula el eje x con ellas, ``to_frame()`` y ``violations()`` añaden la columna ``label`` y ``summary()``
+        las muestra junto al número de punto. El orden y el cálculo no cambian.
+
+        Parameters
+        ----------
+        labels : array-like
+            Una etiqueta por punto graficado (observaciones o subgrupos).
+        """
+        etiquetas = np.asarray(labels)
+        if etiquetas.ndim != 1 or len(etiquetas) != len(self.panels[0].values):
+            raise ValueError(tr("'labels' debe tener una etiqueta por cada punto graficado ({n}).").format(
+                n=len(self.panels[0].values)))
+        self.labels = etiquetas
+        return self
 
     def __getitem__(self, name: str) -> Panel:
         for p in self.panels:
@@ -120,6 +149,8 @@ class ControlChart:
         base = pd.DataFrame(
             {col["point"]: np.arange(1, len(self.panels[0].values) + 1), col["stage"]: self.panels[0].stage}
         )
+        if self.labels is not None:
+            base.insert(1, col["label"], self.labels)
         return pd.concat([base] + frames, axis=1)
 
     def _violations(self) -> pd.DataFrame:
@@ -135,6 +166,10 @@ class ControlChart:
                          "value": float(p.values[i]), "description": desc}
                     )
         cols = ["panel", "point", "test", "value", "description"]
+        if self.labels is not None:
+            for r in rows:
+                r["label"] = self.labels[int(r["point"]) - 1]  # type: ignore[call-overload]
+            cols.append("label")
         return pd.DataFrame(rows, columns=cols).sort_values(["panel", "point", "test"]).reset_index(drop=True)
 
     def violations(self, stable: bool = False) -> pd.DataFrame:
@@ -169,11 +204,18 @@ class ControlChart:
             else:
                 lines.append(tr("  Puntos marcados: {count}").format(count=len(v)))
                 for _, r in v.iterrows():
-                    lines.append(
-                        tr("    [{panel}] punto {point}: prueba {test} (valor {value:.6g}) - {description}").format(
-                            panel=r["panel"], point=r["point"], test=r["test"], value=r["value"],
-                            description=r["description"])
-                    )
+                    if self.labels is not None:
+                        lines.append(
+                            tr("    [{panel}] punto {point} ({label}): prueba {test} (valor {value:.6g}) - {description}").format(
+                                panel=r["panel"], point=r["point"], label=_texto_etiqueta(r["label"]), test=r["test"],
+                                value=r["value"], description=r["description"])
+                        )
+                    else:
+                        lines.append(
+                            tr("    [{panel}] punto {point}: prueba {test} (valor {value:.6g}) - {description}").format(
+                                panel=r["panel"], point=r["point"], test=r["test"], value=r["value"],
+                                description=r["description"])
+                        )
         return "\n".join(lines)
 
     def __str__(self) -> str:  # pragma: no cover - trivial

@@ -28,6 +28,8 @@ examples in this README assume English is active.
    - [Xbar-R and Xbar-S](#xbar-r-and-xbar-s-charts)
    - [Data input formats](#data-input-formats)
    - [Historical parameters and stages](#historical-parameters-and-stages)
+   - [Iterative Phase I](#iterative-phase-i)
+   - [Dates on the x axis](#dates-on-the-x-axis)
 4. [Attribute charts](#attribute-charts)
 5. [Time-weighted charts](#time-weighted-charts)
    - [EWMA](#ewma)
@@ -247,6 +249,53 @@ chart.params[1]     # {'stage': 'After', 'media': ..., 'sigma': ..., ...}
 
 # Combination: historical parameters + stages (the same parameters for all of them)
 pp.imr_chart(x, mu=100, sigma=2, stages=stage_labels)
+```
+
+---
+
+### Iterative Phase I
+
+`phase_one()` computes the chart, **excludes the points with signals, recomputes the limits and repeats**
+until none is left; `phase2()` applies those frozen limits to new data. It works with `imr_chart`,
+`xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` and `u_chart`.
+
+```python
+rng = np.random.default_rng(3)
+x_historical = rng.normal(100, 2, 60)
+x_historical[[10, 33]] += 15          # two points with a special cause
+x_new = rng.normal(100, 2, 20)
+
+phase1 = pp.phase_one(pp.imr_chart, x_historical, tests=(1, 2, 3))
+print(phase1.summary())    # excluded points, frozen limits and every pass
+phase1.excluded            # positions (0-based) of the excluded points
+phase1.chart.plot()        # chart with the final limits
+
+chart_ii = phase1.phase2(x_new, tests=(1, 2))   # Phase II with the Phase I limits
+```
+
+Safeguards: `max_iterations` (10), `min_points` (20) and `max_excluded` (25 % of the points). If one
+trips, the result does not converge and a warning is issued: a process that needs to discard that many points
+is not stable. **Exclude points only if you have found and corrected their special cause.** In `imr_chart`
+only the signals of the I panel count (an outlier also triggers the moving range of its neighbor); change
+this with `exclude_panels=`.
+
+---
+
+### Dates on the x axis
+
+With a pandas Series with a **date index** (or a text index, e.g. lot numbers) the chart keeps the
+labels: the plot labels the x axis with them, `to_frame()` and `violations()` add the `label` column and
+`summary()` shows the date next to the point. Points are plotted in sampling order, as in Minitab.
+
+```python
+import pandas as pd
+
+x = np.random.default_rng(1).normal(10, 1, 30)
+series = pd.Series(x, index=pd.date_range("2026-03-01", periods=len(x), freq="D"))
+chart = pp.imr_chart(series, tests=(1, 2))
+chart.plot()                     # "Date" axis
+chart.violations()               # with the date of each signal
+chart.with_labels([f"L{i}" for i in range(30)])   # your own labels (one per plotted point)
 ```
 
 ---

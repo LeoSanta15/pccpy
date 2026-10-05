@@ -11,6 +11,7 @@ from scipy.special import boxcox as _boxcox
 
 from ._data import as_1d, to_subgroups
 from ._i18n import tr
+from ._labels import es_temporal, formatear
 from .normality import anderson_darling_pvalue, anderson_darling_statistic
 from .results import ControlChart, Panel
 
@@ -79,8 +80,18 @@ def plot_control_chart(chart: ControlChart, *, zones: bool = True, figsize=None,
         fig, axes = plt.subplots(k, 1, sharex=True, figsize=figsize or (11, 3.6 * k), squeeze=False)
         for ax, panel in zip(axes[:, 0], chart.panels):
             _draw_panel(ax, panel, zones)
-        axes[-1, 0].xaxis.set_major_locator(MaxNLocator(integer=True))
-        axes[-1, 0].set_xlabel(tr("Observación") if chart.kind in _POINT_KINDS else tr("Muestra"))
+        eje = axes[-1, 0]
+        xlabel = tr("Observación") if chart.kind in _POINT_KINDS else tr("Muestra")
+        if chart.labels is not None:
+            # los puntos se grafican por orden de muestreo (como Minitab); el eje x se rotula con las etiquetas
+            posiciones, textos = formatear(chart.labels)
+            eje.set_xticks(posiciones)
+            eje.set_xticklabels(textos, rotation=30, ha="right")
+            if es_temporal(chart.labels):
+                xlabel = tr("Fecha")
+        else:
+            eje.xaxis.set_major_locator(MaxNLocator(integer=True))
+        eje.set_xlabel(xlabel)
         fig.suptitle(title or tr("Carta de control {kind}").format(kind=chart.kind), fontweight="bold")
         fig.tight_layout(rect=(0, 0, 0.9, 0.97))
         return fig

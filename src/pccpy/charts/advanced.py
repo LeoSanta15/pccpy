@@ -11,6 +11,7 @@ from .. import rules
 from .._constants import c4, c5, d2, d3
 from .._data import as_1d, to_subgroups
 from .._i18n import N_, tr
+from .._labels import con_etiquetas
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, check_method, full
@@ -18,6 +19,7 @@ from .timeweighted import _series
 
 
 # ------------------------------------------------------------------ media móvil
+@con_etiquetas
 def ma_chart(
     data,
     *,
@@ -77,6 +79,7 @@ def _mr_values(y: np.ndarray) -> np.ndarray:
     return mr[~np.isnan(mr)]
 
 
+@con_etiquetas
 def zmr_chart(
     x,
     parts,
@@ -191,6 +194,7 @@ def zmr_chart(
 
 
 # ------------------------------------------------------------- I-MR-R/S (entre/dentro)
+@con_etiquetas
 def imr_rs_chart(
     data,
     *,
@@ -302,6 +306,7 @@ def _geom_quantile(p: float, q: float) -> float:
     return ka + (q - pa) / (pb - pa)
 
 
+@con_etiquetas
 def g_chart(
     x,
     *,
@@ -360,6 +365,7 @@ def _weibull_mle(x: np.ndarray):
     return c, float(np.mean(x**c) ** (1.0 / c))
 
 
+@con_etiquetas
 def t_chart(
     x,
     *,
@@ -442,6 +448,7 @@ def _zone_scores(z: np.ndarray, weights, reset: bool):
     return score, np.array(flagged, dtype=int)
 
 
+@con_etiquetas
 def zone_chart(
     data,
     *,

@@ -26,6 +26,8 @@ documenta Minitab.
    - [Xbar-R y Xbar-S](#cartas-xbar-r-y-xbar-s)
    - [Formatos de entrada de datos](#formatos-de-entrada-de-datos)
    - [Parámetros históricos y etapas](#parámetros-históricos-y-etapas)
+   - [Fase I iterativa](#fase-i-iterativa)
+   - [Fechas en el eje x](#fechas-en-el-eje-x)
 4. [Cartas de atributos](#cartas-de-atributos)
 5. [Cartas de tiempo ponderado](#cartas-de-tiempo-ponderado)
    - [EWMA](#ewma)
@@ -245,6 +247,52 @@ carta.params[1]     # {'stage': 'Después', 'media': ..., 'sigma': ..., ...}
 
 # Combinación: parámetros históricos + etapas (los mismos parámetros para todas)
 pp.imr_chart(x, mu=100, sigma=2, stages=etapas)
+```
+
+---
+
+### Fase I iterativa
+
+`phase_one()` calcula la carta, **excluye los puntos con señal, recalcula los límites y repite** hasta que no
+queda ninguna; `phase2()` aplica esos límites congelados a datos nuevos. Funciona con `imr_chart`,
+`xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` y `u_chart`.
+
+```python
+rng = np.random.default_rng(3)
+x_historico = rng.normal(100, 2, 60)
+x_historico[[10, 33]] += 15           # dos puntos con causa especial
+x_nuevo = rng.normal(100, 2, 20)
+
+fase1 = pp.phase_one(pp.imr_chart, x_historico, tests=(1, 2, 3))
+print(fase1.summary())     # puntos excluidos, límites congelados y cada pasada
+fase1.excluded             # posiciones (base 0) de los puntos excluidos
+fase1.chart.plot()         # carta con los límites definitivos
+
+carta_ii = fase1.phase2(x_nuevo, tests=(1, 2))   # Fase II con los límites de la Fase I
+```
+
+Salvaguardas: `max_iterations` (10), `min_points` (20) y `max_excluded` (25 % de los puntos). Si saltan,
+el resultado no converge y se avisa: un proceso que necesita descartar tantos puntos no es estable.
+**Excluye puntos solo si has encontrado y corregido su causa especial.** En `imr_chart` solo cuentan las
+señales del panel I (un valor atípico dispara también el rango móvil de su vecino); cámbialo con `exclude_panels=`.
+
+---
+
+### Fechas en el eje x
+
+Con una serie de pandas con **índice de fechas** (o de texto, p. ej. números de lote) la carta conserva las
+etiquetas: el gráfico rotula el eje x con ellas, `to_frame()` y `violations()` añaden la columna `etiqueta` y
+`summary()` muestra la fecha junto al punto. Los puntos se grafican por orden de muestreo, como en Minitab.
+
+```python
+import pandas as pd
+
+x = np.random.default_rng(1).normal(10, 1, 30)
+serie = pd.Series(x, index=pd.date_range("2026-03-01", periods=len(x), freq="D"))
+carta = pp.imr_chart(serie, tests=(1, 2))
+carta.plot()                     # eje «Fecha»
+carta.violations()               # con la fecha de cada señal
+carta.with_labels([f"L{i}" for i in range(30)])   # etiquetas propias (una por punto graficado)
 ```
 
 ---

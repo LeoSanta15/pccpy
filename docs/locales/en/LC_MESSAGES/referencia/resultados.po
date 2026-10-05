@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -37,14 +37,23 @@ msgstr "Parameters"
 msgid "Resultado de una carta de control: paneles, parámetros por etapa y pruebas."
 msgstr "Result of a control chart: panels, per-stage parameters and tests."
 
+msgid "Asocia una etiqueta a cada punto graficado (fechas, lotes…) y devuelve la propia carta."
+msgstr "Associates a label with each plotted point (dates, lots…) and returns the chart itself."
+
+msgid "Las cartas calculadas con una serie de pandas con índice de fechas (o de texto) ya las traen. Con etiquetas, el gráfico rotula el eje x con ellas, ``to_frame()`` y ``violations()`` añaden la columna ``label`` y ``summary()`` las muestra junto al número de punto. El orden y el cálculo no cambian."
+msgstr "Charts computed from a pandas Series with a date (or text) index already carry them. With labels, the plot labels the x axis with them, ``to_frame()`` and ``violations()`` add the ``label`` column and ``summary()`` shows them next to the point number. The order and the computation do not change."
+
+msgid "Una etiqueta por punto graficado (observaciones o subgrupos)."
+msgstr "One label per plotted point (observations or subgroups)."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
 msgid "Tabla ancha: una fila por punto, columnas por panel."
 msgstr "Wide table: one row per point, columns per panel."
 
 msgid "Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma."
 msgstr "With ``stable=True`` the columns carry canonical English keys that do not change with the language."
-
-msgid "Tipo del valor devuelto"
-msgstr "Return type"
 
 msgid "Tabla de puntos que fallan pruebas: panel, punto (base 1), prueba, valor y descripción."
 msgstr "Table of points that fail tests: panel, point (1-based), test, value and description."
