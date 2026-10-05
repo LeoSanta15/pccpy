@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - idioma de los mensajes (fases 0 a 3b de 5)
+## [0.11.0] - idioma de los mensajes (español e inglés)
 
 ### Añadido
 - Mecanismo de idioma basado en `gettext`: `set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable de entorno `PCCPY_LANG`. El idioma fuente es el español y `en` es el primer idioma adicional.
@@ -20,8 +20,12 @@
 - Fase 3b: `pareto()` (`stable=`; el grupo «Otros» usa el idioma activo), `oc_curve()`/`aoq_curve()` (`stable=`), las tablas ANOVA y de kappa mediante los métodos nuevos `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()` (los atributos `anova_table`, `kappa_within` y `kappa_vs_reference` no cambian: siguen en español), y las hojas de `to_excel()` (`KappaVsReferencia` → `KappaVsReference` en inglés). 742 → 767 textos. Español sin cambios (20 tablas de referencia generadas antes de migrar).
 - `plot_pareto()` acepta tablas de cualquier idioma o con `stable=True` (usa las columnas por posición).
 
+- Fase 5: guía «Cómo traducir» (`docs/source/traducir.md`) con el glosario español → inglés, test que comprueba que el glosario se aplica en todo el catálogo (`tests/test_i18n_glosario.py`) y `scripts/i18n_revision.py` (tabla español | inglés para la revisión humana).
+
 ### Nota
-- Quedan por traducir, si se decide: `pareto`, curvas OC/AOQ, tablas ANOVA y `kappa_vs_reference`: fases siguientes. El comportamiento por defecto (español) no cambia.
+- El comportamiento por defecto (español) **no cambia**. El inglés está completo (767 textos) pero **pendiente de revisión por una persona del dominio SPC**.
+- Los atributos `anova_table`, `kappa_within` y `kappa_vs_reference` siguen siempre en español; usa `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()` para el idioma activo.
+- La documentación (Sphinx) sigue en español.
 
 ## [0.10.8] - documentación de referencia completa
 

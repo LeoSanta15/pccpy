@@ -5,8 +5,8 @@
 Cartas de control (univariadas y multivariadas), pruebas de causas especiales,
 análisis de capacidad, prueba de normalidad y Pareto, con salidas y convenciones
 (LCS/LCI, LEI/LES, Cp/Cpk/Pp/Ppk, Z.Bench, PPM, Anderson-Darling) pensadas para
-quien viene de Minitab. Todo en español: nombres de columnas, mensajes,
-descripciones de pruebas y gráficos.
+quien viene de Minitab. En español por defecto; el inglés está disponible
+(véase [Idioma de los mensajes](idioma.md)).
 
 ```{toctree}
 :maxdepth: 2
@@ -30,6 +30,7 @@ acceptance
 faq
 wizard
 idioma
+traducir
 ```
 
 ```{toctree}
