@@ -159,3 +159,30 @@ print(f"Z.Bench = {res.z_bench:.2f}  ({res.ppm_total:.0f} PPM)")
 - {doc}`guia_seleccion` — cuándo hacer análisis de capacidad
 - {doc}`referencia/capacidad` — referencia completa de `capability_analysis`
 - {doc}`faq` — "¿Por qué Cp ≠ Cpk?" y otras preguntas frecuentes
+
+
+## Capacidad para atributos
+
+Con datos de atributos (unidades defectuosas o conteo de defectos) no existen Cp ni Cpk: la capacidad es la **tasa de
+defectos**, con su intervalo exacto.
+
+```python
+import pccpy as pp
+
+r = pp.capability_binomial([3, 5, 2, 4, 6, 1, 3, 5], n=200)
+print(r.summary())            # % defectivo, PPM, Z del proceso e intervalos
+r.homogeneous                 # ¿p es constante entre muestras?
+
+q = pp.capability_poisson([3, 5, 2, 4, 6, 1, 3, 5], units=10, opportunities=20)
+q.dpu, q.dpu_ci, q.dpmo, q.z
+```
+
+| Dato | Función | Estimador | Intervalo |
+|------|---------|-----------|-----------|
+| Unidades defectuosas en muestras de tamaño `n` | `capability_binomial` | `p̄ = Σd / Σn`, PPM = 10⁶·p̄, `Z = Φ⁻¹(1 − p̄)` | Clopper-Pearson (exacto) |
+| Defectos en `units` unidades | `capability_poisson` | `DPU = Σd / Σu`; con `opportunities=`, DPMO y `Z` | Garwood (exacto) |
+
+Ambas calculan la **prueba chi-cuadrado de que la tasa es constante** entre muestras. Si el valor p es pequeño
+(`homogeneous` es `False`), el proceso no es estable y la capacidad calculada no es fiable: revise primero la carta P o U
+(y use `phase_one()` para depurar la Fase I). `r.plot()` muestra la tasa por muestra y la estimación acumulada con su
+intervalo, para ver si ya se estabilizó.

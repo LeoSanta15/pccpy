@@ -8,7 +8,7 @@ versión instalada calcula bien (por ejemplo, en un sistema de calidad regulado)
 import pccpy as pp
 
 informe = pp.run_validation()
-print(informe.summary())      # «Validación de pccpy …: 31 de 31 comprobaciones correctas»
+print(informe.summary())      # «Validación de pccpy …: 33 de 33 comprobaciones correctas»
 informe.passed                # True si todo coincide
 informe.to_frame()            # una fila por comprobación (error y tolerancia)
 ```
@@ -27,6 +27,7 @@ python -m pccpy.validation --markdown validacion.md
 | Límites de I-MR, Xbar-R, Xbar-S, P, NP, C y U | Fórmulas manuales; d2 y d3 por integración numérica |
 | Pruebas de causas especiales 1 a 8 | Patrones construidos a mano; tasa de falsas alarmas por simulación |
 | Cp, Cpk, Pp, Ppk, Z.Bench y PPM | Fórmulas con la distribución normal |
+| Capacidad binomial y Poisson | Intervalos exactos de SciPy (Clopper-Pearson) y cuantiles de la gamma (Garwood) |
 | Anderson-Darling | Estadístico A² calculado por separado |
 | Intervalos de tolerancia | Factores k conocidos (n = 10, 95/95) |
 | Muestreo de aceptación | Celdas de la tabla II-A de Z1.4; probabilidad binomial acumulada |

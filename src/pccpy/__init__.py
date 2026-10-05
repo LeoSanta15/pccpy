@@ -19,6 +19,12 @@ from .capability import (
     capability_boxcox,
     capability_nonnormal,
 )
+from .capability_attr import (
+    BinomialCapabilityResult,
+    PoissonCapabilityResult,
+    capability_binomial,
+    capability_poisson,
+)
 from .charts import (
     RunChartResult,
     c_chart,
@@ -92,6 +98,7 @@ __version__ = "0.11.0"
 
 __all__ = [
     "AttributeAgreementResult",
+    "BinomialCapabilityResult",
     "CapabilityResult",
     "ControlChart",
     "DiagnoseResult",
@@ -104,6 +111,7 @@ __all__ = [
     "Panel",
     "PhaseOneIteration",
     "PhaseOneResult",
+    "PoissonCapabilityResult",
     "PreControlResult",
     "RunChartResult",
     "SamplingPlanAttributes",
@@ -122,8 +130,10 @@ __all__ = [
     "c_chart",
     "capability_analysis",
     "capability_analysis_summary",
+    "capability_binomial",
     "capability_boxcox",
     "capability_nonnormal",
+    "capability_poisson",
     "capability_sixpack",
     "control_chart_constants",
     "cusum_c_chart",

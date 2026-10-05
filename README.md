@@ -757,6 +757,28 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Capacidad para atributos (binomial y Poisson)
+
+Cuando el dato es «defectuoso / bueno» o un conteo de defectos, no hay Cp ni Cpk: la capacidad es la **tasa de
+defectos** con su intervalo exacto. `capability_binomial` da el % defectivo (Clopper-Pearson), el PPM y el nivel Z;
+`capability_poisson` da los defectos por unidad (Garwood) y, con `opportunities=`, el DPMO y el Z. Ambas incluyen la
+prueba chi-cuadrado de que la tasa es constante entre muestras: si falla, el proceso no es estable y la capacidad no es
+fiable (revise la carta P o U).
+
+```python
+defectuosas = [3, 5, 2, 4, 6, 1, 3, 5]
+defectos = [3, 5, 2, 4, 6, 1, 3, 5]
+r = pp.capability_binomial(defectuosas, n=200)        # n constante o uno por muestra
+print(r.summary())
+r.p_ci, r.ppm, r.z, r.homogeneous
+r.plot()                                               # tasa por muestra y estimación acumulada
+
+q = pp.capability_poisson(defectos, units=10, opportunities=20)
+q.dpu, q.dpu_ci, q.dpmo, q.z
+```
+
+---
+
 ### Capability Sixpack
 
 Genera las **6 vistas** del Capability Sixpack de Minitab en una sola figura:
@@ -1096,7 +1118,7 @@ print(t1.summary())
 t1.bias      # sesgo = media - referencia
 t1.t_stat    # estadístico t para H₀: sesgo = 0
 t1.p_value   # valor p de la prueba bilateral
-t1.cg        # capacidad del instrumento (0.1×tolerancia / 6s)
+t1.cg        # capacidad del instrumento (0.2×tolerancia / 6s)
 t1.cgk       # capacidad considerando sesgo
 
 # Desde estadísticos resumen (sin datos individuales)

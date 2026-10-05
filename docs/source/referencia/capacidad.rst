@@ -7,6 +7,14 @@ Capacidad del proceso
 .. autofunction:: pccpy.capability_boxcox
 .. autofunction:: pccpy.capability_sixpack
 .. autofunction:: pccpy.plot_capability
+.. autofunction:: pccpy.capability_binomial
+.. autofunction:: pccpy.capability_poisson
+
+.. autoclass:: pccpy.BinomialCapabilityResult
+   :members: to_frame, summary, plot, save_plot, to_excel, homogeneous
+
+.. autoclass:: pccpy.PoissonCapabilityResult
+   :members: to_frame, summary, plot, save_plot, to_excel, homogeneous
 
 .. note::
 

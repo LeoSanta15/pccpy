@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -312,4 +312,49 @@ msgstr "{doc}`referencia/capacidad` — full reference of `capability_analysis`"
 #, python-brace-format
 msgid "{doc}`faq` — \"¿Por qué Cp ≠ Cpk?\" y otras preguntas frecuentes"
 msgstr "{doc}`faq` — \"Why is Cp ≠ Cpk?\" and other frequently asked questions"
+
+msgid "Capacidad para atributos"
+msgstr "Capability for attribute data"
+
+msgid "Con datos de atributos (unidades defectuosas o conteo de defectos) no existen Cp ni Cpk: la capacidad es la **tasa de defectos**, con su intervalo exacto."
+msgstr "With attribute data (defective units or a count of defects) there is no Cp or Cpk: capability is the **defect rate**, with its exact interval."
+
+msgid "Dato"
+msgstr "Data"
+
+msgid "Función"
+msgstr "Situation"
+
+msgid "Estimador"
+msgstr "Estimator"
+
+msgid "Intervalo"
+msgstr "Interval"
+
+msgid "Unidades defectuosas en muestras de tamaño `n`"
+msgstr "Defective units in samples of size `n`"
+
+msgid "`capability_binomial`"
+msgstr "`capability_binomial`"
+
+msgid "`p̄ = Σd / Σn`, PPM = 10⁶·p̄, `Z = Φ⁻¹(1 − p̄)`"
+msgstr "`p̄ = Σd / Σn`, PPM = 10⁶·p̄, `Z = Φ⁻¹(1 − p̄)`"
+
+msgid "Clopper-Pearson (exacto)"
+msgstr "Clopper-Pearson (exact)"
+
+msgid "Defectos en `units` unidades"
+msgstr "Defects in `units` units"
+
+msgid "`capability_poisson`"
+msgstr "`capability_poisson`"
+
+msgid "`DPU = Σd / Σu`; con `opportunities=`, DPMO y `Z`"
+msgstr "`DPU = Σd / Σu`; with `opportunities=`, DPMO and `Z`"
+
+msgid "Garwood (exacto)"
+msgstr "Garwood (exact)"
+
+msgid "Ambas calculan la **prueba chi-cuadrado de que la tasa es constante** entre muestras. Si el valor p es pequeño (`homogeneous` es `False`), el proceso no es estable y la capacidad calculada no es fiable: revise primero la carta P o U (y use `phase_one()` para depurar la Fase I). `r.plot()` muestra la tasa por muestra y la estimación acumulada con su intervalo, para ver si ya se estabilizó."
+msgstr "Both compute the **chi-square test that the rate is constant** across samples. If the p-value is small (`homogeneous` is `False`), the process is not stable and the computed capability is not reliable: check the P or U chart first (and use `phase_one()` to clean up Phase I). `r.plot()` shows the rate by sample and the cumulative estimate with its interval, to see whether it has settled."
 

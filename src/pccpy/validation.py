@@ -302,6 +302,29 @@ def _oc():
     return stats.binom.cdf(2, 80, p), np.array([plan.pa(v) for v in p])
 
 
+@_comprobacion("capacidad-binomial", N_("Capacidad binomial: p̄, intervalo exacto de Clopper-Pearson y Z del proceso"),
+               "scipy.stats.binomtest (intervalo exacto); Z = Φ⁻¹(1 − p̄)", 1e-9)
+def _cap_binomial():
+    from .capability_attr import capability_binomial
+
+    d, n = 29, 1600
+    ic = stats.binomtest(d, n).proportion_ci(confidence_level=0.95, method="exact")
+    esperado = [d / n, ic.low, ic.high, stats.norm.isf(d / n)]
+    r = capability_binomial([3, 5, 2, 4, 6, 1, 3, 5], [200] * 8)
+    return np.array(esperado), np.array([r.p_bar, r.p_ci[0], r.p_ci[1], r.z])
+
+
+@_comprobacion("capacidad-poisson", N_("Capacidad Poisson: DPU e intervalo exacto de Garwood (cuantiles de la gamma)"),
+               "Garwood (1936): cuantiles de la distribución gamma", 1e-9)
+def _cap_poisson():
+    from .capability_attr import capability_poisson
+
+    d, u = 29, 84.0
+    esperado = [d / u, stats.gamma.ppf(0.025, d) / u, stats.gamma.ppf(0.975, d + 1) / u]
+    r = capability_poisson([3, 5, 2, 4, 6, 1, 3, 5], [10, 12, 10, 9, 11, 10, 10, 12])
+    return np.array(esperado), np.array([r.dpu, r.dpu_ci[0], r.dpu_ci[1]])
+
+
 # ── 7. sistemas de medición ──────────────────────────────────────────────────
 @_comprobacion("gage-rr-anova", N_("Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con interacción)"),
                "Cuadrados medios esperados del ANOVA cruzado; AIAG MSA 4ª ed.", 1e-9)

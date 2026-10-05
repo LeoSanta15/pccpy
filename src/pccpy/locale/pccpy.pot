@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 22:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -489,6 +489,10 @@ msgstr ""
 msgid "  % Acuerdo global vs ref     = {pct:.1f}%"
 msgstr ""
 
+#, python-brace-format, python-format
+msgid "  % defectivo={p:.4f}  IC {nivel:g}%: ({lo:.4f}, {hi:.4f})"
+msgstr ""
+
 #, python-brace-format
 msgid "  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}"
 msgstr ""
@@ -518,6 +522,16 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Asimetría       : {skewness:.4f}"
+msgstr ""
+
+msgid ""
+"  Aviso: la tasa no es constante entre muestras; el proceso no es estable"
+" y la capacidad calculada no es fiable (revise la carta U)."
+msgstr ""
+
+msgid ""
+"  Aviso: p no es constante entre muestras; el proceso no es estable y la "
+"capacidad calculada no es fiable (revise la carta P)."
 msgstr ""
 
 #, python-brace-format
@@ -561,6 +575,14 @@ msgid "  Código:"
 msgstr ""
 
 msgid "  DIAGNÓSTICO RÁPIDO DEL PROCESO"
+msgstr ""
+
+#, python-brace-format
+msgid "  DPMO={dpmo:.1f}  Z del proceso={z:.3f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  DPU={dpu:.5f}  IC {nivel:g}%: ({lo:.5f}, {hi:.5f})"
 msgstr ""
 
 msgid "  Desempeño (PPM):            < LEI       > LES      Total"
@@ -662,6 +684,14 @@ msgid "  Mediana         : {median:.4f}"
 msgstr ""
 
 #, python-brace-format
+msgid "  Muestras={k}  Unidades={n:g}  Defectuosas={d:g}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Muestras={k}  Unidades={u:g}  Defectos={d:g}"
+msgstr ""
+
+#, python-brace-format
 msgid "  Mínimo / Máximo : {low:.4f}  /  {high:.4f}"
 msgstr ""
 
@@ -677,6 +707,10 @@ msgstr ""
 msgid ""
 "  N={n}  Media={mean:.5f}  Desv.Est.(dentro)={within:.5f} [{method}]  "
 "Desv.Est.(general)={overall:.5f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  PPM defectivo={ppm:.1f}  IC: ({lo:.1f}, {hi:.1f})"
 msgstr ""
 
 #, python-brace-format
@@ -779,6 +813,10 @@ msgid "  Sobre/bajo la mediana:"
 msgstr ""
 
 #, python-brace-format
+msgid "  Tasa constante: chi²={c:.2f} (GL={gl}), valor p={p:.4f}"
+msgstr ""
+
+#, python-brace-format
 msgid "  Total               {var:10.5f}  100.00%"
 msgstr ""
 
@@ -798,7 +836,15 @@ msgid "  Verde={green}  Amarillo={yellow}  Rojo={red}"
 msgstr ""
 
 #, python-brace-format
+msgid "  Z del proceso={z:.3f}  IC: ({lo:.3f}, {hi:.3f})"
+msgstr ""
+
+#, python-brace-format
 msgid "  Zona verde: [{low:.5g}, {high:.5g}]"
+msgstr ""
+
+#, python-brace-format
+msgid "  p constante: chi²={c:.2f} (GL={gl}), valor p={p:.4f}"
 msgstr ""
 
 #, python-brace-format
@@ -841,6 +887,30 @@ msgid "% Acuerdo global vs referencia"
 msgstr ""
 
 msgid "% acuerdo"
+msgstr ""
+
+#, python-format
+msgid "% defectivo"
+msgstr ""
+
+#, python-format
+msgid "% defectivo (p̄)"
+msgstr ""
+
+#, python-format
+msgid "% defectivo máximo"
+msgstr ""
+
+#, python-format
+msgid "% defectivo mínimo"
+msgstr ""
+
+#, python-format
+msgid "% defectivo, límite inferior"
+msgstr ""
+
+#, python-format
+msgid "% defectivo, límite superior"
 msgstr ""
 
 msgid "%Contribución"
@@ -935,7 +1005,14 @@ msgstr ""
 msgid "'mu' debe tener {p} elementos y 'cov' ser {p} x {p}."
 msgstr ""
 
+msgid "'n' debe contener enteros positivos."
+msgstr ""
+
 msgid "'n' debe ser un escalar o tener la misma longitud que los conteos."
+msgstr ""
+
+#, python-brace-format
+msgid "'n' debe ser un número o tener la misma longitud que los datos ({k})."
 msgstr ""
 
 msgid "'n' debe ser ≥ 2."
@@ -945,6 +1022,9 @@ msgid "'n_hist' debe ser mayor que el número de variables."
 msgstr ""
 
 msgid "'n_hist' solo aplica con parámetros históricos."
+msgstr ""
+
+msgid "'opportunities' debe ser positivo."
 msgstr ""
 
 msgid "'p' debe estar en (0, 1)."
@@ -996,6 +1076,9 @@ msgstr ""
 msgid "'tests' debe ser 'all', None o una lista de enteros 1-8."
 msgstr ""
 
+msgid "'units' debe contener valores positivos."
+msgstr ""
+
 msgid "'weight' debe estar en (0, 1]."
 msgstr ""
 
@@ -1029,6 +1112,14 @@ msgstr ""
 
 #, python-brace-format
 msgid "'{name}' no tiene valores válidos tras eliminar NaN/inf."
+msgstr ""
+
+#, python-brace-format
+msgid "'{nombre}' debe contener enteros no negativos."
+msgstr ""
+
+#, python-brace-format
+msgid "'{nombre}' no puede estar vacío."
 msgstr ""
 
 #, python-brace-format
@@ -1156,6 +1247,28 @@ msgstr ""
 msgid "Capacidad"
 msgstr ""
 
+msgid "Capacidad Poisson"
+msgstr ""
+
+msgid ""
+"Capacidad Poisson: DPU e intervalo exacto de Garwood (cuantiles de la "
+"gamma)"
+msgstr ""
+
+msgid "Capacidad binomial"
+msgstr ""
+
+msgid ""
+"Capacidad binomial: p̄, intervalo exacto de Clopper-Pearson y Z del "
+"proceso"
+msgstr ""
+
+msgid "Capacidad del proceso — datos Poisson"
+msgstr ""
+
+msgid "Capacidad del proceso — datos binomiales"
+msgstr ""
+
 msgid "Capacidad desde estadísticos resumen (media, σ, n)"
 msgstr ""
 
@@ -1201,6 +1314,12 @@ msgid "Cg"
 msgstr ""
 
 msgid "Cgk"
+msgstr ""
+
+msgid "Chi-cuadrado (p constante)"
+msgstr ""
+
+msgid "Chi-cuadrado (tasa constante)"
 msgstr ""
 
 msgid "Cobertura (p)"
@@ -1321,6 +1440,21 @@ msgstr ""
 msgid "DPMO"
 msgstr ""
 
+msgid "DPU (defectos por unidad)"
+msgstr ""
+
+msgid "DPU máximo"
+msgstr ""
+
+msgid "DPU mínimo"
+msgstr ""
+
+msgid "DPU, límite inferior"
+msgstr ""
+
+msgid "DPU, límite superior"
+msgstr ""
+
 msgid "Datos"
 msgstr ""
 
@@ -1336,7 +1470,16 @@ msgstr ""
 msgid "Datos en subgrupos pequeños (n ≤ 8) — carta Xbar-R"
 msgstr ""
 
+msgid "Defectos"
+msgstr ""
+
+msgid "Defectos por unidad"
+msgstr ""
+
 msgid "Defectos/unidad EWMA"
+msgstr ""
+
+msgid "Defectuosas"
 msgstr ""
 
 msgid "Densidad"
@@ -1473,6 +1616,10 @@ msgid "Estadístico normalidad"
 msgstr ""
 
 #, python-brace-format
+msgid "Estimación acumulada (IC {nivel:g}%)"
+msgstr ""
+
+#, python-brace-format
 msgid "Estudio Tipo 1  (N={n}  Ref={reference})"
 msgstr ""
 
@@ -1596,6 +1743,9 @@ msgid "Hay conteos de defectuosos mayores que el tamaño de la muestra."
 msgstr ""
 
 msgid "Hay conteos mayores que el tamaño de muestra."
+msgstr ""
+
+msgid "Hay más defectuosas que unidades en alguna muestra."
 msgstr ""
 
 msgid "Hay subgrupos sin ninguna observación válida."
@@ -1976,6 +2126,12 @@ msgstr ""
 msgid "Muestra"
 msgstr ""
 
+msgid "Muestras"
+msgstr ""
+
+msgid "Muestras acumuladas"
+msgstr ""
+
 msgid "Muestreo de aceptación"
 msgstr ""
 
@@ -2042,6 +2198,9 @@ msgid "Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma.
 msgstr ""
 
 msgid "Nivel Sigma"
+msgstr ""
+
+msgid "Nivel de confianza (%)"
 msgstr ""
 
 #, python-brace-format
@@ -2146,6 +2305,9 @@ msgstr ""
 msgid "Operadores (o)"
 msgstr ""
 
+msgid "Oportunidades por unidad"
+msgstr ""
+
 msgid "Oscilación"
 msgstr ""
 
@@ -2159,6 +2321,9 @@ msgid "P(aceptar) (%)"
 msgstr ""
 
 msgid "PPL"
+msgstr ""
+
+msgid "PPM defectivo"
 msgstr ""
 
 msgid "PPM esp < LEI"
@@ -2183,6 +2348,12 @@ msgid "PPM obs > LES"
 msgstr ""
 
 msgid "PPM obs total"
+msgstr ""
+
+msgid "PPM, límite inferior"
+msgstr ""
+
+msgid "PPM, límite superior"
 msgstr ""
 
 msgid "PPU"
@@ -2508,6 +2679,9 @@ msgid ""
 "0,0027)"
 msgstr ""
 
+msgid "Tasa por muestra"
+msgstr ""
+
 msgid "Tendencias"
 msgstr ""
 
@@ -2556,6 +2730,9 @@ msgstr ""
 msgid "Una carta multivariada necesita al menos 2 variables."
 msgstr ""
 
+msgid "Unidades inspeccionadas"
+msgstr ""
+
 msgid "Unilateral inferior — solo cota mínima"
 msgstr ""
 
@@ -2576,6 +2753,12 @@ msgid "Valor de referencia"
 msgstr ""
 
 msgid "Valor individual"
+msgstr ""
+
+msgid "Valor p (p constante)"
+msgstr ""
+
+msgid "Valor p (tasa constante)"
 msgstr ""
 
 msgid "Valores atípicos (IQR)"
@@ -2623,6 +2806,15 @@ msgstr ""
 
 #, python-brace-format
 msgid "Verde lo={v:.4g}"
+msgstr ""
+
+msgid "Z del proceso"
+msgstr ""
+
+msgid "Z, límite inferior"
+msgstr ""
+
+msgid "Z, límite superior"
 msgstr ""
 
 msgid "Z.Bench (dentro)"

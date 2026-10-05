@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -102,6 +102,66 @@ msgstr "Returns ``(figure, capability_result, control_chart)``. Accepts the same
 
 msgid "Histograma de capacidad con curvas normales (dentro / general) y especificaciones."
 msgstr "Capability histogram with normal curves (within / overall) and specifications."
+
+msgid "Capacidad del proceso con datos binomiales (unidades defectuosas por muestra)."
+msgstr "Process capability with binomial data (defective units per sample)."
+
+msgid "Número de unidades defectuosas en cada muestra."
+msgstr "Number of defective units in each sample."
+
+msgid "Tamaño de las muestras (constante o uno por muestra)."
+msgstr "Sample size (constant or one per sample)."
+
+msgid "Nivel de confianza de los intervalos (por defecto 0,95)."
+msgstr "Confidence level of the Pp and Ppk intervals (default 0.95)."
+
+msgid "*BinomialCapabilityResult*"
+msgstr "*CapabilityResult*"
+
+msgid "Capacidad del proceso con datos Poisson (defectos por muestra de ``units`` unidades)."
+msgstr "Process capability with Poisson data (defects per sample of ``units`` units)."
+
+msgid "Número de defectos observados en cada muestra."
+msgstr "Number of defects observed in each sample."
+
+msgid "Unidades inspeccionadas en cada muestra (constante o una por muestra). Por defecto 1."
+msgstr "Units inspected in each sample (constant or one per sample). Default 1."
+
+msgid "Oportunidades de defecto por unidad. Si se indica, se calculan el DPMO y el nivel Z."
+msgstr "Defect opportunities per unit. If given, the DPMO and the Z level are computed."
+
+msgid "Nivel de confianza del intervalo (por defecto 0,95)."
+msgstr "Confidence level of the Pp and Ppk intervals (default 0.95)."
+
+msgid "*PoissonCapabilityResult*"
+msgstr "*CapabilityResult*"
+
+msgid "Capacidad binomial: proporción defectiva, PPM y nivel Z con sus intervalos."
+msgstr "Binomial capability: proportion defective, PPM and Z level with their intervals."
+
+msgid "``True`` si no se rechaza que ``p`` sea constante entre muestras (nivel 0,05)."
+msgstr "``True`` if the hypothesis that ``p`` is constant across samples is not rejected (0.05 level)."
+
+msgid "Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."
+msgstr "Summary table (one row per statistic; with ``stable=True``, canonical English keys)."
+
+msgid "Exporta el resumen a un archivo Excel (.xlsx). Requiere ``openpyxl``."
+msgstr "Exports the summary to an Excel file (.xlsx). Requires ``openpyxl``."
+
+msgid "Proporción defectiva por muestra y estimación acumulada con su intervalo."
+msgstr "Proportion defective by sample and cumulative estimate with its interval."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Capacidad Poisson: defectos por unidad (DPU) con su intervalo exacto."
+msgstr "Poisson capability: defects per unit (DPU) with its exact interval."
+
+msgid "``True`` si no se rechaza que la tasa sea constante entre muestras (nivel 0,05)."
+msgstr "``True`` if the hypothesis that the rate is constant across samples is not rejected (0.05 level)."
+
+msgid "Defectos por unidad en cada muestra y estimación acumulada con su intervalo."
+msgstr "Defects per unit in each sample and cumulative estimate with its interval."
 
 msgid ":class:`~pccpy.CapabilityResult` expone dos propiedades adicionales:"
 msgstr ":class:`~pccpy.CapabilityResult` exposes two additional properties:"

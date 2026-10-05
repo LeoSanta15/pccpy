@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -60,6 +60,12 @@ msgstr "Cp, Cpk, Pp, Ppk, Z.Bench and PPM"
 
 msgid "Fórmulas con la distribución normal"
 msgstr "Formulas with the normal distribution"
+
+msgid "Capacidad binomial y Poisson"
+msgstr "Binomial and Poisson capability"
+
+msgid "Intervalos exactos de SciPy (Clopper-Pearson) y cuantiles de la gamma (Garwood)"
+msgstr "Exact intervals from SciPy (Clopper-Pearson) and gamma quantiles (Garwood)"
 
 msgid "Anderson-Darling"
 msgstr "Anderson-Darling"

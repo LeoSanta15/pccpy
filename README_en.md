@@ -760,6 +760,28 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Capability for attribute data (binomial and Poisson)
+
+When the data are "defective / good" or a count of defects there is no Cp or Cpk: capability is the **defect rate**
+with its exact interval. `capability_binomial` gives the % defective (Clopper-Pearson), the PPM and the Z level;
+`capability_poisson` gives the defects per unit (Garwood) and, with `opportunities=`, the DPMO and Z. Both include the
+chi-square test that the rate is constant across samples: if it fails, the process is not stable and the capability is
+not reliable (check the P or U chart).
+
+```python
+defectives = [3, 5, 2, 4, 6, 1, 3, 5]
+defects = [3, 5, 2, 4, 6, 1, 3, 5]
+r = pp.capability_binomial(defectives, n=200)         # constant n, or one per sample
+print(r.summary())
+r.p_ci, r.ppm, r.z, r.homogeneous
+r.plot()                                               # rate by sample and cumulative estimate
+
+q = pp.capability_poisson(defects, units=10, opportunities=20)
+q.dpu, q.dpu_ci, q.dpmo, q.z
+```
+
+---
+
 ### Capability Sixpack
 
 Generates the **6 views** of Minitab's Capability Sixpack in a single figure:
@@ -1099,7 +1121,7 @@ print(t1.summary())
 t1.bias      # bias = mean - reference
 t1.t_stat    # t statistic for H₀: bias = 0
 t1.p_value   # p-value of the two-sided test
-t1.cg        # instrument capability (0.1×tolerance / 6s)
+t1.cg        # instrument capability (0.2×tolerance / 6s)
 t1.cgk       # capability considering bias
 
 # From summary statistics (no individual data)
