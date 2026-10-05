@@ -675,3 +675,45 @@ def plot_attribute_agreement(result, *, figsize=None, title: str | None = None):
     ), fontsize=10)
     fig.tight_layout()
     return fig
+
+
+# ------------------------------------------------------------------ capacidad de atributos
+def plot_capability_attributes(result, *, figsize=None, title: str | None = None):
+    """Tasa por muestra y estimación acumulada con su intervalo exacto (capacidad binomial o Poisson)."""
+    from .capability_attr import BinomialCapabilityResult, clopper_pearson, garwood
+
+    binomial = isinstance(result, BinomialCapabilityResult)
+    with plt.rc_context({}):
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=figsize or (11, 4.2))
+    if binomial:
+        tasa, centro, tam, cont = 100 * result.proportions, 100 * result.p_bar, result.sizes, result.counts
+        etiqueta = tr("% defectivo")
+    else:
+        tasa, centro, tam, cont = result.rates, result.dpu, result.units, result.counts
+        etiqueta = tr("Defectos por unidad")
+    k = np.arange(1, len(tasa) + 1)
+    ax1.plot(k, tasa, color=BLUE, marker="o", ms=4, lw=1)
+    ax1.axhline(centro, color=GREEN, ls="--", lw=1.2)
+    ax1.set_xlabel(tr("Muestra"))
+    ax1.set_ylabel(etiqueta)
+    ax1.set_title(tr("Tasa por muestra"))
+    ax1.grid(alpha=0.25)
+
+    acum_d, acum_n = np.cumsum(cont), np.cumsum(tam)
+    est = acum_d / acum_n
+    nivel = result.ci_level
+    if binomial:
+        ic = np.array([clopper_pearson(a, b, nivel) for a, b in zip(acum_d, acum_n)])
+        est, ic = 100 * est, 100 * ic
+    else:
+        ic = np.array([garwood(a, b, nivel) for a, b in zip(acum_d, acum_n)])
+    ax2.plot(k, est, color=ORANGE, lw=2)
+    ax2.fill_between(k, ic[:, 0], ic[:, 1], color=ORANGE, alpha=0.2)
+    ax2.axhline(centro, color=GREEN, ls="--", lw=1.2)
+    ax2.set_xlabel(tr("Muestras acumuladas"))
+    ax2.set_ylabel(etiqueta)
+    ax2.set_title(tr("Estimación acumulada (IC {nivel:g}%)").format(nivel=100 * nivel))
+    ax2.grid(alpha=0.25)
+    fig.suptitle(title or (tr("Capacidad binomial") if binomial else tr("Capacidad Poisson")))
+    fig.tight_layout()
+    return fig
