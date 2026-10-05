@@ -1,9 +1,9 @@
 # Idioma de los mensajes
 
 ```{note}
-**Estado: en desarrollo (fase 1 de 5).** Hoy se traducen al inglés los **mensajes de error y de aviso**
-(las `ValueError`, `TypeError`, `ImportError` y `UserWarning` de las funciones). El resto de los textos
-(`summary()`, etiquetas de `to_frame()` y gráficos) se migra por fases y sigue en español hasta entonces.
+**Estado: en desarrollo (fase 2 de 5).** Hoy se traducen al inglés los **mensajes de error y de aviso**, los
+**`summary()`** y las **etiquetas de `to_frame()`** de los resultados. Los textos de los gráficos, el asistente
+(`wizard`) y otras tablas (`pareto`, curvas OC/AOQ, tablas ANOVA) se migran en fases posteriores y siguen en español.
 ```
 
 pccpy escribe sus textos en **español**, que es el idioma fuente: si un idioma no tiene traducción para un texto,
@@ -43,6 +43,28 @@ with pp.language("en"):
 ```{warning}
 Un hilo creado **dentro** de `with pp.language(...)` no hereda ese idioma: usa el global.
 Para que lo vea cualquier hilo, usa {func}`~pccpy.set_language`.
+```
+
+## Tablas (`to_frame`) con claves que no cambian con el idioma
+
+Las cabeceras de `to_frame()` y `violations()` son **presentación**: salen en el idioma activo, como `summary()`.
+Para código que indexa la tabla por nombre, usa `stable=True`: devuelve claves canónicas en inglés (`snake_case`)
+que son iguales en cualquier idioma.
+
+```python
+r = pp.capability_analysis(datos, lsl=44, usl=56)
+
+r.to_frame()                       # índice: 'N', 'Media', 'Desv.Est. (dentro)', … (en inglés: 'N', 'Mean', …)
+r.to_frame(stable=True)["value"]["cpk"]   # igual en es y en
+```
+
+Las tablas de estadísticos tienen el índice `statistic` y la columna `value`; las de puntos
+(`ControlChart.to_frame`, `violations`) usan `point`, `stage`, `value`, `cl`, `ucl`, `lcl`, `test`, `description`…
+
+```{note}
+Los valores de datos (p. ej. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`, o los nombres de
+parámetros como `chart.params[0]["media"]`) **no se traducen**: solo se muestran traducidos en `summary()`.
+Los textos que un resultado guarda al crearse (p. ej. `DiagnoseResult.issues`) quedan en el idioma activo en ese momento.
 ```
 
 ## Variable de entorno

@@ -10,7 +10,7 @@ from scipy import optimize, stats
 from .. import rules
 from .._constants import c4, c5, d2, d3
 from .._data import as_1d, to_subgroups
-from .._i18n import tr
+from .._i18n import N_, tr
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, check_method, full
@@ -342,7 +342,7 @@ def g_chart(
         return [panel], {"p": pe, "media": mean, "n": n}
 
     chart = build_chart("G", x.size, stages, stage_fn, tests_n, test_params)
-    chart.test1_text = "1 punto fuera de los percentiles de la distribución geométrica"
+    chart.test1_text = N_("1 punto fuera de los percentiles de la distribución geométrica")
     return chart
 
 
@@ -408,7 +408,8 @@ def t_chart(
         return [panel], {"distribución": distribution, "forma": c, "escala": sc, "n": n}
 
     chart = build_chart("T", x.size, stages, stage_fn, tests_n, test_params)
-    chart.test1_text = f"1 punto fuera de los percentiles de la distribución {distribution}"
+    chart.test1_text = N_("1 punto fuera de los percentiles de la distribución {distribution}")
+    chart.test1_params = {"distribution": distribution}
     return chart
 
 
@@ -512,5 +513,6 @@ def zone_chart(
         return [z_panel, s_panel], {"media": m, "sigma": sg, "pesos": w, "reinicio": reset, "n": k}
 
     chart = build_chart("Zona", g.shape[0], stages, stage_fn, (1,), None)
-    chart.test1_text = f"puntaje acumulado de zona >= {w[3]:g}"
+    chart.test1_text = N_("puntaje acumulado de zona >= {score:g}")
+    chart.test1_params = {"score": w[3]}
     return chart

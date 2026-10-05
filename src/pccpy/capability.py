@@ -22,7 +22,8 @@ from scipy import stats
 from scipy.special import boxcox as _boxcox
 
 from ._data import _excel_writer, as_1d, to_subgroups
-from ._i18n import tr
+from ._frames import tabla_estadisticos
+from ._i18n import N_, tr
 from ._sigma import sigma_individuals, sigma_subgroups
 
 NAN = float("nan")
@@ -121,53 +122,63 @@ class CapabilityResult:
         """Nivel sigma del proceso: Z.bench general = Φ⁻¹(1 − P(defecto total))."""
         return self.z_bench_overall
 
-    def to_frame(self) -> pd.DataFrame:
-        """Tabla resumen (una fila por estadístico)."""
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico).
+
+        Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
         rows = [
-            ("N", self.n), ("Media", self.mean),
-            ("Desv.Est. (dentro)", self.sigma_within), ("Desv.Est. (general)", self.sigma_overall),
-            ("Cp", self.cp), ("CPL", self.cpl), ("CPU", self.cpu), ("Cpk", self.cpk),
-            ("Pp", self.pp), ("PPL", self.ppl), ("PPU", self.ppu), ("Ppk", self.ppk),
-            ("Cpm", self.cpm),
-            ("Z.Bench (dentro)", self.z_bench_within), ("Z.Bench (general)", self.z_bench_overall),
-            ("Nivel Sigma", self.sigma_level), ("DPMO", self.dpmo),
-            ("PPM obs < LEI", self.ppm_obs[0]), ("PPM obs > LES", self.ppm_obs[1]),
-            ("PPM obs total", self.ppm_obs[2]),
-            ("PPM esp. dentro total", self.ppm_within[2]),
-            ("PPM esp. general total", self.ppm_overall[2]),
+            ("n", N_("N"), self.n), ("mean", N_("Media"), self.mean),
+            ("sigma_within", N_("Desv.Est. (dentro)"), self.sigma_within),
+            ("sigma_overall", N_("Desv.Est. (general)"), self.sigma_overall),
+            ("cp", N_("Cp"), self.cp), ("cpl", N_("CPL"), self.cpl), ("cpu", N_("CPU"), self.cpu),
+            ("cpk", N_("Cpk"), self.cpk),
+            ("pp", N_("Pp"), self.pp), ("ppl", N_("PPL"), self.ppl), ("ppu", N_("PPU"), self.ppu),
+            ("ppk", N_("Ppk"), self.ppk),
+            ("cpm", N_("Cpm"), self.cpm),
+            ("z_bench_within", N_("Z.Bench (dentro)"), self.z_bench_within),
+            ("z_bench_overall", N_("Z.Bench (general)"), self.z_bench_overall),
+            ("sigma_level", N_("Nivel Sigma"), self.sigma_level), ("dpmo", N_("DPMO"), self.dpmo),
+            ("ppm_obs_below_lsl", N_("PPM obs < LEI"), self.ppm_obs[0]),
+            ("ppm_obs_above_usl", N_("PPM obs > LES"), self.ppm_obs[1]),
+            ("ppm_obs_total", N_("PPM obs total"), self.ppm_obs[2]),
+            ("ppm_within_total", N_("PPM esp. dentro total"), self.ppm_within[2]),
+            ("ppm_overall_total", N_("PPM esp. general total"), self.ppm_overall[2]),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
         o = self
         ci = round(o.ci_level * 100)
         L = [
-            "Análisis de capacidad del proceso (distribución normal)",
-            f"  LEI={_fmt(o.lsl, 4)}  Objetivo={_fmt(o.target, 4)}  LES={_fmt(o.usl, 4)}",
-            (f"  N={o.n}  Media={o.mean:.5f}  "
-            f"Desv.Est.(dentro)={o.sigma_within:.5f} [{o.within_method}]  "
-            f"Desv.Est.(general)={o.sigma_overall:.5f}"),
+            tr("Análisis de capacidad del proceso (distribución normal)"),
+            tr("  LEI={lsl}  Objetivo={target}  LES={usl}").format(
+                lsl=_fmt(o.lsl, 4), target=_fmt(o.target, 4), usl=_fmt(o.usl, 4)),
+            tr("  N={n}  Media={mean:.5f}  Desv.Est.(dentro)={within:.5f} [{method}]  Desv.Est.(general)={overall:.5f}").format(
+                n=o.n, mean=o.mean, within=o.sigma_within, method=o.within_method, overall=o.sigma_overall),
         ]
         if o.transform:
             L.append(
-                f"  Transformación Box-Cox con lambda = {o.transform['lambda']:.4f} "
-                "(Media, Desv.Est. y Z.* están en la escala transformada; "
-                "LEI/LES/objetivo y PPM observado, en unidades originales)"
+                tr("  Transformación Box-Cox con lambda = {lam:.4f} (Media, Desv.Est. y Z.* están en la escala transformada; "
+                   "LEI/LES/objetivo y PPM observado, en unidades originales)").format(lam=o.transform["lambda"])
             )
         L += [
-            "  Capacidad potencial (dentro):",
-            f"    Cp={_fmt(o.cp)}  CPL={_fmt(o.cpl)}  CPU={_fmt(o.cpu)}  Cpk={_fmt(o.cpk)}",
-            f"    Z.Bench={_fmt(o.z_bench_within)}",
-            "  Desempeño general:",
-            f"    Pp={_fmt(o.pp)}  PPL={_fmt(o.ppl)}  PPU={_fmt(o.ppu)}  Ppk={_fmt(o.ppk)}  Cpm={_fmt(o.cpm)}",
-            (f"    IC {ci}% Pp: ({_fmt(o.pp_ci[0])}, {_fmt(o.pp_ci[1])})   "
-            f"IC {ci}% Ppk: ({_fmt(o.ppk_ci[0])}, {_fmt(o.ppk_ci[1])})"),
-            (f"    Z.Bench={_fmt(o.z_bench_overall)}  Z.LEI={_fmt(o.z_lsl_overall)}  Z.LES={_fmt(o.z_usl_overall)}"
-             f"  Nivel Sigma={_fmt(o.sigma_level)}  DPMO={o.dpmo:,.0f}"),
-            "  Desempeño (PPM):            < LEI       > LES      Total",
+            tr("  Capacidad potencial (dentro):"),
+            tr("    Cp={cp}  CPL={cpl}  CPU={cpu}  Cpk={cpk}").format(
+                cp=_fmt(o.cp), cpl=_fmt(o.cpl), cpu=_fmt(o.cpu), cpk=_fmt(o.cpk)),
+            tr("    Z.Bench={z}").format(z=_fmt(o.z_bench_within)),
+            tr("  Desempeño general:"),
+            tr("    Pp={pp}  PPL={ppl}  PPU={ppu}  Ppk={ppk}  Cpm={cpm}").format(
+                pp=_fmt(o.pp), ppl=_fmt(o.ppl), ppu=_fmt(o.ppu), ppk=_fmt(o.ppk), cpm=_fmt(o.cpm)),
+            tr("    IC {ci}% Pp: ({pp_lo}, {pp_hi})   IC {ci}% Ppk: ({ppk_lo}, {ppk_hi})").format(
+                ci=ci, pp_lo=_fmt(o.pp_ci[0]), pp_hi=_fmt(o.pp_ci[1]), ppk_lo=_fmt(o.ppk_ci[0]), ppk_hi=_fmt(o.ppk_ci[1])),
+            tr("    Z.Bench={z_bench}  Z.LEI={z_lsl}  Z.LES={z_usl}  Nivel Sigma={sigma_level}  DPMO={dpmo:,.0f}").format(
+                z_bench=_fmt(o.z_bench_overall), z_lsl=_fmt(o.z_lsl_overall), z_usl=_fmt(o.z_usl_overall),
+                sigma_level=_fmt(o.sigma_level), dpmo=o.dpmo),
+            tr("  Desempeño (PPM):            < LEI       > LES      Total"),
         ]
-        for label, t in (("Observado", o.ppm_obs), ("Esperado dentro", o.ppm_within),
-                         ("Esperado general", o.ppm_overall)):
+        for label, t in ((tr("Observado"), o.ppm_obs), (tr("Esperado dentro"), o.ppm_within),
+                         (tr("Esperado general"), o.ppm_overall)):
             L.append(f"    {label:<18}{_fmt(t[0]):>10}{_fmt(t[1]):>12}{_fmt(t[2]):>11}")
         return "\n".join(L)
 
@@ -180,7 +191,7 @@ class CapabilityResult:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Capacidad")
+            self.to_frame().to_excel(writer, sheet_name=tr("Capacidad"))
 
     def plot(self, **kwargs):
         """Histograma de capacidad. Ver :func:`pccpy.plotting.plot_capability`."""
@@ -463,31 +474,40 @@ class NonNormalCapabilityResult:
 
     def summary(self) -> str:
         o = self
+        observado, esperado = tr("Observado"), tr("Esperado")  # fuera del f-string: Babel solo extrae tr() de f-strings en Python >= 3.12
         return "\n".join([
-            f"Análisis de capacidad (no normal) - distribución {o.distribution}",
-            f"  LEI={_fmt(o.lsl, 4)}  LES={_fmt(o.usl, 4)}  N={o.n}  logL={o.loglik:.3f}  AIC={o.aic:.3f}",
-            f"  Percentiles: 0.135% = {o.x_low:.5f}   50% = {o.x_median:.5f}   99.865% = {o.x_high:.5f}",
-            f"  Pp={_fmt(o.pp)}  PPL={_fmt(o.ppl)}  PPU={_fmt(o.ppu)}  Ppk={_fmt(o.ppk)}",
-            "  Desempeño (PPM):            < LEI       > LES      Total",
-            f"    {'Observado':<18}{_fmt(o.ppm_obs[0]):>10}{_fmt(o.ppm_obs[1]):>12}{_fmt(o.ppm_obs[2]):>11}",
-            f"    {'Esperado':<18}{_fmt(o.ppm_expected[0]):>10}{_fmt(o.ppm_expected[1]):>12}{_fmt(o.ppm_expected[2]):>11}",
+            tr("Análisis de capacidad (no normal) - distribución {distribution}").format(distribution=o.distribution),
+            tr("  LEI={lsl}  LES={usl}  N={n}  logL={loglik:.3f}  AIC={aic:.3f}").format(
+                lsl=_fmt(o.lsl, 4), usl=_fmt(o.usl, 4), n=o.n, loglik=o.loglik, aic=o.aic),
+            tr("  Percentiles: 0.135% = {low:.5f}   50% = {median:.5f}   99.865% = {high:.5f}").format(
+                low=o.x_low, median=o.x_median, high=o.x_high),
+            tr("  Pp={pp}  PPL={ppl}  PPU={ppu}  Ppk={ppk}").format(
+                pp=_fmt(o.pp), ppl=_fmt(o.ppl), ppu=_fmt(o.ppu), ppk=_fmt(o.ppk)),
+            tr("  Desempeño (PPM):            < LEI       > LES      Total"),
+            f"    {observado:<18}{_fmt(o.ppm_obs[0]):>10}{_fmt(o.ppm_obs[1]):>12}{_fmt(o.ppm_obs[2]):>11}",
+            f"    {esperado:<18}{_fmt(o.ppm_expected[0]):>10}{_fmt(o.ppm_expected[1]):>12}{_fmt(o.ppm_expected[2]):>11}",
         ])
 
-    def to_frame(self) -> pd.DataFrame:
-        """Tabla resumen (una fila por estadístico)."""
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico).
+
+        Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
         o = self
         rows = [
-            ("N", o.n), ("Distribución", o.distribution),
-            ("LEI", o.lsl), ("LES", o.usl), ("Objetivo", o.target),
-            ("Percentil 0.135%", o.x_low), ("Mediana", o.x_median),
-            ("Percentil 99.865%", o.x_high),
-            ("Pp", o.pp), ("PPL", o.ppl), ("PPU", o.ppu), ("Ppk", o.ppk),
-            ("PPM obs < LEI", o.ppm_obs[0]), ("PPM obs > LES", o.ppm_obs[1]),
-            ("PPM obs total", o.ppm_obs[2]),
-            ("PPM esp < LEI", o.ppm_expected[0]), ("PPM esp > LES", o.ppm_expected[1]),
-            ("PPM esp total", o.ppm_expected[2]),
+            ("n", N_("N"), o.n), ("distribution", N_("Distribución"), o.distribution),
+            ("lsl", N_("LEI"), o.lsl), ("usl", N_("LES"), o.usl), ("target", N_("Objetivo"), o.target),
+            ("percentile_low", N_("Percentil 0.135%"), o.x_low), ("median", N_("Mediana"), o.x_median),
+            ("percentile_high", N_("Percentil 99.865%"), o.x_high),
+            ("pp", N_("Pp"), o.pp), ("ppl", N_("PPL"), o.ppl), ("ppu", N_("PPU"), o.ppu), ("ppk", N_("Ppk"), o.ppk),
+            ("ppm_obs_below_lsl", N_("PPM obs < LEI"), o.ppm_obs[0]),
+            ("ppm_obs_above_usl", N_("PPM obs > LES"), o.ppm_obs[1]),
+            ("ppm_obs_total", N_("PPM obs total"), o.ppm_obs[2]),
+            ("ppm_exp_below_lsl", N_("PPM esp < LEI"), o.ppm_expected[0]),
+            ("ppm_exp_above_usl", N_("PPM esp > LES"), o.ppm_expected[1]),
+            ("ppm_exp_total", N_("PPM esp total"), o.ppm_expected[2]),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def to_excel(self, path) -> None:
         """Exporta el análisis de capacidad no normal a un archivo Excel (.xlsx).
@@ -495,7 +515,7 @@ class NonNormalCapabilityResult:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Capacidad")
+            self.to_frame().to_excel(writer, sheet_name=tr("Capacidad"))
 
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()

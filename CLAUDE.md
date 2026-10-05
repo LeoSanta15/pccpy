@@ -115,7 +115,10 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - API: `pccpy.set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable `PCCPY_LANG`. Un idioma inexistente lanza `ValueError`.
 - Textos: `tr("…")` se traduce al mostrar; `N_("…")` marca constantes de módulo (se traducen con `tr()` al usarlas). Los f-strings **no** se pueden traducir: usa `tr("… {x} …").format(x=x)`.
 - Comandos: `make i18n-update` (extraer + actualizar `.po`), `make i18n-compile` (los `.mo` se versionan) y `make i18n-check` (lo exige el CI).
-- Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Fases 0 y 1 hechas (mecanismo + errores/avisos); `summary()`, `to_frame()` y gráficos siguen solo en español hasta las fases 2–3.
+- Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Fases 0, 1 y 2 hechas (mecanismo, errores/avisos, `summary()` y `to_frame()`); gráficos, `wizard` y otras tablas (`pareto`, curvas OC/AOQ, ANOVA) siguen solo en español hasta las fases 3–3b.
+- `to_frame(stable=True)` da claves canónicas en inglés (no cambian con el idioma); sin `stable`, cabeceras en el idioma activo. Al añadir filas o columnas, define su clave estable (los tests comparan con `tests/golden/i18n_stable.json`).
+- Los textos de `summary()` se comprueban contra `tests/golden/i18n_es.json` (generado con el código previo a la migración; **no se regenera** salvo cambio deliberado del español) y con invariantes es/en (`tests/test_i18n_resumenes.py`).
+- No pongas `tr()` dentro de un f-string: Babel solo lo extrae en Python >= 3.12 (el catálogo cambiaría según la versión).
 - El marcador se llama `tr`, no `_`: 8 funciones usan `_` como variable y lanzan errores (un `_("…")` ahí fallaría solo en la ruta de error).
 
 ## Mapa del código

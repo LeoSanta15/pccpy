@@ -7,8 +7,34 @@ import numpy as np
 import pandas as pd
 
 from ._data import _excel_writer
-from ._i18n import tr
+from ._frames import etiquetas
+from ._i18n import N_, tr
 from .rules import DEFAULT_K, describe
+
+# Claves estables (inglés) → texto de la columna en español, marcado para traducir.
+_COLUMNAS_PANEL = {
+    "point": N_("punto"), "stage": N_("etapa"), "value": N_("valor"), "cl": N_("LC"), "ucl": N_("LCS"),
+    "lcl": N_("LCI"), "lower_value": N_("valor_inferior"), "failed_tests": N_("pruebas_fallidas"),
+}
+_COLUMNAS_VIOLACIONES = {
+    "panel": N_("panel"), "point": N_("punto"), "test": N_("prueba"), "value": N_("valor"),
+    "description": N_("descripcion"),
+}
+# Algunas cartas guardan parámetros con clave en español: son datos y no se traducen; solo se muestran traducidos.
+_PARAMETROS = {
+    "centro": N_("centro"), "distribución": N_("distribución"), "escala": N_("escala"), "forma": N_("forma"),
+    "longitud": N_("longitud"), "media": N_("media"), "objetivo": N_("objetivo"), "peso": N_("peso"),
+    "pesos": N_("pesos"), "reinicio": N_("reinicio"), "subgrupos": N_("subgrupos"), "tamaño": N_("tamaño"),
+    "n_subgrupo": N_("n_subgrupo"), "MR_prom": N_("MR_prom"), "alfa": N_("alfa"), "corridas": N_("corridas"),
+    "fase": N_("fase"), "método": N_("método"), "n_puntos": N_("n_puntos"), "partes": N_("partes"),
+    "puntos": N_("puntos"), "sigma_conocida": N_("sigma_conocida"), "sigma_dentro": N_("sigma_dentro"),
+    "sigma_entre": N_("sigma_entre"), "sigma_entre_dentro": N_("sigma_entre_dentro"), "variables": N_("variables"),
+    "LCS": N_("LCS"),
+}
+
+
+def _nombre_parametro(clave) -> str:
+    return tr(_PARAMETROS[clave]) if clave in _PARAMETROS else str(clave)
 
 
 @dataclass
@@ -34,23 +60,28 @@ class Panel:
             return np.array([], dtype=int)
         return np.unique(np.concatenate(list(self.violations.values())).astype(int))
 
-    def to_frame(self) -> pd.DataFrame:
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla del panel: una fila por punto.
+
+        Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
+        col = etiquetas(_COLUMNAS_PANEL, stable)
         data = {
-            "punto": np.arange(1, len(self.values) + 1),
-            "etapa": self.stage,
-            "valor": self.values,
-            "LC": self.center,
-            "LCS": self.ucl,
-            "LCI": self.lcl,
+            col["point"]: np.arange(1, len(self.values) + 1),
+            col["stage"]: self.stage,
+            col["value"]: self.values,
+            col["cl"]: self.center,
+            col["ucl"]: self.ucl,
+            col["lcl"]: self.lcl,
         }
         if self.secondary is not None:
-            data["valor_inferior"] = self.secondary
+            data[col["lower_value"]] = self.secondary
         df = pd.DataFrame(data)
         tests_at: dict[int, list[str]] = {}
         for t, idx in self.violations.items():
             for i in idx:
                 tests_at.setdefault(int(i), []).append(str(t))
-        df["pruebas_fallidas"] = [
+        df[col["failed_tests"]] = [
             ",".join(tests_at.get(i, [])) for i in range(len(self.values))
         ]
         return df
@@ -65,7 +96,8 @@ class ControlChart:
     params: list[dict]
     tests: tuple = ()
     test_params: dict[int, float] = field(default_factory=dict)
-    test1_text: str | None = None  # descripción propia de la prueba 1 (p. ej. límites no normales)
+    test1_text: str | None = None  # plantilla (msgid) de la descripción propia de la prueba 1; se traduce al mostrarla
+    test1_params: dict = field(default_factory=dict)  # valores de los marcadores de test1_text
 
     def __getitem__(self, name: str) -> Panel:
         for p in self.panels:
@@ -75,31 +107,43 @@ class ControlChart:
             "No existe el panel {name!r}. Disponibles: {available}"
         ).format(name=name, available=[p.name for p in self.panels]))
 
-    def to_frame(self) -> pd.DataFrame:
-        """Tabla ancha: una fila por punto, columnas por panel."""
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla ancha: una fila por punto, columnas por panel.
+
+        Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
+        col = etiquetas(_COLUMNAS_PANEL, stable)
         frames = []
         for p in self.panels:
-            f = p.to_frame().drop(columns=["punto", "etapa"]).add_prefix(f"{p.name}_")
+            f = p.to_frame(stable=stable).drop(columns=[col["point"], col["stage"]]).add_prefix(f"{p.name}_")
             frames.append(f)
         base = pd.DataFrame(
-            {"punto": np.arange(1, len(self.panels[0].values) + 1), "etapa": self.panels[0].stage}
+            {col["point"]: np.arange(1, len(self.panels[0].values) + 1), col["stage"]: self.panels[0].stage}
         )
         return pd.concat([base] + frames, axis=1)
 
-    def violations(self) -> pd.DataFrame:
-        """Tabla de puntos que fallan pruebas: panel, punto (base 1), prueba, valor."""
+    def _violations(self) -> pd.DataFrame:
+        """Puntos que fallan pruebas, con claves estables (``panel``, ``point``, ``test``, ``value``, ``description``)."""
         rows = []
         for p in self.panels:
             for t, idx in sorted(p.violations.items()):
-                desc = (self.test1_text if t == 1 and self.test1_text
+                desc = (tr(self.test1_text).format(**self.test1_params) if t == 1 and self.test1_text
                         else describe(t, self.test_params.get(t, DEFAULT_K[t])))
                 for i in idx:
                     rows.append(
-                        {"panel": p.name, "punto": int(i) + 1, "prueba": t,
-                         "valor": float(p.values[i]), "descripcion": desc}
+                        {"panel": p.name, "point": int(i) + 1, "test": t,
+                         "value": float(p.values[i]), "description": desc}
                     )
-        cols = ["panel", "punto", "prueba", "valor", "descripcion"]
-        return pd.DataFrame(rows, columns=cols).sort_values(["panel", "punto", "prueba"]).reset_index(drop=True)
+        cols = ["panel", "point", "test", "value", "description"]
+        return pd.DataFrame(rows, columns=cols).sort_values(["panel", "point", "test"]).reset_index(drop=True)
+
+    def violations(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla de puntos que fallan pruebas: panel, punto (base 1), prueba, valor y descripción.
+
+        Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma.
+        """
+        v = self._violations()
+        return v if stable else v.rename(columns=etiquetas(_COLUMNAS_VIOLACIONES, False))
 
     @property
     def in_control(self) -> bool:
@@ -107,27 +151,28 @@ class ControlChart:
         return all(p.flagged.size == 0 for p in self.panels)
 
     def summary(self) -> str:
-        lines = [f"Carta de control {self.kind}"]
+        lines = [tr("Carta de control {kind}").format(kind=self.kind)]
         for prm in self.params:
-            head = f"  Etapa {prm['stage']}" if len(self.params) > 1 else "  Parámetros"
+            head = tr("  Etapa {stage}").format(stage=prm["stage"]) if len(self.params) > 1 else tr("  Parámetros")
             body = ", ".join(
-                f"{k}={v:.6g}" if isinstance(v, (float, np.floating)) else f"{k}={v}"
+                f"{_nombre_parametro(k)}={v:.6g}" if isinstance(v, (float, np.floating)) else f"{_nombre_parametro(k)}={v}"
                 for k, v in prm.items() if k != "stage"
             )
             lines.append(f"{head}: {body}")
         if not self.tests:
-            lines.append("  Pruebas de causas especiales: ninguna solicitada")
+            lines.append(tr("  Pruebas de causas especiales: ninguna solicitada"))
         else:
-            lines.append(f"  Pruebas solicitadas: {', '.join(map(str, self.tests))}")
-            v = self.violations()
+            lines.append(tr("  Pruebas solicitadas: {tests}").format(tests=", ".join(map(str, self.tests))))
+            v = self._violations()
             if v.empty:
-                lines.append("  Resultado: sin puntos fuera de control")
+                lines.append(tr("  Resultado: sin puntos fuera de control"))
             else:
-                lines.append(f"  Puntos marcados: {len(v)}")
+                lines.append(tr("  Puntos marcados: {count}").format(count=len(v)))
                 for _, r in v.iterrows():
                     lines.append(
-                        f"    [{r['panel']}] punto {r['punto']}: prueba {r['prueba']} "
-                        f"(valor {r['valor']:.6g}) - {r['descripcion']}"
+                        tr("    [{panel}] punto {point}: prueba {test} (valor {value:.6g}) - {description}").format(
+                            panel=r["panel"], point=r["point"], test=r["test"], value=r["value"],
+                            description=r["description"])
                     )
         return "\n".join(lines)
 

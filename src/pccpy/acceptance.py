@@ -18,7 +18,8 @@ from scipy import stats
 from scipy.optimize import brentq
 
 from ._data import _excel_writer
-from ._i18n import tr
+from ._frames import tabla_estadisticos
+from ._i18n import N_, tr
 
 
 # ──────────────────────────────────────────────────── curva OC (binomial) ────
@@ -143,28 +144,29 @@ class SamplingPlanAttributes:
         aoq = self._pa_arr * self._p_arr * (self.N - self.n) / self.N
         return pd.DataFrame({"p_defectivo": self._p_arr, "AOQ": aoq})
 
-    def to_frame(self) -> pd.DataFrame:
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
         rows = [
-            ("N (tamaño de lote)", self.N),
-            ("n (tamaño de muestra)", self.n),
-            ("c (número de aceptación)", self.c),
-            ("AQL (%)", round(self.aql, 4)),
-            ("LTPD (%)", round(self.ltpd * 100, 4)),
-            ("α (riesgo productor)", round(self.alpha, 5)),
-            ("β (riesgo consumidor = 0.10)", round(self.beta, 5)),
-            ("AOQL (%)", round(self.aoq_max * 100, 4)),
-            ("Método", self.method),
+            ("lot_size", N_("N (tamaño de lote)"), self.N),
+            ("sample_size", N_("n (tamaño de muestra)"), self.n),
+            ("acceptance_number", N_("c (número de aceptación)"), self.c),
+            ("aql_pct", N_("AQL (%)"), round(self.aql, 4)),
+            ("ltpd_pct", N_("LTPD (%)"), round(self.ltpd * 100, 4)),
+            ("alpha", N_("α (riesgo productor)"), round(self.alpha, 5)),
+            ("beta", N_("β (riesgo consumidor = 0.10)"), round(self.beta, 5)),
+            ("aoql_pct", N_("AOQL (%)"), round(self.aoq_max * 100, 4)),
+            ("method", N_("Método"), self.method),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
-        return (
-            f"Plan de muestreo por atributos ({self.method})\n"
-            f"  Lote N={self.N}  Muestra n={self.n}  Ac={self.c}  Re={self.c + 1}\n"
-            f"  AQL={self.aql:.3g}%  α={self.alpha:.4f}  "
-            f"LTPD={self.ltpd*100:.3g}%  β=0.10\n"
-            f"  AOQL={self.aoq_max*100:.3g}%"
-        )
+        return "\n".join([
+            tr("Plan de muestreo por atributos ({method})").format(method=self.method),
+            tr("  Lote N={N}  Muestra n={n}  Ac={c}  Re={r}").format(N=self.N, n=self.n, c=self.c, r=self.c + 1),
+            tr("  AQL={aql:.3g}%  α={alpha:.4f}  LTPD={ltpd:.3g}%  β=0.10").format(
+                aql=self.aql, alpha=self.alpha, ltpd=self.ltpd * 100),
+            tr("  AOQL={aoql:.3g}%").format(aoql=self.aoq_max * 100),
+        ])
 
     def to_excel(self, path) -> None:
         """Exporta el plan de muestreo a un archivo Excel (.xlsx).
@@ -172,7 +174,7 @@ class SamplingPlanAttributes:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Plan")
+            self.to_frame().to_excel(writer, sheet_name=tr("Plan"))
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
@@ -316,28 +318,29 @@ class SamplingPlanVariables:
         pa_arr = np.array([self.pa(p) for p in p_arr])
         return pd.DataFrame({"p_defectivo": p_arr, "P(aceptar)": pa_arr})
 
-    def to_frame(self) -> pd.DataFrame:
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
         rows = [
-            ("N (tamaño de lote)", self.N),
-            ("n (tamaño de muestra)", self.n),
-            ("k (factor de aceptabilidad)", round(self.k, 4)),
-            ("AQL (%)", round(self.aql, 4)),
-            ("LTPD (%)", round(self.ltpd * 100, 4)),
-            ("α (riesgo productor)", round(self.alpha, 5)),
-            ("β (riesgo consumidor = 0.10)", 0.10),
-            ("Tipo de especificación", self.spec_type),
-            ("Método", self.method),
+            ("lot_size", N_("N (tamaño de lote)"), self.N),
+            ("sample_size", N_("n (tamaño de muestra)"), self.n),
+            ("k", N_("k (factor de aceptabilidad)"), round(self.k, 4)),
+            ("aql_pct", N_("AQL (%)"), round(self.aql, 4)),
+            ("ltpd_pct", N_("LTPD (%)"), round(self.ltpd * 100, 4)),
+            ("alpha", N_("α (riesgo productor)"), round(self.alpha, 5)),
+            ("beta", N_("β (riesgo consumidor = 0.10)"), 0.10),
+            ("spec_type", N_("Tipo de especificación"), self.spec_type),
+            ("method", N_("Método"), self.method),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
-        return (
-            f"Plan de muestreo por variables ({self.method})\n"
-            f"  Lote N={self.N}  Muestra n={self.n}  k={self.k:.4f}\n"
-            f"  AQL={self.aql:.3g}%  α={self.alpha:.4f}  "
-            f"LTPD={self.ltpd*100:.3g}%  β=0.10\n"
-            f"  Especificación: {self.spec_type}"
-        )
+        return "\n".join([
+            tr("Plan de muestreo por variables ({method})").format(method=self.method),
+            tr("  Lote N={N}  Muestra n={n}  k={k:.4f}").format(N=self.N, n=self.n, k=self.k),
+            tr("  AQL={aql:.3g}%  α={alpha:.4f}  LTPD={ltpd:.3g}%  β=0.10").format(
+                aql=self.aql, alpha=self.alpha, ltpd=self.ltpd * 100),
+            tr("  Especificación: {spec_type}").format(spec_type=self.spec_type),
+        ])
 
     def to_excel(self, path) -> None:
         """Exporta el plan de muestreo por variables a un archivo Excel (.xlsx).
@@ -345,7 +348,7 @@ class SamplingPlanVariables:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Plan")
+            self.to_frame().to_excel(writer, sheet_name=tr("Plan"))
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
@@ -559,28 +562,30 @@ class DodgeRomigPlan:
         aoq = self._pa_arr * self._p_arr * (self.N - self.n) / self.N
         return pd.DataFrame({"p_defectivo": self._p_arr, "AOQ": aoq})
 
-    def to_frame(self) -> pd.DataFrame:
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
+        objetivo = "LTPD" if self.plan_type == "LTPD" else "AOQL"
         rows = [
-            ("N (tamaño de lote)", self.N),
-            ("n (tamaño de muestra)", self.n),
-            ("c (número de aceptación)", self.c),
-            ("Tipo de plan", self.plan_type),
-            (f"{'LTPD' if self.plan_type == 'LTPD' else 'AOQL'} objetivo (%)",
-             round(self.target * 100, 4)),
-            ("Promedio de proceso (%)", round(self.process_avg * 100, 4)),
-            ("AOQL (%)", round(self.aoql * 100, 4)),
-            ("LTPD (β=0.10) (%)", round(self.ltpd * 100, 4)),
+            ("lot_size", N_("N (tamaño de lote)"), self.N),
+            ("sample_size", N_("n (tamaño de muestra)"), self.n),
+            ("acceptance_number", N_("c (número de aceptación)"), self.c),
+            ("plan_type", N_("Tipo de plan"), self.plan_type),
+            ("target_pct", tr("{kind} objetivo (%)").format(kind=objetivo), round(self.target * 100, 4)),
+            ("process_avg_pct", N_("Promedio de proceso (%)"), round(self.process_avg * 100, 4)),
+            ("aoql_pct", N_("AOQL (%)"), round(self.aoql * 100, 4)),
+            ("ltpd_pct", N_("LTPD (β=0.10) (%)"), round(self.ltpd * 100, 4)),
         ]
-        return pd.DataFrame(rows, columns=["estadístico", "valor"]).set_index("estadístico")
+        return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
-        return (
-            f"Plan Dodge-Romig ({self.plan_type})\n"
-            f"  Lote N={self.N}  Muestra n={self.n}  Ac={self.c}  Re={self.c + 1}\n"
-            f"  {'LTPD' if self.plan_type == 'LTPD' else 'AOQL'} objetivo={self.target*100:.3g}%  "
-            f"Promedio proceso={self.process_avg*100:.3g}%\n"
-            f"  AOQL={self.aoql*100:.3g}%  LTPD={self.ltpd*100:.3g}%"
-        )
+        return "\n".join([
+            tr("Plan Dodge-Romig ({plan_type})").format(plan_type=self.plan_type),
+            tr("  Lote N={N}  Muestra n={n}  Ac={c}  Re={r}").format(N=self.N, n=self.n, c=self.c, r=self.c + 1),
+            tr("  {kind} objetivo={target:.3g}%  Promedio proceso={process_avg:.3g}%").format(
+                kind="LTPD" if self.plan_type == "LTPD" else "AOQL", target=self.target * 100,
+                process_avg=self.process_avg * 100),
+            tr("  AOQL={aoql:.3g}%  LTPD={ltpd:.3g}%").format(aoql=self.aoql * 100, ltpd=self.ltpd * 100),
+        ])
 
     def to_excel(self, path) -> None:
         """Exporta el plan Dodge-Romig a un archivo Excel (.xlsx).
@@ -588,7 +593,7 @@ class DodgeRomigPlan:
         Requiere ``openpyxl`` (``pip install openpyxl``).
         """
         with _excel_writer(path) as writer:
-            self.to_frame().to_excel(writer, sheet_name="Plan")
+            self.to_frame().to_excel(writer, sheet_name=tr("Plan"))
 
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()

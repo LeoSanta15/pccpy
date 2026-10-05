@@ -17,24 +17,24 @@ from collections.abc import Iterable
 
 import numpy as np
 
-from ._i18n import tr
+from ._i18n import N_, tr
 
 TEST_DESCRIPTIONS: dict[int, str] = {
-    1: "1 punto a más de {k} desviaciones estándar de la línea central",
-    2: "{k} puntos consecutivos del mismo lado de la línea central",
-    3: "{k} puntos consecutivos, todos ascendentes o todos descendentes",
-    4: "{k} puntos consecutivos alternando arriba y abajo",
-    5: "{k} de {k1} puntos a más de 2 desviaciones estándar (mismo lado)",
-    6: "{k} de {k1} puntos a más de 1 desviación estándar (mismo lado)",
-    7: "{k} puntos consecutivos a menos de 1 desviación estándar (ambos lados)",
-    8: "{k} puntos consecutivos a más de 1 desviación estándar (ambos lados)",
+    1: N_("1 punto a más de {k} desviaciones estándar de la línea central"),
+    2: N_("{k} puntos consecutivos del mismo lado de la línea central"),
+    3: N_("{k} puntos consecutivos, todos ascendentes o todos descendentes"),
+    4: N_("{k} puntos consecutivos alternando arriba y abajo"),
+    5: N_("{k} de {k1} puntos a más de 2 desviaciones estándar (mismo lado)"),
+    6: N_("{k} de {k1} puntos a más de 1 desviación estándar (mismo lado)"),
+    7: N_("{k} puntos consecutivos a menos de 1 desviación estándar (ambos lados)"),
+    8: N_("{k} puntos consecutivos a más de 1 desviación estándar (ambos lados)"),
 }
 
 
 def describe(test: int, k=None) -> str:
     """Descripción de la prueba con su parámetro K ya sustituido."""
     k = DEFAULT_K[test] if k is None else k
-    return TEST_DESCRIPTIONS[test].format(k=f"{k:g}", k1=f"{k + 1:g}")
+    return tr(TEST_DESCRIPTIONS[test]).format(k=f"{k:g}", k1=f"{k + 1:g}")
 
 #: Parámetro K por defecto de cada prueba (valores por defecto de Minitab).
 DEFAULT_K: dict[int, float] = {1: 3, 2: 9, 3: 6, 4: 14, 5: 2, 6: 4, 7: 15, 8: 8}

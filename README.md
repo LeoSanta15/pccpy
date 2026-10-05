@@ -71,7 +71,7 @@ Requiere Python ≥ 3.9 con NumPy, SciPy, pandas y matplotlib.
 
 ### Idioma de los mensajes
 
-Los textos de pccpy están en español. El idioma se puede cambiar (en desarrollo: por ahora se traducen los mensajes de error y aviso; `summary()`, `to_frame()` y gráficos llegan por fases):
+Los textos de pccpy están en español. El idioma se puede cambiar (en desarrollo: por ahora se traducen los mensajes de error y aviso, los `summary()` y las cabeceras de `to_frame()` —con `stable=True` para claves fijas—; gráficos y asistente llegan por fases):
 
 ```python
 import pccpy as pp

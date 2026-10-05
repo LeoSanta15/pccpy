@@ -24,7 +24,8 @@ class NormalityResult:
 
     def __str__(self) -> str:
         p = "< 0.005" if self.p_value < 0.005 else f"{self.p_value:.3f}"
-        return f"{self.method}: estadístico = {self.statistic:.4f}, valor p {'' if p.startswith('<') else '= '}{p} (n = {self.n})"
+        return tr("{method}: estadístico = {statistic:.4f}, valor p {relation}{p} (n = {n})").format(
+            method=self.method, statistic=self.statistic, relation="" if p.startswith("<") else "= ", p=p, n=self.n)
 
 
 def anderson_darling_statistic(x: np.ndarray) -> float:

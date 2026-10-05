@@ -82,6 +82,8 @@ def get_language() -> str:
 
 def tr(mensaje: str) -> str:
     """Traduce ``mensaje`` al idioma activo (o lo devuelve igual si no hay traducción)."""
+    if not mensaje:  # gettext("") devuelve la cabecera del catálogo, no una cadena vacía
+        return mensaje
     return _catalogo(get_language()).gettext(mensaje)
 
 

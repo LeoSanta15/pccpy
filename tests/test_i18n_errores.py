@@ -142,6 +142,28 @@ def test_el_detector_de_nombres_reservados():
     assert nombres_reservados_ocupados("def f():\n    return 1\n") == []
 
 
+def llamadas_a_tr_dentro_de_fstrings(codigo: str) -> list[str]:
+    """``tr()``/``N_()`` dentro de un f-string: Babel solo los extrae en Python >= 3.12, así que el catálogo dependería de la versión."""
+    return [
+        f"línea {c.lineno}"
+        for f in ast.walk(ast.parse(codigo)) if isinstance(f, ast.JoinedStr)
+        for c in ast.walk(f) if isinstance(c, ast.Call) and _nombre(c.func) in NOMBRES_RESERVADOS
+    ]
+
+
+@pytest.mark.parametrize("ruta", ARCHIVOS, ids=lambda p: str(p.relative_to(SRC)))
+def test_ningun_tr_dentro_de_un_fstring(ruta):
+    assert not llamadas_a_tr_dentro_de_fstrings(ruta.read_text(encoding="utf-8")), (
+        f"{ruta.relative_to(SRC)}: asigna tr(...) a una variable antes del f-string"
+    )
+
+
+def test_el_detector_de_tr_en_fstrings_funciona():
+    assert llamadas_a_tr_dentro_de_fstrings("x = f\"{tr('a'):<5}\"")
+    assert llamadas_a_tr_dentro_de_fstrings("y = f'{N_(\"a\")}'")
+    assert llamadas_a_tr_dentro_de_fstrings("a = tr('a')\nx = f\"{a:<5}\"") == []
+
+
 # ── el catálogo en inglés ────────────────────────────────────────────────────
 
 ESPANOL = frozenset(

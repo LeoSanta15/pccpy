@@ -42,16 +42,16 @@ class WizardResult:
     def summary(self) -> str:
         lines = [
             "═" * 56,
-            f"  Análisis recomendado : {self.function}",
-            f"  Razón                : {self.rationale}",
+            tr("  Análisis recomendado : {function}").format(function=self.function),
+            tr("  Razón                : {rationale}").format(rationale=self.rationale),
         ]
         if self.params:
-            lines.append(f"  Parámetros sugeridos : {self.params}")
+            lines.append(tr("  Parámetros sugeridos : {params}").format(params=self.params))
         if self.alternatives:
-            lines.append(f"  Alternativas         : {', '.join(self.alternatives)}")
+            lines.append(tr("  Alternativas         : {alternatives}").format(alternatives=", ".join(self.alternatives)))
         lines += [
             "─" * 56,
-            "  Código:",
+            tr("  Código:"),
             "",
         ]
         for ln in self.snippet().splitlines():

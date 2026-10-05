@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - idioma de los mensajes (fases 0 y 1 de 5)
+## [Sin publicar] - idioma de los mensajes (fases 0, 1 y 2 de 5)
 
 ### Añadido
 - Mecanismo de idioma basado en `gettext`: `set_language()`, `get_language()`, `language()` (contexto) y `available_languages()`; variable de entorno `PCCPY_LANG`. El idioma fuente es el español y `en` es el primer idioma adicional.
@@ -10,8 +10,12 @@
 
 - Fase 1: los **151 mensajes de error y aviso** (134 textos únicos) pasan por `tr()` y tienen traducción al inglés; los 34 f-strings se convierten en plantillas con `.format()`. Tests estáticos (AST) comprueban que todo `raise`/`warnings.warn` usa `tr()`, que los marcadores `{…}` coinciden con los argumentos de `.format()` y que nadie ocupa los nombres `tr`/`N_`; otro test detecta palabras españolas en las traducciones.
 
+- Fase 2: los `summary()` de todos los resultados (14 clases), las cabeceras de `to_frame()` (15 métodos) y de `violations()`, las descripciones de las pruebas de causas especiales y las hojas de `to_excel()` pasan por `tr()` con traducción al inglés (428 → 444 textos).
+- `to_frame(stable=True)` y `violations(stable=True)`: claves canónicas en inglés que no cambian con el idioma.
+- Referencia en español **sin cambios**: 64 resultados de referencia (generados antes de migrar) coinciden byte a byte; tests de invariantes es/en (mismas líneas y números, sin palabras españolas, columnas alineadas) y de claves estables.
+
 ### Nota
-- Todavía **no** se traducen los `summary()`, `to_frame()` ni los gráficos: llegan en las fases 2 y 3. El comportamiento por defecto (español) no cambia.
+- Todavía **no** se traducen los gráficos, el texto de decisión del asistente (`wizard`) ni las tablas `pareto`, curvas OC/AOQ, tablas ANOVA y `kappa_vs_reference`: fases siguientes. El comportamiento por defecto (español) no cambia.
 
 ## [0.10.8] - documentación de referencia completa
 

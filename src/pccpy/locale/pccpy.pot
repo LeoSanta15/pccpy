@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-04 20:56+0000\n"
+"POT-Creation-Date: 2026-10-05 00:28+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,6 +16,391 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
+
+#, python-brace-format
+msgid "    Cp={cp}  CPL={cpl}  CPU={cpu}  Cpk={cpk}"
+msgstr ""
+
+#, python-brace-format
+msgid "    IC {ci}% Pp: ({pp_lo}, {pp_hi})   IC {ci}% Ppk: ({ppk_lo}, {ppk_hi})"
+msgstr ""
+
+#, python-brace-format
+msgid "    Interacción       {var:10.5f}"
+msgstr ""
+
+#, python-brace-format
+msgid "    Obs {obs}: {label}"
+msgstr ""
+
+#, python-brace-format
+msgid "    Operador          {var:10.5f}"
+msgstr ""
+
+#, python-brace-format
+msgid "    Pp={pp}  PPL={ppl}  PPU={ppu}  Ppk={ppk}  Cpm={cpm}"
+msgstr ""
+
+#, python-brace-format
+msgid "    Rachas={runs}  Esperadas={expected:.2f}  Racha más larga={longest}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"    Z.Bench={z_bench}  Z.LEI={z_lsl}  Z.LES={z_usl}  Nivel "
+"Sigma={sigma_level}  DPMO={dpmo:,.0f}"
+msgstr ""
+
+#, python-brace-format
+msgid "    Z.Bench={z}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"    [{panel}] punto {point}: prueba {test} (valor {value:.6g}) - "
+"{description}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"    p Agrupamiento={p_clustering:.4f}{flag_clustering}  p "
+"Mezclas={p_mixtures:.4f}{flag_mixtures}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"    p Tendencias={p_trends:.4f}{flag_trends}  p "
+"Oscilación={p_oscillation:.4f}{flag_oscillation}"
+msgstr ""
+
+#, python-brace-format
+msgid "    {operator}: κ={kappa:.4f}  p-valor={p:.5f}  Acuerdo={agreement:.1f}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  % Acuerdo global vs ref     = {pct:.1f}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}"
+msgstr ""
+
+#, python-brace-format
+msgid "  AOQL={aoql:.3g}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  AOQL={aoql:.3g}%  LTPD={ltpd:.3g}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  AQL={aql:.3g}%  α={alpha:.4f}  LTPD={ltpd:.3g}%  β=0.10"
+msgstr ""
+
+#, python-brace-format
+msgid "  Alternativas         : {alternatives}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Análisis recomendado : {function}"
+msgstr ""
+
+msgid "  Arriba/abajo:"
+msgstr ""
+
+#, python-brace-format
+msgid "  Asimetría       : {skewness:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  CV              : {cv:.2f} %"
+msgstr ""
+
+#, python-brace-format
+msgid "  Cantidad : {count}"
+msgstr ""
+
+msgid "  Capacidad potencial (dentro):"
+msgstr ""
+
+#, python-brace-format
+msgid "  Cg={cg}  Cgk={cgk}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Confianza alcanzada: {confidence:.2f}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  Cp  : {cp:.3f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Cpk : {cpk:.3f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Curtosis        : {kurtosis:.4f}"
+msgstr ""
+
+msgid "  Código:"
+msgstr ""
+
+msgid "  DIAGNÓSTICO RÁPIDO DEL PROCESO"
+msgstr ""
+
+msgid "  Desempeño (PPM):            < LEI       > LES      Total"
+msgstr ""
+
+msgid "  Desempeño general:"
+msgstr ""
+
+#, python-brace-format
+msgid "  Desv. estándar  : {std:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Distribución    : {distribution}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Especificación: {spec_type}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Estadístico     : {stat:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Etapa {stage}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Factor k = {k:.5f}"
+msgstr ""
+
+msgid "  Fuente              Var          %Contribución"
+msgstr ""
+
+#, python-brace-format
+msgid "  Función : {function}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Gage R&R            {var:10.5f}   {pct:6.2f}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  K = {k}  (variación de estudio = K·σ)"
+msgstr ""
+
+#, python-brace-format
+msgid "  Kappa de Fleiss             = {kappa:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Kappa global vs referencia = {kappa:.4f}"
+msgstr ""
+
+msgid "  Kappa por operador vs referencia:"
+msgstr ""
+
+#, python-brace-format
+msgid "  LEI={lsl}  LES={usl}  N={n}  logL={loglik:.3f}  AIC={aic:.3f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  LEI={lsl}  Objetivo={target}  LES={usl}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Linealidad={linearity:.5g} ({pct:.2f}%)"
+msgstr ""
+
+#, python-brace-format
+msgid "  Lote N={N}  Muestra n={n}  Ac={c}  Re={r}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Lote N={N}  Muestra n={n}  k={k:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Media           : {mean:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Media={mean:.5g}  Desv.Est.={std:.5g}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Mediana         : {median:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Mínimo / Máximo : {low:.4f}  /  {high:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  N               : {n}"
+msgstr ""
+
+#, python-brace-format
+msgid "  N={n}  Cobertura≥{coverage}%  Confianza={confidence}%"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  N={n}  Media={mean:.5f}  Desv.Est.(dentro)={within:.5f} [{method}]  "
+"Desv.Est.(general)={overall:.5f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Parte a parte       {var:10.5f}   {pct:6.2f}%"
+msgstr ""
+
+msgid "  Parámetros"
+msgstr ""
+
+#, python-brace-format
+msgid "  Parámetros sugeridos : {params}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Pendiente={slope:.5g}  Intercepto={intercept:.5g}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  Percentiles: 0.135% = {low:.5f}   50% = {median:.5f}   99.865% = "
+"{high:.5f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Pp={pp}  PPL={ppl}  PPU={ppu}  Ppk={ppk}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Pruebas de aleatoriedad (α={alpha}%); * = señal"
+msgstr ""
+
+msgid "  Pruebas de causas especiales: ninguna solicitada"
+msgstr ""
+
+#, python-brace-format
+msgid "  Pruebas solicitadas: {tests}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Puntos marcados: {count}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Razón                : {rationale}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Repetibilidad       {var:10.5f}   {pct:6.2f}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  Reproducibilidad    {var:10.5f}   {pct:6.2f}%"
+msgstr ""
+
+msgid "  Resultado: sin puntos fuera de control"
+msgstr ""
+
+#, python-brace-format
+msgid "  R²={r2:.4f}  p(pendiente=0)={p:.5f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Se detectó tendencia {direction}."
+msgstr ""
+
+#, python-brace-format
+msgid "  Sesgo promedio={bias:.5g} ({pct:.2f}%)"
+msgstr ""
+
+#, python-brace-format
+msgid "  Sesgo={bias:.5g} ({bias_pct:.2f}%)  t={t:.4f}  p={p:.5f}"
+msgstr ""
+
+msgid "  Señales:"
+msgstr ""
+
+msgid "  Sin señales detectadas."
+msgstr ""
+
+msgid "  Sobre/bajo la mediana:"
+msgstr ""
+
+#, python-brace-format
+msgid "  Total               {var:10.5f}  100.00%"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  Transformación Box-Cox con lambda = {lam:.4f} (Media, Desv.Est. y Z.* "
+"están en la escala transformada; LEI/LES/objetivo y PPM observado, en "
+"unidades originales)"
+msgstr ""
+
+#, python-brace-format
+msgid "  Valor p         : {p:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Verde={green}  Amarillo={yellow}  Rojo={red}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Zona verde: [{low:.5g}, {high:.5g}]"
+msgstr ""
+
+#, python-brace-format
+msgid "  {kind} objetivo={target:.3g}%  Promedio proceso={process_avg:.3g}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  Índices  : {indices}"
+msgstr ""
+
+msgid "  ── Alertas ──"
+msgstr ""
+
+msgid "  ── Análisis recomendado ──"
+msgstr ""
+
+msgid "  ── Capacidad (estimada) ──"
+msgstr ""
+
+msgid "  ── Normalidad (prueba de normalidad) ──"
+msgstr ""
+
+msgid "  ── Tendencia ──"
+msgstr ""
+
+msgid "  ── Valores atípicos (IQR) ──"
+msgstr ""
+
+msgid "% Acuerdo global vs referencia"
+msgstr ""
+
+msgid "%Contribución Gage R&R"
+msgstr ""
+
+msgid "%Contribución parte a parte"
+msgstr ""
+
+msgid "%Contribución repetibilidad"
+msgstr ""
+
+msgid "%Contribución reproducibilidad"
+msgstr ""
+
+msgid "%Var. estudio Gage R&R"
+msgstr ""
 
 msgid "'aoql' debe estar en (0, 1)."
 msgstr ""
@@ -175,6 +560,39 @@ msgstr ""
 msgid "'{name}' no tiene valores válidos tras eliminar NaN/inf."
 msgstr ""
 
+#, python-brace-format
+msgid "1 punto a más de {k} desviaciones estándar de la línea central"
+msgstr ""
+
+msgid "1 punto fuera de los límites de control"
+msgstr ""
+
+msgid "1 punto fuera de los percentiles de la distribución geométrica"
+msgstr ""
+
+#, python-brace-format
+msgid "1 punto fuera de los percentiles de la distribución {distribution}"
+msgstr ""
+
+msgid "AOQL (%)"
+msgstr ""
+
+msgid "AQL (%)"
+msgstr ""
+
+#, python-brace-format
+msgid "Análisis de capacidad (no normal) - distribución {distribution}"
+msgstr ""
+
+msgid "Análisis de capacidad del proceso (distribución normal)"
+msgstr ""
+
+msgid "Análisis de concordancia por atributos"
+msgstr ""
+
+msgid "Asimetría"
+msgstr ""
+
 msgid "Box-Cox requiere datos estrictamente positivos."
 msgstr ""
 
@@ -182,7 +600,36 @@ msgstr ""
 msgid "Box-Cox requiere que {name} sea positivo."
 msgstr ""
 
+msgid "CPL"
+msgstr ""
+
+msgid "CPU"
+msgstr ""
+
+msgid "CV (%)"
+msgstr ""
+
 msgid "Cada etapa necesita al menos 2 subgrupos."
+msgstr ""
+
+msgid "Capacidad"
+msgstr ""
+
+#, python-brace-format
+msgid "Carta de control {kind}"
+msgstr ""
+
+#, python-brace-format
+msgid "Carta de corridas  N={n}  Mediana={median:.5g}"
+msgstr ""
+
+msgid "Cg"
+msgstr ""
+
+msgid "Cgk"
+msgstr ""
+
+msgid "Cobertura (p)"
 msgstr ""
 
 #, python-brace-format
@@ -212,14 +659,78 @@ msgstr ""
 msgid "Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."
 msgstr ""
 
+msgid "Confianza (1−α)"
+msgstr ""
+
+msgid "Confianza alcanzada"
+msgstr ""
+
+msgid "Cp"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Cp = {cp:.2f} < 1.0: el proceso no es capaz con las especificaciones "
+"dadas."
+msgstr ""
+
+msgid "Cp estimado"
+msgstr ""
+
+msgid "Cpk"
+msgstr ""
+
+#, python-brace-format
+msgid "Cpk = {cpk:.2f} < 1.0: el proceso no está centrado o no es capaz."
+msgstr ""
+
+msgid "Cpk estimado"
+msgstr ""
+
+msgid "Cpm"
+msgstr ""
+
+msgid "Curtosis"
+msgstr ""
+
 msgid "D'Agostino-Pearson requiere al menos 8 observaciones."
+msgstr ""
+
+msgid "DPMO"
 msgstr ""
 
 msgid "Datos 1-D: indique 'subgroup_size' o 'subgroup', o pase una matriz 2-D."
 msgstr ""
 
+msgid "Desv.Est."
+msgstr ""
+
+msgid "Desv.Est. (dentro)"
+msgstr ""
+
+msgid "Desv.Est. (general)"
+msgstr ""
+
+msgid "Diagnóstico"
+msgstr ""
+
+msgid "Dirección tendencia"
+msgstr ""
+
+msgid "Distribución"
+msgstr ""
+
 #, python-brace-format
 msgid "Distribución no soportada: {distribution!r}. Opciones: {options}"
+msgstr ""
+
+msgid "Distribución normal"
+msgstr ""
+
+msgid "Dos amarillas consecutivas en el mismo lado — ajustar"
+msgstr ""
+
+msgid "Dos amarillas consecutivas en lados opuestos — varianza"
 msgstr ""
 
 msgid "EWMA/CUSUM/MA requieren subgrupos de igual tamaño (sin valores faltantes)."
@@ -253,6 +764,25 @@ msgstr ""
 msgid "Especifica exactamente uno de 'ltpd' o 'aoql'."
 msgstr ""
 
+msgid "Esperado"
+msgstr ""
+
+msgid "Esperado dentro"
+msgstr ""
+
+msgid "Esperado general"
+msgstr ""
+
+msgid "Estadístico normalidad"
+msgstr ""
+
+#, python-brace-format
+msgid "Estudio Tipo 1  (N={n}  Ref={reference})"
+msgstr ""
+
+msgid "Factor k"
+msgstr ""
+
 msgid "Falta el tamaño de la muestra 'n'."
 msgstr ""
 
@@ -262,6 +792,15 @@ msgstr ""
 
 #, python-brace-format
 msgid "Forma del array {shape} ≠ ({parts}, {operators}, {replicates})."
+msgstr ""
+
+msgid "Función recomendada"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Gage R&R ({method}) — {parts} partes × {operators} operadores × "
+"{replicates} réplicas"
 msgstr ""
 
 msgid "Hay conteos de defectuosos mayores que el tamaño de la muestra."
@@ -280,10 +819,57 @@ msgstr ""
 msgid "Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."
 msgstr ""
 
+msgid "Intercepto"
+msgstr ""
+
+#, python-brace-format
+msgid "Intervalo de tolerancia ({method}, {sides})"
+msgstr ""
+
+msgid "Kappa de Fleiss (entre operadores)"
+msgstr ""
+
+msgid "Kappa global vs referencia"
+msgstr ""
+
+msgid "LC"
+msgstr ""
+
+msgid "LCI"
+msgstr ""
+
+msgid "LCS"
+msgstr ""
+
+msgid "LEI"
+msgstr ""
+
+msgid "LES"
+msgstr ""
+
+#, python-brace-format
+msgid "LI = {lower:.5g}"
+msgstr ""
+
+#, python-brace-format
+msgid "LS = {upper:.5g}"
+msgstr ""
+
+msgid "LTPD (%)"
+msgstr ""
+
+msgid "LTPD (β=0.10) (%)"
+msgstr ""
+
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr ""
 
 msgid "La carta no tiene media/covarianza calculadas para este punto."
+msgstr ""
+
+msgid ""
+"La distribución no es normal (p ≤ 0.05). Considera transformación o "
+"análisis no paramétrico."
 msgstr ""
 
 #, python-brace-format
@@ -324,6 +910,9 @@ msgid ""
 "pase datos 3-D."
 msgstr ""
 
+msgid "Lados"
+msgstr ""
+
 msgid "Laney requiere al menos 2 puntos por etapa."
 msgstr ""
 
@@ -334,6 +923,15 @@ msgid "Las duraciones deben ser positivas (no se admiten duraciones iguales a 0)
 msgstr ""
 
 msgid "Las frecuencias no pueden ser negativas."
+msgstr ""
+
+msgid "Linealidad"
+msgstr ""
+
+msgid "Linealidad (%)"
+msgstr ""
+
+msgid "Linealidad y sesgo"
 msgstr ""
 
 #, python-brace-format
@@ -366,13 +964,61 @@ msgstr ""
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr ""
 
+msgid "Límite inferior"
+msgstr ""
+
+msgid "Límite superior"
+msgstr ""
+
+msgid "MR_prom"
+msgstr ""
+
+msgid "Media"
+msgstr ""
+
+msgid "Mediana"
+msgstr ""
+
+msgid "Mult. estudio (K)"
+msgstr ""
+
 msgid "Muy pocos datos para el número de variables (grados de libertad <= 0)."
+msgstr ""
+
+msgid "Máximo"
+msgstr ""
+
+msgid "Método"
+msgstr ""
+
+msgid "Mínimo"
+msgstr ""
+
+msgid "N"
+msgstr ""
+
+msgid "N (tamaño de lote)"
+msgstr ""
+
+msgid "N bajo mediana"
 msgstr ""
 
 msgid "N debe ser ≥ 2."
 msgstr ""
 
+msgid "N sobre mediana"
+msgstr ""
+
+msgid "N/D"
+msgstr ""
+
+msgid "NDC (núm. categorías distintas)"
+msgstr ""
+
 msgid "Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma."
+msgstr ""
+
+msgid "Nivel Sigma"
 msgstr ""
 
 #, python-brace-format
@@ -388,15 +1034,142 @@ msgid ""
 "2 observaciones consecutivas de la misma parte."
 msgstr ""
 
+msgid "No normal (p ≤ 0.05)"
+msgstr ""
+
 #, python-brace-format
 msgid "Nodo desconocido en el árbol: {node!r}"
+msgstr ""
+
+msgid "Normal (p > 0.05)"
+msgstr ""
+
+msgid "Nº de valores referencia"
+msgstr ""
+
+msgid "Objetivo"
+msgstr ""
+
+msgid "Observado"
+msgstr ""
+
+msgid "Operadores (o)"
+msgstr ""
+
+msgid "PPL"
+msgstr ""
+
+msgid "PPM esp < LEI"
+msgstr ""
+
+msgid "PPM esp > LES"
+msgstr ""
+
+msgid "PPM esp total"
+msgstr ""
+
+msgid "PPM esp. dentro total"
+msgstr ""
+
+msgid "PPM esp. general total"
+msgstr ""
+
+msgid "PPM obs < LEI"
+msgstr ""
+
+msgid "PPM obs > LES"
+msgstr ""
+
+msgid "PPM obs total"
+msgstr ""
+
+msgid "PPU"
 msgstr ""
 
 msgid "Para parámetros históricos Weibull indique 'shape' y 'scale' juntos."
 msgstr ""
 
+msgid "Partes (p)"
+msgstr ""
+
+msgid "Pendiente"
+msgstr ""
+
+msgid "Percentil 0.135%"
+msgstr ""
+
+msgid "Percentil 99.865%"
+msgstr ""
+
+msgid "Plan"
+msgstr ""
+
+#, python-brace-format
+msgid "Plan Dodge-Romig ({plan_type})"
+msgstr ""
+
+#, python-brace-format
+msgid "Plan de muestreo por atributos ({method})"
+msgstr ""
+
+#, python-brace-format
+msgid "Plan de muestreo por variables ({method})"
+msgstr ""
+
+msgid "Pp"
+msgstr ""
+
+msgid "Ppk"
+msgstr ""
+
+#, python-brace-format
+msgid "Pre-control  N={n}  LEI={lsl:.5g}  LES={usl:.5g}  Centro={center:.5g}"
+msgstr ""
+
+msgid "Promedio de proceso (%)"
+msgstr ""
+
 #, python-brace-format
 msgid "Pruebas no válidas: {bad}. Use enteros entre 1 y 8."
+msgstr ""
+
+msgid "Punto rojo — detener y corregir"
+msgstr ""
+
+msgid "Racha más larga (arriba/abajo)"
+msgstr ""
+
+msgid "Racha más larga (mediana)"
+msgstr ""
+
+msgid "Rachas arriba/abajo"
+msgstr ""
+
+msgid "Rachas esperadas (arriba/abajo)"
+msgstr ""
+
+msgid "Rachas esperadas (mediana)"
+msgstr ""
+
+msgid "Rachas sobre/bajo mediana"
+msgstr ""
+
+msgid "Referencia"
+msgstr ""
+
+msgid "Resumen"
+msgstr ""
+
+msgid "R²"
+msgstr ""
+
+msgid "Réplicas (r)"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Se detectó tendencia {direction}. Verifica causas asignables antes de "
+"calcular capacidad."
 msgstr ""
 
 #, python-brace-format
@@ -435,6 +1208,30 @@ msgstr ""
 msgid "Se obtuvo una sigma igual a cero (datos sin variación)."
 msgstr ""
 
+msgid "Sesgo"
+msgstr ""
+
+msgid "Sesgo (%)"
+msgstr ""
+
+msgid "Sesgo promedio"
+msgstr ""
+
+msgid "Sesgo promedio (%)"
+msgstr ""
+
+msgid "Tiene tendencia"
+msgstr ""
+
+msgid "Tipo de especificación"
+msgstr ""
+
+msgid "Tipo de plan"
+msgstr ""
+
+msgid "Tipo1"
+msgstr ""
+
 msgid "Todas las duraciones son iguales; no se puede ajustar la Weibull."
 msgstr ""
 
@@ -444,13 +1241,125 @@ msgstr ""
 msgid "Todos los datos son iguales; no se puede probar normalidad."
 msgstr ""
 
+msgid "Tolerancia"
+msgstr ""
+
 msgid "Una carta multivariada necesita al menos 2 variables."
+msgstr ""
+
+msgid "Valores atípicos (IQR)"
+msgstr ""
+
+msgid "Var. estudio Gage R&R"
+msgstr ""
+
+msgid "Var. estudio total"
+msgstr ""
+
+msgid "Variación de estudio"
+msgstr ""
+
+msgid "Varianza Gage R&R"
+msgstr ""
+
+msgid "Varianza interacción (IA²)"
+msgstr ""
+
+msgid "Varianza operador (AV²)"
+msgstr ""
+
+msgid "Varianza parte a parte (PV²)"
+msgstr ""
+
+msgid "Varianza repetibilidad (EV²)"
+msgstr ""
+
+msgid "Varianza reproducibilidad"
+msgstr ""
+
+msgid "Varianza total"
+msgstr ""
+
+msgid "Z.Bench (dentro)"
+msgstr ""
+
+msgid "Z.Bench (general)"
+msgstr ""
+
+msgid "alfa"
+msgstr ""
+
+msgid "c (número de aceptación)"
+msgstr ""
+
+msgid "centro"
+msgstr ""
+
+msgid "corridas"
+msgstr ""
+
+msgid "creciente"
+msgstr ""
+
+msgid "decreciente"
+msgstr ""
+
+msgid "descripcion"
 msgstr ""
 
 msgid "diagnose requiere al menos 4 observaciones."
 msgstr ""
 
+msgid "distribución"
+msgstr ""
+
+msgid "escala"
+msgstr ""
+
+msgid "estadístico"
+msgstr ""
+
+msgid "etapa"
+msgstr ""
+
+msgid "fase"
+msgstr ""
+
+msgid "forma"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.capability_analysis(datos, {args})"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.capability_boxcox(datos, {args})"
+msgstr ""
+
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.imr_chart(datos)"
+msgstr ""
+
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.run_chart(datos)"
+msgstr ""
+
+msgid "k (factor de aceptabilidad)"
+msgstr ""
+
+msgid "longitud"
+msgstr ""
+
 msgid "lsl debe ser menor que usl."
+msgstr ""
+
+msgid "media"
 msgstr ""
 
 msgid "method debe ser 'anderson', 'shapiro' o 'dagostino'."
@@ -460,8 +1369,26 @@ msgstr ""
 msgid "mode debe ser 'auto', 'cli' o 'widget'; se recibió {mode!r}."
 msgstr ""
 
+msgid "método"
+msgstr ""
+
+msgid "n (tamaño de muestra)"
+msgstr ""
+
 #, python-brace-format
 msgid "n={n} insuficiente para el intervalo no paramétrico solicitado."
+msgstr ""
+
+msgid "n_puntos"
+msgstr ""
+
+msgid "n_subgrupo"
+msgstr ""
+
+msgid "objetivo"
+msgstr ""
+
+msgid "observación"
 msgstr ""
 
 msgid ""
@@ -471,13 +1398,144 @@ msgid ""
 "    pip install pccpy[excel]"
 msgstr ""
 
+msgid "p Agrupamiento (clustering)"
+msgstr ""
+
+msgid "p Mezclas (mixtures)"
+msgstr ""
+
+msgid "p Oscilación (oscillation)"
+msgstr ""
+
+msgid "p Tendencias (trends)"
+msgstr ""
+
+msgid "p-valor (intercepto=0)"
+msgstr ""
+
+msgid "p-valor (pendiente=0)"
+msgstr ""
+
+msgid "p-valor (sesgo=0)"
+msgstr ""
+
+msgid "p-valor normalidad"
+msgstr ""
+
+msgid "panel"
+msgstr ""
+
+msgid "partes"
+msgstr ""
+
+msgid "peso"
+msgstr ""
+
+msgid "pesos"
+msgstr ""
+
+msgid "prueba"
+msgstr ""
+
+msgid "pruebas_fallidas"
+msgstr ""
+
+#, python-brace-format
+msgid "puntaje acumulado de zona >= {score:g}"
+msgstr ""
+
+msgid "punto"
+msgstr ""
+
+msgid "puntos"
+msgstr ""
+
+msgid "reinicio"
+msgstr ""
+
 msgid "run_chart requiere al menos 3 observaciones."
+msgstr ""
+
+msgid "señal"
+msgstr ""
+
+msgid "sigma_conocida"
+msgstr ""
+
+msgid "sigma_dentro"
+msgstr ""
+
+msgid "sigma_entre"
+msgstr ""
+
+msgid "sigma_entre_dentro"
 msgstr ""
 
 msgid "sigma_method debe ser 'mr', 'median_mr' o 'mssd'."
 msgstr ""
 
 msgid "sigma_method debe ser 'rbar', 'sbar' o 'pooled'."
+msgstr ""
+
+msgid "subgrupos"
+msgstr ""
+
+msgid "t"
+msgstr ""
+
+msgid "tamaño"
+msgstr ""
+
+msgid "valor"
+msgstr ""
+
+msgid "valor_inferior"
+msgstr ""
+
+msgid "variables"
+msgstr ""
+
+msgid "zona"
+msgstr ""
+
+#, python-brace-format
+msgid "{count} valor(es) atípico(s) detectado(s). Investiga su origen."
+msgstr ""
+
+#, python-brace-format
+msgid "{kind} objetivo (%)"
+msgstr ""
+
+#, python-brace-format
+msgid "{k} de {k1} puntos a más de 1 desviación estándar (mismo lado)"
+msgstr ""
+
+#, python-brace-format
+msgid "{k} de {k1} puntos a más de 2 desviaciones estándar (mismo lado)"
+msgstr ""
+
+#, python-brace-format
+msgid "{k} puntos consecutivos a menos de 1 desviación estándar (ambos lados)"
+msgstr ""
+
+#, python-brace-format
+msgid "{k} puntos consecutivos a más de 1 desviación estándar (ambos lados)"
+msgstr ""
+
+#, python-brace-format
+msgid "{k} puntos consecutivos alternando arriba y abajo"
+msgstr ""
+
+#, python-brace-format
+msgid "{k} puntos consecutivos del mismo lado de la línea central"
+msgstr ""
+
+#, python-brace-format
+msgid "{k} puntos consecutivos, todos ascendentes o todos descendentes"
+msgstr ""
+
+#, python-brace-format
+msgid "{method}: estadístico = {statistic:.4f}, valor p {relation}{p} (n = {n})"
 msgstr ""
 
 #, python-brace-format
@@ -493,5 +1551,11 @@ msgstr ""
 
 #, python-brace-format
 msgid "{what} debe ser uno de {allowed} (recibido: {method!r})."
+msgstr ""
+
+msgid "α (riesgo productor)"
+msgstr ""
+
+msgid "β (riesgo consumidor = 0.10)"
 msgstr ""
 
