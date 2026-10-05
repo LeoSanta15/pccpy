@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -105,11 +105,27 @@ msgstr "Phase I and Phase II — freezing historical limits"
 msgid "En un estudio de **Fase I** calculas los límites con datos históricos y verificas que el proceso estaba bajo control. En **Fase II** aplicas esos mismos límites a producción nueva para detectar cambios."
 msgstr "In a **Phase I** study you compute the limits with historical data and verify that the process was in control. In **Phase II** you apply those same limits to new production to detect changes."
 
-msgid "Para cartas de subgrupos usa los mismos parámetros:"
-msgstr "For subgroup charts use the same parameters:"
+msgid "`phase_one()` hace la Fase I **de forma iterativa**: calcula la carta, excluye los puntos con señal, recalcula los límites y repite hasta que no quede ninguna señal. Con `phase2()` aplicas los límites resultantes a los datos nuevos:"
+msgstr "`phase_one()` does Phase I **iteratively**: it computes the chart, excludes the points with signals, recomputes the limits and repeats until no signal is left. With `phase2()` you apply the resulting limits to the new data:"
+
+#, python-format
+msgid "Funciona con `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` y `u_chart` (en las de atributos, pasa `n=`). Tres salvaguardas evitan «limpiar» un proceso que no es estable: `max_iterations`, `min_points` y `max_excluded` (por defecto no se excluye más del 25 % de los puntos); si saltan, el resultado no converge y se avisa. **Excluye puntos solo si has encontrado y corregido su causa especial.**"
+msgstr "It works with `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` and `u_chart` (for attribute charts, pass `n=`). Three safeguards prevent \"cleaning\" a process that is not stable: `max_iterations`, `min_points` and `max_excluded` (by default no more than 25 % of the points are excluded); if they trip, the result does not converge and a warning is issued. **Exclude points only if you have found and corrected their special cause.**"
+
+msgid "Si prefieres hacerlo a mano, fija la media y la sigma estimadas (las claves de `params` son `'media'` y `'sigma'`):"
+msgstr "If you prefer to do it by hand, fix the estimated mean and sigma (the `params` keys are `'media'` and `'sigma'`):"
 
 msgid "Para marcar múltiples etapas dentro de un mismo gráfico (Minitab \"stages\"):"
 msgstr "To mark multiple stages within a single plot (Minitab \"stages\"):"
+
+msgid "Fechas (o lotes) en el eje x"
+msgstr "Dates (or lots) on the x axis"
+
+msgid "Si los datos son una serie de pandas con **índice de fechas** (o de texto, como números de lote), la carta las conserva: el eje x se rotula con ellas, `to_frame()` y `violations()` añaden la columna `etiqueta` y `summary()` muestra la fecha junto a cada punto. Los puntos siguen graficándose por orden de muestreo (como Minitab); las fechas solo rotulan el eje."
+msgstr "If the data are a pandas Series with a **date index** (or a text index, such as lot numbers), the chart keeps them: the x axis is labeled with them, `to_frame()` and `violations()` add the `label` column and `summary()` shows the date next to each point. Points are still plotted in sampling order (like Minitab); the dates only label the axis."
+
+msgid "También funciona con subgrupos (`subgroup_size=`, un DataFrame con fechas en las filas, o `subgroup=` con fechas) y con las cartas de atributos y multivariadas. Para otras etiquetas, usa `carta.with_labels([...])` (una por punto graficado)."
+msgstr "It also works with subgroups (`subgroup_size=`, a DataFrame with dates in the rows, or `subgroup=` with dates) and with attribute and multivariate charts. For other labels, use `chart.with_labels([...])` (one per plotted point)."
 
 msgid "Guardar gráficos"
 msgstr "Saving plots"
@@ -163,4 +179,7 @@ msgstr "**Normality, Pareto and constants**: {doc}`referencia/normalidad_y_herra
 #, python-brace-format
 msgid "**Objetos de resultado** (`ControlChart`, `MultivariateChart`, `Panel`, y los resultados de capacidad, normalidad y análisis de proceso): {doc}`referencia/resultados`."
 msgstr "**Result objects** (`ControlChart`, `MultivariateChart`, `Panel`, and the capability, normality and process analysis results): {doc}`referencia/resultados`."
+
+#~ msgid "Para cartas de subgrupos usa los mismos parámetros:"
+#~ msgstr "For subgroup charts use the same parameters:"
 

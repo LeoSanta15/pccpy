@@ -14,6 +14,7 @@ from __future__ import annotations
 import numpy as np
 
 from .._i18n import N_, tr
+from .._labels import con_etiquetas
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
 from .attributes import _prep
@@ -71,6 +72,7 @@ def _ewma_attr(code: str, kind: str, ylabel: str,
     return build_chart(kind, N, None, stage_fn, (1,), {1: k})
 
 
+@con_etiquetas
 def ewma_p_chart(
     defectives,
     n,
@@ -97,6 +99,7 @@ def ewma_p_chart(
     return _ewma_attr("p", "EWMA-P", N_("Proporción EWMA"), defectives, n, p, weight, k)
 
 
+@con_etiquetas
 def ewma_c_chart(
     defects,
     *,
@@ -120,6 +123,7 @@ def ewma_c_chart(
     return _ewma_attr("c", "EWMA-C", N_("Conteo EWMA"), defects, None, c, weight, k)
 
 
+@con_etiquetas
 def ewma_u_chart(
     defects,
     n,
@@ -181,6 +185,7 @@ def _cusum_attr(code: str, kind: str, ylabel: str,
     return build_chart(kind, N, None, stage_fn, (1,), None)
 
 
+@con_etiquetas
 def cusum_p_chart(
     defectives,
     n,
@@ -211,6 +216,7 @@ def cusum_p_chart(
     return _cusum_attr("p", "CUSUM-P", N_("Suma acumulada P (σ)"), defectives, n, p, h, k)
 
 
+@con_etiquetas
 def cusum_c_chart(
     defects,
     *,
@@ -234,6 +240,7 @@ def cusum_c_chart(
     return _cusum_attr("c", "CUSUM-C", N_("Suma acumulada C (σ)"), defects, None, c, h, k)
 
 
+@con_etiquetas
 def cusum_u_chart(
     defects,
     n,

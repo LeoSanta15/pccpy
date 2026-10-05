@@ -22,6 +22,7 @@ import pandas as pd
 from scipy import optimize, stats
 
 from ._i18n import N_, tr
+from ._labels import con_etiquetas
 from .charts._engine import StagePanel, build_chart, full
 from .results import MultivariateChart
 
@@ -170,6 +171,7 @@ def _t2_reference(p, m, n, alpha, phase):
     return float(center), float(kk * stats.f.ppf(q, p, v2))
 
 
+@con_etiquetas
 def t2_chart(
     data,
     *,
@@ -273,6 +275,7 @@ def _gv_constants(p: int, n: int):
     return float(b1), float(b2)
 
 
+@con_etiquetas
 def generalized_variance_chart(
     data,
     *,
@@ -377,6 +380,7 @@ def mewma_limit(p: int, weight: float = 0.1, arl: float = 200.0) -> float:
     return float(optimize.brentq(f, lo, hi, xtol=1e-6))
 
 
+@con_etiquetas
 def mewma_chart(
     data,
     *,
@@ -479,6 +483,7 @@ def mcusum_limit(p: int, k: float = 0.5, arl: float = 200.0) -> float:
     return float(optimize.brentq(f, lo, hi, xtol=1e-6))
 
 
+@con_etiquetas
 def mcusum_chart(
     data,
     *,

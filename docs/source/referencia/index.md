@@ -5,6 +5,7 @@
 
 variables
 atributos
+fase1
 tiempo_ponderado
 avanzadas
 multivariadas

@@ -67,6 +67,7 @@ from .multivariate import (
     t2_chart,
 )
 from .normality import NormalityResult, normality_test
+from .phase1 import PhaseOneIteration, PhaseOneResult, phase_one
 from .plotting import (
     capability_sixpack,
     plot_attribute_agreement,
@@ -101,6 +102,8 @@ __all__ = [
     "NonNormalCapabilityResult",
     "NormalityResult",
     "Panel",
+    "PhaseOneIteration",
+    "PhaseOneResult",
     "PreControlResult",
     "RunChartResult",
     "SamplingPlanAttributes",
@@ -156,6 +159,7 @@ __all__ = [
     "np_chart",
     "p_chart",
     "pareto",
+    "phase_one",
     "plot_attribute_agreement",
     "plot_capability",
     "plot_control_chart",

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 00:53+0000\n"
+"POT-Creation-Date: 2026-10-05 22:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -436,6 +436,10 @@ msgid "    Operador          {var:10.5f}"
 msgstr ""
 
 #, python-brace-format
+msgid "    Pasada {iteration}: {n} puntos, {flagged} con señal"
+msgstr ""
+
+#, python-brace-format
 msgid "    Pp={pp}  PPL={ppl}  PPU={ppu}  Ppk={ppk}  Cpm={cpm}"
 msgstr ""
 
@@ -451,6 +455,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "    Z.Bench={z}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"    [{panel}] punto {point} ({label}): prueba {test} (valor {value:.6g}) "
+"- {description}"
 msgstr ""
 
 #, python-brace-format
@@ -508,6 +518,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Asimetría       : {skewness:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  Aviso: quedan señales en otros paneles ({panels}); no se excluyeron por"
+" no contar para la Fase I"
 msgstr ""
 
 #, python-brace-format
@@ -624,6 +640,10 @@ msgid "  Lote N={N}  Muestra n={n}  k={k:.4f}"
 msgstr ""
 
 #, python-brace-format
+msgid "  Límites congelados para la Fase II: {limits}"
+msgstr ""
+
+#, python-brace-format
 msgid "  Media           : {mean:.4f}"
 msgstr ""
 
@@ -690,7 +710,15 @@ msgid "  Pruebas solicitadas: {tests}"
 msgstr ""
 
 #, python-brace-format
+msgid "  Puntos excluidos: {points}"
+msgstr ""
+
+#, python-brace-format
 msgid "  Puntos marcados: {count}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Puntos: {n} → {kept} (excluidos: {excluded})"
 msgstr ""
 
 #, python-brace-format
@@ -703,6 +731,14 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Reproducibilidad    {var:10.5f}   {pct:6.2f}%"
+msgstr ""
+
+#, python-brace-format
+msgid "  Resultado: NO convergió ({reason})"
+msgstr ""
+
+#, python-brace-format
+msgid "  Resultado: el proceso quedó bajo control tras {iters} pasada(s)"
 msgstr ""
 
 msgid "  Resultado: sin puntos fuera de control"
@@ -862,10 +898,19 @@ msgstr ""
 msgid "'k' debe ser >= 0."
 msgstr ""
 
+#, python-brace-format
+msgid "'labels' debe tener una etiqueta por cada punto graficado ({n})."
+msgstr ""
+
 msgid "'length' debe ser un entero >= 2."
 msgstr ""
 
 msgid "'ltpd' debe estar en (0, 1)."
+msgstr ""
+
+msgid ""
+"'max_iterations' debe ser >= 0, 'max_excluded' estar en (0, 1] y "
+"'min_points' ser >= 2."
 msgstr ""
 
 msgid "'measurements' y 'references' deben tener la misma longitud."
@@ -1439,6 +1484,13 @@ msgid "Falta la media histórica de la parte {lab!r} en 'mu'."
 msgstr ""
 
 #, python-brace-format
+msgid "Fase I: carta {kind}"
+msgstr ""
+
+msgid "Fecha"
+msgstr ""
+
+#, python-brace-format
 msgid "Forma del array {shape} ≠ ({parts}, {operators}, {replicates})."
 msgstr ""
 
@@ -1640,6 +1692,29 @@ msgstr ""
 
 #, python-brace-format
 msgid "LTPD={v:.3g}%"
+msgstr ""
+
+msgid "La Fase I necesita al menos una prueba de causas especiales ('tests')."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"La Fase I necesita al menos {min_points} puntos (hay {n}); ajusta "
+"'min_points' si es a propósito."
+msgstr ""
+
+msgid "La Fase I no admite 'stages': hazla por separado en cada etapa."
+msgstr ""
+
+msgid "La Fase I no admite valores faltantes ni infinitos: elimínalos antes."
+msgstr ""
+
+#, python-brace-format
+msgid "La Fase I no convergió: {reason}."
+msgstr ""
+
+#, python-brace-format
+msgid "La Fase I no está soportada para esta carta; usa {charts}."
 msgstr ""
 
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
@@ -2496,6 +2571,9 @@ msgstr ""
 msgid "etapa"
 msgstr ""
 
+msgid "etiqueta"
+msgstr ""
+
 msgid "fase"
 msgstr ""
 
@@ -2534,6 +2612,9 @@ msgid ""
 "ipywidgets no está instalado. Instálalo con:\n"
 "    pip install ipywidgets\n"
 "Cambiando a modo interactivo (CLI)…"
+msgstr ""
+
+msgid "iteración"
 msgstr ""
 
 msgid "k (factor de aceptabilidad)"
@@ -2661,13 +2742,28 @@ msgstr ""
 msgid "puntos"
 msgstr ""
 
+msgid "quedarían menos puntos que el mínimo"
+msgstr ""
+
 msgid "reinicio"
 msgstr ""
 
 msgid "run_chart requiere al menos 3 observaciones."
 msgstr ""
 
+msgid "se alcanzó el máximo de pasadas"
+msgstr ""
+
+msgid "se excluiría una fracción excesiva de los puntos: el proceso no es estable"
+msgstr ""
+
 msgid "señal"
+msgstr ""
+
+msgid "señales"
+msgstr ""
+
+msgid "sigma"
 msgstr ""
 
 msgid "sigma_conocida"

@@ -6,11 +6,13 @@ import numpy as np
 from .._constants import c4, c5, d2, d3
 from .._data import as_1d, to_subgroups
 from .._i18n import N_, tr
+from .._labels import con_etiquetas
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, check_method, full
 
 
+@con_etiquetas
 def imr_chart(
     x,
     *,
@@ -109,6 +111,7 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
     return build_chart(kind, total, stages, stage_fn, tests, test_params)
 
 
+@con_etiquetas
 def xbar_r_chart(
     data,
     *,
@@ -142,6 +145,7 @@ def xbar_r_chart(
                        mu, sigma, stages, tests, test_params, value=value)
 
 
+@con_etiquetas
 def xbar_s_chart(
     data,
     *,

@@ -5,6 +5,7 @@ import numpy as np
 
 from .._data import as_1d, to_subgroups
 from .._i18n import N_, tr
+from .._labels import con_etiquetas
 from .._sigma import sigma_individuals, sigma_subgroups
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
@@ -27,6 +28,7 @@ def _series(data, subgroup_size, subgroup, value=None):
     return means, n, sigma, float(np.nanmean(g_lim))
 
 
+@con_etiquetas
 def ewma_chart(
     data,
     *,
@@ -73,6 +75,7 @@ def ewma_chart(
     return build_chart("EWMA", len(means), None, stage_fn, (1,), {1: k})
 
 
+@con_etiquetas
 def cusum_chart(
     data,
     *,

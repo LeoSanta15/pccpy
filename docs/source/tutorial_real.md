@@ -164,29 +164,21 @@ nuevos (Fase II):
 x_fase1 = df.loc[df["lote"] <= 20, "diametro_mm"].values
 g_fase1 = x_fase1.reshape(-1, 4)
 
-carta_fase1 = pp.xbar_r_chart(g_fase1, tests="all")
-params = carta_fase1.params[0]  # parámetros de la etapa 1
-
-# Extraer mu y sigma estimados
-mu_est      = params["mu"]
-sigma_est   = params["sigma"]
-print(f"Fase I:  μ = {mu_est:.4f},  σ = {sigma_est:.4f}")
+fase1 = pp.phase_one(pp.xbar_r_chart, g_fase1, tests=(1, 2))   # excluye lotes con señal y recalcula
+print(fase1.summary())
+print(fase1.limits)          # {'mu': ..., 'sigma': ...}: los límites congelados
 
 # Fase II: aplicar esos límites a los lotes 21-30
 g_fase2 = df.loc[df["lote"] > 20, "diametro_mm"].values.reshape(-1, 4)
 
-carta_fase2 = pp.xbar_r_chart(
-    g_fase2,
-    mu=mu_est,
-    sigma_within=sigma_est,
-    tests=(1, 2),
-)
+carta_fase2 = fase1.phase2(g_fase2, tests=(1, 2))
 carta_fase2.plot()
 carta_fase2.save_plot("carta_fase2.png")
 ```
 
-> Los parámetros `mu` y `sigma_within` fijan los límites de control usando las
-> estimaciones de Fase I, en lugar de recalcularlos con los datos de Fase II.
+> `phase_one()` excluye los lotes con señal y recalcula hasta que el proceso queda estable; `phase2()`
+> aplica `mu` y `sigma` de la Fase I a los datos nuevos en lugar de recalcularlos. Excluye lotes solo si
+> encuentras y corriges su causa especial.
 
 ---
 

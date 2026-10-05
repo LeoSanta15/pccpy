@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-05 22:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -80,8 +80,8 @@ msgstr "Step 5 — Phase I and Phase II analysis"
 msgid "La señal detectada en el lote 21 sugiere un cambio de proceso. El flujo estándar es calcular los límites con los datos \"estables\" (Fase I) y aplicarlos a los datos nuevos (Fase II):"
 msgstr "The signal detected at lot 21 suggests a process change. The standard flow is to compute the limits with the \"stable\" data (Phase I) and apply them to the new data (Phase II):"
 
-msgid "Los parámetros `mu` y `sigma_within` fijan los límites de control usando las estimaciones de Fase I, en lugar de recalcularlos con los datos de Fase II."
-msgstr "The parameters `mu` and `sigma_within` fix the control limits using the Phase I estimates, instead of recomputing them with the Phase II data."
+msgid "`phase_one()` excluye los lotes con señal y recalcula hasta que el proceso queda estable; `phase2()` aplica `mu` y `sigma` de la Fase I a los datos nuevos en lugar de recalcularlos. Excluye lotes solo si encuentras y corriges su causa especial."
+msgstr "`phase_one()` excludes the lots with signals and recomputes until the process is stable; `phase2()` applies the Phase I `mu` and `sigma` to the new data instead of recomputing them. Exclude lots only if you find and correct their special cause."
 
 msgid "Paso 6 — Intervalo de tolerancia"
 msgstr "Step 6 — Tolerance interval"
@@ -114,4 +114,7 @@ msgstr "{doc}`inicio_rapido` — more quick examples"
 #, python-brace-format
 msgid "{doc}`minitab` — equivalencias con Minitab"
 msgstr "{doc}`minitab` — equivalences with Minitab"
+
+#~ msgid "Los parámetros `mu` y `sigma_within` fijan los límites de control usando las estimaciones de Fase I, en lugar de recalcularlos con los datos de Fase II."
+#~ msgstr "The parameters `mu` and `sigma_within` fix the control limits using the Phase I estimates, instead of recomputing them with the Phase II data."
 

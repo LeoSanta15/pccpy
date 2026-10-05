@@ -6,6 +6,7 @@ import numpy as np
 from .._constants import d2
 from .._data import as_1d
 from .._i18n import N_, tr
+from .._labels import con_etiquetas
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
 
@@ -77,6 +78,7 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
     return build_chart(kind, c.size, stages, stage_fn, tests, test_params)
 
 
+@con_etiquetas
 def p_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
             test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta P: proporción de unidades defectuosas (n constante o variable)."""
@@ -84,6 +86,7 @@ def p_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
                             test_params, p, laney=False)
 
 
+@con_etiquetas
 def np_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
              test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta NP: número de defectuosos (n constante)."""
@@ -91,6 +94,7 @@ def np_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
                             test_params, p, laney=False)
 
 
+@con_etiquetas
 def c_chart(defects, *, c: float | None = None, stages=None, tests=(1,),
             test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta C: número de defectos por unidad de inspección (tamaño constante)."""
@@ -98,6 +102,7 @@ def c_chart(defects, *, c: float | None = None, stages=None, tests=(1,),
                             test_params, c, laney=False)
 
 
+@con_etiquetas
 def u_chart(defects, n, *, u: float | None = None, stages=None, tests=(1,),
             test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta U: defectos por unidad (tamaño de muestra constante o variable)."""
@@ -105,6 +110,7 @@ def u_chart(defects, n, *, u: float | None = None, stages=None, tests=(1,),
                             test_params, u, laney=False)
 
 
+@con_etiquetas
 def laney_p_chart(defectives, n, *, stages=None, tests=(1,),
                   test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta P' de Laney: corrige la sobredispersión/subdispersión de la carta P.
@@ -116,6 +122,7 @@ def laney_p_chart(defectives, n, *, stages=None, tests=(1,),
                             test_params, None, laney=True)
 
 
+@con_etiquetas
 def laney_u_chart(defects, n, *, stages=None, tests=(1,),
                   test_params: dict[int, float] | None = None) -> ControlChart:
     """Carta U' de Laney: corrige la sobredispersión/subdispersión de la carta U."""

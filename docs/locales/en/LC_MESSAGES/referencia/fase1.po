@@ -1,0 +1,180 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 22:06+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Fase I iterativa"
+msgstr "Iterative Phase I"
+
+msgid "``phase_one`` calcula la carta, excluye los puntos con señal, recalcula los límites y repite hasta que el proceso queda estable; ``PhaseOneResult.phase2`` aplica los límites resultantes a datos nuevos."
+msgstr "``phase_one`` computes the chart, excludes the points with signals, recomputes the limits and repeats until the process is stable; ``PhaseOneResult.phase2`` applies the resulting limits to new data."
+
+msgid "Fase I iterativa: excluye los puntos con señal, recalcula los límites y repite hasta que no quede ninguna."
+msgstr "Iterative Phase I: excludes the points with signals, recomputes the limits and repeats until none is left."
+
+msgid "En cada pasada se calcula la carta con los puntos que siguen incluidos; todos los puntos con alguna señal (en los paneles que cuentan, ver ``exclude_panels``) se excluyen y se vuelve a calcular. Termina cuando una carta no tiene señales (el proceso quedó estable: sus límites sirven para vigilar datos nuevos con :meth:`PhaseOneResult.phase2`) o cuando seguir excluyendo no es razonable (ver ``max_iterations``, ``min_points`` y ``max_excluded``). **Excluir puntos solo tiene sentido si se ha encontrado y corregido su causa especial**; si no, los límites quedan artificialmente estrechos."
+msgstr "On each pass the chart is computed with the points that are still included; all the points with any signal (in the panels that count, see ``exclude_panels``) are excluded and the chart is recomputed. It ends when a chart has no signals (the process is stable: its limits can be used to monitor new data with :meth:`PhaseOneResult.phase2`) or when continuing to exclude points is not reasonable (see ``max_iterations``, ``min_points`` and ``max_excluded``). **Excluding points only makes sense if their special cause has been found and corrected**; otherwise the limits are artificially narrow."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Función de la carta: ``imr_chart``, ``xbar_r_chart``, ``xbar_s_chart``, ``p_chart``, ``np_chart``, ``c_chart`` o ``u_chart``."
+msgstr "Chart function: ``imr_chart``, ``xbar_r_chart``, ``xbar_s_chart``, ``p_chart``, ``np_chart``, ``c_chart`` or ``u_chart``."
+
+msgid "Los datos de la Fase I, en el formato de esa carta. Con una serie de pandas con fechas, el resultado conserva las fechas. No debe contener valores faltantes."
+msgstr "The Phase I data, in the format of that chart. With a pandas Series with dates, the result keeps the dates. It must not contain missing values."
+
+msgid "Solo se excluyen los puntos con señal en estas pruebas (por defecto, todas las solicitadas en ``tests``)."
+msgstr "Only the points with a signal in these tests are excluded (by default, all those requested in ``tests``)."
+
+msgid "Paneles cuyas señales excluyen puntos. Por defecto, en ``imr_chart`` solo el panel ``'I'`` (un valor atípico dispara también el rango móvil de su vecino, que no es un punto anómalo) y, en las demás cartas, todos."
+msgstr "Panels whose signals exclude points. By default, in ``imr_chart`` only the ``'I'`` panel (an outlier also triggers the moving range of its neighbor, which is not an anomalous point) and, in the other charts, all of them."
+
+msgid "Máximo de recálculos tras la carta inicial (por defecto 10)."
+msgstr "Maximum number of recomputations after the initial chart (default 10)."
+
+msgid "No se excluyen puntos si quedarían menos de estos (por defecto 20; observaciones, subgrupos o muestras)."
+msgstr "No points are excluded if fewer than this many would remain (default 20; observations, subgroups or samples)."
+
+msgid "Fracción máxima de puntos que se pueden excluir en total (por defecto 0.25). Si se superara, se detiene sin excluir y el resultado no converge: un proceso que necesita descartar tantos puntos no está estable."
+msgstr "Maximum fraction of points that can be excluded in total (default 0.25). If it would be exceeded, it stops without excluding and the result does not converge: a process that needs to discard that many points is not stable."
+
+msgid "Argumentos de la función de la carta, como ``tests=(1, 2, 3)``, ``subgroup_size=5`` o ``n=…`` (en las cartas de atributos)."
+msgstr "Arguments of the chart function, such as ``tests=(1, 2, 3)``, ``subgroup_size=5`` or ``n=…`` (in attribute charts)."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*PhaseOneResult*"
+msgstr "*PhaseOneResult*"
+
+msgid "Muestra"
+msgstr "Raises"
+
+msgid "Si la carta no está soportada, no se pide ninguna prueba, hay valores no finitos o hay menos de     ``min_points`` puntos."
+msgstr "If the chart is not supported, no test is requested, there are non-finite values or there are fewer than ``min_points`` points."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Ejemplos"
+msgstr "Examples"
+
+msgid "Resultado de :func:`phase_one`."
+msgstr "Result of :func:`phase_one`."
+
+msgid "Atributos"
+msgstr "Attributes"
+
+msgid "chart"
+msgstr "chart"
+
+msgid "ControlChart"
+msgstr "ControlChart"
+
+msgid "Carta final, calculada solo con los puntos que no se excluyeron."
+msgstr "Final chart, computed only with the points that were not excluded."
+
+msgid "history"
+msgstr "history"
+
+msgid "list of PhaseOneIteration"
+msgstr "list of PhaseOneIteration"
+
+msgid "Una entrada por pasada (la 0 es la carta con todos los datos)."
+msgstr "One entry per pass (0 is the chart with all the data)."
+
+msgid "excluded"
+msgstr "excluded"
+
+msgid "numpy.ndarray"
+msgstr "numpy.ndarray"
+
+msgid "Posiciones (base 0, en los datos originales) de los puntos excluidos, en orden."
+msgstr "Positions (0-based, in the original data) of the excluded points, in order."
+
+msgid "kept"
+msgstr "kept"
+
+msgid "Posiciones (base 0) de los puntos que se conservaron."
+msgstr "Positions (0-based) of the points that were kept."
+
+msgid "converged"
+msgstr "converged"
+
+msgid "bool"
+msgstr "bool"
+
+msgid "``True`` si la última carta no tiene ninguna señal en los paneles que cuentan (``chart.in_control`` mira todos los paneles)."
+msgstr "``True`` if the last chart has no signal in the panels that count (``chart.in_control`` looks at all the panels)."
+
+msgid "reason"
+msgstr "reason"
+
+msgid "str"
+msgstr "str"
+
+msgid "``'in_control'``, ``'max_iterations'``, ``'min_points'`` o ``'too_many_excluded'``."
+msgstr "``'in_control'``, ``'max_iterations'``, ``'min_points'`` or ``'too_many_excluded'``."
+
+msgid "limits"
+msgstr "limits"
+
+msgid "dict"
+msgstr "dict"
+
+msgid "Argumentos de la función de la carta que congelan los límites (``mu``/``sigma``, ``p``, ``c`` o ``u``): es lo que :meth:`phase2` aplica a los datos nuevos."
+msgstr "Chart function arguments that freeze the limits (``mu``/``sigma``, ``p``, ``c`` or ``u``): this is what :meth:`phase2` applies to the new data."
+
+msgid "labels"
+msgstr "labels"
+
+msgid "numpy.ndarray or None"
+msgstr "numpy.ndarray or None"
+
+msgid "Etiquetas (fechas, lotes…) de los puntos originales, si los datos las traían."
+msgstr "Labels (dates, lots…) of the original points, if the data carried them."
+
+msgid "Etiquetas de los puntos excluidos (``None`` si los datos no traían etiquetas)."
+msgstr "Labels of the excluded points (``None`` if the data carried no labels)."
+
+msgid "Historial: una fila por pasada (puntos incluidos, señales, centro y sigma)."
+msgstr "History: one row per pass (included points, signals, center and sigma)."
+
+msgid "Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma."
+msgstr "With ``stable=True`` the columns carry canonical English keys that do not change with the language."
+
+msgid "Resumen en texto: puntos excluidos, límites finales y estado de cada pasada."
+msgstr "Text summary: excluded points, final limits and the status of each pass."
+
+msgid "Carta de Fase II: los datos nuevos con los límites congelados de esta Fase I."
+msgstr "Phase II chart: the new data with the frozen limits of this Phase I."
+
+msgid "Datos nuevos, en cualquiera de los formatos que acepta la carta (una serie con fechas conserva las fechas)."
+msgstr "New data, in any of the formats the chart accepts (a Series with dates keeps the dates)."
+
+msgid "Argumentos de la función de la carta para los datos nuevos (por ejemplo ``n=`` en las cartas de atributos o ``subgroup_size=``); sustituyen a los usados en la Fase I."
+msgstr "Chart function arguments for the new data (for example ``n=`` in attribute charts or ``subgroup_size=``); they replace those used in Phase I."
+
+msgid "Dibuja la carta final de la Fase I. Ver :func:`pccpy.plotting.plot_control_chart`."
+msgstr "Draws the final Phase I chart. See :func:`pccpy.plotting.plot_control_chart`."
+
+msgid "Una pasada de la Fase I: la carta calculada con los puntos que seguían incluidos."
+msgstr "One Phase I pass: the chart computed with the points that were still included."
+
