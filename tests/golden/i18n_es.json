@@ -3315,7 +3315,7 @@
      0.01007
     ],
     [
-     0.177
+     0.354
     ],
     [
      0.211
@@ -3343,7 +3343,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Estudio Tipo 1  (N=40  Ref=10.0)\n  Media=10.02  Desv.Est.=0.047088\n  Sesgo=0.02014 (7.13%)  t=2.7051  p=0.01007\n  Cg=0.177  Cgk=0.211"
+  "summary": "Estudio Tipo 1  (N=40  Ref=10.0)\n  Media=10.02  Desv.Est.=0.047088\n  Sesgo=0.02014 (7.13%)  t=2.7051  p=0.01007\n  Cg=0.354  Cgk=0.211"
  },
  "gage_tipo1_resumen": {
   "frame": {
@@ -3376,7 +3376,7 @@
      0.01556
     ],
     [
-     0.167
+     0.333
     ],
     [
      0.2
@@ -3404,7 +3404,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Estudio Tipo 1  (N=40  Ref=10.0)\n  Media=10.02  Desv.Est.=0.05\n  Sesgo=0.02 (6.67%)  t=2.5298  p=0.01556\n  Cg=0.167  Cgk=0.200"
+  "summary": "Estudio Tipo 1  (N=40  Ref=10.0)\n  Media=10.02  Desv.Est.=0.05\n  Sesgo=0.02 (6.67%)  t=2.5298  p=0.01556\n  Cg=0.333  Cgk=0.200"
  },
  "gage_tipo1_resumen_sin_tolerancia": {
   "frame": {
@@ -8022,22 +8022,22 @@
      80
     ],
     [
-     3
+     2
     ],
     [
      1.0
     ],
     [
-     8.1603
+     6.516
     ],
     [
-     0.00866
+     0.04655
     ],
     [
      0.1
     ],
     [
-     2.2347
+     1.5737
     ],
     [
      "z1.4"
@@ -8056,7 +8056,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Plan de muestreo por atributos (z1.4)\n  Lote N=1000  Muestra n=80  Ac=3  Re=4\n  AQL=1%  α=0.0087  LTPD=8.16%  β=0.10\n  AOQL=2.23%"
+  "summary": "Plan de muestreo por atributos (z1.4)\n  Lote N=1000  Muestra n=80  Ac=2  Re=3\n  AQL=1%  α=0.0466  LTPD=6.52%  β=0.10\n  AOQL=1.57%"
  },
  "muestreo_variables": {
   "frame": {

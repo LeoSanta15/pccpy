@@ -118,3 +118,12 @@ def test_dodge_romig_summary_and_frame():
     assert len(s) > 0
     df = plan.to_frame()
     assert len(df) > 0
+
+
+@pytest.mark.parametrize("N, aql, n, c", [
+    (1000, 1.0, 80, 2), (1000, 0.65, 80, 1), (1000, 2.5, 80, 5), (400, 1.0, 50, 1), (2000, 1.0, 125, 3),
+    (5000, 1.0, 200, 5), (1000, 0.10, 125, 0), (1000, 10.0, 80, 14), (100000, 0.10, 500, 1),
+])
+def test_tabla_z14_coincide_con_la_norma(N, aql, n, c):
+    plan = pccpy.acceptance_sampling_attributes(N=N, aql=aql)
+    assert (plan.n, plan.c) == (n, c)

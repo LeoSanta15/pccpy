@@ -1,7 +1,7 @@
 """pccpy - Control Estadístico de Procesos (SPC) en Python, al estilo Minitab."""
 from ._constants import c4, c5, control_chart_constants, d2, d3
 from ._diagnose import DiagnoseResult, diagnose
-from ._i18n import available_languages, get_language, language, set_language
+from ._i18n import available_languages, get_language, language, set_language, tr
 from ._wizard import WidgetSession, WizardResult, wizard
 from .acceptance import (
     DodgeRomigPlan,
@@ -110,6 +110,7 @@ __all__ = [
     "SamplingPlanVariables",
     "ToleranceResult",
     "Type1Result",
+    "ValidationReport",
     "WidgetSession",
     "WizardResult",
     "acceptance_sampling_attributes",
@@ -175,6 +176,7 @@ __all__ = [
     "precontrol",
     "probability_plot",
     "run_chart",
+    "run_validation",
     "set_language",
     "t2_chart",
     "t_chart",
@@ -187,3 +189,11 @@ __all__ = [
     "zmr_chart",
     "zone_chart",
 ]
+
+
+def __getattr__(nombre):  # validation se importa al usarlo, para poder ejecutar ``python -m pccpy.validation`` sin avisos
+    if nombre in ("ValidationReport", "run_validation"):
+        from . import validation
+
+        return getattr(validation, nombre)
+    raise AttributeError(tr("el módulo 'pccpy' no tiene el atributo {nombre}").format(nombre=nombre))

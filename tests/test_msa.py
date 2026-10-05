@@ -216,3 +216,13 @@ def test_capability_summary_with_std_within():
     )
     assert rs.cp == pytest.approx((56 - 44) / (6 * 1.8))
     assert rs.within_method == "especificada"
+
+
+def test_tipo1_cg_formula_de_minitab():
+    import numpy as np
+
+    x = np.array([10.1, 10.0, 10.2, 9.9, 10.05, 10.12, 9.95, 10.08, 10.01, 9.97])
+    r = pccpy.gage_type1(x, reference=10.0, tolerance=0.5)
+    s = x.std(ddof=1)
+    assert r.cg == pytest.approx(0.2 * 0.5 / (6 * s))
+    assert r.cgk == pytest.approx((0.1 * 0.5 - abs(x.mean() - 10.0)) / (3 * s))

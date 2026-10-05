@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 22:02+0000\n"
+"POT-Creation-Date: 2026-10-05 22:30+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -799,6 +799,10 @@ msgid "  Etapa {stage}"
 msgstr "  Stage {stage}"
 
 #, python-brace-format
+msgid "  FALLA {id}: {description} (error {error:.3g} > tolerancia {tolerance:.3g}) {detail}"
+msgstr "  FAIL {id}: {description} (error {error:.3g} > tolerance {tolerance:.3g}) {detail}"
+
+#, python-brace-format
 msgid "  Factor k = {k:.5f}"
 msgstr "  k factor = {k:.5f}"
 
@@ -1384,6 +1388,9 @@ msgstr "Run chart — detect non-random patterns (p-values)"
 msgid "Carta de pre-control"
 msgstr "Pre-control chart"
 
+msgid "Celdas conocidas de la tabla Z1.4 (n y Ac en varias letras y AQL)"
+msgstr "Known cells of the Z1.4 table (n and Ac for several code letters and AQLs)"
+
 #, python-brace-format
 msgid "Centro={v:.4g}"
 msgstr "Center={v:.4g}"
@@ -1401,9 +1408,8 @@ msgstr "Coverage (p)"
 msgid "Combinación AQL={aql_key}% y letra={letra} no disponible en la tabla Z1.9."
 msgstr "AQL={aql_key}% and letter={letra} combination not available in the Z1.9 table."
 
-#, python-brace-format
-msgid "Combinación de letra={letra} y AQL={aql_key} no disponible en la tabla."
-msgstr "Letter={letra} and AQL={aql_key} combination not available in the table."
+msgid "Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con interacción)"
+msgstr "Variance components of the crossed Gage R&R (two-way ANOVA with interaction)"
 
 #, python-brace-format
 msgid ""
@@ -1441,6 +1447,10 @@ msgstr "Confidence (1−α)"
 msgid "Confianza alcanzada"
 msgstr "Achieved confidence"
 
+#, python-brace-format
+msgid "Constantes d2, d3, c4, A2, A3, D3, D4, B3 y B4 para n = {n}"
+msgstr "Constants d2, d3, c4, A2, A3, D3, D4, B3 and B4 for n = {n}"
+
 msgid "Conteo"
 msgstr "Count"
 
@@ -1465,6 +1475,9 @@ msgstr "Cp = {cp:.2f} < 1.0: the process is not capable with the given specifica
 
 msgid "Cp estimado"
 msgstr "Estimated Cp"
+
+msgid "Cp, Cpk, Pp y Ppk desde estadísticos (media 50, σ dentro 1,5, σ global 2, LEI 44, LES 58)"
+msgstr "Cp, Cpk, Pp and Ppk from statistics (mean 50, within σ 1.5, overall σ 2, LSL 44, USL 58)"
 
 msgid "Cpk"
 msgstr "Cpk"
@@ -1542,6 +1555,9 @@ msgstr ""
 "Overall\n"
 "Pp = {pp:.2f}\n"
 "Ppk = {ppk:.2f}"
+
+msgid "Descripción"
+msgstr "Description"
 
 msgid "Desv. est. de la muestra"
 msgstr "Sample std. dev."
@@ -1648,6 +1664,9 @@ msgstr "Expected within"
 msgid "Esperado general"
 msgstr "Expected overall"
 
+msgid "Estadístico A² de Anderson-Darling de la prueba de normalidad"
+msgstr "Anderson-Darling A² statistic of the normality test"
+
 msgid "Estadístico normalidad"
 msgstr "Normality statistic"
 
@@ -1665,6 +1684,9 @@ msgstr "Type 1 study — bias and repeatability of an instrument"
 msgid "Estudio Tipo 1 — sesgo, t-test, Cg y Cgk"
 msgstr "Type 1 study — bias, t-test, Cg and Cgk"
 
+msgid "Estudio Tipo 1: sesgo, Cg y Cgk (K = 20 %, 6σ)"
+msgstr "Type 1 study: bias, Cg and Cgk (K = 20 %, 6σ)"
+
 msgid "Eventos raros (muy poca frecuencia de defectos)"
 msgstr "Rare events (very low defect frequency)"
 
@@ -1680,6 +1702,12 @@ msgstr "F"
 msgid "Factor k"
 msgstr "k factor"
 
+msgid "Factor k del intervalo de tolerancia bilateral (n = 10, 95/95)"
+msgstr "Factor k of the two-sided tolerance interval (n = 10, 95/95)"
+
+msgid "Factor k del intervalo de tolerancia unilateral (n = 10, 95/95)"
+msgstr "Factor k of the one-sided tolerance interval (n = 10, 95/95)"
+
 msgid "Falta el tamaño de la muestra 'n'."
 msgstr "The sample size 'n' is missing."
 
@@ -1693,6 +1721,9 @@ msgstr "Phase I: {kind} chart"
 
 msgid "Fecha"
 msgstr "Date"
+
+msgid "Fecha (UTC)"
+msgstr "Date (UTC)"
 
 #, python-brace-format
 msgid "Forma del array {shape} ≠ ({parts}, {operators}, {replicates})."
@@ -1791,6 +1822,13 @@ msgstr "Language not available: {lang!r}. Available languages: {disponibles}."
 msgid "Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."
 msgstr "Give 'mu' and 'cov' together (historical parameters) or neither."
 
+msgid "Informe de validación de pccpy"
+msgstr "pccpy validation report"
+
+#, python-brace-format
+msgid "Informe escrito en {path}"
+msgstr "Report written to {path}"
+
 msgid "Interacción parte×operador"
 msgstr "Part×operator interaction"
 
@@ -1821,6 +1859,9 @@ msgstr "One-sided upper tolerance interval — P(X ≤ UL) ≥ coverage"
 
 msgid "Intervalos de tolerancia"
 msgstr "Tolerance intervals"
+
+msgid "Kappa de Cohen de un operador frente a la referencia (50 piezas; po = 0,7, pe = 0,5 → κ = 0,4)"
+msgstr "Cohen's kappa of one operator against the reference (50 parts; po = 0.7, pe = 0.5 → κ = 0.4)"
 
 msgid "Kappa de Fleiss (entre operadores)"
 msgstr "Fleiss' kappa (between operators)"
@@ -1985,6 +2026,13 @@ msgstr "Durations must be positive (durations equal to 0 are not allowed)."
 msgid "Las frecuencias no pueden ser negativas."
 msgstr "Frequencies cannot be negative."
 
+msgid ""
+"Las referencias son tablas publicadas, fórmulas escritas aparte con NumPy/SciPy o simulaciones con semilla fija. No "
+"es una comparación con Minitab."
+msgstr ""
+"The references are published tables, formulas written separately with NumPy/SciPy, or simulations with a fixed seed. "
+"This is not a comparison with Minitab."
+
 msgid "Linealidad"
 msgstr "Linearity"
 
@@ -2002,6 +2050,9 @@ msgstr "Linearity and bias — detects whether the bias changes with the measure
 
 msgid "Linealidad y sesgo — sesgo varía con el valor de referencia?"
 msgstr "Linearity and bias — does the bias vary with the reference value?"
+
+msgid "Linealidad y sesgo: pendiente, ordenada y R² de datos sin ruido (sesgo = 0,1 + 0,02·ref)"
+msgstr "Linearity and bias: slope, intercept and R² of noise-free data (bias = 0.1 + 0.02·ref)"
 
 #, python-brace-format
 msgid "Longitud de datos ({n_data}) ≠ parts*operators*replicates ({parts}×{operators}×{replicates}={expected})."
@@ -2031,11 +2082,29 @@ msgstr "The data must be an N x p matrix (or 3-D: subgroups x n x p)."
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr "Sample sizes must be positive."
 
+msgid "Límite H de la MEWMA para p = 2, λ = 0,1 y ARL en control = 200"
+msgstr "MEWMA limit H for p = 2, λ = 0.1 and in-control ARL = 200"
+
 msgid "Límite inferior"
 msgstr "Lower limit"
 
 msgid "Límite superior"
 msgstr "Upper limit"
+
+msgid "Límites de la carta I-MR (X̄ ± 3·MR̄/d2; D4·MR̄)"
+msgstr "I-MR chart limits (X̄ ± 3·MR̄/d2; D4·MR̄)"
+
+msgid "Límites de la carta P con n variable (p̄ ± 3·√(p̄(1−p̄)/n))"
+msgstr "P chart limits with variable n (p̄ ± 3·√(p̄(1−p̄)/n))"
+
+msgid "Límites de la carta Xbar-R (X̿ ± A2·R̄; D4·R̄)"
+msgstr "Xbar-R chart limits (X̿ ± A2·R̄; D4·R̄)"
+
+msgid "Límites de la carta Xbar-S (X̿ ± A3·S̄; B4·S̄)"
+msgstr "Xbar-S chart limits (X̿ ± A3·S̄; B4·S̄)"
+
+msgid "Límites de las cartas NP, C y U"
+msgstr "NP, C and U chart limits"
 
 msgid "MCUSUM — mejor para cambios abruptos pequeños"
 msgstr "MCUSUM — better for small abrupt shifts"
@@ -2353,6 +2422,9 @@ msgstr "Plan"
 msgid "Plan Dodge-Romig ({plan_type})"
 msgstr "Dodge-Romig plan ({plan_type})"
 
+msgid "Plan Z1.4 para lote 1000, AQL 1,0 %, nivel II: n = 80 (código J), Ac = 2"
+msgstr "Z1.4 plan for lot 1000, AQL 1.0 %, level II: n = 80 (code J), Ac = 2"
+
 #, python-brace-format
 msgid "Plan de muestreo por atributos ({method})"
 msgstr "Attribute sampling plan ({method})"
@@ -2389,6 +2461,9 @@ msgstr "Pre-control (Shainin) — green / yellow / red traffic light"
 msgid "Pre-control Shainin — semáforo verde / amarillo / rojo basado en tolerancia"
 msgstr "Shainin pre-control — green / yellow / red traffic light based on tolerance"
 
+msgid "Probabilidad de aceptación del plan (n = 80, c = 2) para p = 0,5 %, 1 % y 3 %"
+msgstr "Acceptance probability of the plan (n = 80, c = 2) for p = 0.5 %, 1 % and 3 %"
+
 msgid "Promedio de proceso (%)"
 msgstr "Process average (%)"
 
@@ -2397,6 +2472,10 @@ msgstr "Proportion"
 
 msgid "Proporción EWMA"
 msgstr "EWMA proportion"
+
+#, python-brace-format
+msgid "Prueba de causas especiales {t}: marca el punto que completa el patrón"
+msgstr "Special-cause test {t}: flags the point that completes the pattern"
 
 msgid "Prueba de normalidad (Anderson-Darling, Shapiro-Wilk)"
 msgstr "Normality test (Anderson-Darling, Shapiro-Wilk)"
@@ -2469,6 +2548,9 @@ msgstr "Repeatability"
 
 msgid "Reproducibilidad"
 msgstr "Reproducibility"
+
+msgid "Resultado"
+msgstr "Result"
 
 msgid "Resumen"
 msgstr "Summary"
@@ -2615,6 +2697,9 @@ msgstr "Defect rate with overdispersion correction (Laney U′)"
 msgid "Tasa de defectos por unidad con tamaño de muestra variable"
 msgstr "Defect rate per unit with variable sample size"
 
+msgid "Tasa de falsas alarmas de la prueba 1 en 400 000 puntos normales (≈ 0,0027)"
+msgstr "False-alarm rate of test 1 on 400,000 normal points (≈ 0.0027)"
+
 msgid "Tendencias"
 msgstr "Trends"
 
@@ -2654,6 +2739,9 @@ msgstr "Tolerance"
 msgid "Transformación Box-Cox automática para normalizar los datos"
 msgstr "Automatic Box-Cox transformation to normalize the data"
 
+msgid "T² de Hotelling de observaciones individuales con parámetros históricos"
+msgstr "Hotelling's T² of individual observations with historical parameters"
+
 msgid "T² de Hotelling — monitoreo multivariado estándar"
 msgstr "Hotelling's T² — standard multivariate monitoring"
 
@@ -2665,6 +2753,10 @@ msgstr "One-sided lower — minimum bound only"
 
 msgid "Unilateral superior — solo cota máxima"
 msgstr "One-sided upper — maximum bound only"
+
+#, python-brace-format
+msgid "Validación de pccpy {version}: {ok} de {total} comprobaciones correctas"
+msgstr "pccpy {version} validation: {ok} of {total} checks passed"
 
 msgid "Valor"
 msgstr "Value"
@@ -2731,6 +2823,9 @@ msgstr "Z.Bench (within)"
 msgid "Z.Bench (general)"
 msgstr "Z.Bench (overall)"
 
+msgid "Z.Bench y PPM esperado globales desde la distribución normal"
+msgstr "Overall Z.Bench and expected PPM from the normal distribution"
+
 msgid "acumulado"
 msgstr "cumulative"
 
@@ -2749,6 +2844,9 @@ msgstr "center"
 msgid "conteo"
 msgstr "count"
 
+msgid "correcta"
+msgstr "passed"
+
 msgid "corridas"
 msgstr "runs"
 
@@ -2761,14 +2859,27 @@ msgstr "decreasing"
 msgid "descripcion"
 msgstr "description"
 
+msgid "descripción"
+msgstr "description"
+
 msgid "diagnose requiere al menos 4 observaciones."
 msgstr "diagnose requires at least 4 observations."
 
 msgid "distribución"
 msgstr "distribution"
 
+#, python-brace-format
+msgid "el módulo 'pccpy' no tiene el atributo {nombre}"
+msgstr "module 'pccpy' has no attribute {nombre}"
+
+msgid "error"
+msgstr "error"
+
 msgid "escala"
 msgstr "scale"
+
+msgid "esperado"
+msgstr "expected"
 
 msgid "estadístico"
 msgstr "statistic"
@@ -2784,6 +2895,13 @@ msgstr "phase"
 
 msgid "forma"
 msgstr "shape"
+
+#, python-brace-format
+msgid "formas distintas {e} y {o}"
+msgstr "different shapes {e} and {o}"
+
+msgid "id"
+msgstr "id"
 
 #, python-brace-format
 msgid ""
@@ -2879,6 +2997,9 @@ msgstr "target"
 msgid "observación"
 msgstr "observation"
 
+msgid "obtenido"
+msgstr "obtained"
+
 msgid ""
 "openpyxl es necesario para exportar a Excel. Instálalo con:\n"
 "    pip install openpyxl\n"
@@ -2967,6 +3088,9 @@ msgstr "points"
 msgid "quedarían menos puntos que el mínimo"
 msgstr "fewer points than the minimum would remain"
 
+msgid "referencia"
+msgstr "reference"
+
 msgid "reinicio"
 msgstr "reset"
 
@@ -3014,6 +3138,9 @@ msgstr "t"
 
 msgid "tamaño"
 msgstr "size"
+
+msgid "tolerancia"
+msgstr "tolerance"
 
 msgid "valor"
 msgstr "value"
@@ -3185,4 +3312,7 @@ msgstr "✔ Recommended analysis: <code style='font-size:13px'>{function}</code>
 
 #~ msgid "La Fase I no admite valores faltantes ni infinitos: elimínalos antes (índices de posición)."
 #~ msgstr ""
+
+#~ msgid "Combinación de letra={letra} y AQL={aql_key} no disponible en la tabla."
+#~ msgstr "Letter={letra} and AQL={aql_key} combination not available in the table."
 

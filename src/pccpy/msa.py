@@ -531,7 +531,7 @@ class Type1Result:
     p_value : float
         p-valor bilateral del test de sesgo.
     cg : float
-        Índice Cg (= K·tolerance / (2·study_variation·σ)).
+        Índice Cg (= 0.2·tolerance / (study_variation·σ), como Minitab con K = 20 %).
     cgk : float
         Índice Cgk (corrige por sesgo).
     study_variation : float
@@ -646,7 +646,7 @@ def gage_type1(
 
     # Cg, Cgk requieren tolerancia
     if tolerance is not None and tolerance > 0:
-        cg = 0.1 * tolerance / (study_variation * s) if s > 0 else NAN
+        cg = 0.2 * tolerance / (study_variation * s) if s > 0 else NAN
         cgk = (0.1 * tolerance - abs(bias)) / (study_variation / 2 * s) if s > 0 else NAN
         bias_pct = bias / (study_variation * s) * 100 if sv > 0 else NAN
     else:
@@ -709,7 +709,7 @@ def gage_type1_summary(
     p_value = float(2 * stats.t.sf(abs(t_stat), n - 1))
 
     if tolerance is not None and tolerance > 0:
-        cg = 0.1 * tolerance / (study_variation * s)
+        cg = 0.2 * tolerance / (study_variation * s)
         cgk = (0.1 * tolerance - abs(bias)) / (study_variation / 2 * s)
         bias_pct = bias / sv * 100
     else:

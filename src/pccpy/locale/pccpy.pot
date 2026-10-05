@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 22:02+0000\n"
+"POT-Creation-Date: 2026-10-05 22:30+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -587,6 +587,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Etapa {stage}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  FALLA {id}: {description} (error {error:.3g} > tolerancia "
+"{tolerance:.3g}) {detail}"
 msgstr ""
 
 #, python-brace-format
@@ -1184,6 +1190,9 @@ msgstr ""
 msgid "Carta de pre-control"
 msgstr ""
 
+msgid "Celdas conocidas de la tabla Z1.4 (n y Ac en varias letras y AQL)"
+msgstr ""
+
 #, python-brace-format
 msgid "Centro={v:.4g}"
 msgstr ""
@@ -1201,8 +1210,9 @@ msgstr ""
 msgid "Combinación AQL={aql_key}% y letra={letra} no disponible en la tabla Z1.9."
 msgstr ""
 
-#, python-brace-format
-msgid "Combinación de letra={letra} y AQL={aql_key} no disponible en la tabla."
+msgid ""
+"Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con "
+"interacción)"
 msgstr ""
 
 #, python-brace-format
@@ -1240,6 +1250,10 @@ msgstr ""
 msgid "Confianza alcanzada"
 msgstr ""
 
+#, python-brace-format
+msgid "Constantes d2, d3, c4, A2, A3, D3, D4, B3 y B4 para n = {n}"
+msgstr ""
+
 msgid "Conteo"
 msgstr ""
 
@@ -1265,6 +1279,11 @@ msgid ""
 msgstr ""
 
 msgid "Cp estimado"
+msgstr ""
+
+msgid ""
+"Cp, Cpk, Pp y Ppk desde estadísticos (media 50, σ dentro 1,5, σ global 2,"
+" LEI 44, LES 58)"
 msgstr ""
 
 msgid "Cpk"
@@ -1335,6 +1354,9 @@ msgid ""
 "General\n"
 "Pp = {pp:.2f}\n"
 "Ppk = {ppk:.2f}"
+msgstr ""
+
+msgid "Descripción"
 msgstr ""
 
 msgid "Desv. est. de la muestra"
@@ -1444,6 +1466,9 @@ msgstr ""
 msgid "Esperado general"
 msgstr ""
 
+msgid "Estadístico A² de Anderson-Darling de la prueba de normalidad"
+msgstr ""
+
 msgid "Estadístico normalidad"
 msgstr ""
 
@@ -1461,6 +1486,9 @@ msgstr ""
 msgid "Estudio Tipo 1 — sesgo, t-test, Cg y Cgk"
 msgstr ""
 
+msgid "Estudio Tipo 1: sesgo, Cg y Cgk (K = 20 %, 6σ)"
+msgstr ""
+
 msgid "Eventos raros (muy poca frecuencia de defectos)"
 msgstr ""
 
@@ -1476,6 +1504,12 @@ msgstr ""
 msgid "Factor k"
 msgstr ""
 
+msgid "Factor k del intervalo de tolerancia bilateral (n = 10, 95/95)"
+msgstr ""
+
+msgid "Factor k del intervalo de tolerancia unilateral (n = 10, 95/95)"
+msgstr ""
+
 msgid "Falta el tamaño de la muestra 'n'."
 msgstr ""
 
@@ -1488,6 +1522,9 @@ msgid "Fase I: carta {kind}"
 msgstr ""
 
 msgid "Fecha"
+msgstr ""
+
+msgid "Fecha (UTC)"
 msgstr ""
 
 #, python-brace-format
@@ -1580,6 +1617,13 @@ msgstr ""
 msgid "Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."
 msgstr ""
 
+msgid "Informe de validación de pccpy"
+msgstr ""
+
+#, python-brace-format
+msgid "Informe escrito en {path}"
+msgstr ""
+
 msgid "Interacción parte×operador"
 msgstr ""
 
@@ -1609,6 +1653,11 @@ msgid "Intervalo de tolerancia unilateral superior — P(X ≤ LS) ≥ coverage"
 msgstr ""
 
 msgid "Intervalos de tolerancia"
+msgstr ""
+
+msgid ""
+"Kappa de Cohen de un operador frente a la referencia (50 piezas; po = "
+"0,7, pe = 0,5 → κ = 0,4)"
 msgstr ""
 
 msgid "Kappa de Fleiss (entre operadores)"
@@ -1781,6 +1830,12 @@ msgstr ""
 msgid "Las frecuencias no pueden ser negativas."
 msgstr ""
 
+msgid ""
+"Las referencias son tablas publicadas, fórmulas escritas aparte con "
+"NumPy/SciPy o simulaciones con semilla fija. No es una comparación con "
+"Minitab."
+msgstr ""
+
 msgid "Linealidad"
 msgstr ""
 
@@ -1797,6 +1852,11 @@ msgid "Linealidad y sesgo — detecta si el sesgo cambia con el valor medido"
 msgstr ""
 
 msgid "Linealidad y sesgo — sesgo varía con el valor de referencia?"
+msgstr ""
+
+msgid ""
+"Linealidad y sesgo: pendiente, ordenada y R² de datos sin ruido (sesgo = "
+"0,1 + 0,02·ref)"
 msgstr ""
 
 #, python-brace-format
@@ -1829,10 +1889,28 @@ msgstr ""
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr ""
 
+msgid "Límite H de la MEWMA para p = 2, λ = 0,1 y ARL en control = 200"
+msgstr ""
+
 msgid "Límite inferior"
 msgstr ""
 
 msgid "Límite superior"
+msgstr ""
+
+msgid "Límites de la carta I-MR (X̄ ± 3·MR̄/d2; D4·MR̄)"
+msgstr ""
+
+msgid "Límites de la carta P con n variable (p̄ ± 3·√(p̄(1−p̄)/n))"
+msgstr ""
+
+msgid "Límites de la carta Xbar-R (X̿ ± A2·R̄; D4·R̄)"
+msgstr ""
+
+msgid "Límites de la carta Xbar-S (X̿ ± A3·S̄; B4·S̄)"
+msgstr ""
+
+msgid "Límites de las cartas NP, C y U"
 msgstr ""
 
 msgid "MCUSUM — mejor para cambios abruptos pequeños"
@@ -2147,6 +2225,9 @@ msgstr ""
 msgid "Plan Dodge-Romig ({plan_type})"
 msgstr ""
 
+msgid "Plan Z1.4 para lote 1000, AQL 1,0 %, nivel II: n = 80 (código J), Ac = 2"
+msgstr ""
+
 #, python-brace-format
 msgid "Plan de muestreo por atributos ({method})"
 msgstr ""
@@ -2185,6 +2266,11 @@ msgid ""
 "tolerancia"
 msgstr ""
 
+msgid ""
+"Probabilidad de aceptación del plan (n = 80, c = 2) para p = 0,5 %, 1 % y"
+" 3 %"
+msgstr ""
+
 msgid "Promedio de proceso (%)"
 msgstr ""
 
@@ -2192,6 +2278,10 @@ msgid "Proporción"
 msgstr ""
 
 msgid "Proporción EWMA"
+msgstr ""
+
+#, python-brace-format
+msgid "Prueba de causas especiales {t}: marca el punto que completa el patrón"
 msgstr ""
 
 msgid "Prueba de normalidad (Anderson-Darling, Shapiro-Wilk)"
@@ -2262,6 +2352,9 @@ msgid "Repetibilidad"
 msgstr ""
 
 msgid "Reproducibilidad"
+msgstr ""
+
+msgid "Resultado"
 msgstr ""
 
 msgid "Resumen"
@@ -2410,6 +2503,11 @@ msgstr ""
 msgid "Tasa de defectos por unidad con tamaño de muestra variable"
 msgstr ""
 
+msgid ""
+"Tasa de falsas alarmas de la prueba 1 en 400 000 puntos normales (≈ "
+"0,0027)"
+msgstr ""
+
 msgid "Tendencias"
 msgstr ""
 
@@ -2449,6 +2547,9 @@ msgstr ""
 msgid "Transformación Box-Cox automática para normalizar los datos"
 msgstr ""
 
+msgid "T² de Hotelling de observaciones individuales con parámetros históricos"
+msgstr ""
+
 msgid "T² de Hotelling — monitoreo multivariado estándar"
 msgstr ""
 
@@ -2459,6 +2560,10 @@ msgid "Unilateral inferior — solo cota mínima"
 msgstr ""
 
 msgid "Unilateral superior — solo cota máxima"
+msgstr ""
+
+#, python-brace-format
+msgid "Validación de pccpy {version}: {ok} de {total} comprobaciones correctas"
 msgstr ""
 
 msgid "Valor"
@@ -2526,6 +2631,9 @@ msgstr ""
 msgid "Z.Bench (general)"
 msgstr ""
 
+msgid "Z.Bench y PPM esperado globales desde la distribución normal"
+msgstr ""
+
 msgid "acumulado"
 msgstr ""
 
@@ -2544,6 +2652,9 @@ msgstr ""
 msgid "conteo"
 msgstr ""
 
+msgid "correcta"
+msgstr ""
+
 msgid "corridas"
 msgstr ""
 
@@ -2556,13 +2667,26 @@ msgstr ""
 msgid "descripcion"
 msgstr ""
 
+msgid "descripción"
+msgstr ""
+
 msgid "diagnose requiere al menos 4 observaciones."
 msgstr ""
 
 msgid "distribución"
 msgstr ""
 
+#, python-brace-format
+msgid "el módulo 'pccpy' no tiene el atributo {nombre}"
+msgstr ""
+
+msgid "error"
+msgstr ""
+
 msgid "escala"
+msgstr ""
+
+msgid "esperado"
 msgstr ""
 
 msgid "estadístico"
@@ -2578,6 +2702,13 @@ msgid "fase"
 msgstr ""
 
 msgid "forma"
+msgstr ""
+
+#, python-brace-format
+msgid "formas distintas {e} y {o}"
+msgstr ""
+
+msgid "id"
 msgstr ""
 
 #, python-brace-format
@@ -2659,6 +2790,9 @@ msgid "objetivo"
 msgstr ""
 
 msgid "observación"
+msgstr ""
+
+msgid "obtenido"
 msgstr ""
 
 msgid ""
@@ -2745,6 +2879,9 @@ msgstr ""
 msgid "quedarían menos puntos que el mínimo"
 msgstr ""
 
+msgid "referencia"
+msgstr ""
+
 msgid "reinicio"
 msgstr ""
 
@@ -2791,6 +2928,9 @@ msgid "t"
 msgstr ""
 
 msgid "tamaño"
+msgstr ""
+
+msgid "tolerancia"
 msgstr ""
 
 msgid "valor"
