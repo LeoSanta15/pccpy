@@ -207,6 +207,8 @@ def t2_chart(
         Transforma cada variable con su propio Box-Cox antes de calcular la carta
         (no se puede combinar con ``mu``/``cov``).
 
+    Notes
+    -----
     El resultado tiene un panel ``"T2"`` con LC = valor esperado de T² y LCS; no hay
     LCI. Use ``chart.contributions(punto)`` para ver qué variables explican una señal
     (usa la media y covarianza de la etapa de ese punto).

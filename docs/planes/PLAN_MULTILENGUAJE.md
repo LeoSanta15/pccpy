@@ -24,7 +24,7 @@
 | 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | [#9](https://github.com/LeoSanta15/pccpy/pull/9) | en revisión |
 | 3 Gráficos y constantes de módulo (`wizard`) | `feat/i18n-fase-3-graficos` | [#10](https://github.com/LeoSanta15/pccpy/pull/10) | en revisión |
 | 3b Otras tablas con columnas en español (`pareto`, curvas OC/AOQ, ANOVA, `kappa_vs_reference`) | `feat/i18n-fase-3b-tablas` | [#11](https://github.com/LeoSanta15/pccpy/pull/11) | en revisión |
-| 4 Documentación multilingüe | — | — | diferida |
+| 4 Documentación multilingüe | `feat/i18n-fase-4-docs` | [#13](https://github.com/LeoSanta15/pccpy/pull/13) | en revisión |
 | 5 Glosario y release `0.11.0` | `feat/i18n-fase-5-release` | _(se completa al abrir el PR)_ | en revisión (falta la revisión humana del inglés; el tag lo crea la persona responsable) |
 
 ---
@@ -168,3 +168,12 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 - **Mutaciones comprobadas:** no traducir columnas, filas, el nombre «Otros» o la hoja de kappa hace fallar los tests.
 - **Fallo de CI corregido:** los tests de tablas generaban las hojas de Excel sin comprobar que `openpyxl` (extra opcional) estuviera instalado; en local pasaban y en CI fallaban 62 tests. Ahora las hojas se omiten sin `openpyxl`. Se verificó con una instalación `pip install -e .` sin extras (1840 pasan, 13 omitidos).
 - **Segundo fallo de CI corregido:** `kappa_*` difería en el último dígito decimal entre versiones de numpy/scipy (Python 3.10/3.11 vs local); las referencias de tablas comparan ahora etiquetas exactas y números con tolerancia relativa 1e-9 (con control negativo).
+
+## Desviaciones y hallazgos de la fase 4
+
+- **Alcance:** 1 756 textos extraídos (sin contar el historial de versiones, `changelog`, que se deja en español): 18 páginas de guías y 15 de referencia (la referencia de la API sale de los docstrings, así que la traducción vive en los catálogos de la documentación, no en los del paquete). Se traducen al inglés además `README_en.md`.
+- **MyST y los roles RST:** en las páginas `.md`, Sphinx interpreta el `msgstr` con el analizador Markdown; los roles de las descripciones de la API (`:func:`x``) deben escribirse `{func}`x`` en la traducción o Sphinx avisa (`i18n.inconsistent_references`, y `-W` lo convierte en error). `docs_i18n_check.py` los trata como equivalentes.
+- **Docstring que no se extraía:** el párrafo final de `t2_chart` (sin sección) no aparecía en el catálogo; se movió a `Notes`.
+- **README con 6 ejemplos rotos** (hallados al ejecutar los bloques de código en secuencia para comprobar la versión en inglés): corregidos en ambos idiomas. Quedan 2 bloques que fallan solo al ejecutarse en cadena por reutilizar `x`/`datos` (no son errores de la API).
+- **Read the Docs:** el inglés requiere crear un segundo proyecto como traducción (acción de la persona responsable; está descrito en `.readthedocs.yaml`). `conf.py` lee `READTHEDOCS_LANGUAGE`.
+- **Pendiente:** revisión humana del inglés de la documentación (la tabla español | inglés de los catálogos de `docs/locales` se puede revisar con cualquier editor de `.po`).

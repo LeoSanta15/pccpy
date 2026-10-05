@@ -1,0 +1,84 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Diagnóstico rápido"
+msgstr "Quick diagnosis"
+
+msgid "Diagnóstico rápido de un proceso 1-D."
+msgstr "Quick diagnosis of a 1-D process."
+
+msgid "Calcula estadísticos descriptivos, prueba de normalidad, detección de tendencia y valores atípicos, e indica qué función de ``pccpy`` usar a continuación."
+msgstr "Computes descriptive statistics, a normality test, trend detection and outliers, and tells you which ``pccpy`` function to use next."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Datos del proceso (vector 1-D)."
+msgstr "Process data (1-D vector)."
+
+msgid "Límite de especificación inferior."
+msgstr "Lower specification limit."
+
+msgid "Límite de especificación superior."
+msgstr "Upper specification limit."
+
+msgid "Valor objetivo (nominal)."
+msgstr "Target (nominal) value."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*DiagnoseResult* -- Objeto con todos los resultados; llama a ``.summary()`` para un texto al estilo Minitab o a ``.plot()`` para un gráfico rápido."
+msgstr "*DiagnoseResult* -- Object with all the results; call ``.summary()`` for a Minitab-style text or ``.plot()`` for a quick plot."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Ejemplos"
+msgstr "Examples"
+
+msgid "Resultado del diagnóstico rápido devuelto por :func:`diagnose`."
+msgstr "Quick diagnosis result returned by :func:`diagnose`."
+
+msgid "Tabla resumen (una fila por estadístico)."
+msgstr "Summary table (one row per statistic)."
+
+msgid "Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma."
+msgstr "With ``stable=True`` the rows carry canonical English keys that do not change with the language."
+
+msgid "Exporta el diagnóstico a un archivo Excel (.xlsx)."
+msgstr "Exports the diagnosis to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``)."
+
+msgid "Resumen en texto al estilo sesión de Minitab."
+msgstr "Minitab session-style text summary."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Histograma con curva normal + gráfico de secuencia."
+msgstr "Histogram with normal curve + sequence plot."
+
+msgid "*matplotlib.figure.Figure*"
+msgstr "*matplotlib.figure.Figure*"
+

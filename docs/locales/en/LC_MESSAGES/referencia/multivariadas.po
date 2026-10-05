@@ -1,0 +1,96 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:37+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Cartas multivariadas"
+msgstr "Multivariate charts"
+
+msgid "Todas aceptan ``stages`` (reestima parámetros, o reinicia el acumulador en MEWMA/MCUSUM, al empezar cada etapa) y ``boxcox`` (transforma cada variable por separado antes de calcular la carta). Ver la sección \"Etapas y Box-Cox\" de la página principal del proyecto para ejemplos."
+msgstr "All accept ``stages`` (re-estimates parameters, or resets the accumulator in MEWMA/MCUSUM, at the start of each stage) and ``boxcox`` (transforms each variable separately before computing the chart). See the \"Stages and Box-Cox\" section of the project's main page for examples."
+
+msgid "Carta T² de Hotelling (Stat > Control Charts > Multivariate > T-Squared)."
+msgstr "Hotelling's T² chart (Stat > Control Charts > Multivariate > T-Squared)."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Matriz N x p de observaciones individuales; con ``subgroup_size`` las filas consecutivas se agrupan en subgrupos; también acepta un array 3-D (subgrupos x n x p). Los subgrupos deben tener igual tamaño."
+msgstr "N x p matrix of individual observations; with ``subgroup_size`` consecutive rows are grouped into subgroups; it also accepts a 3-D array (subgroups x n x p). Subgroups must have equal size."
+
+msgid "Vector de medias y matriz de covarianzas históricos (deben darse juntos). Sin ellos se estiman de los datos y se usan límites de **Fase I**."
+msgstr "Historical mean vector and covariance matrix (must be given together). Without them they are estimated from the data and **Phase I** limits are used."
+
+msgid "Con parámetros históricos, número de subgrupos (u observaciones) con que se estimaron; usa los límites de **Fase II** basados en F. Sin ``n_hist`` los parámetros se toman como conocidos (límite chi-cuadrado)."
+msgstr "With historical parameters, number of subgroups (or observations) used to estimate them; uses F-based **Phase II** limits. Without ``n_hist`` the parameters are taken as known (chi-square limit)."
+
+msgid "Probabilidad de cola superior del límite (por defecto 0.00135, como Minitab)."
+msgstr "Upper-tail probability of the limit (default 0.00135, as in Minitab)."
+
+msgid "Etiqueta de etapa por punto graficado. Sin ``mu``/``cov``, la media y la covarianza (y por tanto los límites de Fase I) se vuelven a estimar dentro de cada etapa; con parámetros históricos, se usan los mismos en todas las etapas."
+msgstr "Stage label per plotted point. Without ``mu``/``cov``, the mean and covariance (and hence the Phase I limits) are re-estimated within each stage; with historical parameters, the same ones are used in all stages."
+
+msgid "Transforma cada variable con su propio Box-Cox antes de calcular la carta (no se puede combinar con ``mu``/``cov``)."
+msgstr "Transforms each variable with its own Box-Cox before computing the chart (cannot be combined with ``mu``/``cov``)."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Notas"
+msgstr "Notes"
+
+msgid "El resultado tiene un panel ``\"T2\"`` con LC = valor esperado de T² y LCS; no hay LCI. Use ``chart.contributions(punto)`` para ver qué variables explican una señal (usa la media y covarianza de la etapa de ese punto)."
+msgstr "The result has a ``\"T2\"`` panel with CL = expected value of T² and UCL; there is no LCL. Use ``chart.contributions(point)`` to see which variables explain a signal (it uses the mean and covariance of the stage of that point)."
+
+msgid "Carta de varianza generalizada ``|S|`` (dispersión multivariada)."
+msgstr "Generalized variance chart ``|S|`` (multivariate dispersion)."
+
+msgid "Grafica el determinante de la matriz de covarianzas de cada subgrupo, con LC = ``b1|S̄|``, límites ``|S̄|(b1 ± k·√b2)`` (LCI no menor que 0) y S̄ el promedio de las matrices de covarianza de los subgrupos. Con ``cov`` (Sigma conocida) se usa ``|Sigma|`` en lugar de ``|S̄|``. Requiere subgrupos de tamaño n > p."
+msgstr "Plots the determinant of the covariance matrix of each subgroup, with CL = ``b1|S̄|``, limits ``|S̄|(b1 ± k·√b2)`` (LCL not below 0) and S̄ the average of the subgroup covariance matrices. With ``cov`` (known Sigma), ``|Sigma|`` is used instead of ``|S̄|``. Requires subgroups of size n > p."
+
+msgid "``stages``: sin ``cov``, S̄ (y por tanto el centro y los límites) se recalcula dentro de cada etapa; con ``cov`` se usa la misma Sigma en todas. ``boxcox``: transforma cada variable antes de calcular la carta."
+msgstr "``stages``: without ``cov``, S̄ (and hence the center and the limits) is recomputed within each stage; with ``cov`` the same Sigma is used in all of them. ``boxcox``: transforms each variable before computing the chart."
+
+msgid "Carta MEWMA (EWMA multivariada, Stat > Control Charts > Multivariate > MEWMA)."
+msgstr "MEWMA chart (multivariate EWMA, Stat > Control Charts > Multivariate > MEWMA)."
+
+msgid "``Z_i = weight·(x_i - mu) + (1 - weight)·Z_(i-1)`` con ``Z_0 = 0``; se grafica ``T²_i = Z_i' Sigma_Z^-1 Z_i`` con la covarianza asintótica de Z, ``weight/(2 - weight)·Sigma``. El límite ``H`` se calcula para que el ARL en control (desde ``Z_0 = 0``) sea ``arl`` (por defecto 200, como Minitab), o se fija con ``ucl``. Sirve para detectar cambios pequeños y sostenidos en el vector de medias. ``mu`` y ``cov`` se estiman si no se dan (deben darse juntos)."
+msgstr "``Z_i = weight·(x_i - mu) + (1 - weight)·Z_(i-1)`` with ``Z_0 = 0``; ``T²_i = Z_i' Sigma_Z^-1 Z_i`` is plotted with the asymptotic covariance of Z, ``weight/(2 - weight)·Sigma``. The limit ``H`` is computed so that the in-control ARL (from ``Z_0 = 0``) is ``arl`` (default 200, as in Minitab), or it is set with ``ucl``. Useful for detecting small, sustained shifts in the mean vector. ``mu`` and ``cov`` are estimated if not given (they must be given together)."
+
+msgid "``stages``: la recursión reinicia (``Z_0 = 0``) al principio de cada etapa; sin ``mu``/``cov`` también se vuelve a estimar la media y Sigma dentro de cada una. ``boxcox``: transforma cada variable antes de calcular la carta."
+msgstr "``stages``: the recursion restarts (``Z_0 = 0``) at the beginning of each stage; without ``mu``/``cov`` the mean and Sigma are also re-estimated within each one. ``boxcox``: transforms each variable before computing the chart."
+
+msgid "Límite de control H de la MEWMA para un ARL en control dado."
+msgstr "MEWMA control limit H for a given in-control ARL."
+
+msgid "Resuelve ARL(H) = ``arl`` con la cadena de Markov de Runger y Prabhu (1996), la misma idea del programa de Bodden y Rigdon (1999) que cita Minitab. Con p=2, weight=0.1 y arl=200 da H ≈ 8.64 (Prabhu y Runger, 1997)."
+msgstr "Solves ARL(H) = ``arl`` with the Markov chain of Runger and Prabhu (1996), the same idea as the program by Bodden and Rigdon (1999) cited by Minitab. With p=2, weight=0.1 and arl=200 it gives H ≈ 8.64 (Prabhu and Runger, 1997)."
+
+msgid "Carta CUSUM multivariada de Crosier (1988)."
+msgstr "Crosier's multivariate CUSUM chart (1988)."
+
+msgid "Con ``d_t = x_t - mu`` y ``C_t = sqrt((S_(t-1) + d_t)' Sigma^-1 (S_(t-1) + d_t))``: ``S_t = 0`` si ``C_t <= k`` y ``S_t = (S_(t-1) + d_t)(1 - k/C_t)`` en otro caso. Se grafica ``Y_t = sqrt(S_t' Sigma^-1 S_t)`` y hay señal si ``Y_t > h``. ``k`` es la holgura (0.5 por defecto) y ``h`` se calcula para el ``arl`` en control pedido (200 por defecto) o se fija con ``h``. ``mu`` y ``cov`` se estiman si no se dan (deben darse juntos). Con subgrupos se usan las medias y Sigma/n."
+msgstr "With ``d_t = x_t - mu`` and ``C_t = sqrt((S_(t-1) + d_t)' Sigma^-1 (S_(t-1) + d_t))``: ``S_t = 0`` if ``C_t <= k`` and ``S_t = (S_(t-1) + d_t)(1 - k/C_t)`` otherwise. ``Y_t = sqrt(S_t' Sigma^-1 S_t)`` is plotted and there is a signal if ``Y_t > h``. ``k`` is the slack (0.5 by default) and ``h`` is computed for the requested in-control ``arl`` (200 by default) or set with ``h``. ``mu`` and ``cov`` are estimated if not given (they must be given together). With subgroups, the means and Sigma/n are used."
+
+msgid "``stages``: el acumulador ``S`` reinicia en 0 al principio de cada etapa; sin ``mu``/``cov`` también se vuelve a estimar la media y Sigma dentro de cada una. ``boxcox``: transforma cada variable antes de calcular la carta."
+msgstr "``stages``: the accumulator ``S`` resets to 0 at the beginning of each stage; without ``mu``/``cov`` the mean and Sigma are also re-estimated within each one. ``boxcox``: transforms each variable before computing the chart."
+
+msgid "Límite de control h de la MCUSUM de Crosier para un ARL en control dado."
+msgstr "Crosier's MCUSUM control limit h for a given in-control ARL."
+

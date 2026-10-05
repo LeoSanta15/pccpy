@@ -1,0 +1,222 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Asistente de selección (`wizard`)"
+msgstr "Selection assistant (`wizard`)"
+
+msgid "`pp.wizard()` ayuda a elegir el análisis SPC correcto cuando no estás seguro de qué función usar. Tiene tres modos de operación:"
+msgstr "`pp.wizard()` helps you choose the right SPC analysis when you are not sure which function to use. It has three operating modes:"
+
+msgid "Modo"
+msgstr "Mode"
+
+msgid "Cuándo usarlo"
+msgstr "When to use it"
+
+msgid "`'auto'`"
+msgstr "`'auto'`"
+
+msgid "Tienes datos y quieres una recomendación inmediata"
+msgstr "You have data and want an immediate recommendation"
+
+msgid "`'cli'`"
+msgstr "`'cli'`"
+
+msgid "Quieres responder preguntas en la terminal"
+msgstr "You want to answer questions in the terminal"
+
+msgid "`'widget'`"
+msgstr "`'widget'`"
+
+msgid "Trabajas en Jupyter y prefieres botones"
+msgstr "You work in Jupyter and prefer buttons"
+
+#, python-brace-format
+msgid "Todos los modos devuelven (o llenan) un {class}`~pccpy.WizardResult` con `.snippet()`, `.summary()` y `.run(datos)`."
+msgstr "All modes return (or fill) a {class}`~pccpy.WizardResult` with `.snippet()`, `.summary()` and `.run(data)`."
+
+msgid "Modo `auto`"
+msgstr "`auto` mode"
+
+msgid "Pasa los datos y el asistente los analiza: detecta si son 1-D o 2-D, comprueba normalidad y tendencia, y devuelve la función más adecuada."
+msgstr "Pass the data and the assistant analyzes it: it detects whether it is 1-D or 2-D, checks normality and trend, and returns the most suitable function."
+
+msgid "Heurística automática"
+msgstr "Automatic heuristic"
+
+msgid "Datos"
+msgstr "Data"
+
+msgid "Condición"
+msgstr "Condition"
+
+msgid "Recomendación"
+msgstr "Recommendation"
+
+msgid "2-D, columnas > 10"
+msgstr "2-D, columns > 10"
+
+msgid "multivariado"
+msgstr "multivariate"
+
+msgid "`t2_chart`"
+msgstr "`t2_chart`"
+
+msgid "2-D, columnas ≤ 8"
+msgstr "2-D, columns ≤ 8"
+
+msgid "subgrupos pequeños"
+msgstr "small subgroups"
+
+msgid "`xbar_r_chart`"
+msgstr "`xbar_r_chart`"
+
+msgid "2-D, 9-10 columnas"
+msgstr "2-D, 9-10 columns"
+
+msgid "subgrupos medianos"
+msgstr "medium subgroups"
+
+msgid "`xbar_s_chart`"
+msgstr "`xbar_s_chart`"
+
+msgid "1-D, tendencia clara"
+msgstr "1-D, clear trend"
+
+#, python-format
+msgid "> 80 % o < 20 % incrementos"
+msgstr "> 80 % or < 20 % increments"
+
+msgid "`run_chart`"
+msgstr "`run_chart`"
+
+msgid "1-D, n ≥ 30, normal"
+msgstr "1-D, n ≥ 30, normal"
+
+msgid "p > 0.05 con especificaciones"
+msgstr "p > 0.05 with specifications"
+
+msgid "`capability_analysis`"
+msgstr "`capability_analysis`"
+
+msgid "1-D, n ≥ 30, no normal"
+msgstr "1-D, n ≥ 30, non-normal"
+
+msgid "p ≤ 0.05"
+msgstr "p ≤ 0.05"
+
+msgid "`capability_boxcox`"
+msgstr "`capability_boxcox`"
+
+msgid "1-D, n < 30"
+msgstr "1-D, n < 30"
+
+msgid "pocos datos"
+msgstr "little data"
+
+msgid "`imr_chart`"
+msgstr "`imr_chart`"
+
+msgid "Ejecutar directamente"
+msgstr "Run directly"
+
+msgid "Modo `cli`"
+msgstr "`cli` mode"
+
+msgid "Sin datos: el asistente hace preguntas con opciones numeradas."
+msgstr "Without data: the assistant asks questions with numbered options."
+
+msgid "El árbol de preguntas cubre los 30+ análisis disponibles en `pccpy`. Entradas inválidas se ignoran y se vuelve a preguntar."
+msgstr "The question tree covers the 30+ analyses available in `pccpy`. Invalid inputs are ignored and the question is asked again."
+
+msgid "Modo `widget`"
+msgstr "`widget` mode"
+
+msgid "En Jupyter Notebook / JupyterLab muestra botones interactivos. Requiere `ipywidgets` (incluido en la mayoría de entornos de Jupyter)."
+msgstr "In Jupyter Notebook / JupyterLab it shows interactive buttons. Requires `ipywidgets` (included in most Jupyter environments)."
+
+#, python-brace-format
+msgid "`session` es un {class}`~pccpy.WidgetSession`. Su atributo `.result` es `None` mientras la sesión está abierta y se llena al llegar a una hoja."
+msgstr "`session` is a {class}`~pccpy.WidgetSession`. Its `.result` attribute is `None` while the session is open and is filled when a leaf is reached."
+
+msgid "Si `ipywidgets` no está instalado, el modo degrada automáticamente a `'cli'`."
+msgstr "If `ipywidgets` is not installed, the mode automatically falls back to `'cli'`."
+
+msgid "`WizardResult`"
+msgstr "`WizardResult`"
+
+msgid "Recomendación de análisis devuelta por el asistente."
+msgstr "Analysis recommendation returned by the assistant."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Fragmento de código listo para usar."
+msgstr "Ready-to-use code snippet."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Ejecuta el análisis recomendado con los datos dados."
+msgstr "Runs the recommended analysis with the given data."
+
+msgid "`WidgetSession`"
+msgstr "`WidgetSession`"
+
+msgid "Objeto devuelto por `pp.wizard(mode=\"widget\")`."
+msgstr "Object returned by `pp.wizard(mode=\"widget\")`."
+
+msgid "Atributo"
+msgstr "Attribute"
+
+msgid "Tipo"
+msgstr "Type"
+
+msgid "Descripción"
+msgstr "Description"
+
+msgid "`result`"
+msgstr "`result`"
+
+msgid "`WizardResult | None`"
+msgstr "`WizardResult | None`"
+
+msgid "`None` mientras el usuario navega; se llena al llegar a una hoja del árbol."
+msgstr "`None` while the user navigates; it is filled when a leaf of the tree is reached."
+
+msgid "Sesión activa del wizard en modo widget."
+msgstr "Active wizard session in widget mode."
+
+msgid "El atributo :attr:`result` es ``None`` hasta que el usuario completa la navegación; después contiene el :class:`WizardResult` seleccionado."
+msgstr "The {attr}`result` attribute is ``None`` until the user completes the navigation; afterwards it holds the selected {class}`WizardResult`."
+
+msgid "Recomendación seleccionada por el usuario. ``None`` mientras la sesión está abierta."
+msgstr "Recommendation selected by the user. ``None`` while the session is open."
+
+msgid "type"
+msgstr "type"
+
+msgid "WizardResult or None"
+msgstr "WizardResult or None"
+
+msgid "Ejemplos"
+msgstr "Examples"
+

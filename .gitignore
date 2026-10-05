@@ -15,4 +15,6 @@ salida/
 .ruff_cache/
 docs/build/
 docs/_build/
+docs/_gettext/
+docs/locales/**/*.mo
 .coverage

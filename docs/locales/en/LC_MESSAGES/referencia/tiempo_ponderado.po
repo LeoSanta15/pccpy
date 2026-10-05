@@ -1,0 +1,48 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Cartas de tiempo ponderado"
+msgstr "Time-weighted charts"
+
+msgid "Carta de media móvil exponencialmente ponderada (EWMA)."
+msgstr "Exponentially weighted moving average (EWMA) chart."
+
+msgid "``weight`` (lambda, por defecto 0.2) y ``k`` (ancho de los límites en sigmas, por defecto 3) coinciden con los valores por defecto de Minitab. Los límites son los exactos, que se ensanchan al inicio de la serie. ``target`` y ``sigma`` se estiman de los datos si no se dan."
+msgstr "``weight`` (lambda, default 0.2) and ``k`` (limit width in sigmas, default 3) match Minitab's defaults. The limits are the exact ones, which are wider at the start of the series. ``target`` and ``sigma`` are estimated from the data if not given."
+
+msgid "Acepta los mismos formatos de entrada que :func:`xbar_r_chart` (matriz 2-D, vector 1-D + ``subgroup_size``, o DataFrame largo con ``subgroup`` + ``value``)."
+msgstr "Accepts the same input formats as :func:`xbar_r_chart` (2-D matrix, 1-D vector + ``subgroup_size``, or long DataFrame with ``subgroup`` + ``value``)."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Carta CUSUM tabular (Minitab: Stat > Control Charts > Time-Weighted > CUSUM)."
+msgstr "Tabular CUSUM chart (Minitab: Stat > Control Charts > Time-Weighted > CUSUM)."
+
+msgid "``h`` (límite de decisión) y ``k`` (holgura) están en unidades de sigma del estadístico graficado; por defecto h=4 y k=0.5. Se grafica la suma superior (positiva) y la inferior (negativa) en las unidades originales de los datos."
+msgstr "``h`` (decision limit) and ``k`` (slack) are in sigma units of the plotted statistic; the defaults are h=4 and k=0.5. The upper (positive) and lower (negative) sums are plotted in the original units of the data."
+
+msgid "Acepta los mismos formatos de entrada que :func:`xbar_r_chart`."
+msgstr "Accepts the same input formats as :func:`xbar_r_chart`."
+

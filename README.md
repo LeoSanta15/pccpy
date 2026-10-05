@@ -6,6 +6,8 @@
 
 **Control Estadístico de Procesos (SPC) en Python, al estilo Minitab.**
 
+> 🇬🇧 [English version](README_en.md)
+
 `pccpy` es una librería de SPC en español diseñada para ingenieros y técnicos que conocen
 Minitab y quieren hacer el mismo análisis desde Python. Todas las convenciones de
 nomenclatura (LCS/LCI, LEI/LES, Cp/Cpk/Pp/Ppk, Z.Bench, PPM, Anderson-Darling),
@@ -71,7 +73,7 @@ Requiere Python ≥ 3.9 con NumPy, SciPy, pandas y matplotlib.
 
 ### Idioma de los mensajes
 
-Los textos de pccpy están en español. El idioma se puede cambiar (desde 0.11.0 se traducen los mensajes de error y aviso, los `summary()`, las cabeceras de `to_frame()` —con `stable=True` para claves fijas—, los gráficos, el asistente `wizard()` y las demás tablas; el inglés está pendiente de revisión por una persona del dominio):
+Los textos de pccpy están en español. El idioma se puede cambiar (desde 0.11.0 —la documentación y este README también están en inglés— se traducen los mensajes de error y aviso, los `summary()`, las cabeceras de `to_frame()` —con `stable=True` para claves fijas—, los gráficos, el asistente `wizard()` y las demás tablas; el inglés está pendiente de revisión por una persona del dominio):
 
 ```python
 import pccpy as pp
@@ -296,9 +298,8 @@ carta = pp.ewma_chart(
     x,
     weight=0.2,    # λ: factor de suavizado (0 < λ ≤ 1); menor = más memoria
     k=3.0,         # multiplicador de sigma para los límites (defecto: 3)
-    tests=(1,),    # solo la prueba 1 tiene sentido en EWMA
 )
-# El 'sigma_method' de la carta subyacente se configura con sigma_method='mr'
+# EWMA aplica solo la prueba 1 (no tiene parámetro tests)
 ```
 
 **Guía de selección de λ:**
@@ -323,7 +324,6 @@ carta = pp.cusum_chart(
     h=4.0,    # límite de decisión H (en unidades de sigma); defecto: 4 (= 4σ)
     k=0.5,    # zona de referencia K (en unidades de sigma); defecto: 0.5
     # Con H=4, K=0.5 el ARL en control es ≋370 (estándar de la industria)
-    tests=(1,),
 )
 ```
 
@@ -342,7 +342,6 @@ por lo que sus límites son más amplios.
 pp.ma_chart(
     x,
     length=5,   # ventana de la media móvil; defecto: 3
-    tests=(1,),
 )
 ```
 
@@ -420,7 +419,7 @@ pp.g_chart(entre_eventos)
 # T: tiempo entre eventos (distribución Weibull o exponencial)
 tiempos = rng.weibull(1.5, 40) * 30
 pp.t_chart(tiempos)          # Weibull (defecto)
-pp.t_chart(tiempos, dist="exp")  # exponencial
+pp.t_chart(tiempos, distribution="exponential")  # exponencial
 ```
 
 Los límites de la carta G se basan en percentiles exactos de la distribución
@@ -486,8 +485,7 @@ multivariada mediante el determinante de la matriz de covarianza muestral `|S|`.
 pp.generalized_variance_chart(
     nuev,
     subgroup_size=5,
-    mu=hist.mean(axis=0),
-    cov=np.cov(hist, rowvar=False),
+    cov=np.cov(hist, rowvar=False),   # Sigma histórica (sin media: solo mide dispersión)
 )
 ```
 
@@ -740,14 +738,14 @@ plt.show()
 ```python
 result = pp.normality_test(
     datos,
-    method="ad",      # 'ad' Anderson-Darling (defecto), 'shapiro', 'dagostino'
+    method="anderson",      # 'anderson' (defecto), 'shapiro', 'dagostino'
 )
-print(result.summary())
-# Estadístico: 0.312, Valor p: 0.534, Conclusión: no se rechaza normalidad (α=0.05)
+print(result)
+# Anderson-Darling: estadístico = 0.5302, valor p = 0.165 (n = 40)
 
 result.statistic    # valor del estadístico
-result.pvalue       # valor p
-result.normal       # True si no se rechaza normalidad a α = 0.05
+result.p_value      # valor p
+result.reject       # True si se rechaza normalidad a α = 0.05
 
 # Gráfico de probabilidad normal con Anderson-Darling
 pp.probability_plot(datos)
@@ -1155,7 +1153,7 @@ carta.panels[0].violations   # dict {prueba: array de índices}
 
 ## Validación
 
-252 pruebas automatizadas. Las referencias son independientes de pccpy:
+Más de 1 800 pruebas automatizadas. Las referencias son independientes de pccpy:
 
 - Constantes d2, d3, c4 frente a tablas publicadas (Montgomery).
 - Límites I-MR, Xbar-R y Xbar-S frente al cálculo manual con A2, D3, D4, A3, B3, B4.

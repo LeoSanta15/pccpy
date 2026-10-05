@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Constantes SPC"
+msgstr "SPC constants"
+
+msgid "Calculadas por integración numérica para cualquier :math:`n \\geq 2`, no solo para las tablas finitas que suelen publicarse."
+msgstr "Computed by numerical integration for any :math:`n \\geq 2`, not only for the finite tables that are usually published."
+
+msgid "Devuelve todas las constantes para un tamaño de subgrupo ``n``."
+msgstr "Returns all the constants for a subgroup size ``n``."
+
+msgid "Claves: d2, d3, c4, c5, A2, A3, D3, D4, B3, B4."
+msgstr "Keys: d2, d3, c4, c5, A2, A3, D3, D4, B3, B4."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Media del rango relativo W = R/sigma para n observaciones normales."
+msgstr "Mean of the relative range W = R/sigma for n normal observations."
+
+msgid "Desviación estándar del rango relativo W = R/sigma."
+msgstr "Standard deviation of the relative range W = R/sigma."
+
+msgid "Factor de corrección de sesgo de la desviación estándar muestral."
+msgstr "Bias-correction factor for the sample standard deviation."
+
+msgid "Desviación estándar de s / sigma: sqrt(1 - c4^2)."
+msgstr "Standard deviation of s / sigma: sqrt(1 - c4^2)."
+

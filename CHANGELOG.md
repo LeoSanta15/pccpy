@@ -22,10 +22,15 @@
 
 - Fase 5: guía «Cómo traducir» (`docs/source/traducir.md`) con el glosario español → inglés, test que comprueba que el glosario se aplica en todo el catálogo (`tests/test_i18n_glosario.py`) y `scripts/i18n_revision.py` (tabla español | inglés para la revisión humana).
 
+- Fase 4: **documentación y README en inglés.** Catálogos `gettext` de Sphinx en `docs/locales/en` (todas las páginas y la referencia de la API, salvo el historial de versiones), `README_en.md`, `make docs-en` / `docs-update` / `docs-check`, `scripts/docs_i18n_check.py` (catálogos al día, sin textos vacíos, mismas referencias y código, sin español sin traducir) y CI que construye ambos idiomas con `-W`. `sphinx-intl` en el extra `docs`. Read the Docs: ver el comentario de `.readthedocs.yaml`.
+
+### Corregido
+- README: 6 ejemplos que no se ejecutaban (`ewma_chart`/`cusum_chart`/`ma_chart` sin parámetro `tests`, `t_chart(dist=…)`, `generalized_variance_chart(mu=…)`, `normality_test(method="ad")` y los atributos de `NormalityResult`); el número de pruebas automatizadas.
+- `multivariate`: el párrafo final del docstring de `t2_chart` pasa a una sección `Notes` (no se extraía para la traducción).
+
 ### Nota
-- El comportamiento por defecto (español) **no cambia**. El inglés está completo (767 textos) pero **pendiente de revisión por una persona del dominio SPC**.
+- El comportamiento por defecto (español) **no cambia**. El inglés (mensajes: 767 textos; documentación y README) está completo pero **pendiente de revisión por una persona del dominio SPC**.
 - Los atributos `anova_table`, `kappa_within` y `kappa_vs_reference` siguen siempre en español; usa `anova_frame()`, `kappa_within_frame()` y `kappa_vs_reference_frame()` para el idioma activo.
-- La documentación (Sphinx) sigue en español.
 
 ## [0.10.8] - documentación de referencia completa
 

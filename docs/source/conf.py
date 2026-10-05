@@ -1,6 +1,7 @@
 """Configuración de Sphinx para la documentación de pccpy."""
 from __future__ import annotations
 
+import os
 import sys
 from pathlib import Path
 
@@ -16,7 +17,16 @@ copyright = "2026, LeoSanta15"
 release = pccpy.__version__
 version = pccpy.__version__
 
-language = "es"
+# Idioma fuente: español. Para el inglés: ``sphinx-build -D language=en`` (make docs-en) o, en Read the Docs,
+# un segundo proyecto como traducción (READTHEDOCS_LANGUAGE).
+language = os.environ.get("READTHEDOCS_LANGUAGE", "es")
+locale_dirs = ["../locales"]   # docs/locales/<idioma>/LC_MESSAGES/*.po
+gettext_compact = False        # un catálogo por página
+gettext_location = False       # sin números de línea: diffs de catálogo más pequeños
+gettext_uuid = False
+# Sphinx 9.1 avisa de «referencias inconsistentes» en descripciones de la API (docstring de CapabilityResult.sigma_level)
+# aunque la traducción las conserva; scripts/docs_i18n_check.py ya comprueba que cada traducción mantiene sus roles y URL.
+suppress_warnings = ["i18n.inconsistent_references"]
 
 extensions = [
     "sphinx.ext.autodoc",

@@ -30,6 +30,21 @@ python -m pytest tests/test_i18n_glosario.py tests/test_i18n_errores.py
 python scripts/i18n_revision.py > revision_en.md   # tabla español | inglés para marcar ✔ / ✎ / ?
 ```
 
+## Traducir la documentación
+
+La documentación (Sphinx) y el README también se traducen. Las páginas usan catálogos `gettext` en `docs/locales/<idioma>/LC_MESSAGES/`
+(uno por página, incluidas las descripciones de la API, que salen de los docstrings); el README en inglés es `README_en.md`.
+
+```bash
+make docs-update     # extrae los textos y actualiza los catálogos (traduce después los msgstr nuevos)
+make docs-en         # construye la documentación en inglés (con -W)
+make docs-check      # catálogos al día, sin textos vacíos, mismas referencias de Sphinx, sin español sin traducir
+```
+
+- Conserva los roles (`{doc}`…``, `:func:`…``), las URL, los fragmentos de código y las negritas: `make docs-check` lo comprueba.
+- En las páginas Markdown, escribe los roles de las descripciones de la API con la sintaxis de MyST (`{func}`nombre``), no con la de RST.
+- El historial de versiones (`changelog`) se deja en español.
+
 ## Añadir un idioma
 
 ```bash

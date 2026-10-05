@@ -1,0 +1,329 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Diagnóstico rápido (`diagnose`)"
+msgstr "Quick diagnosis (`diagnose`)"
+
+#, python-brace-format
+msgid "`pp.diagnose()` analiza un vector de datos de proceso y devuelve un {class}`~pccpy.DiagnoseResult` con estadísticos descriptivos, prueba de normalidad, detección de tendencia, valores atípicos y una recomendación de qué función usar a continuación."
+msgstr "`pp.diagnose()` analyzes a vector of process data and returns a {class}`~pccpy.DiagnoseResult` with descriptive statistics, a normality test, trend detection, outliers and a recommendation of which function to use next."
+
+msgid "Es el punto de partida ideal cuando no sabes aún qué análisis aplicar."
+msgstr "It is the ideal starting point when you do not yet know which analysis to apply."
+
+msgid "Uso básico"
+msgstr "Basic usage"
+
+msgid "Salida (extracto):"
+msgstr "Output (excerpt):"
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Parámetro"
+msgstr "Parameter"
+
+msgid "Tipo"
+msgstr "Type"
+
+msgid "Descripción"
+msgstr "Description"
+
+msgid "`x`"
+msgstr "`x`"
+
+msgid "array-like"
+msgstr "array-like"
+
+msgid "Vector 1-D de observaciones del proceso."
+msgstr "1-D vector of process observations."
+
+msgid "`lsl`"
+msgstr "`lsl`"
+
+msgid "`float`, opcional"
+msgstr "`float`, optional"
+
+msgid "Límite de especificación inferior (LEI)."
+msgstr "Lower specification limit (LSL)."
+
+msgid "`usl`"
+msgstr "`usl`"
+
+msgid "Límite de especificación superior (LES)."
+msgstr "Upper specification limit (USL)."
+
+msgid "`target`"
+msgstr "`target`"
+
+msgid "Valor objetivo (nominal)."
+msgstr "Target (nominal) value."
+
+msgid "Requiere al menos **4 observaciones**."
+msgstr "Requires at least **4 observations**."
+
+msgid "Gráfico rápido"
+msgstr "Quick plot"
+
+msgid "El gráfico incluye:"
+msgstr "The plot includes:"
+
+msgid "**Histograma** con curva normal ajustada, líneas de especificación (LEI/LES) y valor objetivo."
+msgstr "**Histogram** with fitted normal curve, specification lines (LSL/USL) and target value."
+
+msgid "**Gráfico de secuencia** con la media marcada y los valores atípicos resaltados en rojo."
+msgstr "**Sequence plot** with the mean marked and outliers highlighted in red."
+
+msgid "Qué analiza"
+msgstr "What it analyzes"
+
+msgid "Estadísticos básicos"
+msgstr "Basic statistics"
+
+msgid "N, media, desviación estándar, CV, mínimo, máximo, mediana, asimetría y curtosis."
+msgstr "N, mean, standard deviation, CV, minimum, maximum, median, skewness and kurtosis."
+
+msgid "Normalidad"
+msgstr "Normality"
+
+msgid "Prueba de normalidad (`scipy.stats.normaltest`). Un valor p > 0.05 indica distribución aproximadamente normal."
+msgstr "Normality test (`scipy.stats.normaltest`). A p-value > 0.05 indicates an approximately normal distribution."
+
+msgid "Con menos de 8 observaciones la prueba no es válida; `diagnose` devuelve `is_normal = True` y `normality_p = nan` en ese caso."
+msgstr "With fewer than 8 observations the test is not valid; `diagnose` returns `is_normal = True` and `normality_p = nan` in that case."
+
+msgid "Tendencia"
+msgstr "Trend"
+
+#, python-format
+msgid "Detección simplificada basada en el porcentaje de incrementos consecutivos: más del 80 % indica tendencia creciente; menos del 20 %, decreciente."
+msgstr "Simplified detection based on the percentage of consecutive increments: more than 80 % indicates an increasing trend; less than 20 %, decreasing."
+
+msgid "Valores atípicos"
+msgstr "Outliers"
+
+msgid "Método IQR × 1.5: puntos por debajo de Q1 − 1.5·IQR o por encima de Q3 + 1.5·IQR."
+msgstr "IQR × 1.5 method: points below Q1 − 1.5·IQR or above Q3 + 1.5·IQR."
+
+msgid "Cp y Cpk estimados"
+msgstr "Estimated Cp and Cpk"
+
+msgid "Si se proporcionan `lsl` y/o `usl`, se calculan los índices de capacidad preliminares:"
+msgstr "If `lsl` and/or `usl` are given, preliminary capability indices are computed:"
+
+msgid "Recomendación automática"
+msgstr "Automatic recommendation"
+
+msgid "Condición"
+msgstr "Condition"
+
+msgid "Función recomendada"
+msgstr "Recommended function"
+
+msgid "Tendencia detectada"
+msgstr "Trend detected"
+
+msgid "`run_chart`"
+msgstr "`run_chart`"
+
+msgid "Con especificaciones y distribución normal"
+msgstr "With specifications and normal distribution"
+
+msgid "`capability_analysis`"
+msgstr "`capability_analysis`"
+
+msgid "Con especificaciones y distribución no normal"
+msgstr "With specifications and non-normal distribution"
+
+msgid "`capability_boxcox`"
+msgstr "`capability_boxcox`"
+
+msgid "Sin especificaciones"
+msgstr "Without specifications"
+
+msgid "`imr_chart`"
+msgstr "`imr_chart`"
+
+msgid "Referencia de `DiagnoseResult`"
+msgstr "`DiagnoseResult` reference"
+
+msgid "Resultado del diagnóstico rápido devuelto por :func:`diagnose`."
+msgstr "Quick diagnosis result returned by {func}`diagnose`."
+
+msgid "Tabla resumen (una fila por estadístico)."
+msgstr "Summary table (one row per statistic)."
+
+msgid "Con ``stable=True`` las filas llevan claves canónicas en inglés que no cambian con el idioma."
+msgstr "With ``stable=True`` the rows carry canonical English keys that do not change with the language."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Exporta el diagnóstico a un archivo Excel (.xlsx)."
+msgstr "Exports the diagnosis to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``)."
+
+msgid "Resumen en texto al estilo sesión de Minitab."
+msgstr "Minitab session-style text summary."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Histograma con curva normal + gráfico de secuencia."
+msgstr "Histogram with normal curve + sequence plot."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*matplotlib.figure.Figure*"
+msgstr "*matplotlib.figure.Figure*"
+
+msgid "Atributos principales"
+msgstr "Main attributes"
+
+msgid "Atributo"
+msgstr "Attribute"
+
+msgid "`n`"
+msgstr "`n`"
+
+msgid "`int`"
+msgstr "`int`"
+
+msgid "Número de observaciones."
+msgstr "Number of observations."
+
+msgid "`mean`, `std`"
+msgstr "`mean`, `std`"
+
+msgid "`float`"
+msgstr "`float`"
+
+msgid "Media y desviación estándar muestrales."
+msgstr "Sample mean and standard deviation."
+
+msgid "`cv`"
+msgstr "`cv`"
+
+msgid "Coeficiente de variación (%)."
+msgstr "Coefficient of variation (%)."
+
+msgid "`min_val`, `max_val`"
+msgstr "`min_val`, `max_val`"
+
+msgid "Mínimo y máximo."
+msgstr "Minimum and maximum."
+
+msgid "`median`"
+msgstr "`median`"
+
+msgid "Mediana."
+msgstr "Median."
+
+msgid "`skewness`, `kurtosis`"
+msgstr "`skewness`, `kurtosis`"
+
+msgid "Asimetría y curtosis (exceso)."
+msgstr "Skewness and kurtosis (excess)."
+
+msgid "`normality_stat`, `normality_p`"
+msgstr "`normality_stat`, `normality_p`"
+
+msgid "Estadístico y valor p de la prueba de normalidad."
+msgstr "Statistic and p-value of the normality test."
+
+msgid "`is_normal`"
+msgstr "`is_normal`"
+
+msgid "`bool`"
+msgstr "`bool`"
+
+msgid "`True` si `normality_p > 0.05`."
+msgstr "`True` if `normality_p > 0.05`."
+
+msgid "`has_trend`"
+msgstr "`has_trend`"
+
+msgid "`True` si se detectó tendencia."
+msgstr "`True` if a trend was detected."
+
+msgid "`trend_direction`"
+msgstr "`trend_direction`"
+
+msgid "`str`"
+msgstr "`str`"
+
+msgid "`'creciente'`, `'decreciente'` o `''`."
+msgstr "`'creciente'`, `'decreciente'` or `''`."
+
+msgid "`outlier_count`"
+msgstr "`outlier_count`"
+
+msgid "Número de valores atípicos detectados (IQR)."
+msgstr "Number of detected outliers (IQR)."
+
+msgid "`outlier_indices`"
+msgstr "`outlier_indices`"
+
+msgid "`list[int]`"
+msgstr "`list[int]`"
+
+msgid "Índices de los valores atípicos."
+msgstr "Indices of the outliers."
+
+msgid "`recommended_function`"
+msgstr "`recommended_function`"
+
+msgid "Nombre de la función recomendada."
+msgstr "Name of the recommended function."
+
+msgid "`recommended_snippet`"
+msgstr "`recommended_snippet`"
+
+msgid "Código listo para copiar."
+msgstr "Ready-to-copy code."
+
+msgid "`issues`"
+msgstr "`issues`"
+
+msgid "`list[str]`"
+msgstr "`list[str]`"
+
+msgid "Lista de alertas (distribución, tendencia, capacidad)."
+msgstr "List of alerts (distribution, trend, capability)."
+
+msgid "`lsl`, `usl`, `target`"
+msgstr "`lsl`, `usl`, `target`"
+
+msgid "`float | None`"
+msgstr "`float | None`"
+
+msgid "Especificaciones pasadas."
+msgstr "Specifications passed in."
+
+msgid "`cp`, `cpk`"
+msgstr "`cp`, `cpk`"
+
+msgid "Índices de capacidad estimados (requieren `lsl` y `usl`)."
+msgstr "Estimated capability indices (require `lsl` and `usl`)."
+

@@ -1,0 +1,575 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "MSA / Gage R&R"
+msgstr "MSA / Gage R&R"
+
+msgid "Los estudios de sistemas de medición (MSA) cuantifican cuánta variación del proceso se debe al sistema de medición. pccpy implementa los cinco estudios más comunes del manual AIAG MSA (4ª ed.):"
+msgstr "Measurement system analysis (MSA) studies quantify how much of the process variation is due to the measurement system. pccpy implements the five most common studies from the AIAG MSA manual (4th ed.):"
+
+msgid "**Crossed Gage R&R** — cada operador mide cada parte (diseño cruzado)."
+msgstr "**Crossed Gage R&R** — each operator measures each part (crossed design)."
+
+msgid "**Nested Gage R&R** — cada operador mide un conjunto distinto de partes."
+msgstr "**Nested Gage R&R** — each operator measures a different set of parts."
+
+msgid "**Type 1 Study** — sesgo y repetibilidad de una sola fuente de variación."
+msgstr "**Type 1 Study** — bias and repeatability from a single source of variation."
+
+msgid "**Linearity and Bias** — variación del sesgo a lo largo del rango de medición."
+msgstr "**Linearity and Bias** — variation of the bias across the measurement range."
+
+msgid "**Attribute Agreement Analysis** — concordancia entre operadores y vs referencia (Kappa de Cohen y Kappa de Fleiss)."
+msgstr "**Attribute Agreement Analysis** — agreement between operators and vs a reference (Cohen's kappa and Fleiss' kappa)."
+
+msgid "Crossed Gage R&R"
+msgstr "Crossed Gage R&R"
+
+msgid "Gage R&R cruzado (Crossed Gage R&R)."
+msgstr "Crossed Gage R&R."
+
+msgid "Cada operador mide cada parte en cada réplica (diseño completamente cruzado)."
+msgstr "Each operator measures each part in each replicate (fully crossed design)."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Mediciones. Puede ser:  * Vector 1-D de longitud ``parts × operators × replicates`` ordenado   de manera que las partes varían más lento, luego operadores, luego   réplicas. * Array 3-D de forma ``(parts, operators, replicates)``."
+msgstr "Measurements. It can be:  * 1-D vector of length ``parts × operators × replicates`` ordered so that   parts vary slowest, then operators, then replicates. * 3-D array of shape ``(parts, operators, replicates)``."
+
+msgid "Mediciones. Puede ser:"
+msgstr "Measurements. It can be:"
+
+msgid "Vector 1-D de longitud ``parts × operators × replicates`` ordenado de manera que las partes varían más lento, luego operadores, luego réplicas."
+msgstr "1-D vector of length ``parts × operators × replicates`` ordered so that parts vary slowest, then operators, then replicates."
+
+msgid "Array 3-D de forma ``(parts, operators, replicates)``."
+msgstr "3-D array of shape ``(parts, operators, replicates)``."
+
+msgid "Número de partes."
+msgstr "Number of parts."
+
+msgid "Número de operadores."
+msgstr "Number of operators."
+
+msgid "Número de réplicas por parte y operador."
+msgstr "Number of replicates per part and operator."
+
+msgid "``'anova'`` (por defecto) o ``'xbar_r'``."
+msgstr "``'anova'`` (default) or ``'xbar_r'``."
+
+msgid "Multiplicador K para la variación de estudio (= K·σ). Por defecto 6 (equivalente a ±3σ, igual que Minitab)."
+msgstr "K multiplier for the study variation (= K·σ). Default 6 (equivalent to ±3σ, same as Minitab)."
+
+#, python-format
+msgid "Tolerancia del proceso (LES − LEI). Si se proporciona, se incluye el % sobre tolerancia en el resumen."
+msgstr "Process tolerance (USL − LSL). If given, the % of tolerance is included in the summary."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*GageRRResult*"
+msgstr "*GageRRResult*"
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Gráficas de componentes de variación del Gage R&R."
+msgstr "Variation component plots of the Gage R&R."
+
+msgid "Devuelve la figura de matplotlib."
+msgstr "Returns the matplotlib figure."
+
+msgid "Resultado de :func:`gage_rr`."
+msgstr "Result of :func:`gage_rr`."
+
+msgid "Atributos"
+msgstr "Attributes"
+
+msgid "method"
+msgstr "method"
+
+msgid "str"
+msgstr "str"
+
+msgid "``'anova'`` o ``'xbar_r'``."
+msgstr "``'anova'`` or ``'xbar_r'``."
+
+msgid "study_variation"
+msgstr "study_variation"
+
+msgid "float"
+msgstr "float"
+
+msgid "Multiplicador para la variación de estudio (por defecto 6)."
+msgstr "Multiplier for the study variation (default 6)."
+
+msgid "var_repeatability"
+msgstr "var_repeatability"
+
+msgid "Varianza de repetibilidad (EV²)."
+msgstr "Repeatability variance (EV²)."
+
+msgid "var_reproducibility"
+msgstr "var_reproducibility"
+
+msgid "Varianza total de reproducibilidad (AV² + IA²)."
+msgstr "Total reproducibility variance (AV² + IA²)."
+
+msgid "var_operator"
+msgstr "var_operator"
+
+msgid "Varianza de operador (AV²)."
+msgstr "Operator variance (AV²)."
+
+msgid "var_interaction"
+msgstr "var_interaction"
+
+msgid "Varianza de interacción parte×operador (IA²). 0 para Xbar-R."
+msgstr "Part×operator interaction variance (IA²). 0 for Xbar-R."
+
+msgid "var_part"
+msgstr "var_part"
+
+msgid "Varianza parte a parte (PV²)."
+msgstr "Part-to-part variance (PV²)."
+
+msgid "var_gage"
+msgstr "var_gage"
+
+msgid "Varianza del sistema de medición (EV² + AV² + IA²)."
+msgstr "Measurement system variance (EV² + AV² + IA²)."
+
+msgid "var_total"
+msgstr "var_total"
+
+msgid "Varianza total."
+msgstr "Total variance."
+
+msgid "pct_gage"
+msgstr "pct_gage"
+
+msgid "%Contribución del Gage R&R (= var_gage / var_total × 100)."
+msgstr "%Contribution of the Gage R&R (= var_gage / var_total × 100)."
+
+msgid "pct_repeatability"
+msgstr "pct_repeatability"
+
+msgid "%Contribución de repetibilidad."
+msgstr "%Contribution of repeatability."
+
+msgid "pct_reproducibility"
+msgstr "pct_reproducibility"
+
+msgid "%Contribución de reproducibilidad."
+msgstr "%Contribution of reproducibility."
+
+msgid "pct_part"
+msgstr "pct_part"
+
+msgid "%Contribución parte a parte."
+msgstr "%Contribution of part-to-part."
+
+msgid "study_var_gage"
+msgstr "study_var_gage"
+
+msgid "Variación de estudio del Gage (= K × σ_gage)."
+msgstr "Gage study variation (= K × σ_gage)."
+
+msgid "study_var_total"
+msgstr "study_var_total"
+
+msgid "Variación de estudio total (= K × σ_total)."
+msgstr "Total study variation (= K × σ_total)."
+
+msgid "pct_study_var"
+msgstr "pct_study_var"
+
+msgid "% Variación de estudio del Gage vs total."
+msgstr "% Study variation of the Gage vs total."
+
+msgid "ndc"
+msgstr "ndc"
+
+msgid "int"
+msgstr "int"
+
+msgid "Número de categorías distintas."
+msgstr "Number of distinct categories."
+
+msgid "anova_table"
+msgstr "anova_table"
+
+msgid "pd.DataFrame o None"
+msgstr "pd.DataFrame or None"
+
+msgid "Tabla ANOVA (solo método 'anova')."
+msgstr "ANOVA table (method 'anova' only)."
+
+msgid "Tabla resumen (una fila por estadístico; con ``stable=True`` sin filas separadoras y con claves canónicas en inglés)."
+msgstr "Summary table (one row per statistic; with ``stable=True``, without separator rows and with canonical English keys)."
+
+msgid "Exporta el Gage R&R a un archivo Excel (.xlsx)."
+msgstr "Exports the Gage R&R to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``). Hojas: Resumen, ANOVA (si está disponible)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``). Sheets: Summary, ANOVA (if available)."
+
+msgid "Tabla ANOVA con las cabeceras del idioma activo (``None`` si el método no usa ANOVA)."
+msgstr "ANOVA table with the headers of the active language (``None`` if the method does not use ANOVA)."
+
+msgid "``anova_table`` conserva siempre las cabeceras en español; con ``stable=True`` esta tabla usa el índice ``source`` y las columnas ``df``, ``ss``, ``ms``, ``f`` y ``p_value``, y las filas ``parts``, ``operators``, ``parts_x_operators``, ``error_repeatability`` (cruzado) o ``parts_nested``, ``error`` (anidado)."
+msgstr "``anova_table`` always keeps its Spanish headers; with ``stable=True`` this table uses the index ``source`` and the columns ``df``, ``ss``, ``ms``, ``f`` and ``p_value``, and the rows ``parts``, ``operators``, ``parts_x_operators``, ``error_repeatability`` (crossed) or ``parts_nested``, ``error`` (nested)."
+
+msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
+msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+msgid "Nested Gage R&R"
+msgstr "Nested Gage R&R"
+
+msgid "Gage R&R anidado (Nested Gage R&R)."
+msgstr "Nested Gage R&R."
+
+msgid "Cada operador mide un conjunto distinto de partes (las partes están anidadas dentro de operadores)."
+msgstr "Each operator measures a different set of parts (parts are nested within operators)."
+
+msgid "Mediciones en formato ``(parts, operators, replicates)``."
+msgstr "Measurements in ``(parts, operators, replicates)`` format."
+
+msgid "Número de partes **por** operador."
+msgstr "Number of parts **per** operator."
+
+msgid "Número de réplicas."
+msgstr "Number of replicates."
+
+msgid "Multiplicador K. Por defecto 6."
+msgstr "K multiplier. Default 6."
+
+msgid "Estudio Tipo 1"
+msgstr "Type 1 study"
+
+msgid "Estudio Tipo 1: sesgo y repetibilidad de una sola fuente de medición."
+msgstr "Type 1 study: bias and repeatability from a single measurement source."
+
+msgid "Mediciones repetidas de la misma pieza de referencia."
+msgstr "Repeated measurements of the same reference part."
+
+msgid "Valor verdadero (de referencia) de la pieza."
+msgstr "True (reference) value of the part."
+
+msgid "LES − LEI. Si se proporciona, Cg y Cgk se calculan en base a ella."
+msgstr "USL − LSL. If given, Cg and Cgk are computed based on it."
+
+msgid "Multiplicador K (por defecto 6)."
+msgstr "K multiplier (default 6)."
+
+msgid "*Type1Result*"
+msgstr "*Type1Result*"
+
+msgid "Estudio Tipo 1 a partir de estadísticos resumen."
+msgstr "Type 1 study from summary statistics."
+
+msgid "Equivalente a :func:`gage_type1` pero acepta media, desviación estándar y tamaño de muestra en lugar de datos crudos."
+msgstr "Equivalent to :func:`gage_type1` but accepts the mean, standard deviation and sample size instead of raw data."
+
+msgid "Media de las mediciones repetidas."
+msgstr "Mean of the repeated measurements."
+
+msgid "Desviación estándar muestral (ddof=1)."
+msgstr "Sample standard deviation (ddof=1)."
+
+msgid "Número de mediciones."
+msgstr "Number of measurements."
+
+msgid "Gráfico de corridas del Estudio Tipo 1 con líneas de referencia."
+msgstr "Run plot of the Type 1 study with reference lines."
+
+msgid "Resultado de :func:`gage_type1`."
+msgstr "Result of :func:`gage_type1`."
+
+msgid "reference"
+msgstr "reference"
+
+msgid "Valor de referencia."
+msgstr "Reference value."
+
+msgid "n"
+msgstr "n"
+
+msgid "mean"
+msgstr "mean"
+
+msgid "Media de las mediciones."
+msgstr "Mean of the measurements."
+
+msgid "std"
+msgstr "std"
+
+msgid "Desviación estándar."
+msgstr "Standard deviation."
+
+msgid "bias"
+msgstr "bias"
+
+msgid "Sesgo = media − referencia."
+msgstr "Bias = mean − reference."
+
+msgid "bias_pct"
+msgstr "bias_pct"
+
+#, python-format
+msgid "Sesgo como % de la variación de estudio (K·σ) o tolerancia."
+msgstr "Bias as a % of the study variation (K·σ) or tolerance."
+
+msgid "t_stat"
+msgstr "t_stat"
+
+msgid "Estadístico t para H₀: sesgo = 0."
+msgstr "t statistic for H₀: bias = 0."
+
+msgid "p_value"
+msgstr "p_value"
+
+msgid "p-valor bilateral del test de sesgo."
+msgstr "Two-sided p-value of the bias test."
+
+msgid "cg"
+msgstr "cg"
+
+msgid "Índice Cg (= K·tolerance / (2·study_variation·σ))."
+msgstr "Cg index (= K·tolerance / (2·study_variation·σ))."
+
+msgid "cgk"
+msgstr "cgk"
+
+msgid "Índice Cgk (corrige por sesgo)."
+msgstr "Cgk index (corrects for bias)."
+
+msgid "Variación de estudio (K·σ)."
+msgstr "Study variation (K·σ)."
+
+msgid "tolerance"
+msgstr "tolerance"
+
+msgid "float o None"
+msgstr "float or None"
+
+msgid "Tolerancia del proceso."
+msgstr "Process tolerance."
+
+msgid "Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."
+msgstr "Summary table (one row per statistic; with ``stable=True``, canonical English keys)."
+
+msgid "Exporta el Estudio Tipo 1 a un archivo Excel (.xlsx)."
+msgstr "Exports the Type 1 study to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``)."
+
+msgid "Linealidad y sesgo"
+msgstr "Linearity and bias"
+
+msgid "Estudio de linealidad y sesgo del sistema de medición."
+msgstr "Linearity and bias study of the measurement system."
+
+msgid "Vector de mediciones (pueden ser múltiples por valor de referencia)."
+msgstr "Vector of measurements (there can be several per reference value)."
+
+msgid "Vector de valores de referencia correspondiente a cada medición."
+msgstr "Vector of reference values corresponding to each measurement."
+
+#, python-format
+msgid "LES − LEI para calcular % de variación de estudio."
+msgstr "USL − LSL for computing % of study variation."
+
+msgid "*LinearityResult*"
+msgstr "*LinearityResult*"
+
+msgid "Sesgo vs referencia con la línea de regresión."
+msgstr "Bias vs reference with the regression line."
+
+msgid "Resultado de :func:`gage_linearity`."
+msgstr "Result of :func:`gage_linearity`."
+
+msgid "references"
+msgstr "references"
+
+msgid "ndarray"
+msgstr "ndarray"
+
+msgid "Valores de referencia únicos."
+msgstr "Unique reference values."
+
+msgid "biases"
+msgstr "biases"
+
+msgid "Sesgo medio en cada valor de referencia."
+msgstr "Mean bias at each reference value."
+
+msgid "slope"
+msgstr "slope"
+
+msgid "Pendiente de la regresión sesgo ~ referencia."
+msgstr "Slope of the bias ~ reference regression."
+
+msgid "intercept"
+msgstr "intercept"
+
+msgid "Intercepto."
+msgstr "Intercept."
+
+msgid "r_squared"
+msgstr "r_squared"
+
+msgid "R² de la regresión."
+msgstr "R² of the regression."
+
+msgid "p_slope"
+msgstr "p_slope"
+
+msgid "p-valor del test de linealidad (H₀: slope = 0)."
+msgstr "p-value of the linearity test (H₀: slope = 0)."
+
+msgid "p_intercept"
+msgstr "p_intercept"
+
+msgid "p-valor H₀: intercept = 0."
+msgstr "p-value H₀: intercept = 0."
+
+msgid "linearity"
+msgstr "linearity"
+
+msgid "abs(slope) × rango de referencias (variación de linealidad)."
+msgstr "abs(slope) × range of references (linearity variation)."
+
+msgid "linearity_pct"
+msgstr "linearity_pct"
+
+#, python-format
+msgid "Linealidad como % de la variación de estudio (si se da tolerancia)."
+msgstr "Linearity as a % of the study variation (if a tolerance is given)."
+
+msgid "avg_bias"
+msgstr "avg_bias"
+
+msgid "Sesgo promedio general."
+msgstr "Overall average bias."
+
+msgid "avg_bias_pct"
+msgstr "avg_bias_pct"
+
+#, python-format
+msgid "Sesgo promedio como % de variación de estudio."
+msgstr "Average bias as a % of the study variation."
+
+msgid "Exporta el análisis de linealidad a un archivo Excel (.xlsx)."
+msgstr "Exports the linearity analysis to an Excel (.xlsx) file."
+
+msgid "Concordancia por atributos"
+msgstr "Attribute agreement"
+
+msgid "Análisis de concordancia por atributos (Kappa de Cohen y Fleiss)."
+msgstr "Attribute agreement analysis (Cohen's and Fleiss' kappa)."
+
+msgid "Clasificaciones de los operadores. Si es DataFrame, cada columna es un operador y cada fila una observación (parte × réplica). Si es ndarray, forma ``(n_parts × replicates, n_operators)``."
+msgstr "Operators' classifications. If a DataFrame, each column is an operator and each row an observation (part × replicate). If an ndarray, shape ``(n_parts × replicates, n_operators)``."
+
+msgid "Clasificación de referencia (de longitud n_parts × replicates o n_parts). Si tiene longitud n_parts, se repite ``replicates`` veces."
+msgstr "Reference classification (of length n_parts × replicates or n_parts). If its length is n_parts, it is repeated ``replicates`` times."
+
+msgid "Nombres de los operadores."
+msgstr "Operator names."
+
+msgid "Número de réplicas por parte (usado para calcular acuerdo dentro del mismo operador)."
+msgstr "Number of replicates per part (used to compute agreement within the same operator)."
+
+msgid "*AttributeAgreementResult*"
+msgstr "*AttributeAgreementResult*"
+
+msgid "Kappa por operador (vs referencia y dentro)."
+msgstr "Kappa per operator (vs reference and within)."
+
+msgid "Resultado de :func:`attribute_agreement`."
+msgstr "Result of :func:`attribute_agreement`."
+
+msgid "kappa_within"
+msgstr "kappa_within"
+
+msgid "pd.DataFrame"
+msgstr "pd.DataFrame"
+
+msgid "Kappa de cada operador consigo mismo (repetibilidad)."
+msgstr "Kappa of each operator with themselves (repeatability)."
+
+msgid "kappa_vs_reference"
+msgstr "kappa_vs_reference"
+
+msgid "Kappa de cada operador vs referencia."
+msgstr "Kappa of each operator vs reference."
+
+msgid "kappa_overall"
+msgstr "kappa_overall"
+
+msgid "Kappa global de todos los operadores vs referencia."
+msgstr "Overall kappa of all operators vs reference."
+
+msgid "fleiss_kappa"
+msgstr "fleiss_kappa"
+
+msgid "Kappa de Fleiss (acuerdo entre todos los operadores)."
+msgstr "Fleiss' kappa (agreement among all operators)."
+
+msgid "pct_agreement_within"
+msgstr "pct_agreement_within"
+
+msgid "pd.Series"
+msgstr "pd.Series"
+
+#, python-format
+msgid "% de acuerdo de cada operador consigo mismo."
+msgstr "% agreement of each operator with themselves."
+
+msgid "pct_agreement_vs_ref"
+msgstr "pct_agreement_vs_ref"
+
+#, python-format
+msgid "% de acuerdo de cada operador vs referencia."
+msgstr "% agreement of each operator vs reference."
+
+msgid "pct_agreement_overall"
+msgstr "pct_agreement_overall"
+
+#, python-format
+msgid "% de acuerdo global vs referencia."
+msgstr "Overall % agreement vs reference."
+
+msgid "``kappa_within`` con las cabeceras del idioma activo (``stable=True``: índice ``operator`` y columnas ``kappa``, ``p_value``, ``pct_agreement``). El atributo conserva siempre las cabeceras en español."
+msgstr "``kappa_within`` with the headers of the active language (``stable=True``: index ``operator`` and columns ``kappa``, ``p_value``, ``pct_agreement``). The attribute always keeps its Spanish headers."
+
+msgid "``kappa_vs_reference`` con las cabeceras del idioma activo (igual que :meth:`kappa_within_frame`)."
+msgstr "``kappa_vs_reference`` with the headers of the active language (same as :meth:`kappa_within_frame`)."
+
+msgid "Exporta la concordancia por atributos a un archivo Excel (.xlsx)."
+msgstr "Exports the attribute agreement analysis to an Excel (.xlsx) file."
+
+msgid "Requiere ``openpyxl`` (``pip install openpyxl``). Hojas: Resumen, KappaVsReferencia (si hay más de un operador)."
+msgstr "Requires ``openpyxl`` (``pip install openpyxl``). Sheets: Summary, KappaVsReference (if there is more than one operator)."
+

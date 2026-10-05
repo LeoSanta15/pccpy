@@ -1,0 +1,51 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Comenzar"
+msgstr "Getting started"
+
+msgid "Guías"
+msgstr "Guides"
+
+msgid "Referencia"
+msgstr "Reference"
+
+msgid "pccpy"
+msgstr "pccpy"
+
+msgid "**Control Estadístico de Procesos (SPC) en Python, al estilo Minitab.**"
+msgstr "**Statistical Process Control (SPC) in Python, Minitab-style.**"
+
+msgid "Cartas de control (univariadas y multivariadas), pruebas de causas especiales, análisis de capacidad, prueba de normalidad y Pareto, con salidas y convenciones (LCS/LCI, LEI/LES, Cp/Cpk/Pp/Ppk, Z.Bench, PPM, Anderson-Darling) pensadas para quien viene de Minitab. En español por defecto; el inglés está disponible (véase [Idioma de los mensajes](idioma.md))."
+msgstr "Control charts (univariate and multivariate), special-cause tests, capability analysis, normality tests and Pareto, with outputs and conventions (UCL/LCL, LSL/USL, Cp/Cpk/Pp/Ppk, Z.Bench, PPM, Anderson-Darling) designed for people coming from Minitab. Spanish by default; English is available (see [Message language](idioma.md))."
+
+msgid "Enlaces"
+msgstr "Links"
+
+msgid "[Repositorio en GitHub](https://github.com/LeoSanta15/pccpy)"
+msgstr "[GitHub repository](https://github.com/LeoSanta15/pccpy)"
+
+msgid "[Reportar un problema](https://github.com/LeoSanta15/pccpy/issues)"
+msgstr "[Report an issue](https://github.com/LeoSanta15/pccpy/issues)"
+
+msgid "[PyPI](https://pypi.org/project/pccpy/)"
+msgstr "[PyPI](https://pypi.org/project/pccpy/)"
+

@@ -1,0 +1,166 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Inicio rápido"
+msgstr "Quick start"
+
+#, python-brace-format
+msgid "Cada tipo de carta tiene su propia página en la {doc}`referencia/index`, con ejemplos y la descripción exacta de cada parámetro (extraída directamente de los docstrings, así que siempre coincide con el código instalado)."
+msgstr "Each type of chart has its own page in the {doc}`referencia/index`, with examples and the exact description of every parameter (extracted directly from the docstrings, so it always matches the installed code)."
+
+msgid "Formatos de entrada para cartas de subgrupos"
+msgstr "Input formats for subgroup charts"
+
+msgid "Las cartas `xbar_r_chart`, `xbar_s_chart`, `ewma_chart`, `cusum_chart`, `ma_chart`, `imr_rs_chart`, `zone_chart`, `capability_analysis` y `capability_sixpack` aceptan cinco formatos equivalentes:"
+msgstr "The charts `xbar_r_chart`, `xbar_s_chart`, `ewma_chart`, `cusum_chart`, `ma_chart`, `imr_rs_chart`, `zone_chart`, `capability_analysis` and `capability_sixpack` accept five equivalent formats:"
+
+msgid "Diagnóstico rápido del proceso"
+msgstr "Quick process diagnosis"
+
+msgid "Cuando tienes datos pero no sabes aún qué análisis aplicar, comienza con `diagnose()`. Calcula estadísticos descriptivos, prueba de normalidad, detecta tendencias y valores atípicos, e indica la función de pccpy que deberías usar a continuación."
+msgstr "When you have data but do not yet know which analysis to apply, start with `diagnose()`. It computes descriptive statistics and a normality test, detects trends and outliers, and tells you which pccpy function you should use next."
+
+msgid "La recomendación automática varía según lo que encuentre:"
+msgstr "The automatic recommendation varies depending on what it finds:"
+
+msgid "Condición detectada"
+msgstr "Detected condition"
+
+msgid "Función recomendada"
+msgstr "Recommended function"
+
+msgid "Tendencia creciente o decreciente"
+msgstr "Increasing or decreasing trend"
+
+msgid "`run_chart`"
+msgstr "`run_chart`"
+
+msgid "Con especificaciones, distribución normal"
+msgstr "With specifications, normal distribution"
+
+msgid "`capability_analysis`"
+msgstr "`capability_analysis`"
+
+msgid "Con especificaciones, distribución no normal"
+msgstr "With specifications, non-normal distribution"
+
+msgid "`capability_boxcox`"
+msgstr "`capability_boxcox`"
+
+msgid "Sin especificaciones"
+msgstr "Without specifications"
+
+msgid "`imr_chart`"
+msgstr "`imr_chart`"
+
+#, python-brace-format
+msgid "Consulta la página {doc}`diagnose` para todos los detalles."
+msgstr "See the {doc}`diagnose` page for all the details."
+
+msgid "Carta de corridas y pre-control"
+msgstr "Run chart and pre-control"
+
+msgid "EWMA y CUSUM para cartas de atributos"
+msgstr "EWMA and CUSUM for attribute charts"
+
+msgid "Intervalos de tolerancia"
+msgstr "Tolerance intervals"
+
+msgid "Muestreo de aceptación"
+msgstr "Acceptance sampling"
+
+msgid "MSA / Gage R&R"
+msgstr "MSA / Gage R&R"
+
+msgid "Funciones desde estadísticos resumen"
+msgstr "Functions from summary statistics"
+
+msgid "Cuando solo dispones de estadísticos agregados (media, desviación y n), sin los datos individuales, usa las variantes `_summary`:"
+msgstr "When you only have aggregated statistics (mean, standard deviation and n), without the individual data, use the `_summary` variants:"
+
+msgid "Estos resultados devuelven el mismo tipo de objeto que su contraparte con datos individuales, por lo que `to_frame()`, `summary()` y demás métodos funcionan igual."
+msgstr "These results return the same type of object as their counterpart with individual data, so `to_frame()`, `summary()` and the other methods work the same way."
+
+msgid "Fase I y Fase II — congelar límites históricos"
+msgstr "Phase I and Phase II — freezing historical limits"
+
+msgid "En un estudio de **Fase I** calculas los límites con datos históricos y verificas que el proceso estaba bajo control. En **Fase II** aplicas esos mismos límites a producción nueva para detectar cambios."
+msgstr "In a **Phase I** study you compute the limits with historical data and verify that the process was in control. In **Phase II** you apply those same limits to new production to detect changes."
+
+msgid "Para cartas de subgrupos usa los mismos parámetros:"
+msgstr "For subgroup charts use the same parameters:"
+
+msgid "Para marcar múltiples etapas dentro de un mismo gráfico (Minitab \"stages\"):"
+msgstr "To mark multiple stages within a single plot (Minitab \"stages\"):"
+
+msgid "Guardar gráficos"
+msgstr "Saving plots"
+
+msgid "Todos los resultados tienen `save_plot()`:"
+msgstr "All the results have `save_plot()`:"
+
+msgid "Un vistazo por tema"
+msgstr "An overview by topic"
+
+#, python-brace-format
+msgid "**Variables** (I-MR, Xbar-R, Xbar-S, media móvil, Z-MR, I-MR-R/S, Zona): {doc}`referencia/variables` y {doc}`referencia/avanzadas`."
+msgstr "**Variables** (I-MR, Xbar-R, Xbar-S, moving average, Z-MR, I-MR-R/S, Zone): {doc}`referencia/variables` and {doc}`referencia/avanzadas`."
+
+#, python-brace-format
+msgid "**Atributos** (P, NP, C, U, Laney P′/U′): {doc}`referencia/atributos`."
+msgstr "**Attributes** (P, NP, C, U, Laney P′/U′): {doc}`referencia/atributos`."
+
+#, python-brace-format
+msgid "**Tiempo ponderado** (EWMA, CUSUM): {doc}`referencia/tiempo_ponderado`."
+msgstr "**Time-weighted** (EWMA, CUSUM): {doc}`referencia/tiempo_ponderado`."
+
+#, python-brace-format
+msgid "**Carta de corridas, pre-control, EWMA/CUSUM atributos**: {doc}`referencia/run_chart_y_precontrol`."
+msgstr "**Run chart, pre-control, attribute EWMA/CUSUM**: {doc}`referencia/run_chart_y_precontrol`."
+
+#, python-brace-format
+msgid "**Multivariadas** (T², varianza generalizada, MEWMA, MCUSUM, con etapas y Box-Cox): {doc}`referencia/multivariadas`."
+msgstr "**Multivariate** (T², generalized variance, MEWMA, MCUSUM, with stages and Box-Cox): {doc}`referencia/multivariadas`."
+
+#, python-brace-format
+msgid "**Capacidad del proceso** (incluyendo DPMO y nivel sigma): {doc}`referencia/capacidad`."
+msgstr "**Process capability** (including DPMO and sigma level): {doc}`referencia/capacidad`."
+
+#, python-brace-format
+msgid "**Intervalos de tolerancia**: {doc}`referencia/tolerancia`."
+msgstr "**Tolerance intervals**: {doc}`referencia/tolerancia`."
+
+#, python-brace-format
+msgid "**Muestreo de aceptación** (Z1.4, Z1.9, Dodge-Romig): {doc}`referencia/muestreo_aceptacion`."
+msgstr "**Acceptance sampling** (Z1.4, Z1.9, Dodge-Romig): {doc}`referencia/muestreo_aceptacion`."
+
+#, python-brace-format
+msgid "**MSA / Gage R&R** (cruzado, anidado, Tipo 1, linealidad, atributos): {doc}`referencia/msa`."
+msgstr "**MSA / Gage R&R** (crossed, nested, Type 1, linearity, attributes): {doc}`referencia/msa`."
+
+#, python-brace-format
+msgid "**Normalidad, Pareto y constantes**: {doc}`referencia/normalidad_y_herramientas` y {doc}`referencia/constantes`."
+msgstr "**Normality, Pareto and constants**: {doc}`referencia/normalidad_y_herramientas` and {doc}`referencia/constantes`."
+
+#, python-brace-format
+msgid "**Objetos de resultado** (`ControlChart`, `MultivariateChart`, `Panel`, y los resultados de capacidad, normalidad y análisis de proceso): {doc}`referencia/resultados`."
+msgstr "**Result objects** (`ControlChart`, `MultivariateChart`, `Panel`, and the capability, normality and process analysis results): {doc}`referencia/resultados`."
+

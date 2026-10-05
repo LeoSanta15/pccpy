@@ -1,0 +1,977 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../source/changelog.md:1
+msgid "Historial de versiones"
+msgstr ""
+
+#: ../../CHANGELOG.md:4
+msgid "[0.11.0] - idioma de los mensajes (español e inglés)"
+msgstr ""
+
+#: ../../CHANGELOG.md:6 ../../CHANGELOG.md:33 ../../CHANGELOG.md:44
+#: ../../CHANGELOG.md:84 ../../CHANGELOG.md:113 ../../CHANGELOG.md:128
+#: ../../CHANGELOG.md:157 ../../CHANGELOG.md:170 ../../CHANGELOG.md:190
+#: ../../CHANGELOG.md:206 ../../CHANGELOG.md:219 ../../CHANGELOG.md:230
+#: ../../CHANGELOG.md:261 ../../CHANGELOG.md:314 ../../CHANGELOG.md:324
+#: ../../CHANGELOG.md:342 ../../CHANGELOG.md:359 ../../CHANGELOG.md:371
+#: ../../CHANGELOG.md:379 ../../CHANGELOG.md:389
+msgid "Añadido"
+msgstr ""
+
+#: ../../CHANGELOG.md:7
+msgid ""
+"Mecanismo de idioma basado en `gettext`: `set_language()`, "
+"`get_language()`, `language()` (contexto) y `available_languages()`; "
+"variable de entorno `PCCPY_LANG`. El idioma fuente es el español y `en` "
+"es el primer idioma adicional."
+msgstr ""
+
+#: ../../CHANGELOG.md:8
+msgid ""
+"Infraestructura de traducción: `make i18n-extract/update/compile/check`, "
+"`scripts/i18n_check.py` (catálogos al día, sin textos sin traducir ni "
+"marcadores distintos) y catálogos `.mo` empaquetados."
+msgstr ""
+
+#: ../../CHANGELOG.md:9
+msgid ""
+"`babel` en el extra `dev` (solo desarrollo; en ejecución se usa `gettext`"
+" de la biblioteca estándar)."
+msgstr ""
+
+#: ../../CHANGELOG.md:10
+msgid "Plan completo en `docs/planes/PLAN_MULTILENGUAJE.md`."
+msgstr ""
+
+#: ../../CHANGELOG.md:12
+#, python-brace-format
+msgid ""
+"Fase 1: los **151 mensajes de error y aviso** (134 textos únicos) pasan "
+"por `tr()` y tienen traducción al inglés; los 34 f-strings se convierten "
+"en plantillas con `.format()`. Tests estáticos (AST) comprueban que todo "
+"`raise`/`warnings.warn` usa `tr()`, que los marcadores `{…}` coinciden "
+"con los argumentos de `.format()` y que nadie ocupa los nombres "
+"`tr`/`N_`; otro test detecta palabras españolas en las traducciones."
+msgstr ""
+
+#: ../../CHANGELOG.md:14
+msgid ""
+"Fase 2: los `summary()` de todos los resultados (14 clases), las "
+"cabeceras de `to_frame()` (15 métodos) y de `violations()`, las "
+"descripciones de las pruebas de causas especiales y las hojas de "
+"`to_excel()` pasan por `tr()` con traducción al inglés (428 → 444 "
+"textos)."
+msgstr ""
+
+#: ../../CHANGELOG.md:15
+msgid ""
+"`to_frame(stable=True)` y `violations(stable=True)`: claves canónicas en "
+"inglés que no cambian con el idioma."
+msgstr ""
+
+#: ../../CHANGELOG.md:16
+msgid ""
+"Referencia en español **sin cambios**: 64 resultados de referencia "
+"(generados antes de migrar) coinciden byte a byte; tests de invariantes "
+"es/en (mismas líneas y números, sin palabras españolas, columnas "
+"alineadas) y de claves estables."
+msgstr ""
+
+#: ../../CHANGELOG.md:18
+msgid ""
+"Fase 3: los **textos de todos los gráficos** (títulos, ejes, leyendas, "
+"anotaciones, etiquetas de los paneles de las cartas) y el **asistente "
+"`wizard()`** completo (árbol de preguntas, justificaciones, fragmentos de"
+" código, modos CLI y widget) pasan por `tr()`/`N_()` con traducción al "
+"inglés (444 → 742 textos). Los fragmentos de código de ejemplo se "
+"muestran con nombres de variable en inglés."
+msgstr ""
+
+#: ../../CHANGELOG.md:19
+msgid ""
+"Referencia en español **sin cambios**: figuras (textos de cada gráfico "
+"del corpus) y asistente (árbol, CLI, resultados, widget) coinciden con "
+"las referencias generadas antes de migrar; tests es/en de gráficos y "
+"asistente (sin palabras españolas, misma estructura, código de ejemplo "
+"válido, marco del CLI con el mismo ancho)."
+msgstr ""
+
+#: ../../CHANGELOG.md:21
+msgid ""
+"Fase 3b: `pareto()` (`stable=`; el grupo «Otros» usa el idioma activo), "
+"`oc_curve()`/`aoq_curve()` (`stable=`), las tablas ANOVA y de kappa "
+"mediante los métodos nuevos `anova_frame()`, `kappa_within_frame()` y "
+"`kappa_vs_reference_frame()` (los atributos `anova_table`, `kappa_within`"
+" y `kappa_vs_reference` no cambian: siguen en español), y las hojas de "
+"`to_excel()` (`KappaVsReferencia` → `KappaVsReference` en inglés). 742 → "
+"767 textos. Español sin cambios (20 tablas de referencia generadas antes "
+"de migrar)."
+msgstr ""
+
+#: ../../CHANGELOG.md:22
+msgid ""
+"`plot_pareto()` acepta tablas de cualquier idioma o con `stable=True` "
+"(usa las columnas por posición)."
+msgstr ""
+
+#: ../../CHANGELOG.md:24
+msgid ""
+"Fase 5: guía «Cómo traducir» (`docs/source/traducir.md`) con el glosario "
+"español → inglés, test que comprueba que el glosario se aplica en todo el"
+" catálogo (`tests/test_i18n_glosario.py`) y `scripts/i18n_revision.py` "
+"(tabla español | inglés para la revisión humana)."
+msgstr ""
+
+#: ../../CHANGELOG.md:26
+msgid "Nota"
+msgstr ""
+
+#: ../../CHANGELOG.md:27
+msgid ""
+"El comportamiento por defecto (español) **no cambia**. El inglés está "
+"completo (767 textos) pero **pendiente de revisión por una persona del "
+"dominio SPC**."
+msgstr ""
+
+#: ../../CHANGELOG.md:28
+msgid ""
+"Los atributos `anova_table`, `kappa_within` y `kappa_vs_reference` siguen"
+" siempre en español; usa `anova_frame()`, `kappa_within_frame()` y "
+"`kappa_vs_reference_frame()` para el idioma activo."
+msgstr ""
+
+#: ../../CHANGELOG.md:29
+msgid "La documentación (Sphinx) sigue en español."
+msgstr ""
+
+#: ../../CHANGELOG.md:31
+msgid "[0.10.8] - documentación de referencia completa"
+msgstr ""
+
+#: ../../CHANGELOG.md:34
+msgid ""
+"Páginas de referencia API para `diagnose()` / `DiagnoseResult` y "
+"`wizard()` / `WizardResult` / `WidgetSession`."
+msgstr ""
+
+#: ../../CHANGELOG.md:35
+msgid ""
+"Nota en la documentación de `capability_analysis()` sobre uso sin límites"
+" de especificación (LSL/USL opcionales)."
+msgstr ""
+
+#: ../../CHANGELOG.md:37 ../../CHANGELOG.md:72 ../../CHANGELOG.md:104
+#: ../../CHANGELOG.md:137 ../../CHANGELOG.md:287 ../../CHANGELOG.md:303
+#: ../../CHANGELOG.md:319 ../../CHANGELOG.md:336 ../../CHANGELOG.md:349
+msgid "Corregido"
+msgstr ""
+
+#: ../../CHANGELOG.md:38
+msgid ""
+"18 advertencias de Sphinx tratadas como errores en CI (descripciones "
+"duplicadas y referencia cruzada ambigua)."
+msgstr ""
+
+#: ../../CHANGELOG.md:42
+msgid "[0.10.7] - compatibilidad con datos reales y dependencias externas"
+msgstr ""
+
+#: ../../CHANGELOG.md:45
+msgid ""
+"`_excel_writer(path)`: helper interno centralizado para abrir "
+"`pd.ExcelWriter` con openpyxl. Todos los métodos `to_excel()` (en "
+"`results.py`, `capability.py`, `tolerance.py`, `msa.py`, `acceptance.py` "
+"y `_diagnose.py`) usan este helper y ahora dan el mensaje `pip install "
+"pccpy[excel]` si openpyxl no está instalado."
+msgstr ""
+
+#: ../../CHANGELOG.md:50 ../../CHANGELOG.md:97
+msgid "Mejorado"
+msgstr ""
+
+#: ../../CHANGELOG.md:51
+msgid ""
+"`as_1d()`: ya **no** lanza `ValueError` cuando los datos contienen `NaN` "
+"o `inf`. En su lugar emite un `UserWarning` indicando cuántos valores no "
+"finitos se encontraron y en qué posiciones, y los excluye del análisis. "
+"El error solo se lanza si no quedan valores válidos."
+msgstr ""
+
+#: ../../CHANGELOG.md:55
+msgid ""
+"`to_subgroups()`: filtra automáticamente las columnas no numéricas de un "
+"DataFrame ancho emitiendo un `UserWarning`. Antes, `np.asarray()` fallaba"
+" con un error de tipo opaco al encontrar texto en el DataFrame."
+msgstr ""
+
+#: ../../CHANGELOG.md:58
+msgid ""
+"`to_subgroups()`: el error `subgroup_size=1` ahora describe la situación "
+"y apunta explícitamente a `imr_chart()` como alternativa correcta. "
+"Parámetro interno `_allow_size_1` para el uso legítimo de `zone_chart`."
+msgstr ""
+
+#: ../../CHANGELOG.md:61
+msgid ""
+"`capability_analysis()`: ya no requiere `lsl` o `usl`. Sin límites de "
+"especificación los índices Cp/Cpk/Pp/Ppk/… se devuelven como `NaN` y "
+"`summary()` los marca con `*`; los estadísticos descriptivos y las sigmas"
+" se calculan con normalidad."
+msgstr ""
+
+#: ../../CHANGELOG.md:65
+msgid ""
+"`capability_analysis()`: con datos de variación cero (desviación estándar"
+" = 0) emite un `UserWarning` y devuelve `NaN` en todos los índices, en "
+"vez de lanzar `ZeroDivisionError`."
+msgstr ""
+
+#: ../../CHANGELOG.md:68
+#, python-brace-format
+msgid ""
+"Todas las funciones `plot_*`, `DiagnoseResult.plot()` y `plot_pareto()` "
+"están ahora envueltas en `plt.rc_context({})`, aislando los estilos "
+"internos de pccpy de cambios globales de matplotlib introducidos por "
+"seaborn u otras librerías."
+msgstr ""
+
+#: ../../CHANGELOG.md:73
+msgid ""
+"`zone_chart` fallaba internamente con el nuevo error `subgroup_size=1` al"
+" llamar a `to_subgroups(arr, 1)` para datos individuales. Corregido con "
+"el parámetro `_allow_size_1=True`."
+msgstr ""
+
+#: ../../CHANGELOG.md:76
+msgid ""
+"`_expected_ppm()`, `_z_bench()` y el cálculo del intervalo de confianza "
+"de Ppk manejaban incorrectamente el caso `sigma=0`, produciendo "
+"`ZeroDivisionError` o resultados sin sentido."
+msgstr ""
+
+#: ../../CHANGELOG.md:79
+msgid ""
+"`instalacion.md`: corregidas las referencias al nombre anterior en los "
+"comandos de desarrollo (`pytest --cov`, `mypy src/...` → `pccpy`)."
+msgstr ""
+
+#: ../../CHANGELOG.md:82
+msgid "[0.10.6] - diagnose(), WidgetSession y docs del wizard"
+msgstr ""
+
+#: ../../CHANGELOG.md:85
+msgid ""
+"`diagnose(x, lsl=None, usl=None, target=None)` — diagnóstico rápido de "
+"proceso: estadísticos básicos, prueba de normalidad, detección de "
+"tendencia (Mann-Kendall simplificado), valores atípicos (IQR × 1.5), "
+"Cp/Cpk estimados y función recomendada. `DiagnoseResult` incluye "
+"`.summary()` (texto al estilo Minitab) y `.plot()` (histograma"
+msgstr ""
+
+#: ../../CHANGELOG.md:89
+msgid "gráfico de secuencia con matplotlib)."
+msgstr ""
+
+#: ../../CHANGELOG.md:90
+msgid ""
+"`WidgetSession` — objeto retornado por `wizard(mode='widget')`. El "
+"atributo `.result` es `None` mientras la sesión está abierta y se llena "
+"con el `WizardResult` al navegar hasta una hoja. Reemplaza la lista "
+"mutable anterior; la API es ahora consistente con los otros modos."
+msgstr ""
+
+#: ../../CHANGELOG.md:94
+msgid ""
+"Página de documentación `wizard.md` en Sphinx (incluida en el TOC de "
+"`index.md`)."
+msgstr ""
+
+#: ../../CHANGELOG.md:95
+msgid "54 tests nuevos en `tests/test_diagnose.py`; 306 pruebas en total."
+msgstr ""
+
+#: ../../CHANGELOG.md:98
+msgid ""
+"`wizard(mode='widget')` ahora muestra números de opción en cada botón "
+"(`1. …`, `2. …`) y breadcrumbs con el texto de la pregunta en lugar del "
+"ID del nodo."
+msgstr ""
+
+#: ../../CHANGELOG.md:100
+msgid ""
+"Tipo de retorno de `wizard()` en la firma y docstring alineado con la "
+"implementación."
+msgstr ""
+
+#: ../../CHANGELOG.md:102
+msgid "[0.10.5] - correcciones de CI y bump de versión"
+msgstr ""
+
+#: ../../CHANGELOG.md:105
+msgid ""
+"CI `publish.yml`: job `publish-pypi` faltaban `checkout` y `setup-"
+"python`; la acción `pypa/gh-action-pypi-publish` los requiere en el mismo"
+" job."
+msgstr ""
+
+#: ../../CHANGELOG.md:107
+msgid ""
+"CI: todas las acciones actualizadas a v6 (`checkout`, `setup-python`, "
+"`upload-artifact`, `download-artifact`) para eliminar advertencias de "
+"Node 20."
+msgstr ""
+
+#: ../../CHANGELOG.md:109
+msgid "Bump de versión `0.10.4` → `0.10.5`."
+msgstr ""
+
+#: ../../CHANGELOG.md:111
+msgid "[0.10.4] - wizard de selección de análisis SPC"
+msgstr ""
+
+#: ../../CHANGELOG.md:114
+msgid ""
+"`wizard(x=None, mode='cli'|'auto'|'widget')` — asistente de selección de "
+"análisis con tres modos:"
+msgstr ""
+
+#: ../../CHANGELOG.md:115
+msgid ""
+"**`'auto'`**: inspecciona el array de datos (dimensiones, normalidad, "
+"tendencia) y devuelve automáticamente un `WizardResult` con la función "
+"recomendada."
+msgstr ""
+
+#: ../../CHANGELOG.md:117
+msgid ""
+"**`'cli'`**: menú interactivo de preguntas con opciones numeradas en la "
+"terminal. El árbol de decisión cubre cartas de control, capacidad, MSA, "
+"muestreo de aceptación, intervalos de tolerancia, normalidad, Pareto y "
+"pre-control."
+msgstr ""
+
+#: ../../CHANGELOG.md:120
+msgid ""
+"**`'widget'`**: interfaz gráfica para Jupyter con botones de selección "
+"(requiere `ipywidgets`; degrada automáticamente a `cli` si no está "
+"instalado)."
+msgstr ""
+
+#: ../../CHANGELOG.md:122
+msgid ""
+"`WizardResult` — objeto retornado con `.function`, `.params`, "
+"`.rationale`, `.alternatives`, `.snippet()`, `.summary()` y `.run(data)`."
+msgstr ""
+
+#: ../../CHANGELOG.md:124
+msgid "32 tests en `tests/test_wizard.py`."
+msgstr ""
+
+#: ../../CHANGELOG.md:126
+msgid "[0.10.3] - cobertura de tests completa y README actualizado"
+msgstr ""
+
+#: ../../CHANGELOG.md:129
+msgid "4 nuevos módulos de tests (252 pruebas en total, +66 respecto a v0.10.2):"
+msgstr ""
+
+#: ../../CHANGELOG.md:130
+msgid ""
+"`tests/test_tolerance.py`: intervalos de tolerancia normal, unilateral y "
+"no paramétrico, y `tolerance_interval_summary`."
+msgstr ""
+
+#: ../../CHANGELOG.md:132
+msgid "`tests/test_acceptance.py`: Z1.4, Z1.9 y Dodge-Romig."
+msgstr ""
+
+#: ../../CHANGELOG.md:133
+msgid ""
+"`tests/test_msa.py`: Crossed Gage R&R (ANOVA y Xbar-R), Nested, Tipo 1, "
+"`gage_type1_summary`, linealidad y concordancia por atributos."
+msgstr ""
+
+#: ../../CHANGELOG.md:135
+msgid "`tests/test_run_precontrol.py`: carta de corridas y pre-control."
+msgstr ""
+
+#: ../../CHANGELOG.md:138
+msgid ""
+"`gage_rr_nested`: `MS_ops` se computaba solo dentro de la rama `crossed`,"
+" pero se usaba en la rama `nested`, causando `UnboundLocalError`."
+msgstr ""
+
+#: ../../CHANGELOG.md:141 ../../CHANGELOG.md:150 ../../CHANGELOG.md:163
+msgid "Documentación"
+msgstr ""
+
+#: ../../CHANGELOG.md:142
+msgid ""
+"README: secciones completas para carta de corridas y pre-control, "
+"EWMA/CUSUM para atributos, intervalos de tolerancia, muestreo de "
+"aceptación y MSA/Gage R&R."
+msgstr ""
+
+#: ../../CHANGELOG.md:144
+msgid ""
+"`inicio_rapido.md`: ejemplos de `tolerance_interval_summary`, "
+"`gage_type1_summary` y `capability_analysis_summary`."
+msgstr ""
+
+#: ../../CHANGELOG.md:146
+msgid "Contador de pruebas actualizado: 186 → 252."
+msgstr ""
+
+#: ../../CHANGELOG.md:148
+msgid "[0.10.2] - documentación completa de referencia Sphinx"
+msgstr ""
+
+#: ../../CHANGELOG.md:151
+#, python-format
+msgid ""
+"Referencia Sphinx cubre ahora el 100 % de los símbolos públicos "
+"(`__all__`). Se agregan `plot_capability`, `plot_control_chart`, "
+"`capability_analysis_summary`, `tolerance_interval_summary` y "
+"`gage_type1_summary` a sus páginas RST."
+msgstr ""
+
+#: ../../CHANGELOG.md:155
+msgid ""
+"[0.10.1] - funciones de entrada por estadísticos resumen y documentación "
+"completa"
+msgstr ""
+
+#: ../../CHANGELOG.md:158
+msgid ""
+"`tolerance_interval_summary(mean, std, n, ...)`: intervalo de tolerancia "
+"normal a partir de estadísticos resumen, sin necesidad de datos crudos."
+msgstr ""
+
+#: ../../CHANGELOG.md:160
+msgid ""
+"`gage_type1_summary(mean, std, n, reference, ...)`: estudio Tipo 1 "
+"(sesgo, Cg, Cgk) a partir de estadísticos resumen."
+msgstr ""
+
+#: ../../CHANGELOG.md:164
+#, python-format
+msgid ""
+"Referencia Sphinx ahora cubre el 100 % de los símbolos públicos "
+"(`__all__`). Se agregan `plot_capability`, `plot_control_chart`, "
+"`capability_analysis_summary`, `tolerance_interval_summary` y "
+"`gage_type1_summary` a sus páginas RST."
+msgstr ""
+
+#: ../../CHANGELOG.md:168
+msgid "[0.10.0] - MSA / Gage R&R"
+msgstr ""
+
+#: ../../CHANGELOG.md:171
+msgid ""
+"`gage_rr`: Crossed Gage R&R completo. Soporta `method='anova'` (con tabla"
+" ANOVA, prueba de interacción parte×operador y agrupación automática "
+"cuando p-valor>0.25) y `method='xbar_r'` (método clásico AIAG). Devuelve "
+"`GageRRResult` con %Contribución, %Variación de estudio, NDC, tabla "
+"ANOVA, `.summary()`, `.to_frame()` y `.plot()`."
+msgstr ""
+
+#: ../../CHANGELOG.md:176
+msgid ""
+"`gage_rr_nested`: Nested Gage R&R (partes anidadas dentro de operadores),"
+" solo método ANOVA."
+msgstr ""
+
+#: ../../CHANGELOG.md:178
+msgid ""
+"`gage_type1`: Estudio Tipo 1 (sesgo y repetibilidad de una fuente). "
+"Calcula sesgo, t-test, Cg y Cgk. Devuelve `Type1Result`."
+msgstr ""
+
+#: ../../CHANGELOG.md:180
+msgid ""
+"`gage_linearity`: Estudio de linealidad y sesgo. Regresión "
+"sesgo~referencia, Linealidad (|pendiente|×rango), R², p-valor. Devuelve "
+"`LinearityResult`."
+msgstr ""
+
+#: ../../CHANGELOG.md:182
+msgid ""
+"`attribute_agreement`: Análisis de concordancia por atributos. Kappa de "
+"Cohen (dentro del operador y vs referencia) y Kappa de Fleiss. Devuelve "
+"`AttributeAgreementResult`."
+msgstr ""
+
+#: ../../CHANGELOG.md:185
+msgid ""
+"Funciones de graficación: `plot_gage_rr`, `plot_type1`, `plot_linearity`,"
+" `plot_attribute_agreement`."
+msgstr ""
+
+#: ../../CHANGELOG.md:188
+msgid "[0.9.0] - Muestreo de aceptación"
+msgstr ""
+
+#: ../../CHANGELOG.md:191
+msgid ""
+"`acceptance_sampling_attributes`: plan de muestreo por atributos según "
+"ANSI/ASQ Z1.4. Devuelve `SamplingPlanAttributes` con `.pa()`, "
+"`.oc_curve()`, `.aoq_curve()`, `.summary()`, `.to_frame()` y `.plot()`. "
+"Calcula automáticamente α, β (0.10), LTPD y AOQL del plan."
+msgstr ""
+
+#: ../../CHANGELOG.md:195
+msgid ""
+"`acceptance_sampling_variables`: plan de muestreo por variables según "
+"ANSI/ASQ Z1.9 (método k). Devuelve `SamplingPlanVariables` con "
+"`.evaluate()` para decidir aceptación dado un vector de muestra."
+msgstr ""
+
+#: ../../CHANGELOG.md:198
+msgid ""
+"`dodge_romig`: plan Dodge-Romig por atributos, minimizando el ATI. "
+"Soporta dos modos: protección al consumidor (`ltpd=`) y calidad media de "
+"salida máxima (`aoql=`). Devuelve `DodgeRomigPlan`."
+msgstr ""
+
+#: ../../CHANGELOG.md:201
+msgid ""
+"`plot_sampling_attributes`: curva OC + curva AOQ para planes por "
+"atributos."
+msgstr ""
+
+#: ../../CHANGELOG.md:202
+msgid "`plot_sampling_variables`: curva OC para planes por variables."
+msgstr ""
+
+#: ../../CHANGELOG.md:204
+msgid "[0.8.0] - Intervalos de tolerancia"
+msgstr ""
+
+#: ../../CHANGELOG.md:207
+msgid ""
+"`tolerance_interval`: calcula intervalos de tolerancia estadísticos. Con "
+"`method='normal'` usa la aproximación de Howe (1969) para bilateral y la "
+"distribución t no central exacta para unilateral. Con "
+"`method='nonparametric'` usa estadísticos de orden (libre de "
+"distribución). Soporta `sides='two'`, `'lower'` y `'upper'`."
+msgstr ""
+
+#: ../../CHANGELOG.md:212
+msgid ""
+"`ToleranceResult`: objeto de resultado con `.summary()`, `.to_frame()` y "
+"`.plot()` (histograma con el intervalo superpuesto)."
+msgstr ""
+
+#: ../../CHANGELOG.md:214
+msgid ""
+"`plot_tolerance`: función de graficación disponible también como método "
+"`.plot()` del resultado."
+msgstr ""
+
+#: ../../CHANGELOG.md:217
+msgid "[0.7.0] - EWMA y CUSUM para cartas de atributos"
+msgstr ""
+
+#: ../../CHANGELOG.md:220
+#, python-brace-format
+msgid ""
+"`ewma_p_chart`, `ewma_c_chart`, `ewma_u_chart`: EWMA para las cartas de "
+"atributos P, C y U. Límites exactos que se ensanchan al inicio de la "
+"serie usando el factor √(1−(1−λ)^{2i}), igual que el EWMA de variables."
+msgstr ""
+
+#: ../../CHANGELOG.md:223
+msgid ""
+"`cusum_p_chart`, `cusum_c_chart`, `cusum_u_chart`: CUSUM tabular "
+"estandarizado para atributos. Cada observación se convierte a z-score "
+"antes de acumular, lo que permite tamaños de muestra variables en P y U. "
+"``h`` y ``k`` en unidades de σ (por defecto h=4, k=0.5 como en Minitab)."
+msgstr ""
+
+#: ../../CHANGELOG.md:228
+msgid "[0.6.0] - run chart, pre-control y DPMO en capacidad"
+msgstr ""
+
+#: ../../CHANGELOG.md:231
+msgid ""
+"`run_chart`: carta de corridas con las 4 pruebas de aleatoriedad de "
+"Minitab (agrupamiento, mezclas, tendencias y oscilación; p-valor con "
+"aproximación normal de Wald-Wolfowitz). Devuelve `RunChartResult` con "
+"`.summary()`, `.to_frame()` y `.plot()`."
+msgstr ""
+
+#: ../../CHANGELOG.md:235
+msgid ""
+"`precontrol`: análisis de pre-control (semáforo de Shainin). Divide la "
+"tolerancia en zonas verde/amarillo/rojo y detecta señales (punto rojo, "
+"dos amarillas en el mismo lado, dos amarillas en lados opuestos). "
+"Devuelve `PreControlResult` con `.summary()`, `.to_frame()` y `.plot()`."
+msgstr ""
+
+#: ../../CHANGELOG.md:239
+msgid ""
+"`plot_run_chart`, `plot_precontrol`: funciones de graficación disponibles"
+" también como métodos `.plot()` de los resultados correspondientes."
+msgstr ""
+
+#: ../../CHANGELOG.md:241
+msgid ""
+"`CapabilityResult.dpmo`: propiedad que devuelve el DPMO esperado (= PPM "
+"general)."
+msgstr ""
+
+#: ../../CHANGELOG.md:242
+msgid ""
+"`CapabilityResult.sigma_level`: propiedad que devuelve el nivel sigma del"
+" proceso (= Z.bench general). Ambos aparecen ahora en `.to_frame()` y "
+"`.summary()`."
+msgstr ""
+
+#: ../../CHANGELOG.md:245
+msgid ""
+"Formato basado en [Keep a Changelog](https://keepachangelog.com/es-"
+"ES/1.0.0/). pccpy usa versionado semántico mientras esté en desarrollo "
+"(0.x): un incremento en el segundo número puede incluir cambios que no "
+"son compatibles hacia atrás."
+msgstr ""
+
+#: ../../CHANGELOG.md:249
+msgid "[0.5.1] - formato largo extendido a todos los gráficos de subgrupos"
+msgstr ""
+
+#: ../../CHANGELOG.md:251 ../../CHANGELOG.md:273 ../../CHANGELOG.md:279
+#: ../../CHANGELOG.md:296
+msgid "Cambiado"
+msgstr ""
+
+#: ../../CHANGELOG.md:252
+msgid ""
+"`ewma_chart`, `cusum_chart`, `ma_chart`: aceptan ahora DataFrame largo "
+"con ``subgroup`` + ``value``, y vector 1-D con ``subgroup_size`` con "
+"resto (el subgrupo incompleto se grafica pero no entra en la estimación "
+"de sigma)."
+msgstr ""
+
+#: ../../CHANGELOG.md:255
+msgid "`imr_rs_chart`, `zone_chart`: ídem."
+msgstr ""
+
+#: ../../CHANGELOG.md:256
+msgid ""
+"`capability_analysis`, `capability_sixpack`: ídem; la sigma dentro se "
+"estima solo con los subgrupos completos."
+msgstr ""
+
+#: ../../CHANGELOG.md:259
+msgid "[0.5.0] - entrada de datos en formato largo para cartas Xbar"
+msgstr ""
+
+#: ../../CHANGELOG.md:262
+msgid "`xbar_r_chart` y `xbar_s_chart` aceptan tres formatos de entrada:"
+msgstr ""
+
+#: ../../CHANGELOG.md:263
+msgid ""
+"**Matriz 2-D** (una fila por subgrupo) — comportamiento anterior, sin "
+"cambios."
+msgstr ""
+
+#: ../../CHANGELOG.md:264
+msgid ""
+"**Vector 1-D + `subgroup_size`** — si el total de observaciones no es "
+"divisible por el tamaño, el último subgrupo incompleto se **grafica** con"
+" sus propios límites (calculados con las constantes de su tamaño real) "
+"pero **no entra** en la estimación de sigma ni media; se emite un "
+"`UserWarning` describiendo la situación."
+msgstr ""
+
+#: ../../CHANGELOG.md:269
+msgid ""
+"**DataFrame en formato largo + `subgroup` + `value`** — `subgroup` es el "
+"nombre de la columna de identificadores de subgrupo y `value` el de la "
+"columna de valores; si hay una sola columna numérica, `value` se detecta "
+"automáticamente."
+msgstr ""
+
+#: ../../CHANGELOG.md:274
+msgid ""
+"`to_subgroups` ahora devuelve `(mat, n_complete)` en vez de solo `mat`. "
+"`n_complete` indica cuántos subgrupos se usan para el cálculo de límites."
+msgstr ""
+
+#: ../../CHANGELOG.md:277
+msgid "[0.4.9] - README exhaustivo"
+msgstr ""
+
+#: ../../CHANGELOG.md:280
+msgid ""
+"`README.md`: reescrito con explicaciones detalladas de todas las cartas "
+"de control, parámetros, ejemplos de uso, tablas de Cp/Cpk vs Pp/Ppk, las "
+"8 pruebas de causas especiales, acceso a datos del resultado e "
+"instrucciones de desarrollo."
+msgstr ""
+
+#: ../../CHANGELOG.md:285
+msgid "[0.4.8] - zonas sigma en cartas asimétricas"
+msgstr ""
+
+#: ../../CHANGELOG.md:288
+msgid ""
+"`_draw_panel`: se eliminó la condición `panel.symmetric` que impedía "
+"dibujar las líneas de ±1σ y ±2σ en cartas asimétricas (MR, R, S, "
+"atributos). Ahora todos los paneles muestran las zonas cuando "
+"`zones=True`, igual que Minitab. Las líneas que quedan por debajo de cero"
+" no son visibles (matplotlib las recorta al rango de los datos)."
+msgstr ""
+
+#: ../../CHANGELOG.md:294
+msgid "[0.4.7] - zonas sigma visibles por defecto"
+msgstr ""
+
+#: ../../CHANGELOG.md:297
+msgid ""
+"`plot_control_chart` y `_draw_panel`: el parámetro `zones` ahora es "
+"`True` por defecto. Las líneas de ±1σ y ±2σ se muestran automáticamente "
+"en todas las cartas simétricas, igual que Minitab. Para ocultar las zonas"
+" usa `zones=False`."
+msgstr ""
+
+#: ../../CHANGELOG.md:301
+msgid "[0.4.4] - correcciones de documentación y empaquetado"
+msgstr ""
+
+#: ../../CHANGELOG.md:304
+msgid ""
+"Eliminado classifier de licencia duplicado (`License :: OSI Approved :: "
+"MIT License`) incompatible con PEP 639 en setuptools ≥ 77."
+msgstr ""
+
+#: ../../CHANGELOG.md:306
+msgid ""
+"Corregidas todas las URLs y referencias de `TU_USUARIO/<nombre anterior>`"
+" a `LeoSanta15/pccpy` en README.md, docs/ y CONTRIBUTING.md."
+msgstr ""
+
+#: ../../CHANGELOG.md:308
+msgid ""
+"Nombre del proyecto actualizado del nombre anterior a `pccpy` en "
+"pyproject.toml, conf.py e index.md."
+msgstr ""
+
+#: ../../CHANGELOG.md:310
+msgid "Modernizadas anotaciones de tipo con ruff (UP006, UP035, UP045)."
+msgstr ""
+
+#: ../../CHANGELOG.md:312
+msgid "[0.4.3] - contexto para Claude Code"
+msgstr ""
+
+#: ../../CHANGELOG.md:315
+msgid ""
+"`CLAUDE.md`: contexto de arranque para continuar el desarrollo desde "
+"Claude Code (reglas de trabajo, mapa del código, cómo verificar cambios, "
+"pendientes conocidos y pasos para subir el repositorio a GitHub)."
+msgstr ""
+
+#: ../../CHANGELOG.md:320
+msgid "Faltaba la etiqueta de git `v0.1.0` en el primer commit; se agregó."
+msgstr ""
+
+#: ../../CHANGELOG.md:322
+msgid "[0.4.2] - documentación con Sphinx"
+msgstr ""
+
+#: ../../CHANGELOG.md:325
+msgid ""
+"Documentación en `docs/`, construida con Sphinx (tema `sphinx-rtd-theme`,"
+" `napoleon` para los docstrings estilo NumPy, `myst-parser` para las "
+"páginas en Markdown): portada, instalación, inicio rápido, una página de "
+"referencia por grupo de cartas (generada con `autofunction`/`autoclass` a"
+" partir del código, no copiada a mano) y el changelog embebido."
+msgstr ""
+
+#: ../../CHANGELOG.md:330
+msgid "`docs = [...]` en `pyproject.toml` con las dependencias para construirla."
+msgstr ""
+
+#: ../../CHANGELOG.md:331
+msgid ""
+"`.readthedocs.yaml`, listo para conectar el repositorio en "
+"readthedocs.org una vez esté en GitHub."
+msgstr ""
+
+#: ../../CHANGELOG.md:333
+msgid ""
+"Job `documentacion` en el CI: construye la documentación con `-W` "
+"(cualquier advertencia de Sphinx hace fallar el build)."
+msgstr ""
+
+#: ../../CHANGELOG.md:337
+msgid ""
+"Docstring de `generalized_variance_chart` (usaba `|S|` sin escapar, que "
+"RST interpreta como una referencia de sustitución y rompía la "
+"documentación)."
+msgstr ""
+
+#: ../../CHANGELOG.md:340
+msgid "[0.4.1] - herramientas de calidad y changelog"
+msgstr ""
+
+#: ../../CHANGELOG.md:343
+msgid "`CHANGELOG.md` (este archivo)."
+msgstr ""
+
+#: ../../CHANGELOG.md:344
+msgid ""
+"`ruff` y `mypy` como dependencias de desarrollo, con configuración en "
+"`pyproject.toml`, y un job de \"calidad\" en el workflow de CI que los "
+"ejecuta."
+msgstr ""
+
+#: ../../CHANGELOG.md:346
+#, python-format
+msgid ""
+"`pytest-cov` como dependencia de desarrollo; el CI ahora corre las "
+"pruebas con reporte de cobertura (97% de líneas al momento de esta "
+"versión)."
+msgstr ""
+
+#: ../../CHANGELOG.md:350
+msgid "Import sin usar en `multivariate.py`."
+msgstr ""
+
+#: ../../CHANGELOG.md:351
+msgid ""
+"Varias anotaciones de tipo incompletas señaladas por mypy (`run_sigma` en"
+" `zmr_chart`, `tests_at` en el graficador); sin cambios de "
+"comportamiento."
+msgstr ""
+
+#: ../../CHANGELOG.md:353
+msgid ""
+"`MultivariateChart.contributions()` ahora valida explícitamente que la "
+"media y la covarianza de la etapa existan antes de usarlas, en vez de "
+"fallar más abajo con un error de numpy menos claro."
+msgstr ""
+
+#: ../../CHANGELOG.md:357
+msgid "[0.4.0] - etapas y Box-Cox en cartas multivariadas"
+msgstr ""
+
+#: ../../CHANGELOG.md:360
+msgid ""
+"`stages` en `t2_chart`, `generalized_variance_chart`, `mewma_chart` y "
+"`mcusum_chart`: sin parámetros históricos, cada etapa reestima su media y"
+" covarianza; con parámetros históricos se usan los mismos en todas. MEWMA"
+" y MCUSUM reinician su acumulador al empezar cada etapa."
+msgstr ""
+
+#: ../../CHANGELOG.md:364
+msgid ""
+"`boxcox` en las mismas 4 cartas: transforma cada variable con su propio "
+"lambda (estimado por máxima verosimilitud) antes de calcular la carta."
+msgstr ""
+
+#: ../../CHANGELOG.md:366
+msgid ""
+"`MultivariateChart.stage_mean`, `.stage_cov`, `.stage_scale`: para que "
+"`contributions()` use la media/covarianza de la etapa del punto "
+"consultado."
+msgstr ""
+
+#: ../../CHANGELOG.md:369
+msgid "[0.3.0] - carta de zona y MCUSUM"
+msgstr ""
+
+#: ../../CHANGELOG.md:372
+msgid ""
+"`zone_chart`: carta de zona (Davis, Homer y Woodall, 1990), puntaje "
+"acumulado con pesos 0-2-4-8 en vez de las pruebas de causas especiales."
+msgstr ""
+
+#: ../../CHANGELOG.md:374
+msgid ""
+"`mcusum_chart` y `mcusum_limit`: CUSUM multivariada de Crosier (1988), "
+"con el límite calculado por ARL mediante una cadena de Markov."
+msgstr ""
+
+#: ../../CHANGELOG.md:377
+msgid "[0.2.0] - cartas avanzadas y multivariadas"
+msgstr ""
+
+#: ../../CHANGELOG.md:380
+msgid ""
+"Univariadas: `ma_chart` (media móvil), `zmr_chart` (Z-MR, corridas "
+"cortas), `imr_rs_chart` (I-MR-R/S, variación entre/dentro), `g_chart` y "
+"`t_chart` (eventos raros)."
+msgstr ""
+
+#: ../../CHANGELOG.md:383
+msgid ""
+"Multivariadas: `t2_chart` (T² de Hotelling, Fase I/II, con "
+"`.contributions()`), `generalized_variance_chart` (|S|), `mewma_chart` y "
+"`mewma_limit` (límite por ARL vía cadena de Markov)."
+msgstr ""
+
+#: ../../CHANGELOG.md:387
+msgid "[0.1.0] - primera versión"
+msgstr ""
+
+#: ../../CHANGELOG.md:390
+msgid "Cartas de variables: I-MR, Xbar-R, Xbar-S."
+msgstr ""
+
+#: ../../CHANGELOG.md:391
+msgid "Cartas de atributos: P, NP, C, U, Laney P′, Laney U′."
+msgstr ""
+
+#: ../../CHANGELOG.md:392
+msgid "Cartas de tiempo ponderado: EWMA, CUSUM."
+msgstr ""
+
+#: ../../CHANGELOG.md:393
+msgid "Las 8 pruebas de causas especiales de Minitab, con parámetros ajustables."
+msgstr ""
+
+#: ../../CHANGELOG.md:394
+msgid ""
+"Capacidad del proceso: normal, no normal (9 distribuciones) y Box-Cox; "
+"`capability_sixpack`."
+msgstr ""
+
+#: ../../CHANGELOG.md:396
+msgid ""
+"`normality_test` (Anderson-Darling, Shapiro, D'Agostino), "
+"`probability_plot`."
+msgstr ""
+
+#: ../../CHANGELOG.md:397
+msgid "`pareto` / `plot_pareto`."
+msgstr ""
+
+#: ../../CHANGELOG.md:398
+msgid ""
+"Constantes SPC (`d2`, `d3`, `c4`, `c5`, `control_chart_constants`) "
+"calculadas por integración numérica para cualquier n ≥ 2, no solo tablas "
+"finitas."
+msgstr ""
+

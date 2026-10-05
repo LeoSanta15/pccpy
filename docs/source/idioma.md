@@ -6,7 +6,7 @@
 ```
 
 pccpy escribe sus textos en **español**, que es el idioma fuente: si un idioma no tiene traducción para un texto,
-se muestra el original. Idiomas disponibles: `es` y `en` (cómo corregir o añadir uno: [Cómo traducir](traducir.md)).
+se muestra el original. La documentación y el README también están en inglés ([Cómo traducir](traducir.md)). Idiomas disponibles: `es` y `en` (cómo corregir o añadir uno: [Cómo traducir](traducir.md)).
 
 ```python
 import pccpy as pp

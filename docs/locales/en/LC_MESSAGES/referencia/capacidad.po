@@ -1,0 +1,117 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Capacidad del proceso"
+msgstr "Process capability"
+
+msgid "Capacidad del proceso para datos con distribución normal."
+msgstr "Process capability for normally distributed data."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Vector 1-D de individuales, o matriz 2-D (fila = subgrupo), o vector 1-D con ``subgroup_size`` / ``subgroup``."
+msgstr "1-D vector of individuals, or 2-D matrix (row = subgroup), or 1-D vector with ``subgroup_size`` / ``subgroup``."
+
+msgid "Límites de especificación inferior y superior, y valor objetivo."
+msgstr "Lower and upper specification limits, and target value."
+
+msgid "Individuales: ``'mr'`` (por defecto), ``'median_mr'`` o ``'mssd'``. Subgrupos: ``'pooled'`` (por defecto), ``'rbar'`` o ``'sbar'``."
+msgstr "Individuals: ``'mr'`` (default), ``'median_mr'`` or ``'mssd'``. Subgroups: ``'pooled'`` (default), ``'rbar'`` or ``'sbar'``."
+
+msgid "Sigma dentro de subgrupos ya conocida (anula la estimación)."
+msgstr "Already known within-subgroup sigma (overrides the estimate)."
+
+msgid "Nivel de confianza de los intervalos de Pp y Ppk (por defecto 0.95)."
+msgstr "Confidence level of the Pp and Ppk intervals (default 0.95)."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Capacidad del proceso a partir de estadísticos resumen (sin datos crudos)."
+msgstr "Process capability from summary statistics (no raw data)."
+
+msgid "Útil cuando solo se dispone de la media, desviación estándar y tamaño de muestra (por ejemplo, desde un informe o un sistema externo)."
+msgstr "Useful when only the mean, standard deviation and sample size are available (for example, from a report or an external system)."
+
+msgid "Media del proceso."
+msgstr "Process mean."
+
+msgid "Desviación estándar global (muestral, ddof=1). Se usa para Pp/Ppk."
+msgstr "Overall standard deviation (sample, ddof=1). Used for Pp/Ppk."
+
+msgid "Número de observaciones (necesario para los intervalos de confianza)."
+msgstr "Number of observations (needed for the confidence intervals)."
+
+msgid "Límites de especificación inferior/superior y valor objetivo."
+msgstr "Lower/upper specification limits and target value."
+
+msgid "Sigma dentro de subgrupos. Si no se proporciona se asume igual a ``std_overall`` (lo que equivale a tratar los datos como individuales sin estructura de subgrupo)."
+msgstr "Within-subgroup sigma. If not provided it is assumed equal to ``std_overall`` (which amounts to treating the data as individuals with no subgroup structure)."
+
+msgid "Nivel de confianza de los IC de Pp y Ppk. Por defecto 0.95."
+msgstr "Confidence level of the Pp and Ppk CIs. Default 0.95."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*CapabilityResult*"
+msgstr "*CapabilityResult*"
+
+msgid "Ejemplos"
+msgstr "Examples"
+
+msgid "Capacidad para datos no normales por percentiles de la distribución ajustada."
+msgstr "Capability for non-normal data using percentiles of the fitted distribution."
+
+msgid "Ajusta por máxima verosimilitud una de: ``normal``, ``lognormal``, ``weibull``, ``gamma``, ``exponential``, ``loglogistic``, ``logistic``, ``largest_extreme``, ``smallest_extreme`` (las distribuciones de soporte positivo usan umbral 0)."
+msgstr "Fits by maximum likelihood one of: ``normal``, ``lognormal``, ``weibull``, ``gamma``, ``exponential``, ``loglogistic``, ``logistic``, ``largest_extreme``, ``smallest_extreme`` (distributions with positive support use threshold 0)."
+
+msgid "Pp = (LES - LEI) / (X99.865 - X0.135); PPU = (LES - X50) / (X99.865 - X50); PPL = (X50 - LEI) / (X50 - X0.135); Ppk = min(PPL, PPU)."
+msgstr "Pp = (USL - LSL) / (X99.865 - X0.135); PPU = (USL - X50) / (X99.865 - X50); PPL = (X50 - LSL) / (X50 - X0.135); Ppk = min(PPL, PPU)."
+
+msgid "Capacidad tras una transformación Box-Cox (datos positivos, 1-D)."
+msgstr "Capability after a Box-Cox transformation (positive data, 1-D)."
+
+msgid "``lam`` fija lambda; si no se da, se estima por máxima verosimilitud. Con ``round_lambda=True`` se redondea al múltiplo de 0.5 más cercano. Los límites de especificación y el objetivo se transforman con el mismo lambda. Acepta los mismos argumentos opcionales que :func:`capability_analysis` (subgrupos, etc.)."
+msgstr "``lam`` fixes lambda; if not given, it is estimated by maximum likelihood. With ``round_lambda=True`` it is rounded to the nearest multiple of 0.5. The specification limits and the target are transformed with the same lambda. Accepts the same optional arguments as :func:`capability_analysis` (subgroups, etc.)."
+
+msgid "Capability Sixpack de Minitab: carta de control, últimos 25, histograma, probabilidad normal y gráfico de capacidad."
+msgstr "Minitab's Capability Sixpack: control chart, last 25, histogram, normal probability and capability plot."
+
+msgid "Devuelve ``(figura, resultado_de_capacidad, carta_de_control)``. Acepta los mismos formatos de entrada que :func:`xbar_r_chart`."
+msgstr "Returns ``(figure, capability_result, control_chart)``. Accepts the same input formats as :func:`xbar_r_chart`."
+
+msgid "Histograma de capacidad con curvas normales (dentro / general) y especificaciones."
+msgstr "Capability histogram with normal curves (within / overall) and specifications."
+
+msgid ":class:`~pccpy.CapabilityResult` expone dos propiedades adicionales:"
+msgstr ":class:`~pccpy.CapabilityResult` exposes two additional properties:"
+
+msgid "``dpmo`` — defectos por millón de oportunidades esperados (= PPM general)."
+msgstr "``dpmo`` — expected defects per million opportunities (= overall PPM)."
+
+msgid "``sigma_level`` — nivel sigma del proceso (= Z.Bench, sin el desplazamiento de 1.5σ). Ambas aparecen en ``.to_frame()`` y ``.summary()``."
+msgstr "``sigma_level`` — process sigma level (= Z.Bench, without the 1.5σ shift). Both appear in ``.to_frame()`` and ``.summary()``."
+
+msgid "**Uso sin límites de especificación** (desde v0.10.7): ``lsl`` y ``usl`` son opcionales en :func:`~pccpy.capability_analysis` y :func:`~pccpy.capability_analysis_summary`. Los índices que dependen de especificaciones (Cp, Cpk, Pp, Ppk, dpmo, sigma_level) se devuelven como ``NaN`` cuando no se pasan; ``sigma_within`` y ``sigma_overall`` siempre se calculan::"
+msgstr "**Use without specification limits** (since v0.10.7): ``lsl`` and ``usl`` are optional in :func:`~pccpy.capability_analysis` and :func:`~pccpy.capability_analysis_summary`. The indices that depend on specifications (Cp, Cpk, Pp, Ppk, dpmo, sigma_level) are returned as ``NaN`` when they are not passed; ``sigma_within`` and ``sigma_overall`` are always computed::"
+

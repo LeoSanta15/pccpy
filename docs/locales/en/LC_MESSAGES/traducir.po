@@ -1,0 +1,288 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:42+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Cómo traducir pccpy"
+msgstr "How to translate pccpy"
+
+msgid "El idioma fuente es el **español**; cada idioma adicional es un catálogo `gettext` (`src/pccpy/locale/<código>/LC_MESSAGES/pccpy.po`). Hoy existe `en` (inglés). Esta guía explica cómo corregir una traducción o añadir un idioma."
+msgstr "The source language is **Spanish**; every additional language is a `gettext` catalog (`src/pccpy/locale/<code>/LC_MESSAGES/pccpy.po`). Today `en` (English) exists. This guide explains how to fix a translation or add a language."
+
+msgid "Corregir una traducción"
+msgstr "Fixing a translation"
+
+msgid "Busca el texto en español en `src/pccpy/locale/en/LC_MESSAGES/pccpy.po` y edita su `msgstr`."
+msgstr "Find the Spanish text in `src/pccpy/locale/en/LC_MESSAGES/pccpy.po` and edit its `msgstr`."
+
+msgid "Compila y comprueba:"
+msgstr "Compile and check:"
+
+msgid "Reglas"
+msgstr "Rules"
+
+#, python-brace-format
+msgid "**Marcadores `{nombre}`:** deben ser idénticos en el original y la traducción (`{n:.2f}` incluido). `make i18n-check` falla si no."
+msgstr "**`{name}` placeholders:** they must be identical in the original and the translation (including `{n:.2f}`). `make i18n-check` fails otherwise."
+
+msgid "**Espacios y alineación:** las tablas de `summary()` se alinean con espacios dentro del texto; conserva el ancho de las columnas (los tests comparan las líneas de ambos idiomas)."
+msgstr "**Spaces and alignment:** the `summary()` tables are aligned with spaces inside the text; keep the column widths (the tests compare the lines of both languages)."
+
+msgid "**Saltos de línea y sangría** de los textos de varias líneas (por ejemplo, los fragmentos de código del asistente): se conservan."
+msgstr "**Line breaks and indentation** of multi-line texts (for example, the assistant's code snippets) are preserved."
+
+msgid "**Código:** `pp.función(...)`, nombres de parámetros y valores como `'weibull'` **no se traducen**."
+msgstr "**Code:** `pp.function(...)`, parameter names and values such as `'weibull'` are **not translated**."
+
+msgid "**Claves estables:** `to_frame(stable=True)` y similares usan claves en inglés fijas; no dependen del catálogo."
+msgstr "**Stable keys:** `to_frame(stable=True)` and similar use fixed English keys; they do not depend on the catalog."
+
+msgid "**Glosario:** usa siempre el mismo término para el mismo concepto (tabla de abajo; lo comprueba `tests/test_i18n_glosario.py`)."
+msgstr "**Glossary:** always use the same term for the same concept (table below; checked by `tests/test_i18n_glosario.py`)."
+
+msgid "Revisar el catálogo"
+msgstr "Reviewing the catalog"
+
+msgid "Traducir la documentación"
+msgstr "Translating the documentation"
+
+msgid "La documentación (Sphinx) y el README también se traducen. Las páginas usan catálogos `gettext` en `docs/locales/<idioma>/LC_MESSAGES/` (uno por página, incluidas las descripciones de la API, que salen de los docstrings); el README en inglés es `README_en.md`."
+msgstr "The documentation (Sphinx) and the README are translated too. The pages use `gettext` catalogs in `docs/locales/<language>/LC_MESSAGES/` (one per page, including the API descriptions, which come from the docstrings); the English README is `README_en.md`."
+
+#, python-brace-format
+msgid "Conserva los roles (`{doc}`…``, `:func:`…``), las URL, los fragmentos de código y las negritas: `make docs-check` lo comprueba."
+msgstr "Keep the roles (`{doc}`…``, `:func:`…``), the URLs, the code fragments and the bold text: `make docs-check` verifies it."
+
+#, python-brace-format
+msgid "En las páginas Markdown, escribe los roles de las descripciones de la API con la sintaxis de MyST (`{func}`nombre``), no con la de RST."
+msgstr "In Markdown pages, write the roles of the API descriptions with MyST syntax (`{func}`name``), not RST syntax."
+
+msgid "El historial de versiones (`changelog`) se deja en español."
+msgstr "The version history (`changelog`) is left in Spanish."
+
+msgid "Añadir un idioma"
+msgstr "Adding a language"
+
+msgid "Después, `pccpy.available_languages()` lo incluye automáticamente. Si cambian textos en el código: `make i18n-update` actualiza los catálogos y marca lo modificado como *fuzzy* para revisarlo."
+msgstr "After that, `pccpy.available_languages()` includes it automatically. If texts change in the code: `make i18n-update` updates the catalogs and marks what changed as *fuzzy* for review."
+
+msgid "Glosario español → inglés"
+msgstr "Spanish → English glossary"
+
+msgid "La traducción al inglés sigue la terminología de Minitab y de la bibliografía SPC. **Pendiente de revisión por una persona del dominio.**"
+msgstr "The English translation follows Minitab's and the SPC literature's terminology. **Pending review by a domain expert.**"
+
+msgid "Español"
+msgstr "Spanish"
+
+msgid "Inglés"
+msgstr "English"
+
+msgid "carta de control"
+msgstr "carta de control"
+
+msgid "control chart"
+msgstr "control chart"
+
+msgid "límite de control"
+msgstr "límite de control"
+
+msgid "control limit"
+msgstr "control limit"
+
+msgid "línea central"
+msgstr "línea central"
+
+msgid "center line"
+msgstr "center line"
+
+msgid "subgrupo"
+msgstr "subgrupo"
+
+msgid "subgroup"
+msgstr "subgroup"
+
+msgid "observación"
+msgstr "observación"
+
+msgid "observation"
+msgstr "observation"
+
+msgid "capacidad (del proceso)"
+msgstr "capacidad (del proceso)"
+
+msgid "capability"
+msgstr "capability"
+
+msgid "desviación estándar"
+msgstr "desviación estándar"
+
+msgid "standard deviation"
+msgstr "standard deviation"
+
+msgid "intervalo de tolerancia"
+msgstr "intervalo de tolerancia"
+
+msgid "tolerance interval"
+msgstr "tolerance interval"
+
+msgid "muestreo de aceptación"
+msgstr "muestreo de aceptación"
+
+msgid "acceptance sampling"
+msgstr "acceptance sampling"
+
+msgid "causa especial"
+msgstr "causa especial"
+
+msgid "special-cause"
+msgstr "special-cause"
+
+msgid "repetibilidad"
+msgstr "repetibilidad"
+
+msgid "repeatability"
+msgstr "repeatability"
+
+msgid "reproducibilidad"
+msgstr "reproducibilidad"
+
+msgid "reproducibility"
+msgstr "reproducibility"
+
+msgid "sesgo"
+msgstr "sesgo"
+
+msgid "bias"
+msgstr "bias"
+
+msgid "linealidad"
+msgstr "linealidad"
+
+msgid "linearity"
+msgstr "linearity"
+
+msgid "concordancia"
+msgstr "concordancia"
+
+msgid "agreement"
+msgstr "agreement"
+
+msgid "fracción defectuosa"
+msgstr "fracción defectuosa"
+
+msgid "fraction defective"
+msgstr "fraction defective"
+
+msgid "p-valor / valor p"
+msgstr "p-valor / valor p"
+
+msgid "p-value"
+msgstr "p-value"
+
+msgid "mediana"
+msgstr "mediana"
+
+msgid "median"
+msgstr "median"
+
+msgid "rango"
+msgstr "rango"
+
+msgid "range"
+msgstr "range"
+
+msgid "especificación"
+msgstr "especificación"
+
+msgid "specification"
+msgstr "specification"
+
+msgid "defectuosos"
+msgstr "defectuosos"
+
+msgid "defective"
+msgstr "defective"
+
+msgid "tamaño de muestra"
+msgstr "tamaño de muestra"
+
+msgid "sample size"
+msgstr "sample size"
+
+msgid "normalidad"
+msgstr "normalidad"
+
+msgid "normality"
+msgstr "normality"
+
+msgid "atípico"
+msgstr "atípico"
+
+msgid "outlier"
+msgstr "outlier"
+
+msgid "tendencia"
+msgstr "tendencia"
+
+msgid "trend"
+msgstr "trend"
+
+msgid "mezcla"
+msgstr "mezcla"
+
+msgid "mixture"
+msgstr "mixture"
+
+msgid "agrupamiento"
+msgstr "agrupamiento"
+
+msgid "clustering"
+msgstr "clustering"
+
+msgid "oscilación"
+msgstr "oscilación"
+
+msgid "oscillation"
+msgstr "oscillation"
+
+msgid "operador"
+msgstr "operador"
+
+msgid "operator"
+msgstr "operator"
+
+msgid "parte"
+msgstr "parte"
+
+msgid "part"
+msgstr "part"
+
+msgid "dentro (del subgrupo)"
+msgstr "dentro (del subgrupo)"
+
+msgid "within"
+msgstr "within"
+
+msgid "general"
+msgstr "general"
+
+msgid "overall"
+msgstr "overall"
+

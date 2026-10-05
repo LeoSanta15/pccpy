@@ -1,0 +1,195 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Guía de selección de carta de control"
+msgstr "Control chart selection guide"
+
+msgid "¿No sabes qué carta usar? Responde las preguntas en orden y llega a la función correcta en menos de un minuto."
+msgstr "Not sure which chart to use? Answer the questions in order and reach the right function in under a minute."
+
+msgid "Paso 1 — ¿Qué tipo de dato tienes?"
+msgstr "Step 1 — What type of data do you have?"
+
+msgid "Paso 2 — ¿Están agrupados en subgrupos?"
+msgstr "Step 2 — Are they grouped into subgroups?"
+
+msgid "Un **subgrupo racional** es un conjunto de mediciones tomadas bajo condiciones muy similares (misma máquina, mismo operador, mismo turno)."
+msgstr "A **rational subgroup** is a set of measurements taken under very similar conditions (same machine, same operator, same shift)."
+
+msgid "`xbar_r_chart` — Xbar-R"
+msgstr "`xbar_r_chart` — Xbar-R"
+
+msgid "Para subgrupos pequeños (2–9). Los límites se basan en el rango promedio."
+msgstr "For small subgroups (2–9). The limits are based on the average range."
+
+msgid "`xbar_s_chart` — Xbar-S"
+msgstr "`xbar_s_chart` — Xbar-S"
+
+msgid "Para subgrupos grandes (≥10) o variables. Los límites se basan en la desviación estándar."
+msgstr "For large subgroups (≥10) or variables. The limits are based on the standard deviation."
+
+msgid "Paso 3 — Datos individuales (sin subgrupos)"
+msgstr "Step 3 — Individual data (no subgroups)"
+
+msgid "`imr_chart` — I-MR (carta de individuos y rango móvil)"
+msgstr "`imr_chart` — I-MR (individuals and moving range chart)"
+
+msgid "La carta más usada para datos individuales. Detecta desplazamientos de ±3σ."
+msgstr "The most widely used chart for individual data. Detects shifts of ±3σ."
+
+msgid "`ewma_chart` — Media móvil exponencialmente ponderada"
+msgstr "`ewma_chart` — Exponentially weighted moving average"
+
+msgid "Detecta desplazamientos pequeños acumulando historia. Ideal para cambios de 0.5σ–1.5σ."
+msgstr "Detects small shifts by accumulating history. Ideal for shifts of 0.5σ–1.5σ."
+
+msgid "`cusum_chart` — CUSUM"
+msgstr "`cusum_chart` — CUSUM"
+
+msgid "Suma acumulada de desviaciones. Alta sensibilidad a desplazamientos sostenidos."
+msgstr "Cumulative sum of deviations. High sensitivity to sustained shifts."
+
+msgid "`imr_rs_chart` — I-MR-R/S"
+msgstr "`imr_rs_chart` — I-MR-R/S"
+
+msgid "Separa la variación entre subgrupos de la variación dentro de subgrupos cuando tienes subgrupos pero quieres monitorear valores individuales."
+msgstr "Separates the variation between subgroups from the variation within subgroups when you have subgroups but want to monitor individual values."
+
+msgid "Paso 4 — Datos de atributos"
+msgstr "Step 4 — Attribute data"
+
+msgid "**¿Cuándo usar Laney P′ o U′?** Cuando el proceso de producción introduce sobredispersión (más variabilidad de la esperada por el binomial o Poisson). `laney_p_chart` y `laney_u_chart` ajustan los límites con un factor σ_z para evitar falsas alarmas."
+msgstr "**When to use Laney P′ or U′?** When the production process introduces overdispersion (more variability than expected from the binomial or Poisson). `laney_p_chart` and `laney_u_chart` adjust the limits with a σ_z factor to avoid false alarms."
+
+msgid "Paso 5 — Capacidad del proceso"
+msgstr "Step 5 — Process capability"
+
+msgid "Una vez que la carta indica proceso **bajo control estadístico**, calcula capacidad:"
+msgstr "Once the chart shows the process is **in statistical control**, compute capability:"
+
+msgid "Paso 6 — No sé por dónde empezar"
+msgstr "Step 6 — I don't know where to start"
+
+msgid "Usa `diagnose()`. Analiza tus datos, detecta problemas y te dice exactamente qué función usar:"
+msgstr "Use `diagnose()`. It analyzes your data, detects problems and tells you exactly which function to use:"
+
+msgid "Tabla resumen"
+msgstr "Summary table"
+
+msgid "Situación"
+msgstr "Situation"
+
+msgid "Función"
+msgstr "Function"
+
+msgid "Datos individuales, monitoreo general"
+msgstr "Individual data, general monitoring"
+
+msgid "`imr_chart`"
+msgstr "`imr_chart`"
+
+msgid "Datos individuales, cambios pequeños"
+msgstr "Individual data, small shifts"
+
+msgid "`ewma_chart` o `cusum_chart`"
+msgstr "`ewma_chart` or `cusum_chart`"
+
+msgid "Subgrupos pequeños (2–9)"
+msgstr "Small subgroups (2–9)"
+
+msgid "`xbar_r_chart`"
+msgstr "`xbar_r_chart`"
+
+msgid "Subgrupos grandes (≥10)"
+msgstr "Large subgroups (≥10)"
+
+msgid "`xbar_s_chart`"
+msgstr "`xbar_s_chart`"
+
+msgid "Fracción defectuosa, n variable"
+msgstr "Fraction defective, variable n"
+
+msgid "`p_chart` o `laney_p_chart`"
+msgstr "`p_chart` or `laney_p_chart`"
+
+msgid "Número de defectuosos, n fijo"
+msgstr "Number of defectives, fixed n"
+
+msgid "`np_chart`"
+msgstr "`np_chart`"
+
+msgid "Defectos por unidad"
+msgstr "Defects per unit"
+
+msgid "`u_chart` o `laney_u_chart`"
+msgstr "`u_chart` or `laney_u_chart`"
+
+msgid "Número de defectos, unidad fija"
+msgstr "Number of defects, fixed unit"
+
+msgid "`c_chart`"
+msgstr "`c_chart`"
+
+msgid "Capacidad, distribución normal"
+msgstr "Capability, normal distribution"
+
+msgid "`capability_analysis`"
+msgstr "`capability_analysis`"
+
+msgid "Capacidad, distribución no normal"
+msgstr "Capability, non-normal distribution"
+
+msgid "`capability_boxcox` o `capability_nonnormal`"
+msgstr "`capability_boxcox` or `capability_nonnormal`"
+
+msgid "Detección de tendencias"
+msgstr "Trend detection"
+
+msgid "`run_chart`"
+msgstr "`run_chart`"
+
+msgid "Semáforo de producción"
+msgstr "Production traffic light"
+
+msgid "`precontrol`"
+msgstr "`precontrol`"
+
+msgid "No sé qué usar"
+msgstr "I don't know what to use"
+
+msgid "`diagnose`"
+msgstr "`diagnose`"
+
+msgid "Ver también"
+msgstr "See also"
+
+#, python-brace-format
+msgid "{doc}`inicio_rapido` — ejemplos de cada función"
+msgstr "{doc}`inicio_rapido` — examples of each function"
+
+#, python-brace-format
+msgid "{doc}`capacidad_indices` — diferencia entre Cp, Cpk, Pp, Ppk"
+msgstr "{doc}`capacidad_indices` — difference between Cp, Cpk, Pp, Ppk"
+
+#, python-brace-format
+msgid "{doc}`minitab` — equivalencias con Minitab"
+msgstr "{doc}`minitab` — equivalences with Minitab"
+

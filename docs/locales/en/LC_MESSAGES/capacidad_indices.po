@@ -1,0 +1,315 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.11.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Índices de capacidad: Cp, Cpk, Pp, Ppk"
+msgstr "Capability indices: Cp, Cpk, Pp, Ppk"
+
+msgid "Los índices de capacidad cuantifican qué tan bien cabe el proceso dentro de las especificaciones. Esta página explica la diferencia entre ellos, cuándo usar cada uno y cómo interpretar sus valores."
+msgstr "Capability indices quantify how well the process fits within the specifications. This page explains the difference between them, when to use each one and how to interpret their values."
+
+msgid "La pregunta que responden"
+msgstr "The question they answer"
+
+msgid "\"Si el proceso sigue funcionando igual, ¿qué fracción de las piezas caerá fuera de especificaciones?\""
+msgstr "\"If the process keeps running the same way, what fraction of the parts will fall outside the specifications?\""
+
+msgid "**Cp, Cpk** — responden esta pregunta con la variación **dentro de subgrupos** (variación a corto plazo; solo el ruido del proceso)."
+msgstr "**Cp, Cpk** — answer this question using the variation **within subgroups** (short-term variation; only the process noise)."
+
+msgid "**Pp, Ppk** — responden con la variación **total u global** (incluye también los desplazamientos y derivas a largo plazo)."
+msgstr "**Pp, Ppk** — answer it using the **total or overall** variation (which also includes long-term shifts and drifts)."
+
+msgid "Las fórmulas"
+msgstr "The formulas"
+
+msgid "Sea:"
+msgstr "Let:"
+
+msgid "`LSL` = límite de especificación inferior"
+msgstr "`LSL` = lower specification limit"
+
+msgid "`USL` = límite de especificación superior"
+msgstr "`USL` = upper specification limit"
+
+msgid "`x̄` = media del proceso"
+msgstr "`x̄` = process mean"
+
+msgid "`σ_dentro` = desviación estándar dentro de subgrupos (estimada con R̄/d₂ o S̄/c₄)"
+msgstr "`σ_within` = within-subgroup standard deviation (estimated with R̄/d₂ or S̄/c₄)"
+
+msgid "`σ_total` = desviación estándar total (calculada con todos los datos, ddof=1)"
+msgstr "`σ_total` = total standard deviation (computed with all the data, ddof=1)"
+
+msgid "Índice"
+msgstr "Index"
+
+msgid "Fórmula"
+msgstr "Formula"
+
+msgid "Mide"
+msgstr "Measures"
+
+msgid "**Cp**"
+msgstr "**Cp**"
+
+msgid "(USL − LSL) / (6 · σ_dentro)"
+msgstr "(USL − LSL) / (6 · σ_within)"
+
+msgid "Potencial del proceso (sin importar el centrado)"
+msgstr "Process potential (regardless of centering)"
+
+msgid "**Cpk**"
+msgstr "**Cpk**"
+
+msgid "min(USL − x̄, x̄ − LSL) / (3 · σ_dentro)"
+msgstr "min(USL − x̄, x̄ − LSL) / (3 · σ_within)"
+
+msgid "Capacidad real considerando centrado"
+msgstr "Actual capability considering centering"
+
+msgid "**Pp**"
+msgstr "**Pp**"
+
+msgid "(USL − LSL) / (6 · σ_total)"
+msgstr "(USL − LSL) / (6 · σ_total)"
+
+msgid "Desempeño global (sin importar el centrado)"
+msgstr "Overall performance (regardless of centering)"
+
+msgid "**Ppk**"
+msgstr "**Ppk**"
+
+msgid "min(USL − x̄, x̄ − LSL) / (3 · σ_total)"
+msgstr "min(USL − x̄, x̄ − LSL) / (3 · σ_total)"
+
+msgid "Desempeño real global"
+msgstr "Actual overall performance"
+
+msgid "**Regla práctica:** Si el proceso está bajo control estadístico (sin causas especiales), `Cp ≈ Pp` y `Cpk ≈ Ppk`. Si hay una diferencia grande, el proceso tiene desplazamientos o derivas: las causas asignables afectan la variación total."
+msgstr "**Rule of thumb:** If the process is in statistical control (no special causes), `Cp ≈ Pp` and `Cpk ≈ Ppk`. If there is a large difference, the process has shifts or drifts: assignable causes affect the total variation."
+
+msgid "Analogía: el auto en el garage"
+msgstr "Analogy: the car in the garage"
+
+msgid "Imagina que el garage es la tolerancia (USL − LSL) y el auto es el proceso:"
+msgstr "Imagine the garage is the tolerance (USL − LSL) and the car is the process:"
+
+msgid "**Cp** — ¿es el auto más angosto que el garage? (solo mide anchos)"
+msgstr "**Cp** — is the car narrower than the garage? (it only measures widths)"
+
+msgid "**Cpk** — ¿cabe el auto centrado en el garage? (mide anchura Y posición)"
+msgstr "**Cpk** — does the car fit centered in the garage? (it measures width AND position)"
+
+msgid "Si Cp > 1 pero Cpk < 1: el auto cabe en ancho, pero está muy pegado a un lado."
+msgstr "If Cp > 1 but Cpk < 1: the car fits in width, but it is pressed up against one side."
+
+msgid "Tabla de referencia"
+msgstr "Reference table"
+
+msgid "Valor del índice"
+msgstr "Index value"
+
+msgid "Interpretación"
+msgstr "Interpretation"
+
+msgid "Nivel sigma aprox."
+msgstr "Approx. sigma level"
+
+msgid "< 1.00"
+msgstr "< 1.00"
+
+msgid "Proceso **no capaz** — produce piezas fuera de especificaciones"
+msgstr "Process **not capable** — produces parts outside the specifications"
+
+msgid "< 3σ"
+msgstr "< 3σ"
+
+msgid "1.00"
+msgstr "1.00"
+
+msgid "Límite mínimo aceptable — 2700 PPM esperados"
+msgstr "Minimum acceptable limit — 2700 PPM expected"
+
+msgid "3σ"
+msgstr "3σ"
+
+msgid "1.33"
+msgstr "1.33"
+
+msgid "Estándar de la industria automotriz (PPAP)"
+msgstr "Automotive industry standard (PPAP)"
+
+msgid "4σ"
+msgstr "4σ"
+
+msgid "1.50"
+msgstr "1.50"
+
+msgid "Meta habitual en manufactura"
+msgstr "Usual goal in manufacturing"
+
+msgid "4.5σ"
+msgstr "4.5σ"
+
+msgid "1.67"
+msgstr "1.67"
+
+msgid "Proceso muy capaz"
+msgstr "Very capable process"
+
+msgid "5σ"
+msgstr "5σ"
+
+msgid "2.00"
+msgstr "2.00"
+
+msgid "Proceso Six Sigma"
+msgstr "Six Sigma process"
+
+msgid "6σ"
+msgstr "6σ"
+
+msgid "Los valores de referencia para Pp y Ppk suelen ser más bajos que para Cp y Cpk porque incluyen más fuentes de variación."
+msgstr "The reference values for Pp and Ppk are usually lower than for Cp and Cpk because they include more sources of variation."
+
+msgid "Cómo calcularlos con pccpy"
+msgstr "How to compute them with pccpy"
+
+msgid "Salida relevante:"
+msgstr "Relevant output:"
+
+msgid "Acceder a los valores individuales:"
+msgstr "Accessing the individual values:"
+
+msgid "¿Cuándo uso Cp/Cpk y cuándo Pp/Ppk?"
+msgstr "When do I use Cp/Cpk and when Pp/Ppk?"
+
+msgid "Situación"
+msgstr "Situation"
+
+msgid "Índice recomendado"
+msgstr "Recommended index"
+
+msgid "Por qué"
+msgstr "Why"
+
+msgid "Proceso nuevo, primera validación"
+msgstr "New process, first validation"
+
+msgid "Pp, Ppk"
+msgstr "Pp, Ppk"
+
+msgid "Aún no hay historia suficiente para estimar σ_dentro con fiabilidad"
+msgstr "There is not yet enough history to estimate σ_within reliably"
+
+msgid "Proceso en producción continua bajo control estadístico"
+msgstr "Process in continuous production under statistical control"
+
+msgid "Cp, Cpk"
+msgstr "Cp, Cpk"
+
+msgid "Mide el potencial \"limpio\" sin ruido de largo plazo"
+msgstr "Measures the \"clean\" potential without long-term noise"
+
+msgid "Auditoría o reporte PPAP / APQP"
+msgstr "PPAP / APQP audit or report"
+
+msgid "Cp, Cpk Y Pp, Ppk"
+msgstr "Cp, Cpk AND Pp, Ppk"
+
+msgid "Los requisitos suelen pedir ambos"
+msgstr "The requirements usually ask for both"
+
+msgid "Proceso con derivas conocidas"
+msgstr "Process with known drifts"
+
+msgid "La deriva forma parte de la variación real del cliente"
+msgstr "The drift is part of the customer's actual variation"
+
+msgid "Cpm — índice de centrado (Taguchi)"
+msgstr "Cpm — centering index (Taguchi)"
+
+msgid "`Cpm` penaliza la distancia al objetivo (target) además de la dispersión:"
+msgstr "`Cpm` penalizes the distance from the target in addition to the dispersion:"
+
+msgid "Se activa automáticamente en `capability_analysis` si pasas `target`:"
+msgstr "It is activated automatically in `capability_analysis` if you pass `target`:"
+
+msgid "Z.Bench — nivel sigma del proceso"
+msgstr "Z.Bench — process sigma level"
+
+msgid "`Z.Bench` es el cuantil de la distribución normal que corresponde al PPM total esperado. Es la forma más directa de comunicar el nivel sigma del proceso al equipo directivo:"
+msgstr "`Z.Bench` is the quantile of the normal distribution that corresponds to the total expected PPM. It is the most direct way to communicate the process sigma level to management:"
+
+msgid "Z.Bench"
+msgstr "Z.Bench"
+
+msgid "PPM aprox."
+msgstr "Approx. PPM"
+
+msgid "Nivel sigma (con desplazamiento 1.5σ)"
+msgstr "Sigma level (with 1.5σ shift)"
+
+msgid "3.0"
+msgstr "3.0"
+
+msgid "2 700"
+msgstr "2 700"
+
+msgid "4.0"
+msgstr "4.0"
+
+msgid "63"
+msgstr "63"
+
+msgid "4.5"
+msgstr "4.5"
+
+msgid "3.4"
+msgstr "3.4"
+
+msgid "6σ (con desplazamiento)"
+msgstr "6σ (with shift)"
+
+msgid "6.0"
+msgstr "6.0"
+
+msgid "0.001"
+msgstr "0.001"
+
+msgid "6σ (centrado)"
+msgstr "6σ (centered)"
+
+msgid "Ver también"
+msgstr "See also"
+
+#, python-brace-format
+msgid "{doc}`guia_seleccion` — cuándo hacer análisis de capacidad"
+msgstr "{doc}`guia_seleccion` — when to do capability analysis"
+
+#, python-brace-format
+msgid "{doc}`referencia/capacidad` — referencia completa de `capability_analysis`"
+msgstr "{doc}`referencia/capacidad` — full reference of `capability_analysis`"
+
+#, python-brace-format
+msgid "{doc}`faq` — \"¿Por qué Cp ≠ Cpk?\" y otras preguntas frecuentes"
+msgstr "{doc}`faq` — \"Why is Cp ≠ Cpk?\" and other frequently asked questions"
+
