@@ -33,6 +33,12 @@ def test_el_detector_trata_igual_los_roles_rst_y_myst():
     assert problemas_de_mensaje("Ver :func:`diagnose`.", "See {func}`diagnose`.") == []
 
 
+def test_el_detector_senala_un_rol_rst_en_una_pagina_markdown():
+    assert problemas_de_mensaje("Ver :func:`x`.", "See :func:`x`.", markdown=True)
+    assert problemas_de_mensaje("Ver :func:`x`.", "See {func}`x`.", markdown=True) == []
+    assert problemas_de_mensaje("Ver :func:`x`.", "See :func:`x`.", markdown=False) == []
+
+
 def test_el_detector_senala_una_url_o_un_codigo_que_cambian():
     assert problemas_de_mensaje("Ver https://a.org/x.", "See https://b.org/x.")
     assert problemas_de_mensaje("Usa `a` y `b`.", "Use `a`.")

@@ -37,11 +37,20 @@ def _roles(texto: str) -> Counter:
     return Counter(re.sub(r"^:([a-z]+):`", r"{\1}`", r) for r in ROL.findall(texto))
 
 
-def problemas_de_mensaje(msgid: str, msgstr: str) -> list[str]:
-    """Problemas de una traducción concreta (vacía, referencias o texto español)."""
+RST_EN_MARKDOWN = re.compile(r"(?<![`\w]):[a-z]+:`")
+
+
+def problemas_de_mensaje(msgid: str, msgstr: str, markdown: bool = False) -> list[str]:
+    """Problemas de una traducción concreta (vacía, referencias o texto español).
+
+    ``markdown=True`` si la página es ``.md``: ahí Sphinx interpreta el ``msgstr`` con MyST y un rol escrito como RST
+    (``:func:`x```) no se enlaza, así que debe escribirse ``{func}`x```.
+    """
     if not msgstr:
         return ["sin traducir"]
     malos = []
+    if markdown and RST_EN_MARKDOWN.search(msgstr):
+        malos.append("rol RST en una página Markdown: usa la sintaxis de MyST ({func}`x`)")
     if _roles(msgid) != _roles(msgstr):
         malos.append("los roles/referencias de Sphinx cambian")
     if Counter(URL.findall(msgid)) != Counter(URL.findall(msgstr)):
@@ -79,7 +88,8 @@ def main() -> int:
             for m in mensajes:
                 if m.fuzzy:
                     errores.append(f"[{idioma}] {dominio}: texto fuzzy: {m.id[:50]!r}")
-                for p in problemas_de_mensaje(m.id, m.string):
+                es_md = (RAIZ / "docs" / "source" / f"{dominio}.md").exists()
+                for p in problemas_de_mensaje(m.id, m.string, markdown=es_md):
                     errores.append(f"[{idioma}] {dominio}: {p}: {m.id[:60]!r} ⇒ {m.string[:60]!r}")
     for e in errores:
         print(e)
