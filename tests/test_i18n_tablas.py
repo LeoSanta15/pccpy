@@ -4,6 +4,7 @@ La referencia en español (``tests/golden/i18n_tablas_es.json``) se generó con 
 """
 from __future__ import annotations
 
+import importlib.util
 import json
 import re
 from pathlib import Path
@@ -16,23 +17,25 @@ import pytest
 import pccpy
 
 TABLAS_ES = json.loads((Path(__file__).parent / "golden" / "i18n_tablas_es.json").read_text(encoding="utf-8"))
+HAY_EXCEL = importlib.util.find_spec("openpyxl") is not None  # extra opcional: CI base no lo instala
+CLAVES_CORPUS = sorted(k for k in TABLAS_ES if HAY_EXCEL or not k.startswith("excel_"))
 _CACHE: dict = {}
 
 
 def _tablas(lang: str) -> dict:
     if lang not in _CACHE:
         with pccpy.language(lang):
-            _CACHE[lang] = corpus.tablas_sueltas()
+            _CACHE[lang] = corpus.tablas_sueltas(con_excel=HAY_EXCEL)
     return _CACHE[lang]
 
 
-@pytest.mark.parametrize("nombre", sorted(TABLAS_ES))
+@pytest.mark.parametrize("nombre", CLAVES_CORPUS)
 def test_el_espanol_de_las_tablas_no_cambia(nombre):
     assert _tablas("es")[nombre] == TABLAS_ES[nombre]
 
 
 def test_las_tablas_del_corpus_son_las_de_la_referencia():
-    assert sorted(_tablas("es")) == sorted(TABLAS_ES)
+    assert sorted(_tablas("es")) == CLAVES_CORPUS
 
 
 ESPANOL = frozenset(
@@ -45,14 +48,14 @@ def _palabras(texto) -> set[str]:
     return {p.lower() for p in re.findall(r"[A-Za-zÁ-ú]+", str(texto))} & ESPANOL
 
 
-@pytest.mark.parametrize("nombre", sorted(TABLAS_ES))
+@pytest.mark.parametrize("nombre", CLAVES_CORPUS)
 def test_las_cabeceras_en_ingles_no_tienen_palabras_en_espanol(nombre):
     t = _tablas("en")[nombre]
     etiquetas = [t["index_name"], *t["columns"]] + ([str(i) for i in t["index"]] if nombre.startswith("anova") else [])
     assert all(not _palabras(e) for e in etiquetas), etiquetas
 
 
-@pytest.mark.parametrize("nombre", sorted(TABLAS_ES))
+@pytest.mark.parametrize("nombre", CLAVES_CORPUS)
 def test_es_y_en_tienen_la_misma_forma_y_los_mismos_numeros(nombre):
     es, en = _tablas("es")[nombre], _tablas("en")[nombre]
     assert len(es["columns"]) == len(en["columns"]) and len(es["index"]) == len(en["index"])
@@ -63,6 +66,8 @@ def test_es_y_en_tienen_la_misma_forma_y_los_mismos_numeros(nombre):
 
 def _hojas(lang: str, que: str) -> list[str]:
     import tempfile
+
+    pytest.importorskip("openpyxl")
 
     import pandas as pd
 

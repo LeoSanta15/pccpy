@@ -97,7 +97,7 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - **R-15 No repetir bugs:** antes de tocar validación de entrada, casos borde,
   imports opcionales, autodoc o releases, lee `docs/retrospectiva/BUG_CATALOG.md`.
   Si un bug reaparece: test de regresión, actualizar catálogo, reforzar la regla.
-- **R-17 Texto visible traducible `[test]`.** Todo mensaje de `raise`/`warnings.warn` es `tr("texto literal")` o `tr("… {x} …").format(x=x)` (marcadores con nombre, iguales en todos los idiomas; nunca un f-string dentro de `tr()`); nadie asigna `tr`/`N_`. Tras cambiar un texto: `make i18n-update`, traducir en `locale/en/…/pccpy.po`, `make i18n-compile` (`make i18n-check` lo exige el CI). Comprobado por `tests/test_i18n_errores.py`.
+- **R-17 Texto visible traducible `[test]`.** Todo mensaje de `raise`/`warnings.warn` es `tr("texto literal")` o `tr("… {x} …").format(x=x)` (marcadores con nombre, iguales en todos los idiomas; nunca un f-string dentro de `tr()`); nadie asigna `tr`/`N_`. Tras cambiar un texto: `make i18n-update`, traducir en `locale/en/…/pccpy.po`, `make i18n-compile` (`make i18n-check` lo exige el CI). Comprobado por `tests/test_i18n_errores.py`. Los tests no pueden depender de extras opcionales (`openpyxl`): el CI no instala `excel`; usa `pytest.importorskip` o `find_spec` (la fase 3b lo rompió en CI porque local sí tenía `openpyxl`; verifica con `pip install -e .` sin extras).
 - **R-16 Reglas probadas:** antes de añadir una regla a este archivo, ejecuta su
   comando contra este repo y registra el resultado (una regla propuesta con
   `ruff --select F,E9,B,I,S` falló: `S101` en `acceptance.py:692`).
