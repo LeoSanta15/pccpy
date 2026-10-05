@@ -237,7 +237,7 @@ def construir_estables() -> dict:
 
 # ── otras tablas (fase 3b): pareto, curvas OC/AOQ, ANOVA, kappa y las hojas de Excel ──
 
-def tablas_sueltas() -> dict:
+def tablas_sueltas(con_excel: bool = True) -> dict:
     """Tablas devueltas por métodos que no son ``to_frame()`` (la referencia en español se generó antes de la fase 3b)."""
     import tempfile
 
@@ -258,8 +258,9 @@ def tablas_sueltas() -> dict:
         acuerdo = pp.attribute_agreement(_desde_df_atributos()[0], reference=_desde_df_atributos()[1], replicates=2)
         d["kappa_dentro"], d["kappa_vs_referencia"] = acuerdo.kappa_within_frame(), acuerdo.kappa_vs_reference_frame()
         with tempfile.TemporaryDirectory() as tmp:
-            for nombre, res in (("gage_rr", cruzado), ("gage_rr_anidado", anidado), ("acuerdo", acuerdo),
-                                ("muestreo_atributos", atr), ("muestreo_variables", var), ("dodge_romig", dr)):
+            hojas = (("gage_rr", cruzado), ("gage_rr_anidado", anidado), ("acuerdo", acuerdo),
+                     ("muestreo_atributos", atr), ("muestreo_variables", var), ("dodge_romig", dr))
+            for nombre, res in hojas if con_excel else ():  # las hojas de Excel necesitan openpyxl (extra opcional)
                 ruta = f"{tmp}/{nombre}.xlsx"
                 res.to_excel(ruta)
                 for i, df in enumerate(pd.read_excel(ruta, sheet_name=None, index_col=0).values()):  # por posición: el nombre de la hoja se traduce
