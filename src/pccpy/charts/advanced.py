@@ -53,7 +53,7 @@ def ma_chart(
         sig_t = s_x / np.sqrt(w)
         ucl, lcl = t0 + k * sig_t, t0 - k * sig_t
         flagged = np.flatnonzero((ma > ucl) | (ma < lcl))
-        panel = StagePanel("MA", ma, full(t0, N), ucl, lcl, sig_t, "Media móvil", "only1",
+        panel = StagePanel("MA", ma, full(t0, N), ucl, lcl, sig_t, N_("Media móvil"), "only1",
                            violations={1: flagged})
         return [panel], {"media": t0, "sigma": s, "longitud": length, "k": k, "n_subgrupo": n}
 
@@ -174,11 +174,11 @@ def zmr_chart(
     def stage_fn(idx):
         n = z.size
         z_panel = StagePanel("Z", z, full(0.0, n), full(3.0, n), full(-3.0, n), full(1.0, n),
-                             "Valor Z", "full")
+                             N_("Valor Z"), "full")
         mr_panel = StagePanel(
             "MR", moving_range(z, 2), full(dd2, n), full(dd2 + 3 * dd3, n),
             full(max(0.0, dd2 - 3 * dd3), n), full(dd3, n),
-            "Rango móvil de Z", "basic", symmetric=False,
+            N_("Rango móvil de Z"), "basic", symmetric=False,
         )
         params = {"método": "histórica" if sigma is not None else sigma_method, "partes": len(labels), "corridas": len(runs), "n": n}
         if len(set(run_sigma)) == 1:
@@ -258,21 +258,21 @@ def imr_rs_chart(
         sbw = float(np.sqrt(sb**2 + sw**2)) if np.isfinite(sb) else float("nan")
 
         i_panel = StagePanel("I", means, full(m, k), full(m + 3 * sx, k), full(m - 3 * sx, k),
-                             full(sx, k), "Media de la muestra", "full")
+                             full(sx, k), N_("Media de la muestra"), "full")
         c = d2(2) * sx
         mr_panel = StagePanel(
             "MR", moving_range(means, 2), full(c, k), full(c + 3 * d3(2) * sx, k),
             full(max(0.0, c - 3 * d3(2) * sx), k), full(d3(2) * sx, k),
-            "Rango móvil de las medias", "basic", symmetric=False,
+            N_("Rango móvil de las medias"), "basic", symmetric=False,
         )
         if within == "r":
             cc, sd = sw * vec(d2, n_i), sw * vec(d3, n_i)
             w_panel = StagePanel("R", rng, cc, cc + 3 * sd, np.maximum(0.0, cc - 3 * sd), sd,
-                                 "Rango dentro del subgrupo", "basic", symmetric=False)
+                                 N_("Rango dentro del subgrupo"), "basic", symmetric=False)
         else:
             cc, sd = sw * vec(c4, n_i), sw * vec(c5, n_i)
             w_panel = StagePanel("S", s_i, cc, cc + 3 * sd, np.maximum(0.0, cc - 3 * sd), sd,
-                                 "Desv. est. dentro del subgrupo", "basic", symmetric=False)
+                                 N_("Desv. est. dentro del subgrupo"), "basic", symmetric=False)
         params = {"media": m, "sigma_dentro": sw, "sigma_entre": sb, "sigma_entre_dentro": sbw,
                   "subgrupos": k}
         return [i_panel, mr_panel, w_panel], params
@@ -337,7 +337,7 @@ def g_chart(
         center, ucl = _geom_quantile(pe, 0.5) - 1, _geom_quantile(pe, q_hi) - 1
         c, u, l = full(center, n), full(ucl, n), full(0.0, n)
         viol = _rare_violations(xs, c, l, u, tests_n, test_params)
-        panel = StagePanel("G", xs, c, u, l, full(np.nan, n), "Cantidad entre eventos", "basic",
+        panel = StagePanel("G", xs, c, u, l, full(np.nan, n), N_("Cantidad entre eventos"), "basic",
                            symmetric=False, violations=viol)
         return [panel], {"p": pe, "media": mean, "n": n}
 
@@ -403,7 +403,7 @@ def t_chart(
         cen, lo, hi = ppf(0.5), ppf(q_lo), ppf(q_hi)
         cc, l, u = full(cen, n), full(lo, n), full(hi, n)
         viol = _rare_violations(xs, cc, l, u, tests_n, test_params)
-        panel = StagePanel("T", xs, cc, u, l, full(np.nan, n), "Tiempo entre eventos", "basic",
+        panel = StagePanel("T", xs, cc, u, l, full(np.nan, n), N_("Tiempo entre eventos"), "basic",
                            symmetric=False, violations=viol)
         return [panel], {"distribución": distribution, "forma": c, "escala": sc, "n": n}
 
@@ -505,10 +505,10 @@ def zone_chart(
         sig_x = sg / np.sqrt(n_i)
         score, flagged = _zone_scores((means - m) / sig_x, w, reset)
         z_panel = StagePanel("Zona", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
-                             "Media de la muestra" if not individuals else "Valor individual",
+                             N_("Media de la muestra") if not individuals else N_("Valor individual"),
                              "only1", violations={1: flagged})
         s_panel = StagePanel("Puntaje", score, full(0.0, k), full(w[3], k), full(np.nan, k),
-                             full(np.nan, k), "Puntaje acumulado", "only1", symmetric=False,
+                             full(np.nan, k), N_("Puntaje acumulado"), "only1", symmetric=False,
                              violations={})
         return [z_panel, s_panel], {"media": m, "sigma": sg, "pesos": w, "reinicio": reset, "n": k}
 

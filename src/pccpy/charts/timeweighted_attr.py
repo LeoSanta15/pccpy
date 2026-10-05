@@ -13,7 +13,7 @@ from __future__ import annotations
 
 import numpy as np
 
-from .._i18n import tr
+from .._i18n import N_, tr
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, full
 from .attributes import _prep
@@ -94,7 +94,7 @@ def ewma_p_chart(
     k : float
         Ancho de los límites en sigmas. Por defecto 3.0.
     """
-    return _ewma_attr("p", "EWMA-P", "Proporción EWMA", defectives, n, p, weight, k)
+    return _ewma_attr("p", "EWMA-P", N_("Proporción EWMA"), defectives, n, p, weight, k)
 
 
 def ewma_c_chart(
@@ -117,7 +117,7 @@ def ewma_c_chart(
     k : float
         Ancho de los límites en sigmas. Por defecto 3.0.
     """
-    return _ewma_attr("c", "EWMA-C", "Conteo EWMA", defects, None, c, weight, k)
+    return _ewma_attr("c", "EWMA-C", N_("Conteo EWMA"), defects, None, c, weight, k)
 
 
 def ewma_u_chart(
@@ -143,7 +143,7 @@ def ewma_u_chart(
     k : float
         Ancho de los límites en sigmas. Por defecto 3.0.
     """
-    return _ewma_attr("u", "EWMA-U", "Defectos/unidad EWMA", defects, n, u, weight, k)
+    return _ewma_attr("u", "EWMA-U", N_("Defectos/unidad EWMA"), defects, n, u, weight, k)
 
 
 # ─────────────────────────────────────────────────────────────── CUSUM ────────
@@ -173,7 +173,7 @@ def _cusum_attr(code: str, kind: str, ylabel: str,
         # Sigma = 1 (estandarizado); límites en sigma units
         panel = StagePanel(
             f"CUSUM-{code.upper()}", up, full(0.0, N), full(h, N), full(-h, N),
-            full(1.0, N), ylabel + " (σ)", "only1",
+            full(1.0, N), ylabel, "only1",
             secondary=lo, symmetric=True, violations={1: flagged},
         )
         return [panel], {"centro": ctr, "h": h, "k": k}
@@ -208,7 +208,7 @@ def cusum_p_chart(
     k : float
         Holgura de referencia en unidades de σ. Por defecto 0.5.
     """
-    return _cusum_attr("p", "CUSUM-P", "Suma acumulada P", defectives, n, p, h, k)
+    return _cusum_attr("p", "CUSUM-P", N_("Suma acumulada P (σ)"), defectives, n, p, h, k)
 
 
 def cusum_c_chart(
@@ -231,7 +231,7 @@ def cusum_c_chart(
     k : float
         Holgura en σ. Por defecto 0.5.
     """
-    return _cusum_attr("c", "CUSUM-C", "Suma acumulada C", defects, None, c, h, k)
+    return _cusum_attr("c", "CUSUM-C", N_("Suma acumulada C (σ)"), defects, None, c, h, k)
 
 
 def cusum_u_chart(
@@ -257,4 +257,4 @@ def cusum_u_chart(
     k : float
         Holgura en σ. Por defecto 0.5.
     """
-    return _cusum_attr("u", "CUSUM-U", "Suma acumulada U", defects, n, u, h, k)
+    return _cusum_attr("u", "CUSUM-U", N_("Suma acumulada U (σ)"), defects, n, u, h, k)

@@ -20,9 +20,9 @@
 | Fase | Rama | PR | Estado |
 |---|---|---|---|
 | 0 Andamiaje | `feat/i18n-fase-0-andamiaje` | [#7](https://github.com/LeoSanta15/pccpy/pull/7) | en revisión |
-| 1 Errores y avisos | `feat/i18n-fase-1-errores` | _(se completa al abrir el PR)_ | en revisión |
-| 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | _(se completa al abrir el PR)_ | en revisión |
-| 3 Gráficos y constantes de módulo (`wizard`) | `feat/i18n-fase-3-graficos` | — | pendiente |
+| 1 Errores y avisos | `feat/i18n-fase-1-errores` | [#8](https://github.com/LeoSanta15/pccpy/pull/8) | en revisión |
+| 2 `summary()` y `to_frame()` | `feat/i18n-fase-2-resumenes` | [#9](https://github.com/LeoSanta15/pccpy/pull/9) | en revisión |
+| 3 Gráficos y constantes de módulo (`wizard`) | `feat/i18n-fase-3-graficos` | [#10](https://github.com/LeoSanta15/pccpy/pull/10) | en revisión |
 | 3b Otras tablas con columnas en español (`pareto`, curvas OC/AOQ, ANOVA, `kappa_vs_reference`) | `feat/i18n-fase-3b-tablas` | — | pendiente (hallazgo de la fase 2) |
 | 4 Documentación multilingüe | — | — | diferida |
 | 5 Glosario y release `0.11.0` | `feat/i18n-fase-5-release` | — | pendiente |
@@ -149,3 +149,13 @@ Cada fase se entrega en **su propia rama y PR** (nunca directo a `main`), con `m
 - **Hallazgo:** algunas cartas guardan parámetros con **clave en español** (`media`, `forma`, `n_puntos`, `sigma_dentro`…); son datos públicos y no se traducen: solo se muestran traducidos en `summary()`.
 - **Hallazgo:** `tr()` dentro de un f-string se extrae solo en Python >= 3.12; ahora un test lo prohíbe (el catálogo no debe depender de la versión de Python).
 - **Semántica a documentar:** los textos que un resultado guarda al crearse (`DiagnoseResult.issues`, `recommended_snippet`, `WizardResult.rationale`) quedan en el idioma activo en ese momento.
+
+---
+
+## Desviaciones y hallazgos de la fase 3
+
+- **Etiquetas de paneles (`Panel.ylabel`):** se guardan en español (son datos públicos del resultado) marcadas con `N_()` y se traducen solo al dibujar (`plotting.py`), igual que `trend_direction` o las claves de `params`.
+- **Asistente:** `WizardResult.rationale` y las preguntas/opciones del árbol siguen en español como dato; `summary()`, `snippet()`, el modo CLI y el widget los muestran traducidos al idioma activo **en el momento de mostrarlos** (no al crear el resultado).
+- **Fragmentos de código en inglés:** los nombres de variable de ejemplo (`datos`, `carta`…) pasan a `data`, `chart`…; los tests exigen que sean Python válido y que llamen a la función recomendada.
+- **Detector útil:** el test «sin palabras españolas» de los gráficos encontró dos etiquetas de panel (`Cantidad entre eventos`, `Puntaje acumulado`) que se habían escapado de la migración.
+- **Mutaciones comprobadas:** quitar `tr()` de una etiqueta de eje, del botón «Volver» o del estado `pendiente` hace fallar los tests; quitar `N_()` lo detecta `make i18n-check` (catálogo desactualizado).

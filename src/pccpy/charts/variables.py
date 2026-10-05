@@ -5,7 +5,7 @@ import numpy as np
 
 from .._constants import c4, c5, d2, d3
 from .._data import as_1d, to_subgroups
-from .._i18n import tr
+from .._i18n import N_, tr
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
 from ._engine import StagePanel, build_chart, check_method, full
@@ -55,13 +55,13 @@ def imr_chart(
         s = float(sigma) if sigma is not None else sigma_individuals(xs, sigma_method, span)
         i_panel = StagePanel(
             "I", xs, full(m, n), full(m + 3 * s, n), full(m - 3 * s, n), full(s, n),
-            "Valor individual", "full",
+            N_("Valor individual"), "full",
         )
         c = dd2 * s
         mr_panel = StagePanel(
             "MR", moving_range(xs, span), full(c, n), full(c + 3 * dd3 * s, n),
             full(max(0.0, c - 3 * dd3 * s), n), full(dd3 * s, n),
-            "Rango móvil", "basic", symmetric=False,
+            N_("Rango móvil"), "basic", symmetric=False,
         )
         return [i_panel, mr_panel], {"media": m, "sigma": s, "MR_prom": c, "n": n}
 
@@ -89,19 +89,19 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
         sig_x = sg / np.sqrt(n_i)
         x_panel = StagePanel(
             "Xbar", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
-            "Media de la muestra", "full",
+            N_("Media de la muestra"), "full",
         )
         if disp == "r":
             c, sd = sg * vec(d2, n_i), sg * vec(d3, n_i)
             d_panel = StagePanel(
                 "R", rng, c, c + 3 * sd, np.maximum(0.0, c - 3 * sd), sd,
-                "Rango de la muestra", "basic", symmetric=False,
+                N_("Rango de la muestra"), "basic", symmetric=False,
             )
         else:
             c, sd = sg * vec(c4, n_i), sg * vec(c5, n_i)
             d_panel = StagePanel(
                 "S", s_i, c, c + 3 * sd, np.maximum(0.0, c - 3 * sd), sd,
-                "Desv. est. de la muestra", "basic", symmetric=False,
+                N_("Desv. est. de la muestra"), "basic", symmetric=False,
             )
         size = int(n_i[0]) if n_i.min() == n_i.max() else "variable"
         return [x_panel, d_panel], {"media": m, "sigma": sg, "subgrupos": k, "tamaño": size}

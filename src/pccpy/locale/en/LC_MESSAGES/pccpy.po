@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 00:28+0000\n"
+"POT-Creation-Date: 2026-10-05 00:44+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -17,6 +17,624 @@ msgstr ""
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            # Requiere n grande (p. ej. ≥ 300 para 95/95 bilateral)\n"
+"            res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95,\n"
+"                                        method='nonparametric')\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            # Requires a large n (e.g. ≥ 300 for two-sided 95/95)\n"
+"            res = pp.tolerance_interval(data, coverage=0.95, confidence=0.95,\n"
+"                                        method='nonparametric')\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            # datos: matriz 2-D (n_observaciones × n_variables)\n"
+"            carta = pp.t2_chart(datos)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            # data: 2-D matrix (n_observations × n_variables)\n"
+"            chart = pp.t2_chart(data)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            # datos: matriz 2-D (n_subgrupos × tamaño_subgrupo)\n"
+"            carta = pp.imr_rs_chart(datos)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            # data: 2-D matrix (n_subgroups × subgroup_size)\n"
+"            chart = pp.imr_rs_chart(data)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            # distribution: 'weibull', 'lognormal', 'gamma', 'loglogistic', ...\n"
+"            res = pp.capability_nonnormal(datos, lsl=lsl, usl=usl,\n"
+"                                          distribution='weibull')\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            # distribution: 'weibull', 'lognormal', 'gamma', 'loglogistic', ...\n"
+"            res = pp.capability_nonnormal(data, lsl=lsl, usl=usl,\n"
+"                                          distribution='weibull')\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.c_chart(defectos)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.c_chart(defects)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.cusum_chart(datos, h=4.0, k=0.5)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.cusum_chart(data, h=4.0, k=0.5)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.ewma_chart(datos, weight=0.2)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.ewma_chart(data, weight=0.2)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.ewma_chart(datos, weight=0.2, k=3.0)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.ewma_chart(data, weight=0.2, k=3.0)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.g_chart(entre_eventos)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.g_chart(between_events)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.imr_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n"
+"            print(carta.summary())\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.imr_chart(data, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n"
+"            print(chart.summary())\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.laney_p_chart(defectuosos, n=tamaños)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.laney_p_chart(defectives, n=sizes)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.laney_u_chart(defectos, n=unidades)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.laney_u_chart(defects, n=units)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.mcusum_chart(datos, k=0.5, arl=200)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.mcusum_chart(data, k=0.5, arl=200)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.mewma_chart(datos, weight=0.1, arl=200)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.mewma_chart(data, weight=0.1, arl=200)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.np_chart(defectuosos, n=tamaño_muestra)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.np_chart(defectives, n=sample_size)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.p_chart(defectuosos, n=tamaños)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.p_chart(defectives, n=sizes)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.t_chart(tiempos)   # dist='weibull' por defecto\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.t_chart(times)   # dist='weibull' by default\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.u_chart(defectos, n=unidades)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.u_chart(defects, n=units)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.xbar_r_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.xbar_r_chart(data, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.xbar_s_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.xbar_s_chart(data, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            carta = pp.zmr_chart(medidas, partes)\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            chart = pp.zmr_chart(measurements, parts_ids)\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            grr = pp.gage_rr(datos, parts=n_partes, operators=n_operadores,\n"
+"                             replicates=n_replicas, tolerance=tolerancia)\n"
+"            print(grr.summary())\n"
+"            grr.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            grr = pp.gage_rr(data, parts=n_parts, operators=n_operators,\n"
+"                             replicates=n_replicates, tolerance=tolerance_value)\n"
+"            print(grr.summary())\n"
+"            grr.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            grr = pp.gage_rr_nested(datos, parts=n_partes, operators=n_operadores,\n"
+"                                    replicates=n_replicas)\n"
+"            print(grr.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            grr = pp.gage_rr_nested(data, parts=n_parts, operators=n_operators,\n"
+"                                    replicates=n_replicates)\n"
+"            print(grr.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            import matplotlib.pyplot as plt\n"
+"            fig, res, carta = pp.capability_sixpack(datos, lsl=lsl, usl=usl)\n"
+"            plt.show()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            import matplotlib.pyplot as plt\n"
+"            fig, res, chart = pp.capability_sixpack(data, lsl=lsl, usl=usl)\n"
+"            plt.show()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            import pandas as pd\n"
+"            # df: DataFrame con una columna por operador\n"
+"            res = pp.attribute_agreement(df, reference=referencia, replicates=n_replicas)\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            import pandas as pd\n"
+"            # df: DataFrame with one column per operator\n"
+"            res = pp.attribute_agreement(df, reference=reference_col, replicates=n_replicates)\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            lin = pp.gage_linearity(mediciones, referencias, tolerance=tolerancia)\n"
+"            print(lin.summary())\n"
+"            lin.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            lin = pp.gage_linearity(measurements, references, tolerance=tolerance_value)\n"
+"            print(lin.summary())\n"
+"            lin.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            pc = pp.precontrol(datos, lsl=lsl, usl=usl)\n"
+"            print(pc.summary())\n"
+"            pc.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            pc = pp.precontrol(data, lsl=lsl, usl=usl)\n"
+"            print(pc.summary())\n"
+"            pc.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.acceptance_sampling_attributes(N=tamaño_lote, aql=aql)\n"
+"            print(plan.summary())\n"
+"            plan.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.acceptance_sampling_attributes(N=lot_size, aql=aql)\n"
+"            print(plan.summary())\n"
+"            plan.plot()\n"
+"        "
+
+#, python-brace-format
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.acceptance_sampling_variables(N=tamaño_lote, aql=aql,\n"
+"                                                    spec_type='one')\n"
+"            muestra = ...   # array con las mediciones\n"
+"            dec = plan.evaluate(muestra, usl=usl)\n"
+"            print(dec)      # {'xbar': ..., 's': ..., 'accept': True/False}\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.acceptance_sampling_variables(N=lot_size, aql=aql,\n"
+"                                                    spec_type='one')\n"
+"            sample = ...   # array with the measurements\n"
+"            dec = plan.evaluate(sample, usl=usl)\n"
+"            print(dec)      # {'xbar': ..., 's': ..., 'accept': True/False}\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.dodge_romig(N=tamaño_lote, aoql=aoql, process_avg=p_promedio)\n"
+"            print(plan.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.dodge_romig(N=lot_size, aoql=aoql, process_avg=avg_p)\n"
+"            print(plan.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.dodge_romig(N=tamaño_lote, ltpd=ltpd, process_avg=p_promedio)\n"
+"            print(plan.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            plan = pp.dodge_romig(N=lot_size, ltpd=ltpd, process_avg=avg_p)\n"
+"            print(plan.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            pp.probability_plot(datos)\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            pp.probability_plot(data)\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            rc = pp.run_chart(datos)\n"
+"            print(rc.summary())   # p-valores: agrupamiento, mezclas, tendencias, oscilación\n"
+"            rc.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            rc = pp.run_chart(data)\n"
+"            print(rc.summary())   # p-values: clustering, mixtures, trends, oscillation\n"
+"            rc.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_analysis(datos, lsl=lsl, usl=usl)\n"
+"            print(res.summary())\n"
+"            res.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_analysis(data, lsl=lsl, usl=usl)\n"
+"            print(res.summary())\n"
+"            res.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_analysis_summary(\n"
+"                mean=media, std_overall=sigma, n=n,\n"
+"                lsl=lsl, usl=usl,\n"
+"            )\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_analysis_summary(\n"
+"                mean=mean_value, std_overall=sigma, n=n,\n"
+"                lsl=lsl, usl=usl,\n"
+"            )\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_boxcox(datos, lsl=lsl, usl=usl)\n"
+"            print(res.summary())   # incluye lambda estimada\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_boxcox(data, lsl=lsl, usl=usl)\n"
+"            print(res.summary())   # includes the estimated lambda\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.normality_test(datos, method='ad')\n"
+"            print(res.summary())\n"
+"            pp.probability_plot(datos)\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.normality_test(data, method='ad')\n"
+"            print(res.summary())\n"
+"            pp.probability_plot(data)\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='lower')\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval(data, coverage=0.95, confidence=0.95, sides='lower')\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='two')\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval(data, coverage=0.95, confidence=0.95, sides='two')\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='upper')\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval(data, coverage=0.95, confidence=0.95, sides='upper')\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval_summary(mean=media, std=sigma, n=n,\n"
+"                                                coverage=0.95, confidence=0.95)\n"
+"            print(res.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.tolerance_interval_summary(mean=mean_value, std=sigma, n=n,\n"
+"                                                coverage=0.95, confidence=0.95)\n"
+"            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            t1 = pp.gage_type1(mediciones, reference=valor_ref, tolerance=tolerancia)\n"
+"            print(t1.summary())\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            t1 = pp.gage_type1(measurements, reference=ref_value, tolerance=tolerance_value)\n"
+"            print(t1.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            tabla = pp.pareto(categorias)\n"
+"            pp.plot_pareto(tabla)\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            table = pp.pareto(categories)\n"
+"            pp.plot_pareto(table)\n"
+"        "
+
+#, python-brace-format
+msgid ""
+"\n"
+"Conf. alcanzada={v:.2f}%"
+msgstr ""
+"\n"
+"Achieved conf.={v:.2f}%"
 
 #, python-brace-format
 msgid "    Cp={cp}  CPL={cpl}  CPU={cpu}  Cpk={cpk}"
@@ -307,6 +925,9 @@ msgstr "  R²={r2:.4f}  p(slope=0)={p:.5f}"
 msgid "  Se detectó tendencia {direction}."
 msgstr "  Trend detected: {direction}."
 
+msgid "  Selecciona una opción: "
+msgstr "  Select an option: "
+
 #, python-brace-format
 msgid "  Sesgo promedio={bias:.5g} ({pct:.2f}%)"
 msgstr "  Average bias={bias:.5g} ({pct:.2f}%)"
@@ -374,14 +995,30 @@ msgstr "  ── Trend ──"
 msgid "  ── Valores atípicos (IQR) ──"
 msgstr "  ── Outliers (IQR) ──"
 
+msgid "  ║   pccpy — Asistente de selección de análisis    ║"
+msgstr "  ║   pccpy — Analysis selection assistant          ║"
+
+#, python-brace-format
+msgid "  ✗ Ingresa un número entre 1 y {n}."
+msgstr "  ✗ Enter a number between 1 and {n}."
+
+msgid " (dentro)"
+msgstr " (within)"
+
 msgid "% Acuerdo global vs referencia"
 msgstr "% Overall agreement vs reference"
+
+msgid "%Contribución"
+msgstr "%Contribution"
 
 msgid "%Contribución Gage R&R"
 msgstr "%Contribution Gage R&R"
 
 msgid "%Contribución parte a parte"
 msgstr "%Contribution part-to-part"
+
+msgid "%Contribución por fuente"
+msgstr "%Contribution by source"
 
 msgid "%Contribución repetibilidad"
 msgstr "%Contribution repeatability"
@@ -559,11 +1196,60 @@ msgstr "1 point outside the percentiles of the geometric distribution"
 msgid "1 punto fuera de los percentiles de la distribución {distribution}"
 msgstr "1 point outside the percentiles of the {distribution} distribution"
 
+msgid "> 8 observaciones por subgrupo  → Xbar-S"
+msgstr "> 8 observations per subgroup  → Xbar-S"
+
+#, python-brace-format
+msgid ""
+"AD = {a2:.3f}\n"
+"Valor p {ptxt}\n"
+"N = {n}"
+msgstr ""
+"AD = {a2:.3f}\n"
+"p-value {ptxt}\n"
+"N = {n}"
+
+msgid "AOQ (%)"
+msgstr "AOQ (%)"
+
 msgid "AOQL (%)"
 msgstr "AOQL (%)"
 
+msgid "AOQL fijo — limitar la calidad saliente promedio"
+msgstr "Fixed AOQL — limit the average outgoing quality"
+
+#, python-brace-format
+msgid "AOQL={v:.3g}%"
+msgstr "AOQL={v:.3g}%"
+
 msgid "AQL (%)"
 msgstr "AQL (%)"
+
+#, python-brace-format
+msgid "AQL={v:.3g}%"
+msgstr "AQL={v:.3g}%"
+
+msgid "Agrupamiento"
+msgstr "Clustering"
+
+msgid "Alta sensibilidad a cambios abruptos pequeños (H=4, K=0.5)"
+msgstr "High sensitivity to small abrupt shifts (H=4, K=0.5)"
+
+msgid "Alta sensibilidad a desplazamientos sostenidos (λ=0.2 recomendado)"
+msgstr "High sensitivity to sustained shifts (λ=0.2 recommended)"
+
+#, python-brace-format
+msgid "Alternativas: {alternatives}"
+msgstr "Alternatives: {alternatives}"
+
+msgid "Analizar la capacidad del proceso"
+msgstr "Analyze process capability"
+
+msgid "Análisis Gage R&R"
+msgstr "Gage R&R analysis"
+
+msgid "Análisis completo en una sola figura (Sixpack)"
+msgstr "Full analysis in a single figure (Sixpack)"
 
 #, python-brace-format
 msgid "Análisis de capacidad (no normal) - distribución {distribution}"
@@ -575,8 +1261,17 @@ msgstr "Process capability analysis (normal distribution)"
 msgid "Análisis de concordancia por atributos"
 msgstr "Attribute agreement analysis"
 
+msgid "Análisis exploratorio (normalidad, Pareto)"
+msgstr "Exploratory analysis (normality, Pareto)"
+
 msgid "Asimetría"
 msgstr "Skewness"
+
+msgid "Atípicos"
+msgstr "Outliers"
+
+msgid "Bilateral  — límite inferior y superior"
+msgstr "Two-sided  — lower and upper limit"
 
 msgid "Box-Cox requiere datos estrictamente positivos."
 msgstr "Box-Cox requires strictly positive data."
@@ -597,16 +1292,53 @@ msgstr "CV (%)"
 msgid "Cada etapa necesita al menos 2 subgrupos."
 msgstr "Each stage needs at least 2 subgroups."
 
+msgid "Calidad media de salida (AOQ)"
+msgstr "Average outgoing quality (AOQ)"
+
+msgid "Cantidad entre eventos"
+msgstr "Count between events"
+
+msgid "Capability Sixpack — 6 vistas en una figura (igual que Minitab)"
+msgstr "Capability Sixpack — 6 views in one figure (like Minitab)"
+
 msgid "Capacidad"
 msgstr "Capability"
+
+msgid "Capacidad desde estadísticos resumen (media, σ, n)"
+msgstr "Capability from summary statistics (mean, σ, n)"
+
+msgid "Capacidad no normal — ajuste por máxima verosimilitud a distribución alternativa"
+msgstr "Non-normal capability — maximum likelihood fit to an alternative distribution"
+
+msgid "Capacidad normal — Cp, Cpk, Pp, Ppk, PPM, Z.Bench"
+msgstr "Normal capability — Cp, Cpk, Pp, Ppk, PPM, Z.Bench"
 
 #, python-brace-format
 msgid "Carta de control {kind}"
 msgstr "Control chart {kind}"
 
+msgid "Carta de corridas"
+msgstr "Run chart"
+
 #, python-brace-format
 msgid "Carta de corridas  N={n}  Mediana={median:.5g}"
 msgstr "Run chart  N={n}  Median={median:.5g}"
+
+msgid "Carta de corridas o pre-control"
+msgstr "Run chart or pre-control"
+
+msgid "Carta de corridas — 4 pruebas de aleatoriedad (p-valores)"
+msgstr "Run chart — 4 randomness tests (p-values)"
+
+msgid "Carta de corridas — detectar patrones no aleatorios (p-valores)"
+msgstr "Run chart — detect non-random patterns (p-values)"
+
+msgid "Carta de pre-control"
+msgstr "Pre-control chart"
+
+#, python-brace-format
+msgid "Centro={v:.4g}"
+msgstr "Center={v:.4g}"
 
 msgid "Cg"
 msgstr "Cg"
@@ -645,11 +1377,36 @@ msgstr "With individual observations, within_method must be 'mr', 'median_mr' or
 msgid "Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."
 msgstr "With subgroups, within_method must be 'pooled', 'rbar' or 'sbar'."
 
+msgid "Concordancia por atributos (Kappa de Cohen / Fleiss)"
+msgstr "Attribute agreement (Cohen's / Fleiss' kappa)"
+
+msgid "Concordancia por atributos — Kappa de Cohen por operador + Kappa de Fleiss"
+msgstr "Attribute agreement — Cohen's kappa per operator + Fleiss' kappa"
+
+#, python-brace-format
+msgid "Concordancia por atributos — κ global={kappa:.4f}  Fleiss κ={fleiss:.4f}"
+msgstr "Attribute agreement — overall κ={kappa:.4f}  Fleiss κ={fleiss:.4f}"
+
 msgid "Confianza (1−α)"
 msgstr "Confidence (1−α)"
 
 msgid "Confianza alcanzada"
 msgstr "Achieved confidence"
+
+msgid "Conteo"
+msgstr "Count"
+
+msgid "Conteo EWMA"
+msgstr "EWMA count"
+
+msgid "Conteo por unidad"
+msgstr "Count per unit"
+
+msgid "Corridas cortas (piezas con distintas especificaciones)"
+msgstr "Short runs (parts with different specifications)"
+
+msgid "Corridas cortas — estandariza cada parte con sus propios parámetros"
+msgstr "Short runs — standardizes each part with its own parameters"
 
 msgid "Cp"
 msgstr "Cp"
@@ -674,8 +1431,21 @@ msgstr "Estimated Cpk"
 msgid "Cpm"
 msgstr "Cpm"
 
+msgid "Crossed Gage R&R — ANOVA (todos los operadores miden todas las partes)"
+msgstr "Crossed Gage R&R — ANOVA (all operators measure all parts)"
+
+msgid "Crossed Gage R&R — todos los operadores miden todas las partes"
+msgstr "Crossed Gage R&R — all operators measure all parts"
+
 msgid "Curtosis"
 msgstr "Kurtosis"
+
+msgid "Curva OC"
+msgstr "OC curve"
+
+#, python-brace-format
+msgid "Curva OC — Plan variables  n={n}  k={k:.4f}"
+msgstr "OC curve — Variables plan  n={n}  k={k:.4f}"
 
 msgid "D'Agostino-Pearson requiere al menos 8 observaciones."
 msgstr "D'Agostino-Pearson requires at least 8 observations."
@@ -683,8 +1453,53 @@ msgstr "D'Agostino-Pearson requires at least 8 observations."
 msgid "DPMO"
 msgstr "DPMO"
 
+msgid "Datos"
+msgstr "Data"
+
 msgid "Datos 1-D: indique 'subgroup_size' o 'subgroup', o pase una matriz 2-D."
 msgstr "1-D data: give 'subgroup_size' or 'subgroup', or pass a 2-D matrix."
+
+msgid "Datos continuos individuales — carta I-MR estándar Shewhart"
+msgstr "Individual continuous data — standard Shewhart I-MR chart"
+
+msgid "Datos en subgrupos grandes (n > 8) — carta Xbar-S"
+msgstr "Data in large subgroups (n > 8) — Xbar-S chart"
+
+msgid "Datos en subgrupos pequeños (n ≤ 8) — carta Xbar-R"
+msgstr "Data in small subgroups (n ≤ 8) — Xbar-R chart"
+
+msgid "Defectos/unidad EWMA"
+msgstr "EWMA defects/unit"
+
+msgid "Densidad"
+msgstr "Density"
+
+msgid "Dentro"
+msgstr "Within"
+
+#, python-brace-format
+msgid ""
+"Dentro\n"
+"Cp = {cp:.2f}\n"
+"Cpk = {cpk:.2f}\n"
+"\n"
+"General\n"
+"Pp = {pp:.2f}\n"
+"Ppk = {ppk:.2f}"
+msgstr ""
+"Within\n"
+"Cp = {cp:.2f}\n"
+"Cpk = {cpk:.2f}\n"
+"\n"
+"Overall\n"
+"Pp = {pp:.2f}\n"
+"Ppk = {ppk:.2f}"
+
+msgid "Desv. est. de la muestra"
+msgstr "Sample std. dev."
+
+msgid "Desv. est. dentro del subgrupo"
+msgstr "Within-subgroup std. dev."
 
 msgid "Desv.Est."
 msgstr "Std.Dev."
@@ -697,6 +1512,18 @@ msgstr "Std.Dev. (overall)"
 
 msgid "Diagnóstico"
 msgstr "Diagnosis"
+
+msgid "Diagnóstico rápido del proceso"
+msgstr "Quick process diagnosis"
+
+msgid "Diagrama de Pareto"
+msgstr "Pareto chart"
+
+msgid "Diagrama de Pareto (frecuencia de categorías o defectos)"
+msgstr "Pareto chart (frequency of categories or defects)"
+
+msgid "Diagrama de Pareto — ordena categorías por frecuencia acumulada"
+msgstr "Pareto chart — sorts categories by cumulative frequency"
 
 msgid "Dirección tendencia"
 msgstr "Trend direction"
@@ -711,11 +1538,20 @@ msgstr "Unsupported distribution: {distribution!r}. Options: {options}"
 msgid "Distribución normal"
 msgstr "Normal distribution"
 
+msgid "Dodge-Romig AOQL — minimiza ATI con límite de calidad saliente promedio"
+msgstr "Dodge-Romig AOQL — minimizes ATI with an average outgoing quality limit"
+
+msgid "Dodge-Romig LTPD — minimiza ATI con tolerancia a calidad mínima aceptable"
+msgstr "Dodge-Romig LTPD — minimizes ATI with a minimum acceptable quality tolerance"
+
 msgid "Dos amarillas consecutivas en el mismo lado — ajustar"
 msgstr "Two consecutive yellows on the same side — adjust"
 
 msgid "Dos amarillas consecutivas en lados opuestos — varianza"
 msgstr "Two consecutive yellows on opposite sides — variance"
+
+msgid "EWMA para datos en subgrupos con alta sensibilidad"
+msgstr "EWMA for subgrouped data with high sensitivity"
 
 msgid "EWMA/CUSUM/MA requieren subgrupos de igual tamaño (sin valores faltantes)."
 msgstr "EWMA/CUSUM/MA require subgroups of equal size (no missing values)."
@@ -743,6 +1579,9 @@ msgstr "The subgroup size ({n}) must be greater than the number of variables ({p
 msgid "El tamaño de subgrupo debe ser >= 2 (recibido: {n})."
 msgstr "The subgroup size must be >= 2 (received: {n})."
 
+msgid "Espec."
+msgstr "Spec."
+
 msgid "Especifica exactamente uno de 'ltpd' o 'aoql'."
 msgstr "Specify exactly one of 'ltpd' or 'aoql'."
 
@@ -762,6 +1601,25 @@ msgstr "Normality statistic"
 msgid "Estudio Tipo 1  (N={n}  Ref={reference})"
 msgstr "Type 1 study  (N={n}  Ref={reference})"
 
+#, python-brace-format
+msgid "Estudio Tipo 1  N={n}  Ref={ref}  {cg}{cgk}"
+msgstr "Type 1 Study  N={n}  Ref={ref}  {cg}{cgk}"
+
+msgid "Estudio Tipo 1 — sesgo y repetibilidad de un instrumento"
+msgstr "Type 1 study — bias and repeatability of an instrument"
+
+msgid "Estudio Tipo 1 — sesgo, t-test, Cg y Cgk"
+msgstr "Type 1 study — bias, t-test, Cg and Cgk"
+
+msgid "Eventos raros (muy poca frecuencia de defectos)"
+msgstr "Rare events (very low defect frequency)"
+
+msgid "Eventos raros — número de unidades entre eventos (distribución geométrica)"
+msgstr "Rare events — number of units between events (geometric distribution)"
+
+msgid "Eventos raros — tiempo entre eventos (Weibull o exponencial)"
+msgstr "Rare events — time between events (Weibull or exponential)"
+
 msgid "Factor k"
 msgstr "k factor"
 
@@ -776,12 +1634,67 @@ msgstr "The historical mean of part {lab!r} is missing from 'mu'."
 msgid "Forma del array {shape} ≠ ({parts}, {operators}, {replicates})."
 msgstr "Array shape {shape} != ({parts}, {operators}, {replicates})."
 
+msgid "Fracción defectiva p (%)"
+msgstr "Fraction defective p (%)"
+
+msgid "Fracción defectuosa  (piezas malas / total muestral)"
+msgstr "Fraction defective  (bad parts / sample total)"
+
+msgid "Fracción defectuosa con corrección de sobredispersión (Laney P′)"
+msgstr "Fraction defective with overdispersion correction (Laney P′)"
+
+msgid "Fracción defectuosa con tamaño de muestra variable"
+msgstr "Fraction defective with variable sample size"
+
+msgid "Frecuencia"
+msgstr "Frequency"
+
 msgid "Función recomendada"
 msgstr "Recommended function"
+
+#, python-brace-format, python-format
+msgid ""
+"Gage R&R ({method})\n"
+"n={parts}P × {operators}O × {replicates}R\n"
+"\n"
+"%GR&R = {pct_gage:.1f}%\n"
+"  Repet. = {pct_rep:.1f}%\n"
+"  Repro. = {pct_repro:.1f}%\n"
+"Parte a parte = {pct_part:.1f}%\n"
+"NDC = {ndc}\n"
+"%Var. estudio = {pct_sv:.1f}%"
+msgstr ""
+"Gage R&R ({method})\n"
+"n={parts}P × {operators}O × {replicates}R\n"
+"\n"
+"%GR&R = {pct_gage:.1f}%\n"
+"  Repeat. = {pct_rep:.1f}%\n"
+"  Reprod. = {pct_repro:.1f}%\n"
+"Part-to-part = {pct_part:.1f}%\n"
+"NDC = {ndc}\n"
+"%Study var. = {pct_sv:.1f}%"
 
 #, python-brace-format
 msgid "Gage R&R ({method}) — {parts} partes × {operators} operadores × {replicates} réplicas"
 msgstr "Gage R&R ({method}) — {parts} parts × {operators} operators × {replicates} replicates"
+
+msgid "General"
+msgstr "Overall"
+
+msgid "General (Box-Cox)"
+msgstr "Overall (Box-Cox)"
+
+msgid "Gráfico de capacidad"
+msgstr "Capability plot"
+
+msgid "Gráfico de probabilidad normal"
+msgstr "Normal probability plot"
+
+msgid "Gráfico de probabilidad normal con línea Anderson-Darling"
+msgstr "Normal probability plot with Anderson-Darling line"
+
+msgid "Gráfico de secuencia"
+msgstr "Sequence plot"
 
 msgid "Hay conteos de defectuosos mayores que el tamaño de la muestra."
 msgstr "Some defective counts are greater than the sample size."
@@ -792,6 +1705,15 @@ msgstr "Some counts are greater than the sample size."
 msgid "Hay subgrupos sin ninguna observación válida."
 msgstr "Some subgroups have no valid observations."
 
+msgid "Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S"
+msgstr "There is variation between subgroups (shift, lot, cavity) → I-MR-R/S"
+
+msgid "Histograma"
+msgstr "Histogram"
+
+msgid "Histograma de capacidad"
+msgstr "Capability histogram"
+
 #, python-brace-format
 msgid "Idioma no disponible: {lang!r}. Idiomas disponibles: {disponibles}."
 msgstr "Language not available: {lang!r}. Available languages: {disponibles}."
@@ -799,18 +1721,48 @@ msgstr "Language not available: {lang!r}. Available languages: {disponibles}."
 msgid "Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."
 msgstr "Give 'mu' and 'cov' together (historical parameters) or neither."
 
+msgid "Interacción parte×operador"
+msgstr "Part×operator interaction"
+
 msgid "Intercepto"
 msgstr "Intercept"
+
+msgid "Intervalo de tolerancia"
+msgstr "Tolerance interval"
 
 #, python-brace-format
 msgid "Intervalo de tolerancia ({method}, {sides})"
 msgstr "Tolerance interval ({method}, {sides})"
 
+msgid "Intervalo de tolerancia desde estadísticos resumen (media, σ, n)"
+msgstr "Tolerance interval from summary statistics (mean, σ, n)"
+
+msgid "Intervalo de tolerancia no paramétrico — estadísticos de orden"
+msgstr "Nonparametric tolerance interval — order statistics"
+
+msgid "Intervalo de tolerancia normal bilateral — P(LI ≤ X ≤ LS) ≥ coverage"
+msgstr "Two-sided normal tolerance interval — P(LL ≤ X ≤ UL) ≥ coverage"
+
+msgid "Intervalo de tolerancia unilateral inferior — P(X ≥ LI) ≥ coverage"
+msgstr "One-sided lower tolerance interval — P(X ≥ LL) ≥ coverage"
+
+msgid "Intervalo de tolerancia unilateral superior — P(X ≤ LS) ≥ coverage"
+msgstr "One-sided upper tolerance interval — P(X ≤ UL) ≥ coverage"
+
+msgid "Intervalos de tolerancia"
+msgstr "Tolerance intervals"
+
 msgid "Kappa de Fleiss (entre operadores)"
 msgstr "Fleiss' kappa (between operators)"
 
+msgid "Kappa dentro del operador"
+msgstr "Kappa within operator"
+
 msgid "Kappa global vs referencia"
 msgstr "Overall kappa vs reference"
+
+msgid "Kappa vs referencia"
+msgstr "Kappa vs reference"
 
 msgid "LC"
 msgstr "CL"
@@ -824,22 +1776,61 @@ msgstr "UCL"
 msgid "LEI"
 msgstr "LSL"
 
+#, python-brace-format
+msgid "LEI={v:.4g}"
+msgstr "LSL={v:.4g}"
+
 msgid "LES"
 msgstr "USL"
+
+#, python-brace-format
+msgid "LES={v:.4g}"
+msgstr "USL={v:.4g}"
 
 #, python-brace-format
 msgid "LI = {lower:.5g}"
 msgstr "LL = {lower:.5g}"
 
 #, python-brace-format
+msgid "LI = {v:.4g}"
+msgstr "LL = {v:.4g}"
+
+#, python-brace-format
+msgid "LI={v:.4g}"
+msgstr "LL={v:.4g}"
+
+#, python-brace-format
+msgid "LIE={v}"
+msgstr "LSL={v}"
+
+#, python-brace-format
 msgid "LS = {upper:.5g}"
 msgstr "UL = {upper:.5g}"
+
+#, python-brace-format
+msgid "LS = {v:.4g}"
+msgstr "UL = {v:.4g}"
+
+#, python-brace-format
+msgid "LS={v:.4g}"
+msgstr "UL={v:.4g}"
+
+#, python-brace-format
+msgid "LSE={v}"
+msgstr "USL={v}"
 
 msgid "LTPD (%)"
 msgstr "LTPD (%)"
 
 msgid "LTPD (β=0.10) (%)"
 msgstr "LTPD (β=0.10) (%)"
+
+msgid "LTPD fijo — proteger contra calidad inaceptable"
+msgstr "Fixed LTPD — protect against unacceptable quality"
+
+#, python-brace-format
+msgid "LTPD={v:.3g}%"
+msgstr "LTPD={v:.3g}%"
 
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr "The NP chart requires a constant sample size; use the P chart."
@@ -909,6 +1900,15 @@ msgstr "Linearity (%)"
 msgid "Linealidad y sesgo"
 msgstr "Linearity and bias"
 
+msgid "Linealidad y sesgo del sistema de medición"
+msgstr "Linearity and bias of the measurement system"
+
+msgid "Linealidad y sesgo — detecta si el sesgo cambia con el valor medido"
+msgstr "Linearity and bias — detects whether the bias changes with the measured value"
+
+msgid "Linealidad y sesgo — sesgo varía con el valor de referencia?"
+msgstr "Linearity and bias — does the bias vary with the reference value?"
+
 #, python-brace-format
 msgid "Longitud de datos ({n_data}) ≠ parts*operators*replicates ({parts}×{operators}×{replicates}={expected})."
 msgstr "Data length ({n_data}) != parts*operators*replicates ({parts}×{operators}×{replicates}={expected})."
@@ -943,14 +1943,81 @@ msgstr "Lower limit"
 msgid "Límite superior"
 msgstr "Upper limit"
 
+msgid "MCUSUM — mejor para cambios abruptos pequeños"
+msgstr "MCUSUM — better for small abrupt shifts"
+
+msgid "MCUSUM — sensibilidad alta a cambios abruptos multivariados"
+msgstr "MCUSUM — high sensitivity to multivariate abrupt shifts"
+
+msgid "MEWMA — mejor para desplazamientos sostenidos graduales"
+msgstr "MEWMA — better for gradual sustained shifts"
+
+msgid "MEWMA — sensibilidad alta a desplazamientos multivariados sostenidos"
+msgstr "MEWMA — high sensitivity to sustained multivariate shifts"
+
 msgid "MR_prom"
 msgstr "MR_avg"
 
 msgid "Media"
 msgstr "Mean"
 
+#, python-brace-format
+msgid "Media = {v:.4g}"
+msgstr "Mean = {v:.4g}"
+
+msgid "Media de la muestra"
+msgstr "Sample mean"
+
+msgid "Media móvil"
+msgstr "Moving average"
+
+msgid "Media por operador"
+msgstr "Mean by operator"
+
+msgid "Media por parte"
+msgstr "Mean by part"
+
+#, python-brace-format
+msgid "Media={v:.3f}"
+msgstr "Mean={v:.3f}"
+
 msgid "Mediana"
 msgstr "Median"
+
+#, python-brace-format
+msgid "Mediana={median:.4g}"
+msgstr "Median={median:.4g}"
+
+msgid "Mediciones continuas — en subgrupos (varias por muestra)"
+msgstr "Continuous measurements — in subgroups (several per sample)"
+
+msgid "Mediciones continuas — una por instante (individual)"
+msgstr "Continuous measurements — one per time point (individual)"
+
+msgid "Mezclas"
+msgstr "Mixtures"
+
+msgid "Minimizar inspección total (Dodge-Romig)"
+msgstr "Minimize total inspection (Dodge-Romig)"
+
+msgid "Monitorear el proceso (cartas de control)"
+msgstr "Monitor the process (control charts)"
+
+msgid "Muestra"
+msgstr "Sample"
+
+msgid "Muestreo de aceptación"
+msgstr "Acceptance sampling"
+
+msgid "Muestreo de aceptación por atributos — norma ANSI/ASQ Z1.4"
+msgstr "Acceptance sampling by attributes — ANSI/ASQ Z1.4 standard"
+
+msgid "Muestreo de aceptación por variables — norma ANSI/ASQ Z1.9"
+msgstr "Acceptance sampling by variables — ANSI/ASQ Z1.9 standard"
+
+#, python-brace-format
+msgid "Muestreo de aceptación — {info}"
+msgstr "Acceptance sampling — {info}"
 
 msgid "Mult. estudio (K)"
 msgstr "Study multiplier (K)"
@@ -985,8 +2052,23 @@ msgstr "N above median"
 msgid "N/D"
 msgstr "N/A"
 
+#, python-brace-format
+msgid ""
+"N={n}  Cobertura≥{p100}%  Confianza={g100}%\n"
+"Método={method}  Lados={sides}"
+msgstr ""
+"N={n}  Coverage≥{p100}%  Confidence={g100}%\n"
+"Method={method}  Sides={sides}"
+
+#, python-brace-format
+msgid "N={n}  Verde={verde}  Amarillo={amarillo}  Rojo={rojo}  Señales={senales}"
+msgstr "N={n}  Green={verde}  Yellow={amarillo}  Red={rojo}  Signals={senales}"
+
 msgid "NDC (núm. categorías distintas)"
 msgstr "NDC (number of distinct categories)"
+
+msgid "Nested Gage R&R — cada operador mide partes distintas"
+msgstr "Nested Gage R&R — each operator measures different parts"
 
 msgid "Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma."
 msgstr "No subgroup has 2 or more observations; sigma cannot be estimated."
@@ -1009,27 +2091,97 @@ msgstr ""
 "There are no moving ranges to estimate sigma ({what}); at least 2 consecutive observations of the same part are "
 "needed."
 
+msgid "No normal"
+msgstr "Not normal"
+
 msgid "No normal (p ≤ 0.05)"
 msgstr "Not normal (p ≤ 0.05)"
+
+msgid "No o no lo sé → P estándar"
+msgstr "No or I don't know → standard P"
+
+msgid "No — intentar transformación Box-Cox automática"
+msgstr "No — try an automatic Box-Cox transformation"
+
+msgid "No — intervalo no paramétrico (estadísticos de orden)"
+msgstr "No — nonparametric interval (order statistics)"
+
+msgid "No — se ajusta a otra distribución conocida"
+msgstr "No — fit another known distribution"
+
+msgid "No — sensibilidad estándar Shewhart"
+msgstr "No — standard Shewhart sensitivity"
+
+msgid "No — sensibilidad estándar → T² de Hotelling"
+msgstr "No — standard sensitivity → Hotelling's T²"
+
+msgid "No — sensibilidad estándar → Xbar-R"
+msgstr "No — standard sensitivity → Xbar-R"
+
+msgid "No — unidades constantes → C (defectos por muestra)"
+msgstr "No — constant units → C (defects per sample)"
+
+msgid "No → C estándar"
+msgstr "No → standard C"
+
+msgid "No → U estándar"
+msgstr "No → standard U"
+
+msgid "No, variable  → P (fracción defectuosa)"
+msgstr "No, variable  → P (fraction defective)"
 
 #, python-brace-format
 msgid "Nodo desconocido en el árbol: {node!r}"
 msgstr "Unknown node in the tree: {node!r}"
 
+msgid "Normal"
+msgstr "Normal"
+
 msgid "Normal (p > 0.05)"
 msgstr "Normal (p > 0.05)"
+
+msgid "Normal ajustada"
+msgstr "Fitted normal"
 
 msgid "Nº de valores referencia"
 msgstr "No. of reference values"
 
+msgid "Número de defectos con unidades de inspección constantes"
+msgstr "Number of defects with constant inspection units"
+
+msgid "Número de defectos por unidad inspeccionada"
+msgstr "Number of defects per inspected unit"
+
+msgid "Número de defectuosos con tamaño de muestra constante"
+msgstr "Number of defectives with constant sample size"
+
+msgid "Número de piezas o casos entre eventos → G"
+msgstr "Number of parts or cases between events → G"
+
 msgid "Objetivo"
 msgstr "Target"
+
+#, python-brace-format
+msgid "Objetivo={v}"
+msgstr "Target={v}"
+
+msgid "Observación"
+msgstr "Observation"
 
 msgid "Observado"
 msgstr "Observed"
 
+msgid "Operador"
+msgstr "Operator"
+
 msgid "Operadores (o)"
 msgstr "Operators (o)"
+
+msgid "Oscilación"
+msgstr "Oscillation"
+
+msgid "P(aceptar) (%)"
+msgstr "P(accept) (%)"
 
 msgid "PPL"
 msgstr "PPL"
@@ -1064,6 +2216,12 @@ msgstr "PPU"
 msgid "Para parámetros históricos Weibull indique 'shape' y 'scale' juntos."
 msgstr "For historical Weibull parameters give 'shape' and 'scale' together."
 
+msgid "Parte"
+msgstr "Part"
+
+msgid "Parte a parte"
+msgstr "Part-to-part"
+
 msgid "Partes (p)"
 msgstr "Parts (p)"
 
@@ -1091,6 +2249,18 @@ msgstr "Attribute sampling plan ({method})"
 msgid "Plan de muestreo por variables ({method})"
 msgstr "Variable sampling plan ({method})"
 
+msgid "Por atributos (conforme / no conforme) → norma Z1.4"
+msgstr "By attributes (conforming / nonconforming) → Z1.4 standard"
+
+msgid "Por variables (medición continua)      → norma Z1.9"
+msgstr "By variables (continuous measurement)    → Z1.9 standard"
+
+msgid "Porcentaje"
+msgstr "Percent"
+
+msgid "Porcentaje acumulado"
+msgstr "Cumulative percent"
+
 msgid "Pp"
 msgstr "Pp"
 
@@ -1101,12 +2271,33 @@ msgstr "Ppk"
 msgid "Pre-control  N={n}  LEI={lsl:.5g}  LES={usl:.5g}  Centro={center:.5g}"
 msgstr "Pre-control  N={n}  LSL={lsl:.5g}  USL={usl:.5g}  Center={center:.5g}"
 
+msgid "Pre-control (Shainin) — semáforo verde / amarillo / rojo"
+msgstr "Pre-control (Shainin) — green / yellow / red traffic light"
+
+msgid "Pre-control Shainin — semáforo verde / amarillo / rojo basado en tolerancia"
+msgstr "Shainin pre-control — green / yellow / red traffic light based on tolerance"
+
 msgid "Promedio de proceso (%)"
 msgstr "Process average (%)"
+
+msgid "Proporción"
+msgstr "Proportion"
+
+msgid "Proporción EWMA"
+msgstr "EWMA proportion"
+
+msgid "Prueba de normalidad (Anderson-Darling, Shapiro-Wilk)"
+msgstr "Normality test (Anderson-Darling, Shapiro-Wilk)"
+
+msgid "Prueba de normalidad Anderson-Darling (compatible con Minitab)"
+msgstr "Anderson-Darling normality test (Minitab-compatible)"
 
 #, python-brace-format
 msgid "Pruebas no válidas: {bad}. Use enteros entre 1 y 8."
 msgstr "Invalid tests: {bad}. Use integers between 1 and 8."
+
+msgid "Puntaje acumulado"
+msgstr "Cumulative score"
 
 msgid "Punto rojo — detener y corregir"
 msgstr "Red point — stop and correct"
@@ -1129,8 +2320,43 @@ msgstr "Expected runs (median)"
 msgid "Rachas sobre/bajo mediana"
 msgstr "Runs above/below median"
 
+msgid "Rango"
+msgstr "Range"
+
+msgid "Rango de la muestra"
+msgstr "Sample range"
+
+msgid "Rango dentro del subgrupo"
+msgstr "Within-subgroup range"
+
+msgid "Rango móvil"
+msgstr "Moving range"
+
+msgid "Rango móvil de Z"
+msgstr "Moving range of Z"
+
+msgid "Rango móvil de las medias"
+msgstr "Moving range of the means"
+
+msgid "Rango por parte/operador"
+msgstr "Range by part/operator"
+
 msgid "Referencia"
 msgstr "Reference"
+
+#, python-brace-format
+msgid ""
+"Regresión: sesgo={intercept:.4g}+{slope:.4g}·ref\n"
+"  R²={r2:.4f}  p={p:.4f}"
+msgstr ""
+"Regression: bias={intercept:.4g}+{slope:.4g}·ref\n"
+"  R²={r2:.4f}  p={p:.4f}"
+
+msgid "Repetibilidad"
+msgstr "Repeatability"
+
+msgid "Reproducibilidad"
+msgstr "Reproducibility"
 
 msgid "Resumen"
 msgstr "Summary"
@@ -1188,11 +2414,103 @@ msgstr "Bias"
 msgid "Sesgo (%)"
 msgstr "Bias (%)"
 
+msgid "Sesgo (medición − referencia)"
+msgstr "Bias (measurement − reference)"
+
+#, python-brace-format
+msgid "Sesgo = {bias:.4g} ({pct:.2f}%)"
+msgstr "Bias = {bias:.4g} ({pct:.2f}%)"
+
+msgid "Sesgo medio"
+msgstr "Mean bias"
+
+#, python-brace-format
+msgid "Sesgo prom.={bias:.4g} ({pct:.2f}%)"
+msgstr "Avg. bias={bias:.4g} ({pct:.2f}%)"
+
 msgid "Sesgo promedio"
 msgstr "Average bias"
 
 msgid "Sesgo promedio (%)"
 msgstr "Average bias (%)"
+
+msgid "Sistema de medición (MSA / Gage R&R)"
+msgstr "Measurement system (MSA / Gage R&R)"
+
+msgid "Sixpack de capacidad"
+msgstr "Capability Sixpack"
+
+msgid "Solo tengo estadísticos resumen (media, σ, n)"
+msgstr "I only have summary statistics (mean, σ, n)"
+
+msgid "Solo tengo media, desviación típica y n"
+msgstr "I only have the mean, standard deviation and n"
+
+msgid "Subgrupo"
+msgstr "Subgroup"
+
+msgid "Suma acumulada"
+msgstr "Cumulative sum"
+
+msgid "Suma acumulada C (σ)"
+msgstr "Cumulative sum C (σ)"
+
+msgid "Suma acumulada P (σ)"
+msgstr "Cumulative sum P (σ)"
+
+msgid "Suma acumulada U (σ)"
+msgstr "Cumulative sum U (σ)"
+
+msgid "Sí (o no lo sé — puedes verificar con normality_test)"
+msgstr "Yes (or I don't know — you can check with normality_test)"
+
+msgid "Sí — alta sensibilidad → EWMA (subgrupos)"
+msgstr "Yes — high sensitivity → EWMA (subgroups)"
+
+msgid "Sí — cambios abruptos pequeños → CUSUM"
+msgstr "Yes — small abrupt shifts → CUSUM"
+
+msgid "Sí — corrige sobredispersión → Laney P′"
+msgstr "Yes — corrects overdispersion → Laney P′"
+
+msgid "Sí — desplazamientos graduales sostenidos → EWMA"
+msgstr "Yes — gradual sustained shifts → EWMA"
+
+msgid "Sí — intervalo normal (factor k de Wald-Wolfowitz)"
+msgstr "Yes — normal interval (Wald-Wolfowitz k factor)"
+
+msgid "Sí — unidades variables  → U (tasa de defectos)"
+msgstr "Yes — variable units  → U (defect rate)"
+
+msgid "Sí → Laney U′"
+msgstr "Yes → Laney U′"
+
+msgid "Sí → Laney U′ (versión robusta de U)"
+msgstr "Yes → Laney U′ (robust version of U)"
+
+msgid "Sí → MEWMA (media) o MCUSUM (suma acumulada)"
+msgstr "Yes → MEWMA (mean) or MCUSUM (cumulative sum)"
+
+msgid "Sí, constante → NP (número de defectuosos)"
+msgstr "Yes, constant → NP (number of defectives)"
+
+msgid "Tasa de defectos con corrección de sobredispersión (Laney U′)"
+msgstr "Defect rate with overdispersion correction (Laney U′)"
+
+msgid "Tasa de defectos por unidad con tamaño de muestra variable"
+msgstr "Defect rate per unit with variable sample size"
+
+msgid "Tendencias"
+msgstr "Trends"
+
+msgid "Tengo los datos individuales"
+msgstr "I have the individual data"
+
+msgid "Tiempo entre eventos"
+msgstr "Time between events"
+
+msgid "Tiempo entre eventos → T"
+msgstr "Time between events → T"
 
 msgid "Tiene tendencia"
 msgstr "Has trend"
@@ -1218,8 +2536,32 @@ msgstr "All data are equal; normality cannot be tested."
 msgid "Tolerancia"
 msgstr "Tolerance"
 
+msgid "Transformación Box-Cox automática para normalizar los datos"
+msgstr "Automatic Box-Cox transformation to normalize the data"
+
+msgid "T² de Hotelling — monitoreo multivariado estándar"
+msgstr "Hotelling's T² — standard multivariate monitoring"
+
 msgid "Una carta multivariada necesita al menos 2 variables."
 msgstr "A multivariate chart needs at least 2 variables."
+
+msgid "Unilateral inferior — solo cota mínima"
+msgstr "One-sided lower — minimum bound only"
+
+msgid "Unilateral superior — solo cota máxima"
+msgstr "One-sided upper — maximum bound only"
+
+msgid "Valor"
+msgstr "Value"
+
+msgid "Valor Z"
+msgstr "Z value"
+
+msgid "Valor de referencia"
+msgstr "Reference value"
+
+msgid "Valor individual"
+msgstr "Individual value"
 
 msgid "Valores atípicos (IQR)"
 msgstr "Outliers (IQR)"
@@ -1232,6 +2574,9 @@ msgstr "Study var. total"
 
 msgid "Variación de estudio"
 msgstr "Study variation"
+
+msgid "Variación entre y dentro de subgrupos — descompone ambas fuentes"
+msgstr "Variation between and within subgroups — decomposes both sources"
 
 msgid "Varianza Gage R&R"
 msgstr "Gage R&R variance"
@@ -1253,6 +2598,17 @@ msgstr "Reproducibility variance"
 
 msgid "Varianza total"
 msgstr "Total variance"
+
+msgid "Varias variables simultáneas (multivariado)"
+msgstr "Several simultaneous variables (multivariate)"
+
+#, python-brace-format
+msgid "Verde hi={v:.4g}"
+msgstr "Green hi={v:.4g}"
+
+#, python-brace-format
+msgid "Verde lo={v:.4g}"
+msgstr "Green lo={v:.4g}"
 
 msgid "Z.Bench (dentro)"
 msgstr "Z.Bench (within)"
@@ -1332,6 +2688,23 @@ msgstr ""
 "import pccpy as pp\n"
 "result = pp.run_chart(data)"
 
+#, python-brace-format
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.{function}(datos{sep}{args})"
+msgstr ""
+"import pccpy as pp\n"
+"result = pp.{function}(data{sep}{args})"
+
+msgid ""
+"ipywidgets no está instalado. Instálalo con:\n"
+"    pip install ipywidgets\n"
+"Cambiando a modo interactivo (CLI)…"
+msgstr ""
+"ipywidgets is not installed. Install it with:\n"
+"    pip install ipywidgets\n"
+"Switching to interactive (CLI) mode…"
+
 msgid "k (factor de aceptabilidad)"
 msgstr "k (acceptability factor)"
 
@@ -1396,6 +2769,10 @@ msgstr "p Oscillation"
 msgid "p Tendencias (trends)"
 msgstr "p Trends"
 
+#, python-brace-format
+msgid "p {name}={p:.4f}{marca}"
+msgstr "p {name}={p:.4f}{marca}"
+
 msgid "p-valor (intercepto=0)"
 msgstr "p-value (intercept=0)"
 
@@ -1413,6 +2790,9 @@ msgstr "panel"
 
 msgid "partes"
 msgstr "parts"
+
+msgid "pendiente"
+msgstr "pending"
 
 msgid "peso"
 msgstr "weight"
@@ -1540,11 +2920,102 @@ msgstr ""
 msgid "{what} debe ser uno de {allowed} (recibido: {method!r})."
 msgstr "{what} must be one of {allowed} (received: {method!r})."
 
+msgid "±Var. estudio/2"
+msgstr "±Study var./2"
+
+msgid "¿Cuál es el tamaño de los subgrupos?"
+msgstr "What is the subgroup size?"
+
+msgid "¿Cuál es tu objetivo principal?"
+msgstr "What is your main goal?"
+
+msgid "¿Cuál prefieres?"
+msgstr "Which do you prefer?"
+
+msgid "¿Cómo se mide la característica de calidad?"
+msgstr "How is the quality characteristic measured?"
+
+msgid "¿Dispones de los datos individuales o solo de estadísticos resumen?"
+msgstr "Do you have the individual data or only summary statistics?"
+
+msgid "¿El tamaño de muestra es constante entre períodos?"
+msgstr "Is the sample size constant across periods?"
+
+msgid "¿El área / número de unidades inspeccionadas varía entre muestras?"
+msgstr "Does the area / number of inspected units vary between samples?"
+
+msgid "¿Los datos siguen distribución normal?"
+msgstr "Is the data normally distributed?"
+
+msgid "¿Necesitas alta sensibilidad a pequeños desplazamientos?"
+msgstr "Do you need high sensitivity to small shifts?"
+
+msgid "¿Necesitas detectar desplazamientos pequeños (< 1.5σ) con mayor rapidez?"
+msgstr "Do you need to detect small shifts (< 1.5σ) faster?"
+
+msgid "¿Necesitas detectar desplazamientos pequeños?"
+msgstr "Do you need to detect small shifts?"
+
+msgid "¿Qué análisis exploratorio necesitas?"
+msgstr "What exploratory analysis do you need?"
+
+msgid "¿Qué análisis necesitas?"
+msgstr "What analysis do you need?"
+
+msgid "¿Qué mides entre eventos?"
+msgstr "What do you measure between events?"
+
+msgid "¿Qué restricción defines para el plan Dodge-Romig?"
+msgstr "What constraint do you set for the Dodge-Romig plan?"
+
+msgid "¿Qué tipo de datos tienes?"
+msgstr "What type of data do you have?"
+
+msgid "¿Qué tipo de estudio del sistema de medición necesitas?"
+msgstr "What type of measurement system study do you need?"
+
+msgid "¿Qué tipo de límite necesitas?"
+msgstr "What type of limit do you need?"
+
+msgid "¿Qué tipo de reporte de capacidad necesitas?"
+msgstr "What type of capability report do you need?"
+
+msgid "¿Sospechas sobredispersión (más variabilidad de la esperada)?"
+msgstr "Do you suspect overdispersion (more variability than expected)?"
+
+msgid "¿Sospechas sobredispersión?"
+msgstr "Do you suspect overdispersion?"
+
+msgid "Índices Cp, Cpk, Pp, Ppk, PPM y Z.Bench"
+msgstr "Cp, Cpk, Pp, Ppk, PPM and Z.Bench indices"
+
+msgid "Últimas 25 observaciones"
+msgstr "Last 25 observations"
+
+msgid "Últimos 25 subgrupos"
+msgstr "Last 25 subgroups"
+
 msgid "α (riesgo productor)"
 msgstr "α (producer's risk)"
 
 msgid "β (riesgo consumidor = 0.10)"
 msgstr "β (consumer's risk = 0.10)"
+
+msgid "κ=0.40 (aceptable)"
+msgstr "κ=0.40 (acceptable)"
+
+msgid "κ=0.75 (bueno)"
+msgstr "κ=0.75 (good)"
+
+msgid "← Volver"
+msgstr "← Back"
+
+msgid "≤ 8 observaciones por subgrupo  → Xbar-R"
+msgstr "≤ 8 observations per subgroup → Xbar-R"
+
+#, python-brace-format
+msgid "✔ Análisis recomendado: <code style='font-size:13px'>{function}</code>"
+msgstr "✔ Recommended analysis: <code style='font-size:13px'>{function}</code>"
 
 #~ msgid "Longitud de datos ({n_data}) ≠ parts*operators*replicates ({parts}×{operators}×{replicates}={parts_operators_re})."
 #~ msgstr ""

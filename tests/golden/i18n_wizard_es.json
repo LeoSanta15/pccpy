@@ -1,0 +1,408 @@
+{
+ "arbol": {
+  "cap_normal": [
+   "¿Qué tipo de reporte de capacidad necesitas?",
+   [
+    "Índices Cp, Cpk, Pp, Ppk, PPM y Z.Bench",
+    "Análisis completo en una sola figura (Sixpack)",
+    "Solo tengo estadísticos resumen (media, σ, n)"
+   ]
+  ],
+  "capacidad": [
+   "¿Los datos siguen distribución normal?",
+   [
+    "Sí (o no lo sé — puedes verificar con normality_test)",
+    "No — se ajusta a otra distribución conocida",
+    "No — intentar transformación Box-Cox automática"
+   ]
+  ],
+  "cartas": [
+   "¿Qué tipo de datos tienes?",
+   [
+    "Mediciones continuas — una por instante (individual)",
+    "Mediciones continuas — en subgrupos (varias por muestra)",
+    "Fracción defectuosa  (piezas malas / total muestral)",
+    "Número de defectos por unidad inspeccionada",
+    "Varias variables simultáneas (multivariado)",
+    "Eventos raros (muy poca frecuencia de defectos)",
+    "Corridas cortas (piezas con distintas especificaciones)"
+   ]
+  ],
+  "cartas_c": [
+   "¿El área / número de unidades inspeccionadas varía entre muestras?",
+   [
+    "No — unidades constantes → C (defectos por muestra)",
+    "Sí — unidades variables  → U (tasa de defectos)"
+   ]
+  ],
+  "cartas_c_over": [
+   "¿Sospechas sobredispersión?",
+   [
+    "No → C estándar",
+    "Sí → Laney U′ (versión robusta de U)"
+   ]
+  ],
+  "cartas_ind": [
+   "¿Necesitas detectar desplazamientos pequeños (< 1.5σ) con mayor rapidez?",
+   [
+    "No — sensibilidad estándar Shewhart",
+    "Sí — desplazamientos graduales sostenidos → EWMA",
+    "Sí — cambios abruptos pequeños → CUSUM",
+    "Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S"
+   ]
+  ],
+  "cartas_mv": [
+   "¿Necesitas alta sensibilidad a pequeños desplazamientos?",
+   [
+    "No — sensibilidad estándar → T² de Hotelling",
+    "Sí → MEWMA (media) o MCUSUM (suma acumulada)"
+   ]
+  ],
+  "cartas_mv_ts": [
+   "¿Cuál prefieres?",
+   [
+    "MEWMA — mejor para desplazamientos sostenidos graduales",
+    "MCUSUM — mejor para cambios abruptos pequeños"
+   ]
+  ],
+  "cartas_p": [
+   "¿El tamaño de muestra es constante entre períodos?",
+   [
+    "Sí, constante → NP (número de defectuosos)",
+    "No, variable  → P (fracción defectuosa)"
+   ]
+  ],
+  "cartas_p_var": [
+   "¿Sospechas sobredispersión (más variabilidad de la esperada)?",
+   [
+    "No o no lo sé → P estándar",
+    "Sí — corrige sobredispersión → Laney P′"
+   ]
+  ],
+  "cartas_raros": [
+   "¿Qué mides entre eventos?",
+   [
+    "Número de piezas o casos entre eventos → G",
+    "Tiempo entre eventos → T"
+   ]
+  ],
+  "cartas_sub": [
+   "¿Cuál es el tamaño de los subgrupos?",
+   [
+    "≤ 8 observaciones por subgrupo  → Xbar-R",
+    "> 8 observaciones por subgrupo  → Xbar-S"
+   ]
+  ],
+  "cartas_sub_r": [
+   "¿Necesitas detectar desplazamientos pequeños?",
+   [
+    "No — sensibilidad estándar → Xbar-R",
+    "Sí — alta sensibilidad → EWMA (subgrupos)"
+   ]
+  ],
+  "cartas_u_over": [
+   "¿Sospechas sobredispersión?",
+   [
+    "No → U estándar",
+    "Sí → Laney U′"
+   ]
+  ],
+  "corridas": [
+   "¿Qué análisis necesitas?",
+   [
+    "Carta de corridas — detectar patrones no aleatorios (p-valores)",
+    "Pre-control (Shainin) — semáforo verde / amarillo / rojo"
+   ]
+  ],
+  "exploratorio": [
+   "¿Qué análisis exploratorio necesitas?",
+   [
+    "Prueba de normalidad (Anderson-Darling, Shapiro-Wilk)",
+    "Diagrama de Pareto (frecuencia de categorías o defectos)",
+    "Gráfico de probabilidad normal"
+   ]
+  ],
+  "msa": [
+   "¿Qué tipo de estudio del sistema de medición necesitas?",
+   [
+    "Crossed Gage R&R — todos los operadores miden todas las partes",
+    "Nested Gage R&R — cada operador mide partes distintas",
+    "Estudio Tipo 1 — sesgo y repetibilidad de un instrumento",
+    "Linealidad y sesgo — sesgo varía con el valor de referencia?",
+    "Concordancia por atributos (Kappa de Cohen / Fleiss)"
+   ]
+  ],
+  "muestreo": [
+   "¿Cómo se mide la característica de calidad?",
+   [
+    "Por atributos (conforme / no conforme) → norma Z1.4",
+    "Por variables (medición continua)      → norma Z1.9",
+    "Minimizar inspección total (Dodge-Romig)"
+   ]
+  ],
+  "muestreo_dr": [
+   "¿Qué restricción defines para el plan Dodge-Romig?",
+   [
+    "LTPD fijo — proteger contra calidad inaceptable",
+    "AOQL fijo — limitar la calidad saliente promedio"
+   ]
+  ],
+  "root": [
+   "¿Cuál es tu objetivo principal?",
+   [
+    "Monitorear el proceso (cartas de control)",
+    "Analizar la capacidad del proceso",
+    "Sistema de medición (MSA / Gage R&R)",
+    "Muestreo de aceptación",
+    "Análisis exploratorio (normalidad, Pareto)",
+    "Intervalos de tolerancia",
+    "Carta de corridas o pre-control"
+   ]
+  ],
+  "tol_datos": [
+   "¿Los datos siguen distribución normal?",
+   [
+    "Sí — intervalo normal (factor k de Wald-Wolfowitz)",
+    "No — intervalo no paramétrico (estadísticos de orden)"
+   ]
+  ],
+  "tol_lados": [
+   "¿Qué tipo de límite necesitas?",
+   [
+    "Bilateral  — límite inferior y superior",
+    "Unilateral superior — solo cota máxima",
+    "Unilateral inferior — solo cota mínima"
+   ]
+  ],
+  "tolerancia": [
+   "¿Dispones de los datos individuales o solo de estadísticos resumen?",
+   [
+    "Tengo los datos individuales",
+    "Solo tengo media, desviación típica y n"
+   ]
+  ]
+ },
+ "cli": "\n  ╔══════════════════════════════════════════════════╗\n  ║   pccpy — Asistente de selección de análisis    ║\n  ╚══════════════════════════════════════════════════╝\n\n  ¿Cuál es tu objetivo principal?\n\n    [1] Monitorear el proceso (cartas de control)\n    [2] Analizar la capacidad del proceso\n    [3] Sistema de medición (MSA / Gage R&R)\n    [4] Muestreo de aceptación\n    [5] Análisis exploratorio (normalidad, Pareto)\n    [6] Intervalos de tolerancia\n    [7] Carta de corridas o pre-control\n\n  Selecciona una opción:   ✗ Ingresa un número entre 1 y 7.\n  Selecciona una opción:   ✗ Ingresa un número entre 1 y 7.\n  Selecciona una opción: \n  ¿Qué tipo de datos tienes?\n\n    [1] Mediciones continuas — una por instante (individual)\n    [2] Mediciones continuas — en subgrupos (varias por muestra)\n    [3] Fracción defectuosa  (piezas malas / total muestral)\n    [4] Número de defectos por unidad inspeccionada\n    [5] Varias variables simultáneas (multivariado)\n    [6] Eventos raros (muy poca frecuencia de defectos)\n    [7] Corridas cortas (piezas con distintas especificaciones)\n\n  Selecciona una opción: \n  ¿Necesitas detectar desplazamientos pequeños (< 1.5σ) con mayor rapidez?\n\n    [1] No — sensibilidad estándar Shewhart\n    [2] Sí — desplazamientos graduales sostenidos → EWMA\n    [3] Sí — cambios abruptos pequeños → CUSUM\n    [4] Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S\n\n  Selecciona una opción: \n════════════════════════════════════════════════════════\n  Análisis recomendado : imr_chart\n  Razón                : Datos continuos individuales — carta I-MR estándar Shewhart\n  Parámetros sugeridos : {'tests': (1, 2, 3, 4, 5, 6, 7, 8)}\n  Alternativas         : ewma_chart, cusum_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.imr_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n    print(carta.summary())\n    carta.plot()\n════════════════════════════════════════════════════════\n",
+ "resultados": {
+  "r:attr_agreement": {
+   "snippet": "import pccpy as pp\nimport pandas as pd\n# df: DataFrame con una columna por operador\nres = pp.attribute_agreement(df, reference=referencia, replicates=n_replicas)\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : attribute_agreement\n  Razón                : Concordancia por atributos — Kappa de Cohen por operador + Kappa de Fleiss\n  Alternativas         : gage_rr\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    import pandas as pd\n    # df: DataFrame con una columna por operador\n    res = pp.attribute_agreement(df, reference=referencia, replicates=n_replicas)\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:c": {
+   "snippet": "import pccpy as pp\ncarta = pp.c_chart(defectos)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : c_chart\n  Razón                : Número de defectos con unidades de inspección constantes\n  Alternativas         : u_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.c_chart(defectos)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:cap_bc": {
+   "snippet": "import pccpy as pp\nres = pp.capability_boxcox(datos, lsl=lsl, usl=usl)\nprint(res.summary())   # incluye lambda estimada",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_boxcox\n  Razón                : Transformación Box-Cox automática para normalizar los datos\n  Alternativas         : capability_nonnormal\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.capability_boxcox(datos, lsl=lsl, usl=usl)\n    print(res.summary())   # incluye lambda estimada\n════════════════════════════════════════════════════════"
+  },
+  "r:cap_nn": {
+   "snippet": "import pccpy as pp\n# distribution: 'weibull', 'lognormal', 'gamma', 'loglogistic', ...\nres = pp.capability_nonnormal(datos, lsl=lsl, usl=usl,\n                              distribution='weibull')\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_nonnormal\n  Razón                : Capacidad no normal — ajuste por máxima verosimilitud a distribución alternativa\n  Parámetros sugeridos : {'distribution': 'weibull'}\n  Alternativas         : capability_boxcox\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # distribution: 'weibull', 'lognormal', 'gamma', 'loglogistic', ...\n    res = pp.capability_nonnormal(datos, lsl=lsl, usl=usl,\n                                  distribution='weibull')\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:cap_summary": {
+   "snippet": "import pccpy as pp\nres = pp.capability_analysis_summary(\n    mean=media, std_overall=sigma, n=n,\n    lsl=lsl, usl=usl,\n)\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_analysis_summary\n  Razón                : Capacidad desde estadísticos resumen (media, σ, n)\n  Alternativas         : capability_analysis\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.capability_analysis_summary(\n        mean=media, std_overall=sigma, n=n,\n        lsl=lsl, usl=usl,\n    )\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:capability": {
+   "snippet": "import pccpy as pp\nres = pp.capability_analysis(datos, lsl=lsl, usl=usl)\nprint(res.summary())\nres.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_analysis\n  Razón                : Capacidad normal — Cp, Cpk, Pp, Ppk, PPM, Z.Bench\n  Alternativas         : capability_sixpack, capability_nonnormal\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.capability_analysis(datos, lsl=lsl, usl=usl)\n    print(res.summary())\n    res.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:cusum": {
+   "snippet": "import pccpy as pp\ncarta = pp.cusum_chart(datos, h=4.0, k=0.5)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : cusum_chart\n  Razón                : Alta sensibilidad a cambios abruptos pequeños (H=4, K=0.5)\n  Parámetros sugeridos : {'h': 4.0, 'k': 0.5}\n  Alternativas         : imr_chart, ewma_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.cusum_chart(datos, h=4.0, k=0.5)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:dr_aoql": {
+   "snippet": "import pccpy as pp\nplan = pp.dodge_romig(N=tamaño_lote, aoql=aoql, process_avg=p_promedio)\nprint(plan.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : dodge_romig\n  Razón                : Dodge-Romig AOQL — minimiza ATI con límite de calidad saliente promedio\n  Alternativas         : acceptance_sampling_attributes\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    plan = pp.dodge_romig(N=tamaño_lote, aoql=aoql, process_avg=p_promedio)\n    print(plan.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:dr_ltpd": {
+   "snippet": "import pccpy as pp\nplan = pp.dodge_romig(N=tamaño_lote, ltpd=ltpd, process_avg=p_promedio)\nprint(plan.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : dodge_romig\n  Razón                : Dodge-Romig LTPD — minimiza ATI con tolerancia a calidad mínima aceptable\n  Alternativas         : acceptance_sampling_attributes\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    plan = pp.dodge_romig(N=tamaño_lote, ltpd=ltpd, process_avg=p_promedio)\n    print(plan.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:ewma": {
+   "snippet": "import pccpy as pp\ncarta = pp.ewma_chart(datos, weight=0.2, k=3.0)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : ewma_chart\n  Razón                : Alta sensibilidad a desplazamientos sostenidos (λ=0.2 recomendado)\n  Parámetros sugeridos : {'weight': 0.2, 'k': 3.0}\n  Alternativas         : imr_chart, cusum_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.ewma_chart(datos, weight=0.2, k=3.0)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:ewma_sub": {
+   "snippet": "import pccpy as pp\ncarta = pp.ewma_chart(datos, weight=0.2)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : ewma_chart\n  Razón                : EWMA para datos en subgrupos con alta sensibilidad\n  Parámetros sugeridos : {'weight': 0.2}\n  Alternativas         : xbar_r_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.ewma_chart(datos, weight=0.2)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:g": {
+   "snippet": "import pccpy as pp\ncarta = pp.g_chart(entre_eventos)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : g_chart\n  Razón                : Eventos raros — número de unidades entre eventos (distribución geométrica)\n  Alternativas         : t_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.g_chart(entre_eventos)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:gage_lin": {
+   "snippet": "import pccpy as pp\nlin = pp.gage_linearity(mediciones, referencias, tolerance=tolerancia)\nprint(lin.summary())\nlin.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : gage_linearity\n  Razón                : Linealidad y sesgo — detecta si el sesgo cambia con el valor medido\n  Alternativas         : gage_type1\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    lin = pp.gage_linearity(mediciones, referencias, tolerance=tolerancia)\n    print(lin.summary())\n    lin.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:gage_rr": {
+   "snippet": "import pccpy as pp\ngrr = pp.gage_rr(datos, parts=n_partes, operators=n_operadores,\n                 replicates=n_replicas, tolerance=tolerancia)\nprint(grr.summary())\ngrr.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : gage_rr\n  Razón                : Crossed Gage R&R — ANOVA (todos los operadores miden todas las partes)\n  Parámetros sugeridos : {'method': 'anova'}\n  Alternativas         : gage_rr_nested\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    grr = pp.gage_rr(datos, parts=n_partes, operators=n_operadores,\n                     replicates=n_replicas, tolerance=tolerancia)\n    print(grr.summary())\n    grr.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:gage_rr_nested": {
+   "snippet": "import pccpy as pp\ngrr = pp.gage_rr_nested(datos, parts=n_partes, operators=n_operadores,\n                        replicates=n_replicas)\nprint(grr.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : gage_rr_nested\n  Razón                : Nested Gage R&R — cada operador mide partes distintas\n  Alternativas         : gage_rr\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    grr = pp.gage_rr_nested(datos, parts=n_partes, operators=n_operadores,\n                            replicates=n_replicas)\n    print(grr.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:gage_type1": {
+   "snippet": "import pccpy as pp\nt1 = pp.gage_type1(mediciones, reference=valor_ref, tolerance=tolerancia)\nprint(t1.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : gage_type1\n  Razón                : Estudio Tipo 1 — sesgo, t-test, Cg y Cgk\n  Alternativas         : gage_linearity\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    t1 = pp.gage_type1(mediciones, reference=valor_ref, tolerance=tolerancia)\n    print(t1.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:imr": {
+   "snippet": "import pccpy as pp\ncarta = pp.imr_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\nprint(carta.summary())\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : imr_chart\n  Razón                : Datos continuos individuales — carta I-MR estándar Shewhart\n  Parámetros sugeridos : {'tests': (1, 2, 3, 4, 5, 6, 7, 8)}\n  Alternativas         : ewma_chart, cusum_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.imr_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n    print(carta.summary())\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:imr_rs": {
+   "snippet": "import pccpy as pp\n# datos: matriz 2-D (n_subgrupos × tamaño_subgrupo)\ncarta = pp.imr_rs_chart(datos)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : imr_rs_chart\n  Razón                : Variación entre y dentro de subgrupos — descompone ambas fuentes\n  Alternativas         : imr_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # datos: matriz 2-D (n_subgrupos × tamaño_subgrupo)\n    carta = pp.imr_rs_chart(datos)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:laney_p": {
+   "snippet": "import pccpy as pp\ncarta = pp.laney_p_chart(defectuosos, n=tamaños)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : laney_p_chart\n  Razón                : Fracción defectuosa con corrección de sobredispersión (Laney P′)\n  Alternativas         : p_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.laney_p_chart(defectuosos, n=tamaños)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:laney_u": {
+   "snippet": "import pccpy as pp\ncarta = pp.laney_u_chart(defectos, n=unidades)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : laney_u_chart\n  Razón                : Tasa de defectos con corrección de sobredispersión (Laney U′)\n  Alternativas         : u_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.laney_u_chart(defectos, n=unidades)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:mcusum": {
+   "snippet": "import pccpy as pp\ncarta = pp.mcusum_chart(datos, k=0.5, arl=200)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : mcusum_chart\n  Razón                : MCUSUM — sensibilidad alta a cambios abruptos multivariados\n  Parámetros sugeridos : {'k': 0.5, 'arl': 200}\n  Alternativas         : t2_chart, mewma_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.mcusum_chart(datos, k=0.5, arl=200)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:mewma": {
+   "snippet": "import pccpy as pp\ncarta = pp.mewma_chart(datos, weight=0.1, arl=200)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : mewma_chart\n  Razón                : MEWMA — sensibilidad alta a desplazamientos multivariados sostenidos\n  Parámetros sugeridos : {'weight': 0.1, 'arl': 200}\n  Alternativas         : t2_chart, mcusum_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.mewma_chart(datos, weight=0.1, arl=200)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:normality": {
+   "snippet": "import pccpy as pp\nres = pp.normality_test(datos, method='ad')\nprint(res.summary())\npp.probability_plot(datos)",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : normality_test\n  Razón                : Prueba de normalidad Anderson-Darling (compatible con Minitab)\n  Parámetros sugeridos : {'method': 'ad'}\n  Alternativas         : probability_plot\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.normality_test(datos, method='ad')\n    print(res.summary())\n    pp.probability_plot(datos)\n════════════════════════════════════════════════════════"
+  },
+  "r:np": {
+   "snippet": "import pccpy as pp\ncarta = pp.np_chart(defectuosos, n=tamaño_muestra)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : np_chart\n  Razón                : Número de defectuosos con tamaño de muestra constante\n  Alternativas         : p_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.np_chart(defectuosos, n=tamaño_muestra)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:p": {
+   "snippet": "import pccpy as pp\ncarta = pp.p_chart(defectuosos, n=tamaños)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : p_chart\n  Razón                : Fracción defectuosa con tamaño de muestra variable\n  Alternativas         : laney_p_chart, np_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.p_chart(defectuosos, n=tamaños)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:pareto": {
+   "snippet": "import pccpy as pp\ntabla = pp.pareto(categorias)\npp.plot_pareto(tabla)",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : pareto\n  Razón                : Diagrama de Pareto — ordena categorías por frecuencia acumulada\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    tabla = pp.pareto(categorias)\n    pp.plot_pareto(tabla)\n════════════════════════════════════════════════════════"
+  },
+  "r:precontrol": {
+   "snippet": "import pccpy as pp\npc = pp.precontrol(datos, lsl=lsl, usl=usl)\nprint(pc.summary())\npc.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : precontrol\n  Razón                : Pre-control Shainin — semáforo verde / amarillo / rojo basado en tolerancia\n  Alternativas         : run_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    pc = pp.precontrol(datos, lsl=lsl, usl=usl)\n    print(pc.summary())\n    pc.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:prob_plot": {
+   "snippet": "import pccpy as pp\npp.probability_plot(datos)",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : probability_plot\n  Razón                : Gráfico de probabilidad normal con línea Anderson-Darling\n  Alternativas         : normality_test\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    pp.probability_plot(datos)\n════════════════════════════════════════════════════════"
+  },
+  "r:run": {
+   "snippet": "import pccpy as pp\nrc = pp.run_chart(datos)\nprint(rc.summary())   # p-valores: agrupamiento, mezclas, tendencias, oscilación\nrc.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : run_chart\n  Razón                : Carta de corridas — 4 pruebas de aleatoriedad (p-valores)\n  Alternativas         : precontrol\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    rc = pp.run_chart(datos)\n    print(rc.summary())   # p-valores: agrupamiento, mezclas, tendencias, oscilación\n    rc.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:sixpack": {
+   "snippet": "import pccpy as pp\nimport matplotlib.pyplot as plt\nfig, res, carta = pp.capability_sixpack(datos, lsl=lsl, usl=usl)\nplt.show()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_sixpack\n  Razón                : Capability Sixpack — 6 vistas en una figura (igual que Minitab)\n  Alternativas         : capability_analysis\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    import matplotlib.pyplot as plt\n    fig, res, carta = pp.capability_sixpack(datos, lsl=lsl, usl=usl)\n    plt.show()\n════════════════════════════════════════════════════════"
+  },
+  "r:t": {
+   "snippet": "import pccpy as pp\ncarta = pp.t_chart(tiempos)   # dist='weibull' por defecto\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : t_chart\n  Razón                : Eventos raros — tiempo entre eventos (Weibull o exponencial)\n  Alternativas         : g_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.t_chart(tiempos)   # dist='weibull' por defecto\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:t2": {
+   "snippet": "import pccpy as pp\n# datos: matriz 2-D (n_observaciones × n_variables)\ncarta = pp.t2_chart(datos)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : t2_chart\n  Razón                : T² de Hotelling — monitoreo multivariado estándar\n  Alternativas         : mewma_chart, mcusum_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # datos: matriz 2-D (n_observaciones × n_variables)\n    carta = pp.t2_chart(datos)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:tol_lower": {
+   "snippet": "import pccpy as pp\nres = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='lower')\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : tolerance_interval\n  Razón                : Intervalo de tolerancia unilateral inferior — P(X ≥ LI) ≥ coverage\n  Parámetros sugeridos : {'coverage': 0.95, 'confidence': 0.95, 'sides': 'lower'}\n  Alternativas         : tolerance_interval\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='lower')\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:tol_np": {
+   "snippet": "import pccpy as pp\n# Requiere n grande (p. ej. ≥ 300 para 95/95 bilateral)\nres = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95,\n                            method='nonparametric')\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : tolerance_interval\n  Razón                : Intervalo de tolerancia no paramétrico — estadísticos de orden\n  Parámetros sugeridos : {'coverage': 0.95, 'confidence': 0.95, 'method': 'nonparametric'}\n  Alternativas         : tolerance_interval\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # Requiere n grande (p. ej. ≥ 300 para 95/95 bilateral)\n    res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95,\n                                method='nonparametric')\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:tol_summary": {
+   "snippet": "import pccpy as pp\nres = pp.tolerance_interval_summary(mean=media, std=sigma, n=n,\n                                    coverage=0.95, confidence=0.95)\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : tolerance_interval_summary\n  Razón                : Intervalo de tolerancia desde estadísticos resumen (media, σ, n)\n  Parámetros sugeridos : {'coverage': 0.95, 'confidence': 0.95}\n  Alternativas         : tolerance_interval\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.tolerance_interval_summary(mean=media, std=sigma, n=n,\n                                        coverage=0.95, confidence=0.95)\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:tol_two": {
+   "snippet": "import pccpy as pp\nres = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='two')\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : tolerance_interval\n  Razón                : Intervalo de tolerancia normal bilateral — P(LI ≤ X ≤ LS) ≥ coverage\n  Parámetros sugeridos : {'coverage': 0.95, 'confidence': 0.95, 'sides': 'two'}\n  Alternativas         : tolerance_interval_summary\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='two')\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:tol_upper": {
+   "snippet": "import pccpy as pp\nres = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='upper')\nprint(res.summary())",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : tolerance_interval\n  Razón                : Intervalo de tolerancia unilateral superior — P(X ≤ LS) ≥ coverage\n  Parámetros sugeridos : {'coverage': 0.95, 'confidence': 0.95, 'sides': 'upper'}\n  Alternativas         : tolerance_interval\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.tolerance_interval(datos, coverage=0.95, confidence=0.95, sides='upper')\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:u": {
+   "snippet": "import pccpy as pp\ncarta = pp.u_chart(defectos, n=unidades)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : u_chart\n  Razón                : Tasa de defectos por unidad con tamaño de muestra variable\n  Alternativas         : laney_u_chart, c_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.u_chart(defectos, n=unidades)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:xbar_r": {
+   "snippet": "import pccpy as pp\ncarta = pp.xbar_r_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : xbar_r_chart\n  Razón                : Datos en subgrupos pequeños (n ≤ 8) — carta Xbar-R\n  Parámetros sugeridos : {'tests': (1, 2, 3, 4, 5, 6, 7, 8)}\n  Alternativas         : xbar_s_chart, ewma_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.xbar_r_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:xbar_s": {
+   "snippet": "import pccpy as pp\ncarta = pp.xbar_s_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : xbar_s_chart\n  Razón                : Datos en subgrupos grandes (n > 8) — carta Xbar-S\n  Parámetros sugeridos : {'tests': (1, 2, 3, 4, 5, 6, 7, 8)}\n  Alternativas         : xbar_r_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.xbar_s_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:z14": {
+   "snippet": "import pccpy as pp\nplan = pp.acceptance_sampling_attributes(N=tamaño_lote, aql=aql)\nprint(plan.summary())\nplan.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : acceptance_sampling_attributes\n  Razón                : Muestreo de aceptación por atributos — norma ANSI/ASQ Z1.4\n  Alternativas         : acceptance_sampling_variables, dodge_romig\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    plan = pp.acceptance_sampling_attributes(N=tamaño_lote, aql=aql)\n    print(plan.summary())\n    plan.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:z19": {
+   "snippet": "import pccpy as pp\nplan = pp.acceptance_sampling_variables(N=tamaño_lote, aql=aql,\n                                        spec_type='one')\nmuestra = ...   # array con las mediciones\ndec = plan.evaluate(muestra, usl=usl)\nprint(dec)      # {'xbar': ..., 's': ..., 'accept': True/False}",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : acceptance_sampling_variables\n  Razón                : Muestreo de aceptación por variables — norma ANSI/ASQ Z1.9\n  Alternativas         : acceptance_sampling_attributes\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    plan = pp.acceptance_sampling_variables(N=tamaño_lote, aql=aql,\n                                            spec_type='one')\n    muestra = ...   # array con las mediciones\n    dec = plan.evaluate(muestra, usl=usl)\n    print(dec)      # {'xbar': ..., 's': ..., 'accept': True/False}\n════════════════════════════════════════════════════════"
+  },
+  "r:zmr": {
+   "snippet": "import pccpy as pp\ncarta = pp.zmr_chart(medidas, partes)\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : zmr_chart\n  Razón                : Corridas cortas — estandariza cada parte con sus propios parámetros\n  Alternativas         : imr_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.zmr_chart(medidas, partes)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  }
+ },
+ "widget": [
+  [
+   "<p style='font-weight:600;font-size:14px;color:#1E293B;margin:0 0 8px 0'>¿Cuál es tu objetivo principal?</p>",
+   "1. Monitorear el proceso (cartas de control)",
+   "2. Analizar la capacidad del proceso",
+   "3. Sistema de medición (MSA / Gage R&R)",
+   "4. Muestreo de aceptación",
+   "5. Análisis exploratorio (normalidad, Pareto)",
+   "6. Intervalos de tolerancia",
+   "7. Carta de corridas o pre-control"
+  ],
+  [
+   "<div style='font-size:11px;color:#64748B;margin-bottom:6px'>¿Cuál es tu objetivo princip</div>",
+   "<p style='font-weight:600;font-size:14px;color:#1E293B;margin:0 0 8px 0'>¿Qué tipo de datos tienes?</p>",
+   "1. Mediciones continuas — una por instante (individual)",
+   "2. Mediciones continuas — en subgrupos (varias por muestra)",
+   "3. Fracción defectuosa  (piezas malas / total muestral)",
+   "4. Número de defectos por unidad inspeccionada",
+   "5. Varias variables simultáneas (multivariado)",
+   "6. Eventos raros (muy poca frecuencia de defectos)",
+   "7. Corridas cortas (piezas con distintas especificaciones)",
+   "← Volver"
+  ],
+  [
+   "<div style='font-size:11px;color:#64748B;margin-bottom:6px'>¿Cuál es tu objetivo princip › ¿Qué tipo de datos tienes?</div>",
+   "<p style='font-weight:600;font-size:14px;color:#1E293B;margin:0 0 8px 0'>¿Necesitas detectar desplazamientos pequeños (< 1.5σ) con mayor rapidez?</p>",
+   "1. No — sensibilidad estándar Shewhart",
+   "2. Sí — desplazamientos graduales sostenidos → EWMA",
+   "3. Sí — cambios abruptos pequeños → CUSUM",
+   "4. Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S",
+   "← Volver"
+  ],
+  [
+   "<div style='font-size:11px;color:#64748B;margin-bottom:6px'>¿Cuál es tu objetivo princip › ¿Qué tipo de datos tienes? › ¿Necesitas detectar desplaza</div>",
+   "<div style='border:1px solid #22C55E;border-radius:8px;padding:14px 16px;background:#F0FDF4'><p style='margin:0 0 4px 0;font-weight:600;color:#1E293B'>✔ Análisis recomendado: <code style='font-size:13px'>imr_chart</code></p><p style='margin:4px 0;font-size:13px;color:#1E293B'>Datos continuos individuales — carta I-MR estándar Shewhart</p><pre style='background:#F8FAFC;border:1px solid #E2E8F0;border-radius:6px;padding:10px;font-size:12px;margin:8px 0 0 0;overflow-x:auto'>import pccpy as pp\ncarta = pp.imr_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\nprint(carta.summary())\ncarta.plot()</pre><p style='margin:4px 0 0 0;font-size:12px;color:#64748B'>Alternativas: ewma_chart, cusum_chart</p></div>",
+   "← Volver"
+  ],
+  [
+   "<div style='font-size:11px;color:#64748B;margin-bottom:6px'>¿Cuál es tu objetivo princip › ¿Qué tipo de datos tienes?</div>",
+   "<p style='font-weight:600;font-size:14px;color:#1E293B;margin:0 0 8px 0'>¿Necesitas detectar desplazamientos pequeños (< 1.5σ) con mayor rapidez?</p>",
+   "1. No — sensibilidad estándar Shewhart",
+   "2. Sí — desplazamientos graduales sostenidos → EWMA",
+   "3. Sí — cambios abruptos pequeños → CUSUM",
+   "4. Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S",
+   "← Volver"
+  ]
+ ],
+ "widget_repr_inicial": "WidgetSession(pendiente)"
+}

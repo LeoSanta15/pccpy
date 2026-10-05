@@ -52,12 +52,12 @@ def plot_pareto(table: pd.DataFrame, *, ax=None):
     ax.bar(x, table["conteo"], color="#1f4e9c")
     ax.set_xticks(x)
     ax.set_xticklabels(table["categoría"].astype(str), rotation=30, ha="right")
-    ax.set_ylabel("Conteo")
+    ax.set_ylabel(tr("Conteo"))
     ax2 = ax.twinx()
     ax2.plot(x, table["acumulado"], "o-", color="#d62728")
     ax2.set_ylim(0, 105)
-    ax2.set_ylabel("Porcentaje acumulado")
-    ax.set_title("Diagrama de Pareto")
+    ax2.set_ylabel(tr("Porcentaje acumulado"))
+    ax.set_title(tr("Diagrama de Pareto"))
     if fig is not None:
         fig.tight_layout()
     return ax.figure

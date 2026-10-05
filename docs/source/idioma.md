@@ -1,9 +1,8 @@
 # Idioma de los mensajes
 
 ```{note}
-**Estado: en desarrollo (fase 2 de 5).** Hoy se traducen al inglés los **mensajes de error y de aviso**, los
-**`summary()`** y las **etiquetas de `to_frame()`** de los resultados. Los textos de los gráficos, el asistente
-(`wizard`) y otras tablas (`pareto`, curvas OC/AOQ, tablas ANOVA) se migran en fases posteriores y siguen en español.
+**Estado: en desarrollo (fase 3 de 5).** Hoy se traducen al inglés los **mensajes de error y de aviso**, los
+**`summary()`** y las **etiquetas de `to_frame()`** de los resultados. También los **gráficos** y el asistente (`wizard`). Otras tablas (`pareto`, curvas OC/AOQ, tablas ANOVA) se migran en fases posteriores y siguen en español.
 ```
 
 pccpy escribe sus textos en **español**, que es el idioma fuente: si un idioma no tiene traducción para un texto,
