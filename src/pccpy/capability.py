@@ -14,6 +14,7 @@ Definiciones (como en Minitab):
 from __future__ import annotations
 
 import math
+import warnings
 from dataclasses import dataclass, field
 
 import numpy as np
@@ -25,6 +26,7 @@ from ._data import _excel_writer, as_1d, to_subgroups
 from ._frames import tabla_estadisticos
 from ._i18n import N_, tr
 from ._sigma import sigma_individuals, sigma_subgroups
+from .bootstrap import bootstrap_ci
 
 NAN = float("nan")
 
@@ -110,6 +112,7 @@ class CapabilityResult:
     ppk_ci: tuple[float, float]
     ci_level: float
     transform: dict[str, float] | None = None
+    ci_method: str = "normal"
     data: np.ndarray = field(default_factory=lambda: np.array([]), repr=False)
 
     @property
@@ -172,6 +175,8 @@ class CapabilityResult:
                 pp=_fmt(o.pp), ppl=_fmt(o.ppl), ppu=_fmt(o.ppu), ppk=_fmt(o.ppk), cpm=_fmt(o.cpm)),
             tr("    IC {ci}% Pp: ({pp_lo}, {pp_hi})   IC {ci}% Ppk: ({ppk_lo}, {ppk_hi})").format(
                 ci=ci, pp_lo=_fmt(o.pp_ci[0]), pp_hi=_fmt(o.pp_ci[1]), ppk_lo=_fmt(o.ppk_ci[0]), ppk_hi=_fmt(o.ppk_ci[1])),
+            *([tr("    (intervalos por bootstrap {metodo}, {n_boot} remuestreos)").format(
+                metodo=o.ci_method.split(":")[1], n_boot=o.ci_method.split(":")[2])] if o.ci_method.startswith("bootstrap:") else []),
             tr("    Z.Bench={z_bench}  Z.LEI={z_lsl}  Z.LES={z_usl}  Nivel Sigma={sigma_level}  DPMO={dpmo:,.0f}").format(
                 z_bench=_fmt(o.z_bench_overall), z_lsl=_fmt(o.z_lsl_overall), z_usl=_fmt(o.z_usl_overall),
                 sigma_level=_fmt(o.sigma_level), dpmo=o.dpmo),
@@ -208,6 +213,30 @@ class CapabilityResult:
         plt.close(fig)
 
 
+def _ci_bootstrap_pp_ppk(x, lsl, usl, ci_level, n_boot, bootstrap_method, seed) -> tuple:
+    """Intervalos bootstrap de Pp y Ppk (sigma general) remuestreando las observaciones; ``nan`` si no aplican."""
+    con_pp = lsl is not None and usl is not None
+
+    def indices(m, axis=-1):
+        mu = m.mean(axis=axis)
+        sd = m.std(axis=axis, ddof=1)
+        with np.errstate(divide="ignore", invalid="ignore"):
+            cols = []
+            if con_pp:
+                cols.append((usl - lsl) / (6 * sd))
+            ppl = (mu - lsl) / (3 * sd) if lsl is not None else np.full_like(mu, np.inf)
+            ppu = (usl - mu) / (3 * sd) if usl is not None else np.full_like(mu, np.inf)
+            cols.append(np.minimum(ppl, ppu))
+        return np.stack(cols, axis=-1)
+
+    r = bootstrap_ci(x, indices, method=bootstrap_method, n_boot=n_boot, confidence=ci_level, seed=seed,
+                     vectorized=True)
+    lo, hi = r.ci
+    if con_pp:
+        return (float(lo[0]), float(hi[0])), (float(lo[1]), float(hi[1]))
+    return (NAN, NAN), (float(lo[0]), float(hi[0]))
+
+
 def capability_analysis(
     data,
     lsl: float | None = None,
@@ -220,6 +249,10 @@ def capability_analysis(
     within_method: str | None = None,
     sigma_within: float | None = None,
     ci_level: float = 0.95,
+    ci_method: str = "normal",
+    n_boot: int = 2000,
+    bootstrap_method: str = "bca",
+    seed: int | None = None,
 ) -> CapabilityResult:
     """Capacidad del proceso para datos con distribución normal.
 
@@ -237,10 +270,18 @@ def capability_analysis(
         Sigma dentro de subgrupos ya conocida (anula la estimación).
     ci_level : float
         Nivel de confianza de los intervalos de Pp y Ppk (por defecto 0.95).
+    ci_method : str
+        ``'normal'`` (por defecto: chi-cuadrado para Pp y Bissell para Ppk, que suponen normalidad) o
+        ``'bootstrap'``: intervalos de Pp y Ppk por remuestreo de las observaciones, sin suponer normalidad
+        (recomendado con datos asimétricos; ver :func:`pccpy.bootstrap_ci`).
+    n_boot, bootstrap_method, seed :
+        Con ``ci_method='bootstrap'``: número de remuestreos (2000), ``'bca'`` o ``'percentile'`` y semilla.
     """
     _check_specs(lsl, usl)
     if not 0 < ci_level < 1:
         raise ValueError(tr("'ci_level' debe estar entre 0 y 1."))
+    if ci_method not in ("normal", "bootstrap"):
+        raise ValueError(tr("'ci_method' debe ser 'normal' o 'bootstrap'."))
 
     arr = np.asarray(data, dtype=float)
     grouped = arr.ndim == 2 or subgroup is not None or (subgroup_size is not None and subgroup_size > 1)
@@ -275,15 +316,18 @@ def capability_analysis(
     alpha = 1 - ci_level
     pp_ci = (NAN, NAN)
     ppk_ci = (NAN, NAN)
-    if not math.isnan(pp):
-        pp_ci = (
-            pp * math.sqrt(stats.chi2.ppf(alpha / 2, n - 1) / (n - 1)),
-            pp * math.sqrt(stats.chi2.ppf(1 - alpha / 2, n - 1) / (n - 1)),
-        )
-    if not math.isnan(ppk):
-        zc = stats.norm.ppf(1 - alpha / 2)
-        half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
-        ppk_ci = (ppk - half, ppk + half)
+    if ci_method == "bootstrap":
+        pp_ci, ppk_ci = _ci_bootstrap_pp_ppk(x, lsl, usl, ci_level, n_boot, bootstrap_method, seed)
+    else:
+        if not math.isnan(pp):
+            pp_ci = (
+                pp * math.sqrt(stats.chi2.ppf(alpha / 2, n - 1) / (n - 1)),
+                pp * math.sqrt(stats.chi2.ppf(1 - alpha / 2, n - 1) / (n - 1)),
+            )
+        if not math.isnan(ppk):
+            zc = stats.norm.ppf(1 - alpha / 2)
+            half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
+            ppk_ci = (ppk - half, ppk + half)
 
     ppm_w = _expected_ppm(mean, sw, lsl, usl)
     ppm_o = _expected_ppm(mean, so, lsl, usl)
@@ -297,6 +341,7 @@ def capability_analysis(
         z_usl_overall=(usl - mean) / so_safe if usl is not None else NAN,
         ppm_obs=_observed_ppm(x, lsl, usl), ppm_within=ppm_w, ppm_overall=ppm_o,
         pp_ci=pp_ci, ppk_ci=ppk_ci, ci_level=ci_level, data=x,
+        ci_method=f"bootstrap:{bootstrap_method}:{n_boot}" if ci_method == "bootstrap" else "normal",
     )
 
 
@@ -467,6 +512,10 @@ class NonNormalCapabilityResult:
     ppm_obs: tuple[float, float, float]
     ppm_expected: tuple[float, float, float]
     data: np.ndarray = field(default_factory=lambda: np.array([]), repr=False)
+    pp_ci: tuple[float, float] = (NAN, NAN)
+    ppk_ci: tuple[float, float] = (NAN, NAN)
+    ci_level: float = 0.95
+    ci_method: str = "none"
 
     @property
     def frozen(self):
@@ -483,6 +532,10 @@ class NonNormalCapabilityResult:
                 low=o.x_low, median=o.x_median, high=o.x_high),
             tr("  Pp={pp}  PPL={ppl}  PPU={ppu}  Ppk={ppk}").format(
                 pp=_fmt(o.pp), ppl=_fmt(o.ppl), ppu=_fmt(o.ppu), ppk=_fmt(o.ppk)),
+            *([tr("  IC {ci}% Pp: ({pp_lo}, {pp_hi})   IC {ci}% Ppk: ({ppk_lo}, {ppk_hi})  [bootstrap {metodo}, {n_boot} remuestreos]").format(
+                ci=round(o.ci_level * 100), pp_lo=_fmt(o.pp_ci[0]), pp_hi=_fmt(o.pp_ci[1]), ppk_lo=_fmt(o.ppk_ci[0]),
+                ppk_hi=_fmt(o.ppk_ci[1]), metodo=o.ci_method.split(":")[1], n_boot=o.ci_method.split(":")[2])]
+              if o.ci_method.startswith("bootstrap:") else []),
             tr("  Desempeño (PPM):            < LEI       > LES      Total"),
             f"    {observado:<18}{_fmt(o.ppm_obs[0]):>10}{_fmt(o.ppm_obs[1]):>12}{_fmt(o.ppm_obs[2]):>11}",
             f"    {esperado:<18}{_fmt(o.ppm_expected[0]):>10}{_fmt(o.ppm_expected[1]):>12}{_fmt(o.ppm_expected[2]):>11}",
@@ -507,6 +560,10 @@ class NonNormalCapabilityResult:
             ("ppm_exp_above_usl", N_("PPM esp > LES"), o.ppm_expected[1]),
             ("ppm_exp_total", N_("PPM esp total"), o.ppm_expected[2]),
         ]
+        if o.ci_method.startswith("bootstrap:"):
+            rows += [("pp_lower", N_("Pp, límite inferior"), o.pp_ci[0]), ("pp_upper", N_("Pp, límite superior"), o.pp_ci[1]),
+                     ("ppk_lower", N_("Ppk, límite inferior"), o.ppk_ci[0]),
+                     ("ppk_upper", N_("Ppk, límite superior"), o.ppk_ci[1])]
         return tabla_estadisticos(rows, stable)
 
     def to_excel(self, path) -> None:
@@ -534,6 +591,38 @@ class NonNormalCapabilityResult:
         plt.close(fig)
 
 
+def _indices_percentiles(frozen, lsl, usl) -> tuple:
+    """Percentiles 0,135 %, 50 %, 99,865 % de la distribución ajustada y los índices Pp, PPL, PPU y Ppk."""
+    p_lo, p_hi = stats.norm.cdf(-3), stats.norm.cdf(3)
+    x_lo, x_med, x_hi = (float(frozen.ppf(q)) for q in (p_lo, 0.5, p_hi))
+    pp = (usl - lsl) / (x_hi - x_lo) if lsl is not None and usl is not None else NAN
+    ppu = (usl - x_med) / (x_hi - x_med) if usl is not None else NAN
+    ppl = (x_med - lsl) / (x_med - x_lo) if lsl is not None else NAN
+    ppk = float(np.nanmin([ppl, ppu]))
+    return x_lo, x_med, x_hi, pp, ppl, ppu, ppk
+
+
+def _ci_bootstrap_nonnormal(x, dist, fit_kw, lsl, usl, ci_level, n_boot, bootstrap_method, seed) -> tuple:
+    """Intervalos bootstrap de Pp y Ppk re-ajustando la distribución en cada remuestreo."""
+    con_pp = lsl is not None and usl is not None
+
+    def indices(m):
+        try:
+            with warnings.catch_warnings():
+                warnings.simplefilter("ignore")
+                frozen = dist(*dist.fit(m, **fit_kw))
+                _, _, _, pp, _, _, ppk = _indices_percentiles(frozen, lsl, usl)
+        except Exception:  # noqa: BLE001 - un ajuste que falla en un remuestreo se descarta (NaN)
+            return np.array([NAN, NAN] if con_pp else [NAN])
+        return np.array([pp, ppk] if con_pp else [ppk])
+
+    r = bootstrap_ci(x, indices, method=bootstrap_method, n_boot=n_boot, confidence=ci_level, seed=seed)
+    lo, hi = r.ci
+    if con_pp:
+        return (float(lo[0]), float(hi[0])), (float(lo[1]), float(hi[1]))
+    return (NAN, NAN), (float(lo[0]), float(hi[0]))
+
+
 def capability_nonnormal(
     data,
     lsl: float | None = None,
@@ -541,6 +630,11 @@ def capability_nonnormal(
     target: float | None = None,
     *,
     distribution: str = "weibull",
+    ci_method: str = "none",
+    ci_level: float = 0.95,
+    n_boot: int = 1000,
+    bootstrap_method: str = "percentile",
+    seed: int | None = None,
 ) -> NonNormalCapabilityResult:
     """Capacidad para datos no normales por percentiles de la distribución ajustada.
 
@@ -550,8 +644,18 @@ def capability_nonnormal(
 
     Pp = (LES - LEI) / (X99.865 - X0.135); PPU = (LES - X50) / (X99.865 - X50);
     PPL = (X50 - LEI) / (X50 - X0.135); Ppk = min(PPL, PPU).
+
+    Con ``ci_method='bootstrap'`` se añaden intervalos de Pp y Ppk: en cada remuestreo de las observaciones se
+    **vuelve a ajustar** la distribución y se recalculan los índices, de modo que el intervalo recoge también la
+    incertidumbre del ajuste. Es más lento que con datos normales (un ajuste por remuestreo): por eso ``n_boot``
+    es 1000 y el método ``'percentile'`` por defecto (``'bca'`` hace además un ajuste por observación). Con
+    ``ci_method='none'`` (por defecto) no se calcula ningún intervalo.
     """
     _check_specs(lsl, usl)
+    if ci_method not in ("none", "bootstrap"):
+        raise ValueError(tr("'ci_method' debe ser 'none' o 'bootstrap'."))
+    if not 0 < ci_level < 1:
+        raise ValueError(tr("'ci_level' debe estar entre 0 y 1."))
     key = distribution.lower()
     if key not in _DISTS:
         raise ValueError(tr(
@@ -570,12 +674,11 @@ def capability_nonnormal(
     n_free = len(params) - len(fit_kw)
     aic = 2 * n_free - 2 * loglik
 
-    p_lo, p_hi = stats.norm.cdf(-3), stats.norm.cdf(3)
-    x_lo, x_med, x_hi = (float(frozen.ppf(q)) for q in (p_lo, 0.5, p_hi))
-    pp = (usl - lsl) / (x_hi - x_lo) if lsl is not None and usl is not None else NAN
-    ppu = (usl - x_med) / (x_hi - x_med) if usl is not None else NAN
-    ppl = (x_med - lsl) / (x_med - x_lo) if lsl is not None else NAN
-    ppk = float(np.nanmin([ppl, ppu]))
+    x_lo, x_med, x_hi, pp, ppl, ppu, ppk = _indices_percentiles(frozen, lsl, usl)
+
+    pp_ci = ppk_ci = (NAN, NAN)
+    if ci_method == "bootstrap":
+        pp_ci, ppk_ci = _ci_bootstrap_nonnormal(x, dist, fit_kw, lsl, usl, ci_level, n_boot, bootstrap_method, seed)
 
     e_lo = 1e6 * float(frozen.cdf(lsl)) if lsl is not None else NAN
     e_hi = 1e6 * float(frozen.sf(usl)) if usl is not None else NAN
@@ -585,4 +688,6 @@ def capability_nonnormal(
         x_low=x_lo, x_median=x_med, x_high=x_hi, pp=pp, ppl=ppl, ppu=ppu, ppk=ppk,
         ppm_obs=_observed_ppm(x, lsl, usl),
         ppm_expected=(e_lo, e_hi, float(np.nansum([e_lo, e_hi]))), data=x,
+        pp_ci=pp_ci, ppk_ci=ppk_ci, ci_level=ci_level,
+        ci_method=f"bootstrap:{bootstrap_method}:{n_boot}" if ci_method == "bootstrap" else "none",
     )

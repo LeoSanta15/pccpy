@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 20:40+0000\n"
+"POT-Creation-Date: 2026-10-08 20:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -416,6 +416,10 @@ msgid ""
 msgstr ""
 
 #, python-brace-format
+msgid "    (intervalos por bootstrap {metodo}, {n_boot} remuestreos)"
+msgstr ""
+
+#, python-brace-format
 msgid "    Cp={cp}  CPL={cpl}  CPU={cpu}  Cpk={cpk}"
 msgstr ""
 
@@ -630,6 +634,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Gage R&R            {var:10.5f}   {pct:6.2f}%"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  IC {ci}% Pp: ({pp_lo}, {pp_hi})   IC {ci}% Ppk: ({ppk_lo}, {ppk_hi})  "
+"[bootstrap {metodo}, {n_boot} remuestreos]"
 msgstr ""
 
 #, python-brace-format
@@ -953,6 +963,12 @@ msgid "'categories' y 'counts' deben tener la misma longitud."
 msgstr ""
 
 msgid "'ci_level' debe estar entre 0 y 1."
+msgstr ""
+
+msgid "'ci_method' debe ser 'none' o 'bootstrap'."
+msgstr ""
+
+msgid "'ci_method' debe ser 'normal' o 'bootstrap'."
 msgstr ""
 
 msgid "'confidence' debe estar en (0, 1)."
@@ -1837,6 +1853,11 @@ msgstr ""
 msgid "Intervalo de tolerancia unilateral superior — P(X ≤ LS) ≥ coverage"
 msgstr ""
 
+msgid ""
+"Intervalos bootstrap de Pp y Ppk frente a un cálculo manual con los "
+"mismos remuestreos"
+msgstr ""
+
 msgid "Intervalos de tolerancia"
 msgstr ""
 
@@ -2483,7 +2504,19 @@ msgstr ""
 msgid "Pp"
 msgstr ""
 
+msgid "Pp, límite inferior"
+msgstr ""
+
+msgid "Pp, límite superior"
+msgstr ""
+
 msgid "Ppk"
+msgstr ""
+
+msgid "Ppk, límite inferior"
+msgstr ""
+
+msgid "Ppk, límite superior"
 msgstr ""
 
 #, python-brace-format

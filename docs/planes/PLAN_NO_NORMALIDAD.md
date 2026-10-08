@@ -25,7 +25,7 @@
 | Fase | Contenido | Rama | PR | Estado |
 |---|---|---|---|---|
 | F1 | Núcleo de bootstrap (`bootstrap_ci`, percentil y BCa) | `feat/bootstrap-nucleo` | _(ver PR de la rama)_ | en revisión |
-| F2 | Intervalos de capacidad por bootstrap (`capability_analysis`, `capability_boxcox`, `capability_nonnormal`) | | | pendiente |
+| F2 | Intervalos de capacidad por bootstrap (`capability_analysis`, `capability_boxcox`, `capability_nonnormal`) | `feat/bootstrap-capacidad` | _(ver PR de la rama)_ | en revisión |
 | F5 | `diagnose()` con asimetría, curtosis y positividad; arreglar la condición redundante | | | pendiente |
 | F3 | Transformaciones: Yeo-Johnson y familia de Johnson; comprobación de normalidad posterior | | | pendiente |
 | F4 | `transform=` en cartas de variables (escala original por defecto) | | | pendiente |

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 20:40+0000\n"
+"POT-Creation-Date: 2026-10-08 20:49+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -637,6 +637,10 @@ msgstr ""
 "Achieved conf.={v:.2f}%"
 
 #, python-brace-format
+msgid "    (intervalos por bootstrap {metodo}, {n_boot} remuestreos)"
+msgstr "    (bootstrap {metodo} intervals, {n_boot} resamples)"
+
+#, python-brace-format
 msgid "    Cp={cp}  CPL={cpl}  CPU={cpu}  Cpk={cpk}"
 msgstr "    Cp={cp}  CPL={cpl}  CPU={cpu}  Cpk={cpk}"
 
@@ -842,6 +846,10 @@ msgstr "  Function : {function}"
 #, python-brace-format
 msgid "  Gage R&R            {var:10.5f}   {pct:6.2f}%"
 msgstr "  Gage R&R            {var:10.5f}   {pct:6.2f}%"
+
+#, python-brace-format
+msgid "  IC {ci}% Pp: ({pp_lo}, {pp_hi})   IC {ci}% Ppk: ({ppk_lo}, {ppk_hi})  [bootstrap {metodo}, {n_boot} remuestreos]"
+msgstr "  {ci}% CI Pp: ({pp_lo}, {pp_hi})   {ci}% CI Ppk: ({ppk_lo}, {ppk_hi})  [bootstrap {metodo}, {n_boot} resamples]"
 
 #, python-brace-format
 msgid "  K = {k}  (variación de estudio = K·σ)"
@@ -1162,6 +1170,12 @@ msgstr "'categories' and 'counts' must have the same length."
 
 msgid "'ci_level' debe estar entre 0 y 1."
 msgstr "'ci_level' must be between 0 and 1."
+
+msgid "'ci_method' debe ser 'none' o 'bootstrap'."
+msgstr "'ci_method' must be 'none' or 'bootstrap'."
+
+msgid "'ci_method' debe ser 'normal' o 'bootstrap'."
+msgstr "'ci_method' must be 'normal' or 'bootstrap'."
 
 msgid "'confidence' debe estar en (0, 1)."
 msgstr "'confidence' must be in (0, 1)."
@@ -2040,6 +2054,9 @@ msgstr "One-sided lower tolerance interval — P(X ≥ LL) ≥ coverage"
 msgid "Intervalo de tolerancia unilateral superior — P(X ≤ LS) ≥ coverage"
 msgstr "One-sided upper tolerance interval — P(X ≤ UL) ≥ coverage"
 
+msgid "Intervalos bootstrap de Pp y Ppk frente a un cálculo manual con los mismos remuestreos"
+msgstr "Bootstrap intervals of Pp and Ppk versus a manual calculation with the same resamples"
+
 msgid "Intervalos de tolerancia"
 msgstr "Tolerance intervals"
 
@@ -2675,8 +2692,20 @@ msgstr "Cumulative percent"
 msgid "Pp"
 msgstr "Pp"
 
+msgid "Pp, límite inferior"
+msgstr "Pp, lower limit"
+
+msgid "Pp, límite superior"
+msgstr "Pp, upper limit"
+
 msgid "Ppk"
 msgstr "Ppk"
+
+msgid "Ppk, límite inferior"
+msgstr "Ppk, lower limit"
+
+msgid "Ppk, límite superior"
+msgstr "Ppk, upper limit"
 
 #, python-brace-format
 msgid "Pre-control  N={n}  LEI={lsl:.5g}  LES={usl:.5g}  Centro={center:.5g}"
