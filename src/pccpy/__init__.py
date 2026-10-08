@@ -74,6 +74,7 @@ from .multivariate import (
     t2_chart,
 )
 from .normality import NormalityResult, normality_test
+from .outliers import OutlierTestResult, outlier_test
 from .phase1 import PhaseOneIteration, PhaseOneResult, phase_one
 from .plotting import (
     capability_sixpack,
@@ -112,6 +113,7 @@ __all__ = [
     "MultivariateChart",
     "NonNormalCapabilityResult",
     "NormalityResult",
+    "OutlierTestResult",
     "Panel",
     "PhaseOneIteration",
     "PhaseOneResult",
@@ -176,6 +178,7 @@ __all__ = [
     "mewma_limit",
     "normality_test",
     "np_chart",
+    "outlier_test",
     "p_chart",
     "pareto",
     "phase_one",

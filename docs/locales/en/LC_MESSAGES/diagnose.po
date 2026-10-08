@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:01+0000\n"
+"POT-Creation-Date: 2026-10-08 22:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -128,6 +128,46 @@ msgstr "`'shape'`: non-normal without marked skewness (heavy tails, several mode
 #, python-format
 msgid "La causa es una heurística: en simulación acierta ≈ 98 % con datos lognormales y ≈ 96 % con una normal contaminada con tres atípicos lejanos; con asimetría muy leve puede confundirla con atípicos."
 msgstr "The cause is a heuristic: in simulation it is right ≈ 98 % of the time with lognormal data and ≈ 96 % with a normal contaminated with three distant outliers; with very mild skewness it can confuse it with outliers."
+
+msgid "Pruebas formales de atípicos"
+msgstr "Formal outlier tests"
+
+msgid "`diagnose` marca los atípicos con la regla de Tukey (IQR × 1,5), que es descriptiva. Para una prueba de hipótesis usa `outlier_test`:"
+msgstr "`diagnose` flags outliers with Tukey's rule (IQR × 1.5), which is descriptive. For a hypothesis test use `outlier_test`:"
+
+msgid "Método"
+msgstr "Method"
+
+msgid "Contrasta"
+msgstr "Tests"
+
+msgid "Cuándo"
+msgstr "When"
+
+msgid "`\"grubbs\"`"
+msgstr "`\"grubbs\"`"
+
+msgid "un solo atípico"
+msgstr "a single outlier"
+
+msgid "muestras pequeñas con a lo sumo un punto sospechoso"
+msgstr "small samples with at most one suspicious point"
+
+msgid "`\"esd\"`"
+msgstr "`\"esd\"`"
+
+msgid "hasta `max_outliers` (por defecto `min(10, (n − 1) // 2)`)"
+msgstr "up to `max_outliers` (default `min(10, (n − 1) // 2)`)"
+
+msgid "varios sospechosos; evita que se enmascaren entre sí (conviene `n ≥ 25`)"
+msgstr "several suspicious points; avoids them masking each other (`n ≥ 25` is advisable)"
+
+#, python-format
+msgid "Los valores críticos se verificaron contra la tabla publicada de Grubbs y contra el ejemplo de Rosner (1983) del manual del NIST. Con datos normales Grubbs marca ≈ 5 % de las muestras, el nivel nominal."
+msgstr "The critical values were verified against the published Grubbs table and against Rosner's (1983) example from the NIST handbook. With normal data Grubbs flags ≈ 5 % of the samples, the nominal level."
+
+msgid "Ambas pruebas **suponen que los datos sin los atípicos son normales** (el resultado incluye el valor p de Shapiro-Wilk de los datos restantes y avisa si es < 0,05). Declarar un punto atípico **no justifica eliminarlo**: investiga su origen. Con datos de proceso ordenados en el tiempo, usa las cartas de control y sus pruebas de causas especiales. No se recomienda elegir el método de análisis posterior según el resultado de esta prueba: distorsiona la cobertura de los intervalos."
+msgstr "Both tests **assume the data without the outliers are normal** (the result includes the Shapiro-Wilk p-value of the remaining data and warns if it is < 0.05). Declaring a point an outlier **does not justify deleting it**: investigate its origin. With process data ordered in time, use control charts and their special-cause tests. Choosing the subsequent analysis method according to the result of this test is not recommended: it distorts the coverage of the intervals."
 
 msgid "Tendencia"
 msgstr "Trend"

@@ -757,6 +757,18 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Pruebas de atípicos (Grubbs y ESD generalizada)
+
+```python
+r = pp.outlier_test(x)                    # Grubbs: un atípico
+r = pp.outlier_test(x, method="esd")      # ESD de Rosner: varios, sin enmascaramiento
+r.outlier_indices, r.outlier_values, r.summary()
+```
+
+Suponen datos normales (sin los atípicos) y **no justifican eliminar un dato**: investiga su origen. Con datos de proceso en el tiempo usa las cartas de control. Verificadas contra la tabla publicada de Grubbs y el ejemplo de Rosner del manual del NIST.
+
+---
+
 ### Datos asimétricos: guía rápida
 
 | Quiero… | Usa |

@@ -417,6 +417,25 @@ def _resumen_clasico():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("atipicos", N_("Pruebas de atípicos: Grubbs frente a la tabla publicada y ESD generalizada frente al ejemplo de Rosner"),
+               "Tabla de valores críticos de Grubbs (bilateral, α = 0,05); ejemplo de Rosner (1983) del manual del NIST", 2e-3)
+def _atipicos():
+    from .outliers import outlier_test
+
+    rosner = np.array([
+        -0.25, 0.68, 0.94, 1.15, 1.20, 1.26, 1.26, 1.34, 1.38, 1.43, 1.49, 1.49, 1.55, 1.56, 1.58, 1.65, 1.69, 1.70,
+        1.76, 1.77, 1.81, 1.91, 1.94, 1.96, 1.99, 2.06, 2.09, 2.10, 2.14, 2.15, 2.23, 2.23, 2.26, 2.35, 2.37, 2.40,
+        2.47, 2.54, 2.62, 2.64, 2.90, 2.92, 2.92, 2.93, 3.21, 3.26, 3.30, 3.59, 3.68, 4.30, 4.64, 5.34, 5.42, 6.01])
+    estadisticos = [3.118, 2.942, 3.179, 2.810, 2.815, 2.848, 2.279, 2.310, 2.101, 2.067]
+    criticos = [3.158, 3.151, 3.143, 3.136, 3.128, 3.120, 3.111, 3.103, 3.094, 3.085]
+    tabla = {3: 1.153, 5: 1.715, 10: 2.290, 20: 2.709, 30: 2.908}
+    r = outlier_test(rosner, method="esd")
+    grubbs = [outlier_test(np.random.default_rng(n).normal(size=n)).steps.iloc[0]["critical"] for n in tabla]
+    esperado = np.array([*tabla.values(), *estadisticos, *criticos, 3.0])
+    obtenido = np.array([*grubbs, *r.steps["statistic"], *r.steps["critical"], float(r.outlier_indices.size)])
+    return esperado, obtenido
+
+
 # ── 7. sistemas de medición ──────────────────────────────────────────────────
 @_comprobacion("gage-rr-anova", N_("Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con interacción)"),
                "Cuadrados medios esperados del ANOVA cruzado; AIAG MSA 4ª ed.", 1e-9)

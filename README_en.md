@@ -760,6 +760,18 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Outlier tests (Grubbs and generalized ESD)
+
+```python
+r = pp.outlier_test(x)                    # Grubbs: one outlier
+r = pp.outlier_test(x, method="esd")      # Rosner's ESD: several, without masking
+r.outlier_indices, r.outlier_values, r.summary()
+```
+
+They assume normal data (without the outliers) and **do not justify deleting a data point**: investigate its origin. With process data over time use control charts. Verified against the published Grubbs table and Rosner's example from the NIST handbook.
+
+---
+
 ### Skewed data: quick guide
 
 | I want to… | Use |
