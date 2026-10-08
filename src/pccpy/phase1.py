@@ -1,8 +1,10 @@
 """Fase I iterativa: excluir los puntos fuera de control, recalcular los límites y repetir hasta que el proceso quede estable."""
 from __future__ import annotations
 
+import json
 import warnings
 from dataclasses import dataclass, field
+from pathlib import Path
 from typing import Any, Callable
 
 import numpy as np
@@ -23,7 +25,7 @@ _COLUMNAS_HISTORIAL = {
 _COLUMNAS_TRANSFORMACION = {"transformation": N_("transformación"), "lambda": N_("lambda")}
 # argumentos que describen los datos de la Fase I (no se reutilizan con los datos nuevos de la Fase II)
 _ARGUMENTOS_DE_DATOS = ("subgroup_size", "subgroup", "value", "n")
-MOTIVOS = ("in_control", "max_iterations", "min_points", "too_many_excluded", "transform_failed")
+MOTIVOS = ("in_control", "max_iterations", "min_points", "too_many_excluded", "transform_failed", "external")
 _CARTAS_CON_TRANSFORMACION = ("imr_chart", "xbar_r_chart", "xbar_s_chart")
 _CAMBIO_LAMBDA_AVISO = 0.5  # cambio de lambda entre la primera y la última pasada que se considera inestable
 
@@ -53,6 +55,24 @@ def _a_json(valor, ruta: str, finito: bool = False):
         return {str(k): _a_json(v, f"{ruta}[{k!r}]") for k, v in valor.items()}
     raise ValueError(tr("{ruta} ({tipo}) no se puede guardar en JSON; pásalo de nuevo a phase2() en lugar de guardarlo.").format(
         ruta=ruta, tipo=type(valor).__name__))
+
+
+def _validar_limites(funcion: Callable, limites: dict) -> dict:
+    """Límites como ``float`` si sus claves corresponden a la carta y son finitos; si no, ``ValueError``."""
+    esperadas = _CLAVES_DE_LIMITES[funcion.__name__]
+    try:
+        valores = {k: float(v) for k, v in limites.items()}
+    except (TypeError, ValueError) as e:
+        raise ValueError(tr("Los límites deben ser números: {error}").format(error=e)) from e
+    if set(valores) != esperadas or not all(np.isfinite(v) for v in valores.values()):
+        raise ValueError(tr("Los límites guardados ({got}) no corresponden a la carta {chart}: se esperaban {expected}.").format(
+            got=", ".join(sorted(valores)) or "—", chart=funcion.__name__, expected=", ".join(sorted(esperadas))))
+    return valores
+
+
+def _validar_transformacion(funcion: Callable, info: dict | None) -> None:
+    if info is not None and funcion.__name__ not in _CARTAS_CON_TRANSFORMACION:
+        raise ValueError(tr("'transform' solo se admite en {charts}.").format(charts=", ".join(_CARTAS_CON_TRANSFORMACION)))
 
 
 def _de_json(valor):
@@ -116,7 +136,7 @@ class PhaseOneResult:
         ``True`` si la última carta no tiene ninguna señal en los paneles que cuentan (``chart.in_control`` mira todos
         los paneles).
     reason : str
-        ``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'`` o ``'transform_failed'``.
+        ``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'``, ``'transform_failed'`` o ``'external'`` (límites dados con :meth:`from_limits`).
     limits : dict
         Argumentos de la función de la carta que congelan los límites (``mu``/``sigma``, ``p``, ``c`` o ``u``): es lo
         que :meth:`phase2` aplica a los datos nuevos.
@@ -169,16 +189,17 @@ class PhaseOneResult:
     def summary(self) -> str:
         """Resumen en texto: puntos excluidos, límites finales y estado de cada pasada."""
         n_excl = int(self.excluded.size)
-        lines = [
-            tr("Fase I: carta {kind}").format(kind=self._nombre_de_la_carta()),
-            tr("  Puntos: {n} → {kept} (excluidos: {excluded})").format(
-                n=self.n_original, kept=int(self.kept.size), excluded=n_excl),
-        ]
-        if self.converged:
-            lines.append(tr("  Resultado: el proceso quedó bajo control tras {iters} pasada(s)").format(
-                iters=len(self.history) - 1))
+        lines = [tr("Fase I: carta {kind}").format(kind=self._nombre_de_la_carta())]
+        if self.reason == "external":
+            lines.append(tr("  Límites dados por el usuario (no se calcularon con phase_one)"))
         else:
-            lines.append(tr("  Resultado: NO convergió ({reason})").format(reason=_describir_motivo(self.reason)))
+            lines.append(tr("  Puntos: {n} → {kept} (excluidos: {excluded})").format(
+                n=self.n_original, kept=int(self.kept.size), excluded=n_excl))
+            if self.converged:
+                lines.append(tr("  Resultado: el proceso quedó bajo control tras {iters} pasada(s)").format(
+                    iters=len(self.history) - 1))
+            else:
+                lines.append(tr("  Resultado: NO convergió ({reason})").format(reason=_describir_motivo(self.reason)))
         restantes = [] if self.chart is None else [pnl.name for pnl in self.chart.panels if pnl.flagged.size]
         if self.converged and restantes:
             lines.append(tr("  Aviso: quedan señales en otros paneles ({panels}); no se excluyeron por no contar para la Fase I").format(
@@ -266,14 +287,9 @@ class PhaseOneResult:
         if funcion is None:
             raise ValueError(tr("La Fase I no está soportada para esta carta; usa {charts}.").format(
                 charts=", ".join(sorted(funciones))))
-        limites = {k: float(v) for k, v in datos.get("limits", {}).items()}
-        if set(limites) != _CLAVES_DE_LIMITES[funcion.__name__] or not all(np.isfinite(v) for v in limites.values()):
-            raise ValueError(tr("Los límites guardados ({got}) no corresponden a la carta {chart}: se esperaban {expected}.").format(
-                got=", ".join(sorted(limites)) or "—", chart=funcion.__name__,
-                expected=", ".join(sorted(_CLAVES_DE_LIMITES[funcion.__name__]))))
+        limites = _validar_limites(funcion, datos.get("limits", {}))
         info = datos.get("transformation")
-        if info is not None and funcion.__name__ not in _CARTAS_CON_TRANSFORMACION:
-            raise ValueError(tr("'transform' solo se admite en {charts}.").format(charts=", ".join(_CARTAS_CON_TRANSFORMACION)))
+        _validar_transformacion(funcion, info)
         transformacion = None if info is None else Transformation.from_info(info)
         historial = [PhaseOneIteration(
             iteration=h["iteration"], n_points=h["n_points"], flagged=np.asarray(h["flagged"], dtype=int),
@@ -287,6 +303,60 @@ class PhaseOneResult:
             reason=datos.get("reason", "in_control"), n_original=int(datos.get("n_original", 0)), limits=limites,
             transformation=transformacion, _funcion=funcion,
             _argumentos={k: _de_json(v) for k, v in datos.get("arguments", {}).items()})
+
+    def to_json(self, path=None, *, indent: int | None = 2) -> str:
+        """:meth:`to_dict` como texto JSON; con ``path`` lo escribe además en ese archivo (UTF-8) y devuelve el texto."""
+        texto = json.dumps(self.to_dict(), indent=indent, ensure_ascii=False, allow_nan=False)
+        if path is not None:
+            Path(path).write_text(texto + "\n", encoding="utf-8")
+        return texto
+
+    @classmethod
+    def from_json(cls, source) -> PhaseOneResult:
+        """Restaura un resultado desde texto JSON o desde la ruta de un archivo guardado con :meth:`to_json`.
+
+        ``source`` es una ruta (``str`` o ``pathlib.Path``) o el propio texto JSON (un ``str`` que empieza por ``{``).
+        """
+        if isinstance(source, str) and source.lstrip().startswith("{"):
+            texto = source
+        else:
+            try:
+                texto = Path(source).read_text(encoding="utf-8")
+            except OSError as e:
+                raise ValueError(tr("No se pudo leer '{source}': {error}").format(source=source, error=e)) from e
+        try:
+            datos = json.loads(texto)
+        except json.JSONDecodeError as e:
+            raise ValueError(tr("El texto no es un JSON válido: {error}").format(error=e)) from e
+        return cls.from_dict(datos)
+
+    @classmethod
+    def from_limits(cls, chart: Callable[..., ControlChart], *, mu=None, sigma=None, p=None, c=None, u=None,
+                    transform: Transformation | None = None, **kwargs: Any) -> PhaseOneResult:
+        """Resultado de Fase I a partir de límites que ya tienes, sin ejecutar :func:`phase_one`.
+
+        Sirve para pasar a la Fase II con parámetros calculados en otra parte (otra sesión, otro programa, un estudio
+        anterior). Los límites son los de la carta: ``mu`` y ``sigma`` en ``imr_chart``, ``xbar_r_chart`` y
+        ``xbar_s_chart``; ``p`` en ``p_chart`` y ``np_chart`` (proporción, no el número esperado); ``c`` en ``c_chart``;
+        ``u`` en ``u_chart``. Con ``transform`` (una ``Transformation`` ya ajustada, no un nombre) ``mu`` y ``sigma`` están
+        en la escala transformada. El resto de argumentos (``tests=…``, ``sigma_method=…``) se reutilizan en
+        :meth:`phase2`. El resultado no tiene historial ni puntos excluidos (``reason='external'``).
+        """
+        if chart not in _TIPOS:
+            raise ValueError(tr("La Fase I no está soportada para esta carta; usa {charts}.").format(
+                charts=", ".join(sorted(f.__name__ for f in _TIPOS))))
+        dados = {k: v for k, v in (("mu", mu), ("sigma", sigma), ("p", p), ("c", c), ("u", u)) if v is not None}
+        limites = _validar_limites(chart, dados)
+        if sigma is not None and limites["sigma"] <= 0:
+            raise ValueError(tr("'sigma' debe ser positiva."))
+        if transform is not None:
+            if not isinstance(transform, Transformation):
+                raise ValueError(tr("Con from_limits() 'transform' debe ser una Transformation ya ajustada (no un nombre)."))
+            _validar_transformacion(chart, transform.info())
+        return cls(
+            chart=None, history=[], excluded=np.array([], dtype=int), kept=np.array([], dtype=int), converged=True,
+            reason="external", n_original=0, limits=limites, transformation=transform, _funcion=chart,
+            _argumentos=argumentos_fase2(kwargs))
 
     def plot(self, **kwargs):
         """Dibuja la carta final de la Fase I. Ver :func:`pccpy.plotting.plot_control_chart`."""

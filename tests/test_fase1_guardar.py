@@ -107,3 +107,74 @@ def test_from_dict_valida_esquema_carta_y_limites():
     with pytest.raises(ValueError, match="transform"):
         pp.PhaseOneResult.from_dict({**d, "chart": "c_chart", "limits": {"c": 5.0},
                                      "transformation": {"method": "boxcox", "lambda": 0.5}})
+
+
+# ── JSON ─────────────────────────────────────────────────────────────────────
+
+def test_to_json_y_from_json_con_texto_y_con_archivo(tmp_path):
+    x = np.random.default_rng(7).gamma(4.0, 2.0, 90) + 1.0
+    r = pp.phase_one(pp.imr_chart, x, transform="yeo-johnson", tests=(1,))
+    destino = tmp_path / "fase1.json"
+    texto = r.to_json(destino)
+    assert json.loads(destino.read_text(encoding="utf-8")) == json.loads(texto) == r.to_dict()
+    nuevos = np.random.default_rng(2).gamma(4.0, 2.0, 20) + 1.0
+    for fuente in (texto, destino, str(destino)):
+        _igual(r.phase2(nuevos), pp.PhaseOneResult.from_json(fuente).phase2(nuevos))
+
+
+def test_from_json_con_errores_claros(tmp_path):
+    with pytest.raises(ValueError, match="No se pudo leer"):
+        pp.PhaseOneResult.from_json(tmp_path / "no_existe.json")
+    with pytest.raises(ValueError, match="JSON válido"):
+        pp.PhaseOneResult.from_json("{no es json")
+
+
+# ── from_limits ──────────────────────────────────────────────────────────────
+
+def test_from_limits_equivale_a_phase_one_en_i_mr():
+    x = np.random.default_rng(1).normal(50, 2, 60)
+    r = pp.phase_one(pp.imr_chart, x, tests=(1, 2))
+    externo = pp.PhaseOneResult.from_limits(pp.imr_chart, mu=r.limits["mu"], sigma=r.limits["sigma"], tests=(1, 2))
+    nuevos = np.random.default_rng(2).normal(50, 2, 30)
+    _igual(r.phase2(nuevos), externo.phase2(nuevos))
+    assert externo.reason == "external" and externo.chart is None and externo.history == []
+    assert "no se calcularon con phase_one" in externo.summary() and "mu=" in externo.summary()
+
+
+def test_from_limits_con_transformacion_fija_y_ida_y_vuelta_json():
+    x = np.random.default_rng(7).gamma(4.0, 2.0, 90) + 1.0
+    r = pp.phase_one(pp.imr_chart, x, transform="boxcox", tests=(1,))
+    externo = pp.PhaseOneResult.from_limits(pp.imr_chart, mu=r.limits["mu"], sigma=r.limits["sigma"],
+                                            transform=r.transformation, tests=(1,))
+    nuevos = np.random.default_rng(2).gamma(4.0, 2.0, 20) + 1.0
+    _igual(r.phase2(nuevos), externo.phase2(nuevos))
+    _igual(r.phase2(nuevos), pp.PhaseOneResult.from_json(externo.to_json()).phase2(nuevos))
+    assert len(externo.to_frame(stable=True)) == 0
+
+
+@pytest.mark.parametrize(("funcion", "limites", "kw"), [
+    (pp.p_chart, {"p": 0.05}, {"n": 200}), (pp.np_chart, {"p": 0.05}, {"n": 200}),
+    (pp.c_chart, {"c": 6.0}, {}), (pp.u_chart, {"u": 3.0}, {"n": 2.0}),
+])
+def test_from_limits_en_cartas_de_atributos(funcion, limites, kw):
+    datos = np.random.default_rng(3).poisson(6, 20)
+    externo = pp.PhaseOneResult.from_limits(funcion, **limites)
+    directa = funcion(datos, **limites, **kw)
+    _igual(externo.phase2(datos, **kw), directa)
+
+
+def test_from_limits_valida():
+    with pytest.raises(ValueError, match="no corresponden"):
+        pp.PhaseOneResult.from_limits(pp.imr_chart, mu=1.0)  # falta sigma
+    with pytest.raises(ValueError, match="no corresponden"):
+        pp.PhaseOneResult.from_limits(pp.c_chart, mu=1.0, sigma=1.0)
+    with pytest.raises(ValueError, match="positiva"):
+        pp.PhaseOneResult.from_limits(pp.imr_chart, mu=1.0, sigma=-1.0)
+    with pytest.raises(ValueError, match="no es finito|no corresponden"):
+        pp.PhaseOneResult.from_limits(pp.imr_chart, mu=float("nan"), sigma=1.0)
+    with pytest.raises(ValueError, match="no está soportada"):
+        pp.PhaseOneResult.from_limits(pp.ewma_chart, mu=1.0, sigma=1.0)
+    with pytest.raises(ValueError, match="ya ajustada"):
+        pp.PhaseOneResult.from_limits(pp.imr_chart, mu=1.0, sigma=1.0, transform="boxcox")
+    with pytest.raises(ValueError, match="transform"):
+        pp.PhaseOneResult.from_limits(pp.c_chart, c=5.0, transform=pp.fit_transformation(np.arange(1.0, 20.0), "boxcox"))

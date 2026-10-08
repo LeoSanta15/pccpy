@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 23:00+0000\n"
+"POT-Creation-Date: 2026-10-08 23:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -130,8 +130,8 @@ msgstr "reason"
 msgid "str"
 msgstr "str"
 
-msgid "``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'`` o ``'transform_failed'``."
-msgstr "``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'`` or ``'transform_failed'``."
+msgid "``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'``, ``'transform_failed'`` o ``'external'`` (límites dados con :meth:`from_limits`)."
+msgstr "``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'``, ``'transform_failed'`` or ``'external'`` (limits given with :meth:`from_limits`)."
 
 msgid "limits"
 msgstr "limits"
@@ -192,6 +192,21 @@ msgstr "Restores a result saved with :meth:`to_dict`; ``phase2()`` works the sam
 
 msgid "``chart`` queda en ``None`` y las etiquetas de los datos de la Fase I no se restauran. Falla con un mensaje claro si el esquema es de una versión más nueva, la carta no está soportada o los límites no corresponden a la carta."
 msgstr "``chart`` stays ``None`` and the labels of the Phase I data are not restored. It fails with a clear message if the schema is from a newer version, the chart is not supported or the limits do not match the chart."
+
+msgid ":meth:`to_dict` como texto JSON; con ``path`` lo escribe además en ese archivo (UTF-8) y devuelve el texto."
+msgstr ":meth:`to_dict` as JSON text; with ``path`` it also writes it to that file (UTF-8) and returns the text."
+
+msgid "Restaura un resultado desde texto JSON o desde la ruta de un archivo guardado con :meth:`to_json`."
+msgstr "Restores a result from JSON text or from the path of a file saved with :meth:`to_json`."
+
+msgid "``source`` es una ruta (``str`` o ``pathlib.Path``) o el propio texto JSON (un ``str`` que empieza por ``{``)."
+msgstr "``source`` is a path (``str`` or ``pathlib.Path``) or the JSON text itself (a ``str`` starting with ``{``)."
+
+msgid "Resultado de Fase I a partir de límites que ya tienes, sin ejecutar :func:`phase_one`."
+msgstr "Phase I result built from limits you already have, without running :func:`phase_one`."
+
+msgid "Sirve para pasar a la Fase II con parámetros calculados en otra parte (otra sesión, otro programa, un estudio anterior). Los límites son los de la carta: ``mu`` y ``sigma`` en ``imr_chart``, ``xbar_r_chart`` y ``xbar_s_chart``; ``p`` en ``p_chart`` y ``np_chart`` (proporción, no el número esperado); ``c`` en ``c_chart``; ``u`` en ``u_chart``. Con ``transform`` (una ``Transformation`` ya ajustada, no un nombre) ``mu`` y ``sigma`` están en la escala transformada. El resto de argumentos (``tests=…``, ``sigma_method=…``) se reutilizan en :meth:`phase2`. El resultado no tiene historial ni puntos excluidos (``reason='external'``)."
+msgstr "It is meant to move to Phase II with parameters computed elsewhere (another session, another program, a previous study). The limits are those of the chart: ``mu`` and ``sigma`` in ``imr_chart``, ``xbar_r_chart`` and ``xbar_s_chart``; ``p`` in ``p_chart`` and ``np_chart`` (a proportion, not the expected count); ``c`` in ``c_chart``; ``u`` in ``u_chart``. With ``transform`` (an already fitted ``Transformation``, not a name) ``mu`` and ``sigma`` are on the transformed scale. The remaining arguments (``tests=…``, ``sigma_method=…``) are reused in :meth:`phase2`. The result has no history or excluded points (``reason='external'``)."
 
 msgid "Dibuja la carta final de la Fase I. Ver :func:`pccpy.plotting.plot_control_chart`."
 msgstr "Draws the final Phase I chart. See :func:`pccpy.plotting.plot_control_chart`."
