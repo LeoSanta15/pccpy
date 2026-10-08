@@ -139,6 +139,11 @@ Tienes tres opciones:
    ```
    El PPM observado (`cap.ppm_obs`) no depende de ninguna distribución.
 
+Para los **intervalos de confianza** de la media, la mediana y la desviación estándar sin suponer normalidad:
+`pp.bootstrap_summary(x, seed=1)` da los tres con intervalo bootstrap BCa y, como referencia, el intervalo clásico
+(`t` de Student, chi-cuadrado y estadísticos de orden). Con datos asimétricos el clásico de la desviación estándar
+suele quedarse corto.
+
 Para las **cartas de control** con datos asimétricos usa `transform=` (`'boxcox'`, `'yeo-johnson'` o `'johnson'`):
 `pp.imr_chart(x, transform='yeo-johnson')`. Los límites y las pruebas se calculan en la escala transformada y, por
 defecto, el panel de valores individuales (o de medias) se dibuja en unidades originales con límites asimétricos

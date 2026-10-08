@@ -29,7 +29,7 @@
 | F5 | `diagnose()` con asimetría, curtosis y positividad; arreglar la condición redundante | `feat/diagnose-asimetria` | _(ver PR de la rama)_ | en revisión |
 | F3 | Transformaciones: Yeo-Johnson y familia de Johnson (`transform=` en `capability_analysis`, `fit_transformation`) | `feat/transformaciones` | _(ver PR de la rama)_ | en revisión |
 | F4 | `transform=` en cartas de variables (escala original por defecto) | `feat/cartas-transformacion` | _(ver PR de la rama)_ | en revisión |
-| F6 | Bootstrap para media, mediana y desviación estándar | | | pendiente |
+| F6 | Bootstrap para media, mediana y desviación estándar (`bootstrap_summary`) | `feat/bootstrap-resumen` | _(ver PR de la rama)_ | en revisión |
 | F7 | Guía «datos asimétricos», README, `wizard()`, validación, versión 0.13.0 | | | pendiente |
 
 Orden de ejecución: F1 → F2 → F5 → F3 → F4 → F6 → F7.

@@ -8,3 +8,8 @@ datos son asimétricos y los intervalos normales pierden cobertura.
 
 .. autoclass:: pccpy.BootstrapResult
    :members: ci, to_frame, summary
+
+.. autofunction:: pccpy.bootstrap_summary
+
+.. autoclass:: pccpy.BootstrapSummary
+   :members: ci, to_frame, summary

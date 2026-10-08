@@ -776,6 +776,8 @@ sd = lambda v, axis=-1: np.std(v, axis=axis, ddof=1)
 pp.bootstrap_ci(data, sd, vectorized=True, seed=1).ci
 ```
 
+With `pp.bootstrap_summary(data, seed=1)` you get the mean, the median and the standard deviation at once with their bootstrap interval and, as a reference, the classic interval (Student's `t`, chi-square and order statistics).
+
 In simulation (gamma(2), n = 60) the BCa interval for the standard deviation covers ≈ 92 % versus ≈ 83 % for the chi-square interval; for the mean the t interval already holds up well. With n < 20 it warns: the bootstrap also loses coverage.
 
 ---

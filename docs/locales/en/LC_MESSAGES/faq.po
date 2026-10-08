@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:44+0000\n"
+"POT-Creation-Date: 2026-10-08 21:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -122,6 +122,9 @@ msgstr "**Intervals without assuming normality** for Pp and Ppk, with either of 
 
 msgid "El PPM observado (`cap.ppm_obs`) no depende de ninguna distribución."
 msgstr "The observed PPM (`cap.ppm_obs`) does not depend on any distribution."
+
+msgid "Para los **intervalos de confianza** de la media, la mediana y la desviación estándar sin suponer normalidad: `pp.bootstrap_summary(x, seed=1)` da los tres con intervalo bootstrap BCa y, como referencia, el intervalo clásico (`t` de Student, chi-cuadrado y estadísticos de orden). Con datos asimétricos el clásico de la desviación estándar suele quedarse corto."
+msgstr "For **confidence intervals** of the mean, the median and the standard deviation without assuming normality: `pp.bootstrap_summary(x, seed=1)` gives the three with a BCa bootstrap interval and, as a reference, the classic interval (Student's `t`, chi-square and order statistics). With skewed data the classic interval of the standard deviation tends to fall short."
 
 msgid "Para las **cartas de control** con datos asimétricos usa `transform=` (`'boxcox'`, `'yeo-johnson'` o `'johnson'`): `pp.imr_chart(x, transform='yeo-johnson')`. Los límites y las pruebas se calculan en la escala transformada y, por defecto, el panel de valores individuales (o de medias) se dibuja en unidades originales con límites asimétricos (`scale='transformed'` lo deja todo en la escala transformada)."
 msgstr "For **control charts** with skewed data use `transform=` (`'boxcox'`, `'yeo-johnson'` or `'johnson'`): `pp.imr_chart(x, transform='yeo-johnson')`. The limits and the tests are computed on the transformed scale and, by default, the individuals (or means) panel is drawn in original units with asymmetric limits (`scale='transformed'` leaves everything on the transformed scale)."

@@ -398,6 +398,25 @@ def _transformaciones():
     return np.concatenate(esperado), np.concatenate(obtenido)
 
 
+@_comprobacion("resumen-clasico", N_("Intervalos clásicos del resumen (t de Student, chi-cuadrado, estadísticos de orden)"),
+               "scipy.stats.t.interval; chi-cuadrado de la varianza; binomial(n, 0,5) para la mediana", 1e-9)
+def _resumen_clasico():
+    from .bootstrap import bootstrap_summary
+
+    x = np.random.default_rng(1).gamma(2, 1, 60)
+    n, m, s = x.size, x.mean(), x.std(ddof=1)
+    t_lo, t_hi = stats.t.interval(0.95, n - 1, loc=m, scale=s / np.sqrt(n))
+    sd_lo = np.sqrt((n - 1) * s**2 / stats.chi2.ppf(0.975, n - 1))
+    sd_hi = np.sqrt((n - 1) * s**2 / stats.chi2.ppf(0.025, n - 1))
+    xs = np.sort(x)
+    k = max(j for j in range(1, n // 2) if stats.binom.cdf(j - 1, n, 0.5) <= 0.025)  # mayor k con cola ≤ α/2
+    r = bootstrap_summary(x, n_boot=200, seed=1)
+    esperado = [t_lo, t_hi, xs[k - 1], xs[n - k], sd_lo, sd_hi]
+    obtenido = [r.classic_lower[0], r.classic_upper[0], r.classic_lower[1], r.classic_upper[1],
+                r.classic_lower[2], r.classic_upper[2]]
+    return np.array(esperado), np.array(obtenido)
+
+
 # ── 7. sistemas de medición ──────────────────────────────────────────────────
 @_comprobacion("gage-rr-anova", N_("Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con interacción)"),
                "Cuadrados medios esperados del ANOVA cruzado; AIAG MSA 4ª ed.", 1e-9)
