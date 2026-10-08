@@ -68,6 +68,7 @@ class DiagnoseResult:
     non_normal_reason: str = ""            # 'outliers', 'skewed', 'shape' o ''
     transform_normalizes: bool | None = None  # ¿Box-Cox deja los datos normales? (None si no aplica)
     best_distribution: str | None = None    # distribución con menor AIC si gana a la normal
+    yeo_johnson_normalizes: bool | None = None  # ¿Yeo-Johnson deja los datos normales? (None si no aplica)
 
     # ══════════════════════════════════════════════════════════════════════
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
@@ -93,7 +94,8 @@ class DiagnoseResult:
         ]
         if o.non_normal_reason:
             rows += [("non_normal_reason", N_("Motivo de la no normalidad"), o.non_normal_reason),
-                     ("best_distribution", N_("Mejor distribución (AIC)"), o.best_distribution)]
+                     ("best_distribution", N_("Mejor distribución (AIC)"), o.best_distribution),
+                     ("yeo_johnson_normalizes", N_("Yeo-Johnson normaliza"), o.yeo_johnson_normalizes)]
         return tabla_estadisticos(rows, stable)
 
     def to_excel(self, path) -> None:
@@ -134,6 +136,9 @@ class DiagnoseResult:
             if self.transform_normalizes is not None:
                 lines.append(tr("  Box-Cox normaliza: {answer}").format(
                     answer=tr("sí") if self.transform_normalizes else tr("no")))
+            if self.yeo_johnson_normalizes is not None:
+                lines.append(tr("  Yeo-Johnson normaliza: {answer}").format(
+                    answer=tr("sí") if self.yeo_johnson_normalizes else tr("no")))
             if self.best_distribution:
                 lines.append(tr("  Mejor distribución (AIC): {distribution}").format(distribution=self.best_distribution))
         if self.has_trend:
@@ -243,7 +248,7 @@ def _p_normalidad(x: np.ndarray) -> float:
 
 
 def _estudiar_no_normalidad(x: np.ndarray, skewness: float, outlier_mask: np.ndarray) -> tuple:
-    """Motivo de la no normalidad, si Box-Cox normaliza y la distribución de menor AIC (si gana a la normal)."""
+    """Motivo de la no normalidad, si Box-Cox y Yeo-Johnson normalizan y la distribución de menor AIC (si gana a la normal)."""
     # Atípicos como causa: hay algún punto muy lejano (a más de 3·RIC de los cuartiles, "far out" de Tukey), sin ellos
     # los datos son normales y simétricos. Una cola larga normal (p. ej. lognormal) no cumple esto: es asimetría.
     sin_atipicos = x[~outlier_mask]
@@ -251,7 +256,7 @@ def _estudiar_no_normalidad(x: np.ndarray, skewness: float, outlier_mask: np.nda
         q1, q3 = np.percentile(x, [25, 75])
         lejanos = (x < q1 - 3 * (q3 - q1)) | (x > q3 + 3 * (q3 - q1))
         if lejanos.any() and _p_normalidad(sin_atipicos) > 0.05 and abs(stats.skew(sin_atipicos)) < 0.5:
-            return "outliers", None, None
+            return "outliers", None, None, None
     razon = "skewed" if abs(skewness) >= 0.5 else "shape"
 
     from scipy.special import boxcox
@@ -287,7 +292,11 @@ def _estudiar_no_normalidad(x: np.ndarray, skewness: float, outlier_mask: np.nda
         k = min(otras, key=lambda nombre: otras[nombre])
         if otras[k] < aic["normal"] - 2:  # diferencia de AIC > 2: mejora apreciable sobre la normal
             mejor = k
-    return razon, normaliza, mejor
+    try:  # Yeo-Johnson no exige datos positivos: es la alternativa a Box-Cox con ceros, negativos o límites no positivos
+        yeo_johnson = bool(_p_normalidad(stats.yeojohnson(x)[0]) > 0.05)
+    except Exception:  # noqa: BLE001 - si no ajusta, simplemente no se recomienda
+        yeo_johnson = None
+    return razon, normaliza, mejor, yeo_johnson
 
 
 def diagnose(
@@ -364,9 +373,9 @@ def diagnose(
     outlier_idx = [int(i) for i in np.where(outlier_mask)[0]]
 
     # ── Por qué no es normal (solo con prueba de normalidad válida) ─────────
-    razon, normaliza, mejor = "", None, None
+    razon, normaliza, mejor, yeo_johnson = "", None, None, None
     if not is_normal:
-        razon, normaliza, mejor = _estudiar_no_normalidad(x, skewness, outlier_mask)
+        razon, normaliza, mejor, yeo_johnson = _estudiar_no_normalidad(x, skewness, outlier_mask)
 
     # ── Recomendación ──────────────────────────────────────────────────────
     con_specs = lsl is not None or usl is not None
@@ -388,12 +397,21 @@ def diagnose(
             args = ", ".join(f"{k}={v!r}" for k, v in [("lsl", lsl), ("usl", usl)] if v is not None)
             rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_nonnormal(datos, {args}, distribution={distribution!r})"
                              ).format(args=args, distribution=mejor)
+        elif yeo_johnson:
+            rec_fn = "capability_analysis"
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_analysis(datos, {args}, transform='yeo-johnson')"
+                             ).format(args=args_specs)
         else:
             rec_fn = "capability_analysis"
             rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_analysis(datos, {args})").format(args=args_specs)
     else:
         rec_fn = "imr_chart"
-        rec_snippet = tr("import pccpy as pp\nresultado = pp.imr_chart(datos)")
+        transformacion = "boxcox" if (razon == "skewed" and normaliza) else ("yeo-johnson" if (razon == "skewed" and yeo_johnson) else None)
+        if transformacion:
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.imr_chart(datos, transform={transform!r})").format(
+                transform=transformacion)
+        else:
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.imr_chart(datos)")
 
     # ── Capacidad estimada ─────────────────────────────────────────────────
     cp = cpk = None
@@ -408,12 +426,12 @@ def diagnose(
     if razon == "outliers":
         issues.append(tr("La no normalidad se debe a valores atípicos (sin ellos los datos son normales): investiga su "
                          "origen antes de transformar los datos."))
-    elif razon in ("skewed", "shape") and con_specs and rec_fn == "capability_analysis":
+    elif razon in ("skewed", "shape") and con_specs and rec_fn == "capability_analysis" and not yeo_johnson:
         issues.append(tr("Ninguna transformación ni distribución ajusta claramente mejor que la normal: interpreta con "
                          "cautela los índices de capacidad normales (usa ci_method='bootstrap' para los intervalos)."))
     if normaliza and con_specs and not specs_positivas:
         issues.append(tr("Box-Cox normalizaría los datos, pero requiere límites de especificación y objetivo positivos; "
-                         "se recomienda ajustar una distribución no normal."))
+                         "alternativas: una distribución no normal o transform='yeo-johnson'."))
     if razon == "skewed" and not con_specs:
         issues.append(tr("Los datos son asimétricos (asimetría = {skewness:.2f}): los límites de I-MR suponen "
                          "normalidad y pueden dar falsas alarmas del lado de la cola larga; usa "
@@ -441,6 +459,7 @@ def diagnose(
         issues=issues, lsl=lsl, usl=usl, target=target,
         cp=cp, cpk=cpk,
         non_normal_reason=razon, transform_normalizes=normaliza, best_distribution=mejor,
+        yeo_johnson_normalizes=yeo_johnson,
     )
     result._x = x
     return result

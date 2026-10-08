@@ -1635,6 +1635,9 @@
    ],
    [
     "lognormal"
+   ],
+   [
+    true
    ]
   ],
   "index": [
@@ -1660,7 +1663,8 @@
    "cpk_estimated",
    "recommended_function",
    "non_normal_reason",
-   "best_distribution"
+   "best_distribution",
+   "yeo_johnson_normalizes"
   ],
   "index_name": "statistic"
  },
@@ -1925,6 +1929,9 @@
    ],
    [
     null
+   ],
+   [
+    true
    ]
   ],
   "index": [
@@ -1950,7 +1957,8 @@
    "cpk_estimated",
    "recommended_function",
    "non_normal_reason",
-   "best_distribution"
+   "best_distribution",
+   "yeo_johnson_normalizes"
   ],
   "index_name": "statistic"
  },

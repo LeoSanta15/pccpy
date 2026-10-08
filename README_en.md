@@ -760,6 +760,19 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Skewed data: quick guide
+
+| I want to… | Use |
+|---|---|
+| Know why the data are not normal | `pp.diagnose(x)` → `non_normal_reason`, ready-to-run recommendation |
+| Capability with skewed data | `capability_analysis(x, lsl, usl, transform="yeo-johnson")`, `capability_boxcox` or `capability_nonnormal(distribution=…)` |
+| A reliable I-MR or Xbar chart | `imr_chart(x, transform="yeo-johnson")` (asymmetric limits in original units) |
+| Intervals without assuming normality | `ci_method="bootstrap"`, `pp.bootstrap_summary(x)`, `pp.bootstrap_ci(x, function)` |
+
+Full guide, with the limits and the simulation results: [`docs/source/datos_asimetricos.md`](https://github.com/LeoSanta15/pccpy/blob/main/docs/source/datos_asimetricos.md) (in Spanish; the documentation site has the English version).
+
+---
+
 ### Bootstrap intervals (skewed data)
 
 With skewed data the normal intervals (`x̄ ± t·s/√n`, chi-square for sigma, Bissell for Ppk) lose coverage. `bootstrap_ci` resamples your data and assumes no shape: percentile or **BCa** (corrects bias and skewness). It works for any statistic, scalar or vector, with the same resamples.
