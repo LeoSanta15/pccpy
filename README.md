@@ -271,6 +271,19 @@ fase1.chart.plot()         # carta con los límites definitivos
 carta_ii = fase1.phase2(x_nuevo, tests=(1, 2))   # Fase II con los límites de la Fase I
 ```
 
+**¿Ya tienes la Fase I de otra sesión?** Guárdala y cárgala sin repetir `phase_one`, o crea el resultado desde límites que
+ya conoces:
+
+```python
+fase1.to_json("fase1.json")                          # guarda lo que necesita phase2() (sin los datos)
+fase1 = pp.PhaseOneResult.from_json("fase1.json")    # en otra sesión; también acepta el texto JSON
+carta_ii = fase1.phase2(x_nuevo, tests=(1, 2))
+
+# o con parámetros calculados en otra parte (en cartas con transform=, una Transformation ya ajustada)
+externo = pp.PhaseOneResult.from_limits(pp.imr_chart, mu=100.0, sigma=2.0, tests=(1, 2))
+carta_ii = externo.phase2(x_nuevo)
+```
+
 Salvaguardas: `max_iterations` (10), `min_points` (20) y `max_excluded` (25 % de los puntos). Si saltan,
 el resultado no converge y se avisa: un proceso que necesita descartar tantos puntos no es estable.
 **Excluye puntos solo si has encontrado y corregido su causa especial.** En `imr_chart` solo cuentan las

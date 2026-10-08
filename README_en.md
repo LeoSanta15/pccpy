@@ -273,6 +273,19 @@ phase1.chart.plot()        # chart with the final limits
 chart_ii = phase1.phase2(x_new, tests=(1, 2))   # Phase II with the Phase I limits
 ```
 
+**Already have the Phase I from another session?** Save it and load it without repeating `phase_one`, or build
+the result from limits you already know:
+
+```python
+phase1.to_json("phase1.json")                        # saves what phase2() needs (not the data)
+phase1 = pp.PhaseOneResult.from_json("phase1.json")  # in another session; it also accepts the JSON text
+chart_ii = phase1.phase2(x_new, tests=(1, 2))
+
+# or with parameters computed elsewhere (with transform=, an already fitted Transformation)
+external = pp.PhaseOneResult.from_limits(pp.imr_chart, mu=100.0, sigma=2.0, tests=(1, 2))
+chart_ii = external.phase2(x_new)
+```
+
 Safeguards: `max_iterations` (10), `min_points` (20) and `max_excluded` (25 % of the points). If one
 trips, the result does not converge and a warning is issued: a process that needs to discard that many points
 is not stable. **Exclude points only if you have found and corrected their special cause.** In `imr_chart`

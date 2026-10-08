@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 23:06+0000\n"
+"POT-Creation-Date: 2026-10-08 23:16+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -2117,6 +2117,9 @@ msgstr "Phase I with a Box-Cox transformation against a manual computation (refi
 #, python-brace-format
 msgid "Fase I: carta {kind}"
 msgstr "Phase I: {kind} chart"
+
+msgid "Fase II tras guardar y cargar una Fase I (JSON) frente a los mismos límites dados a mano"
+msgstr "Phase II after saving and loading a Phase I (JSON) against the same limits given by hand"
 
 msgid "Fecha"
 msgstr "Date"

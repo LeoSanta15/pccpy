@@ -255,6 +255,29 @@ Funciona con `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`,
 `max_iterations`, `min_points` y `max_excluded` (por defecto no se excluye más del 25 % de los puntos);
 si saltan, el resultado no converge y se avisa. **Excluye puntos solo si has encontrado y corregido su causa especial.**
 
+### Reutilizar una Fase I que ya tienes
+
+Si la Fase I se hizo en otra sesión o en otro programa, no hace falta repetirla:
+
+```python
+# Guardar (sin los datos) y cargar después, en otra sesión
+fase1.to_json("fase1.json")
+fase1 = pp.PhaseOneResult.from_json("fase1.json")      # también acepta el texto JSON
+carta_ii = fase1.phase2(x_nuevo, tests=(1, 2))
+
+# O crear el resultado desde límites que ya conoces
+externo = pp.PhaseOneResult.from_limits(pp.imr_chart, mu=100.0, sigma=2.0, tests=(1, 2))
+carta_ii = externo.phase2(x_nuevo)
+```
+
+`to_json()` guarda la carta (por nombre), sus argumentos, los límites congelados, la transformación si la hubo, el
+historial y los puntos excluidos; no guarda los datos ni la carta final, así que el resultado cargado no tiene
+`chart` (usa `phase2(datos)` para dibujar). `to_dict()` / `from_dict()` hacen lo mismo con un diccionario. En
+`from_limits()` los parámetros dependen de la carta: `mu` y `sigma` (I-MR, Xbar-R, Xbar-S), `p` (`p_chart` y
+`np_chart`, como proporción), `c` o `u`; con una transformación, `mu` y `sigma` están en la escala transformada y se
+pasa una `Transformation` ya ajustada (`pp.Transformation.from_info(...)`). Un argumento que no se pueda guardar
+(una función, un arreglo) da un error que dice cuál es; pásalo de nuevo a `phase2()`.
+
 Si prefieres hacerlo a mano, fija la media y la sigma estimadas (las claves de `params` son
 `'media'` y `'sigma'`):
 

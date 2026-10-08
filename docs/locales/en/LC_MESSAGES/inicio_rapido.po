@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:06+0000\n"
+"POT-Creation-Date: 2026-10-08 23:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -111,6 +111,15 @@ msgstr "`phase_one()` does Phase I **iteratively**: it computes the chart, exclu
 #, python-format
 msgid "Funciona con `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` y `u_chart` (en las de atributos, pasa `n=`). Tres salvaguardas evitan «limpiar» un proceso que no es estable: `max_iterations`, `min_points` y `max_excluded` (por defecto no se excluye más del 25 % de los puntos); si saltan, el resultado no converge y se avisa. **Excluye puntos solo si has encontrado y corregido su causa especial.**"
 msgstr "It works with `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart` and `u_chart` (for attribute charts, pass `n=`). Three safeguards prevent \"cleaning\" a process that is not stable: `max_iterations`, `min_points` and `max_excluded` (by default no more than 25 % of the points are excluded); if they trip, the result does not converge and a warning is issued. **Exclude points only if you have found and corrected their special cause.**"
+
+msgid "Reutilizar una Fase I que ya tienes"
+msgstr "Reusing a Phase I you already have"
+
+msgid "Si la Fase I se hizo en otra sesión o en otro programa, no hace falta repetirla:"
+msgstr "If Phase I was done in another session or in another program, there is no need to repeat it:"
+
+msgid "`to_json()` guarda la carta (por nombre), sus argumentos, los límites congelados, la transformación si la hubo, el historial y los puntos excluidos; no guarda los datos ni la carta final, así que el resultado cargado no tiene `chart` (usa `phase2(datos)` para dibujar). `to_dict()` / `from_dict()` hacen lo mismo con un diccionario. En `from_limits()` los parámetros dependen de la carta: `mu` y `sigma` (I-MR, Xbar-R, Xbar-S), `p` (`p_chart` y `np_chart`, como proporción), `c` o `u`; con una transformación, `mu` y `sigma` están en la escala transformada y se pasa una `Transformation` ya ajustada (`pp.Transformation.from_info(...)`). Un argumento que no se pueda guardar (una función, un arreglo) da un error que dice cuál es; pásalo de nuevo a `phase2()`."
+msgstr "`to_json()` saves the chart (by name), its arguments, the frozen limits, the transformation if there was one, the history and the excluded points; it does not save the data or the final chart, so the loaded result has no `chart` (use `phase2(data)` to plot). `to_dict()` / `from_dict()` do the same with a dictionary. In `from_limits()` the parameters depend on the chart: `mu` and `sigma` (I-MR, Xbar-R, Xbar-S), `p` (`p_chart` and `np_chart`, as a proportion), `c` or `u`; with a transformation, `mu` and `sigma` are on the transformed scale and an already fitted `Transformation` is passed (`pp.Transformation.from_info(...)`). An argument that cannot be saved (a function, an array) gives an error that says which one it is; pass it to `phase2()` again."
 
 msgid "Si prefieres hacerlo a mano, fija la media y la sigma estimadas (las claves de `params` son `'media'` y `'sigma'`):"
 msgstr "If you prefer to do it by hand, fix the estimated mean and sigma (the `params` keys are `'media'` and `'sigma'`):"
