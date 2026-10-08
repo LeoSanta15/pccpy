@@ -28,6 +28,42 @@ _CARTAS_CON_TRANSFORMACION = ("imr_chart", "xbar_r_chart", "xbar_s_chart")
 _CAMBIO_LAMBDA_AVISO = 0.5  # cambio de lambda entre la primera y la última pasada que se considera inestable
 
 
+ESQUEMA = 1  # versión del formato de ``to_dict``
+# claves de los límites congelados de cada carta
+_CLAVES_DE_LIMITES = {"imr_chart": {"mu", "sigma"}, "xbar_r_chart": {"mu", "sigma"}, "xbar_s_chart": {"mu", "sigma"},
+                      "p_chart": {"p"}, "np_chart": {"p"}, "c_chart": {"c"}, "u_chart": {"u"}}
+
+
+def _a_json(valor, ruta: str, finito: bool = False):
+    """Convierte a tipos de JSON (``NaN`` → ``None``); falla con la ruta si el valor no se puede serializar."""
+    if valor is None or isinstance(valor, (str, bool)):
+        return valor
+    if isinstance(valor, (int, np.integer)):
+        return int(valor)
+    if isinstance(valor, (float, np.floating)):
+        v = float(valor)
+        if np.isfinite(v):
+            return v
+        if finito:
+            raise ValueError(tr("{ruta} no es finito ({valor}): no se puede guardar.").format(ruta=ruta, valor=v))
+        return None
+    if isinstance(valor, (list, tuple)):
+        return [_a_json(v, f"{ruta}[{i}]") for i, v in enumerate(valor)]
+    if isinstance(valor, dict):
+        return {str(k): _a_json(v, f"{ruta}[{k!r}]") for k, v in valor.items()}
+    raise ValueError(tr("{ruta} ({tipo}) no se puede guardar en JSON; pásalo de nuevo a phase2() en lugar de guardarlo.").format(
+        ruta=ruta, tipo=type(valor).__name__))
+
+
+def _de_json(valor):
+    """Inverso de ``_a_json`` para los argumentos de la carta: las listas vuelven a ser tuplas (como ``tests=(1, 2)``)."""
+    if isinstance(valor, list):
+        return tuple(_de_json(v) for v in valor)
+    if isinstance(valor, dict):
+        return {k: _de_json(v) for k, v in valor.items()}
+    return valor
+
+
 @dataclass(frozen=True)
 class _Tipo:
     """Cómo se prepara una carta para la Fase I y qué parámetros se congelan para la Fase II."""
@@ -67,8 +103,9 @@ class PhaseOneResult:
 
     Atributos
     ---------
-    chart : ControlChart
-        Carta final, calculada solo con los puntos que no se excluyeron.
+    chart : ControlChart or None
+        Carta final, calculada solo con los puntos que no se excluyeron. ``None`` si el resultado se cargó con
+        :meth:`from_dict` (la carta no se guarda: sin los datos no se puede reconstruir).
     history : list of PhaseOneIteration
         Una entrada por pasada (la 0 es la carta con todos los datos).
     excluded : numpy.ndarray
@@ -90,7 +127,7 @@ class PhaseOneResult:
         con los límites congelados (``mu`` y ``sigma`` están en la escala transformada). ``None`` sin ``transform``.
     """
 
-    chart: ControlChart
+    chart: ControlChart | None
     history: list[PhaseOneIteration]
     excluded: np.ndarray
     kept: np.ndarray
@@ -133,7 +170,7 @@ class PhaseOneResult:
         """Resumen en texto: puntos excluidos, límites finales y estado de cada pasada."""
         n_excl = int(self.excluded.size)
         lines = [
-            tr("Fase I: carta {kind}").format(kind=self.chart.kind),
+            tr("Fase I: carta {kind}").format(kind=self._nombre_de_la_carta()),
             tr("  Puntos: {n} → {kept} (excluidos: {excluded})").format(
                 n=self.n_original, kept=int(self.kept.size), excluded=n_excl),
         ]
@@ -142,7 +179,7 @@ class PhaseOneResult:
                 iters=len(self.history) - 1))
         else:
             lines.append(tr("  Resultado: NO convergió ({reason})").format(reason=_describir_motivo(self.reason)))
-        restantes = [pnl.name for pnl in self.chart.panels if pnl.flagged.size]
+        restantes = [] if self.chart is None else [pnl.name for pnl in self.chart.panels if pnl.flagged.size]
         if self.converged and restantes:
             lines.append(tr("  Aviso: quedan señales en otros paneles ({panels}); no se excluyeron por no contar para la Fase I").format(
                 panels=", ".join(restantes)))
@@ -180,8 +217,81 @@ class PhaseOneResult:
             argumentos["transform"] = self.transformation  # fija: no se reajusta a los datos nuevos
         return self._funcion(data, **argumentos)
 
+    def _nombre_de_la_carta(self) -> str:
+        return self.chart.kind if self.chart is not None else self._funcion.__name__
+
+    def to_dict(self) -> dict:
+        """Lo necesario para repetir la Fase II más el historial, como un diccionario serializable en JSON.
+
+        Guarda la función de la carta (por nombre), sus argumentos, los límites congelados, la transformación (si la hay),
+        el historial de pasadas y los puntos excluidos. No guarda los datos ni la carta final. Se restaura con
+        :meth:`from_dict`. Falla si algún argumento no se puede serializar (una función, un arreglo…) o si algún límite
+        no es finito.
+        """
+        from . import __version__
+
+        return {
+            "schema": ESQUEMA,
+            "pccpy_version": __version__,
+            "chart": self._funcion.__name__,
+            "arguments": {k: _a_json(v, f"arguments[{k!r}]") for k, v in self._argumentos.items()},
+            "limits": {k: _a_json(v, f"limits[{k!r}]", finito=True) for k, v in self.limits.items()},
+            "transformation": None if self.transformation is None else _a_json(self.transformation.info(), "transformation"),
+            "converged": bool(self.converged),
+            "reason": self.reason,
+            "n_original": int(self.n_original),
+            "excluded": [int(i) for i in self.excluded],
+            "kept": [int(i) for i in self.kept],
+            "history": [{
+                "iteration": h.iteration, "n_points": h.n_points, "flagged": [int(i) for i in h.flagged],
+                "center": _a_json(h.center, "center"), "sigma": _a_json(h.sigma, "sigma"),
+                "transformation": None if h.transformation is None else _a_json(h.transformation.info(), "transformation"),
+            } for h in self.history],
+        }
+
+    @classmethod
+    def from_dict(cls, datos: dict) -> PhaseOneResult:
+        """Restaura un resultado guardado con :meth:`to_dict`; ``phase2()`` funciona igual que en el original.
+
+        ``chart`` queda en ``None`` y las etiquetas de los datos de la Fase I no se restauran. Falla con un mensaje claro
+        si el esquema es de una versión más nueva, la carta no está soportada o los límites no corresponden a la carta.
+        """
+        if not isinstance(datos, dict) or "schema" not in datos:
+            raise ValueError(tr("No es un resultado de Fase I guardado con to_dict()."))
+        if datos["schema"] > ESQUEMA:
+            raise ValueError(tr("El resultado se guardó con una versión más nueva del esquema ({v}); actualiza pccpy.").format(
+                v=datos["schema"]))
+        funciones = {f.__name__: f for f in _TIPOS}
+        funcion = funciones.get(str(datos.get("chart")))
+        if funcion is None:
+            raise ValueError(tr("La Fase I no está soportada para esta carta; usa {charts}.").format(
+                charts=", ".join(sorted(funciones))))
+        limites = {k: float(v) for k, v in datos.get("limits", {}).items()}
+        if set(limites) != _CLAVES_DE_LIMITES[funcion.__name__] or not all(np.isfinite(v) for v in limites.values()):
+            raise ValueError(tr("Los límites guardados ({got}) no corresponden a la carta {chart}: se esperaban {expected}.").format(
+                got=", ".join(sorted(limites)) or "—", chart=funcion.__name__,
+                expected=", ".join(sorted(_CLAVES_DE_LIMITES[funcion.__name__]))))
+        info = datos.get("transformation")
+        if info is not None and funcion.__name__ not in _CARTAS_CON_TRANSFORMACION:
+            raise ValueError(tr("'transform' solo se admite en {charts}.").format(charts=", ".join(_CARTAS_CON_TRANSFORMACION)))
+        transformacion = None if info is None else Transformation.from_info(info)
+        historial = [PhaseOneIteration(
+            iteration=h["iteration"], n_points=h["n_points"], flagged=np.asarray(h["flagged"], dtype=int),
+            center=np.nan if h["center"] is None else float(h["center"]),
+            sigma=np.nan if h["sigma"] is None else float(h["sigma"]),
+            transformation=None if h.get("transformation") is None else Transformation.from_info(h["transformation"]))
+            for h in datos.get("history", [])]
+        return cls(
+            chart=None, history=historial, excluded=np.asarray(datos.get("excluded", []), dtype=int),
+            kept=np.asarray(datos.get("kept", []), dtype=int), converged=bool(datos.get("converged", True)),
+            reason=datos.get("reason", "in_control"), n_original=int(datos.get("n_original", 0)), limits=limites,
+            transformation=transformacion, _funcion=funcion,
+            _argumentos={k: _de_json(v) for k, v in datos.get("arguments", {}).items()})
+
     def plot(self, **kwargs):
         """Dibuja la carta final de la Fase I. Ver :func:`pccpy.plotting.plot_control_chart`."""
+        if self.chart is None:
+            raise ValueError(tr("Este resultado se cargó con from_dict() y no guarda la carta: usa phase2(datos) para dibujar."))
         return self.chart.plot(**kwargs)
 
 

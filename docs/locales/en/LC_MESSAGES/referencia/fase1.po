@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 22:48+0000\n"
+"POT-Creation-Date: 2026-10-08 23:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -85,11 +85,11 @@ msgstr "Attributes"
 msgid "chart"
 msgstr "chart"
 
-msgid "ControlChart"
-msgstr "ControlChart"
+msgid "ControlChart or None"
+msgstr "ControlChart or None"
 
-msgid "Carta final, calculada solo con los puntos que no se excluyeron."
-msgstr "Final chart, computed only with the points that were not excluded."
+msgid "Carta final, calculada solo con los puntos que no se excluyeron. ``None`` si el resultado se cargó con :meth:`from_dict` (la carta no se guarda: sin los datos no se puede reconstruir)."
+msgstr "Final chart, computed only with the points that were not excluded. ``None`` if the result was loaded with :meth:`from_dict` (the chart is not saved: it cannot be rebuilt without the data)."
 
 msgid "history"
 msgstr "history"
@@ -181,9 +181,24 @@ msgstr "New data, in any of the formats the chart accepts (a Series with dates k
 msgid "Argumentos de la función de la carta para los datos nuevos (por ejemplo ``n=`` en las cartas de atributos o ``subgroup_size=``); sustituyen a los usados en la Fase I."
 msgstr "Chart function arguments for the new data (for example ``n=`` in attribute charts or ``subgroup_size=``); they replace those used in Phase I."
 
+msgid "Lo necesario para repetir la Fase II más el historial, como un diccionario serializable en JSON."
+msgstr "What is needed to repeat Phase II plus the history, as a dictionary that can be serialized to JSON."
+
+msgid "Guarda la función de la carta (por nombre), sus argumentos, los límites congelados, la transformación (si la hay), el historial de pasadas y los puntos excluidos. No guarda los datos ni la carta final. Se restaura con :meth:`from_dict`. Falla si algún argumento no se puede serializar (una función, un arreglo…) o si algún límite no es finito."
+msgstr "It saves the chart function (by name), its arguments, the frozen limits, the transformation (if any), the history of passes and the excluded points. It does not save the data or the final chart. It is restored with :meth:`from_dict`. It fails if some argument cannot be serialized (a function, an array…) or if some limit is not finite."
+
+msgid "Restaura un resultado guardado con :meth:`to_dict`; ``phase2()`` funciona igual que en el original."
+msgstr "Restores a result saved with :meth:`to_dict`; ``phase2()`` works the same as in the original."
+
+msgid "``chart`` queda en ``None`` y las etiquetas de los datos de la Fase I no se restauran. Falla con un mensaje claro si el esquema es de una versión más nueva, la carta no está soportada o los límites no corresponden a la carta."
+msgstr "``chart`` stays ``None`` and the labels of the Phase I data are not restored. It fails with a clear message if the schema is from a newer version, the chart is not supported or the limits do not match the chart."
+
 msgid "Dibuja la carta final de la Fase I. Ver :func:`pccpy.plotting.plot_control_chart`."
 msgstr "Draws the final Phase I chart. See :func:`pccpy.plotting.plot_control_chart`."
 
 msgid "Una pasada de la Fase I: la carta calculada con los puntos que seguían incluidos."
 msgstr "One Phase I pass: the chart computed with the points that were still included."
+
+#~ msgid "Carta final, calculada solo con los puntos que no se excluyeron."
+#~ msgstr "Final chart, computed only with the points that were not excluded."
 

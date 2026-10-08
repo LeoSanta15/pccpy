@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 22:53+0000\n"
+"POT-Creation-Date: 2026-10-08 23:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1798,6 +1798,12 @@ msgstr ""
 
 #, python-brace-format
 msgid ""
+"El resultado se guardó con una versión más nueva del esquema ({v}); "
+"actualiza pccpy."
+msgstr ""
+
+#, python-brace-format
+msgid ""
 "El tamaño de muestra n={n} es insuficiente para el intervalo no "
 "paramétrico con cobertura={coverage} y confianza={confidence}."
 msgstr ""
@@ -1837,6 +1843,11 @@ msgid "Estadístico A² de Anderson-Darling de la prueba de normalidad"
 msgstr ""
 
 msgid "Estadístico normalidad"
+msgstr ""
+
+msgid ""
+"Este resultado se cargó con from_dict() y no guarda la carta: usa "
+"phase2(datos) para dibujar."
 msgstr ""
 
 #, python-brace-format
@@ -2345,6 +2356,12 @@ msgstr ""
 msgid "Los datos son constantes: no se puede calcular la prueba de atípicos."
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"Los límites guardados ({got}) no corresponden a la carta {chart}: se "
+"esperaban {expected}."
+msgstr ""
+
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr ""
 
@@ -2526,6 +2543,9 @@ msgid "Nivel Sigma"
 msgstr ""
 
 msgid "Nivel de confianza (%)"
+msgstr ""
+
+msgid "No es un resultado de Fase I guardado con to_dict()."
 msgstr ""
 
 #, python-brace-format
@@ -3653,6 +3673,16 @@ msgstr ""
 
 #, python-brace-format
 msgid "{rows} filas no se pueden dividir en subgrupos de {subgroup_size}."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"{ruta} ({tipo}) no se puede guardar en JSON; pásalo de nuevo a phase2() "
+"en lugar de guardarlo."
+msgstr ""
+
+#, python-brace-format
+msgid "{ruta} no es finito ({valor}): no se puede guardar."
 msgstr ""
 
 #, python-brace-format

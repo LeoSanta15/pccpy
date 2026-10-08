@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 22:53+0000\n"
+"POT-Creation-Date: 2026-10-08 23:00+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -2002,6 +2002,10 @@ msgid "El método 'relative' requiere datos positivos (usa ln)."
 msgstr "The 'relative' method requires positive data (it uses ln)."
 
 #, python-brace-format
+msgid "El resultado se guardó con una versión más nueva del esquema ({v}); actualiza pccpy."
+msgstr "The result was saved with a newer schema version ({v}); update pccpy."
+
+#, python-brace-format
 msgid ""
 "El tamaño de muestra n={n} es insuficiente para el intervalo no paramétrico con cobertura={coverage} y "
 "confianza={confidence}."
@@ -2041,6 +2045,9 @@ msgstr "Anderson-Darling A² statistic of the normality test"
 
 msgid "Estadístico normalidad"
 msgstr "Normality statistic"
+
+msgid "Este resultado se cargó con from_dict() y no guarda la carta: usa phase2(datos) para dibujar."
+msgstr "This result was loaded with from_dict() and does not keep the chart: use phase2(data) to plot."
 
 #, python-brace-format
 msgid "Estimación acumulada (IC {nivel:g}%)"
@@ -2536,6 +2543,10 @@ msgstr "The data are constant: a transformation cannot be fitted."
 msgid "Los datos son constantes: no se puede calcular la prueba de atípicos."
 msgstr "The data are constant: the outlier test cannot be computed."
 
+#, python-brace-format
+msgid "Los límites guardados ({got}) no corresponden a la carta {chart}: se esperaban {expected}."
+msgstr "The saved limits ({got}) do not match the {chart} chart: expected {expected}."
+
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr "Sample sizes must be positive."
 
@@ -2721,6 +2732,9 @@ msgstr "Sigma level"
 
 msgid "Nivel de confianza (%)"
 msgstr "Confidence level (%)"
+
+msgid "No es un resultado de Fase I guardado con to_dict()."
+msgstr "This is not a Phase I result saved with to_dict()."
 
 #, python-brace-format
 msgid "No existe el panel {name!r}. Disponibles: {available}"
@@ -3861,6 +3875,14 @@ msgstr "{nombre} with lambda = {lam:.4f}"
 #, python-brace-format
 msgid "{rows} filas no se pueden dividir en subgrupos de {subgroup_size}."
 msgstr "{rows} rows cannot be divided into subgroups of {subgroup_size}."
+
+#, python-brace-format
+msgid "{ruta} ({tipo}) no se puede guardar en JSON; pásalo de nuevo a phase2() en lugar de guardarlo."
+msgstr "{ruta} ({tipo}) cannot be saved as JSON; pass it to phase2() again instead of saving it."
+
+#, python-brace-format
+msgid "{ruta} no es finito ({valor}): no se puede guardar."
+msgstr "{ruta} is not finite ({valor}): it cannot be saved."
 
 #, python-brace-format
 msgid ""
