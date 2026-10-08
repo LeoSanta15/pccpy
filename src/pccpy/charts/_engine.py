@@ -9,8 +9,9 @@ import numpy as np
 
 from .. import rules
 from .._data import stage_slices
-from .._i18n import tr
+from .._i18n import N_, tr
 from ..results import ControlChart, Panel
+from ..transforms import Transformation, fit_transformation
 
 
 @dataclass
@@ -103,3 +104,46 @@ def check_method(method: str, allowed: Sequence[str], what: str = "sigma_method"
         raise ValueError(tr(
             "{what} debe ser uno de {allowed} (recibido: {method!r})."
         ).format(what=what, allowed=tuple(allowed), method=method))
+
+
+#: Etiquetas del eje y de los paneles de dispersión cuando la carta lleva una transformación.
+_YLABEL_TRANSFORMADO = {
+    "Rango móvil": N_("Rango móvil (escala transformada)"),
+    "Rango de la muestra": N_("Rango de la muestra (escala transformada)"),
+    "Desv. est. de la muestra": N_("Desv. est. de la muestra (escala transformada)"),
+}
+_PANELES_DE_POSICION = ("I", "Xbar")
+
+
+def resolver_transformacion(transform, datos, scale: str) -> Transformation | None:
+    """Valida ``transform``/``scale`` y devuelve la transformación (ajustada a ``datos`` si se pidió por nombre)."""
+    if scale not in ("original", "transformed"):
+        raise ValueError(tr("'scale' debe ser 'original' o 'transformed' (recibido: {scale!r}).").format(scale=scale))
+    if transform is None:
+        return None
+    if isinstance(transform, Transformation):
+        return transform
+    return fit_transformation(datos, transform)
+
+
+def aplicar_escala(chart: ControlChart, t: Transformation, scale: str, originales: np.ndarray | None = None) -> ControlChart:
+    """Anota la transformación en la carta y, con ``scale='original'``, lleva los paneles de posición a unidades originales.
+
+    Las pruebas de causas especiales ya se evaluaron en la escala transformada (donde los datos son ~normales); aquí
+    solo se cambia lo que se guarda y se dibuja. Los paneles de dispersión (MR, R, S) quedan en la escala transformada,
+    porque su valor no tiene equivalente en unidades originales. ``originales`` son las observaciones sin transformar
+    (se usan tal cual en el panel I, sin error de redondeo).
+    """
+    chart.transformation, chart.chart_scale = t, scale
+    for panel in chart.panels:
+        if panel.name not in _PANELES_DE_POSICION:
+            panel.ylabel = _YLABEL_TRANSFORMADO.get(panel.ylabel, panel.ylabel)
+            continue
+        if scale != "original":
+            continue
+        centro_t, sigma_t = panel.center.copy(), panel.sigma.copy()
+        panel.values = originales.copy() if (panel.name == "I" and originales is not None) else t.inverse(panel.values)
+        panel.center, panel.ucl, panel.lcl = t.inverse(panel.center), t.inverse(panel.ucl), t.inverse(panel.lcl)
+        panel.zones_upper = {k: t.inverse(centro_t + k * sigma_t) for k in (1, 2)}
+        panel.zones_lower = {k: t.inverse(centro_t - k * sigma_t) for k in (1, 2)}
+    return chart

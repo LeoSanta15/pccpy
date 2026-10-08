@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:20+0000\n"
+"POT-Creation-Date: 2026-10-08 21:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -122,6 +122,9 @@ msgstr "**Intervals without assuming normality** for Pp and Ppk, with either of 
 
 msgid "El PPM observado (`cap.ppm_obs`) no depende de ninguna distribución."
 msgstr "The observed PPM (`cap.ppm_obs`) does not depend on any distribution."
+
+msgid "Para las **cartas de control** con datos asimétricos usa `transform=` (`'boxcox'`, `'yeo-johnson'` o `'johnson'`): `pp.imr_chart(x, transform='yeo-johnson')`. Los límites y las pruebas se calculan en la escala transformada y, por defecto, el panel de valores individuales (o de medias) se dibuja en unidades originales con límites asimétricos (`scale='transformed'` lo deja todo en la escala transformada)."
+msgstr "For **control charts** with skewed data use `transform=` (`'boxcox'`, `'yeo-johnson'` or `'johnson'`): `pp.imr_chart(x, transform='yeo-johnson')`. The limits and the tests are computed on the transformed scale and, by default, the individuals (or means) panel is drawn in original units with asymmetric limits (`scale='transformed'` leaves everything on the transformed scale)."
 
 msgid "Las cartas de medias (Xbar-R, Xbar-S) son bastante robustas a la no normalidad cuando los subgrupos tienen más de 5 observaciones, por el teorema central del límite. Con subgrupos de 2 a 5 observaciones y datos asimétricos la librería avisa, y la carta de **individuales (I-MR)** no tiene esa protección: con datos asimétricos sus límites pueden dar falsas alarmas del lado de la cola larga."
 msgstr "The mean charts (Xbar-R, Xbar-S) are fairly robust to non-normality when the subgroups have more than 5 observations, thanks to the central limit theorem. With subgroups of 2 to 5 observations and skewed data the library warns, and the **individuals chart (I-MR)** has no such protection: with skewed data its limits can give false alarms on the long-tail side."

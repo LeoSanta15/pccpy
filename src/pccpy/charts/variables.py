@@ -9,7 +9,7 @@ from .._i18n import N_, tr
 from .._labels import con_etiquetas
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
-from ._engine import StagePanel, build_chart, check_method, full
+from ._engine import StagePanel, aplicar_escala, build_chart, check_method, full, resolver_transformacion
 
 
 @con_etiquetas
@@ -23,6 +23,8 @@ def imr_chart(
     stages=None,
     tests=(1,),
     test_params: dict[int, float] | None = None,
+    transform=None,
+    scale: str = "original",
 ) -> ControlChart:
     """Carta de valores individuales y rango móvil (Stat > Control Charts > I-MR).
 
@@ -43,8 +45,21 @@ def imr_chart(
         Pruebas de causas especiales (1-8). Por defecto solo la prueba 1, igual que Minitab.
     test_params : dict, opcional
         Valor K por prueba, p. ej. ``{2: 8}``.
+    transform : {None, 'boxcox', 'yeo-johnson', 'johnson'} o Transformation
+        Normaliza los datos antes de calcular la carta (útil con datos asimétricos): los límites y las pruebas se
+        calculan en la escala transformada. Se puede pasar una ``Transformation`` ya ajustada (p. ej.
+        ``carta.transformation``) para aplicar la misma a datos nuevos. ``mu`` y ``sigma`` históricos, si se dan,
+        están en la escala transformada (son los de ``carta.params``).
+    scale : {'original', 'transformed'}
+        Con ``transform``: escala en que se guarda y dibuja el panel I. ``'original'`` (por defecto) devuelve los
+        valores, los límites y las líneas de 1 y 2 sigma en unidades originales (los límites quedan asimétricos);
+        el panel MR se queda en la escala transformada. ``'transformed'`` deja todo en la escala transformada.
     """
     x = as_1d(x)
+    t = resolver_transformacion(transform, x, scale)
+    x_original = x
+    if t is not None:
+        x = t.forward(x)
     if span < 2:
         raise ValueError(tr("'span' debe ser >= 2."))
     check_method(sigma_method, ("mr", "median_mr", "mssd"))
@@ -67,13 +82,18 @@ def imr_chart(
         )
         return [i_panel, mr_panel], {"media": m, "sigma": s, "MR_prom": c, "n": n}
 
-    return build_chart("I-MR", x.size, stages, stage_fn, tests, test_params)
+    chart = build_chart("I-MR", x.size, stages, stage_fn, tests, test_params)
+    return chart if t is None else aplicar_escala(chart, t, scale, originales=x_original)
 
 
 def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sigma,
-                stages, tests, test_params, value=None) -> ControlChart:
+                stages, tests, test_params, value=None, transform=None, scale="original") -> ControlChart:
     g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
-    avisar_asimetria_subgrupos(g[:n_complete], destino="carta", stacklevel=5)
+    t = resolver_transformacion(transform, g[~np.isnan(g)], scale)
+    if t is None:
+        avisar_asimetria_subgrupos(g[:n_complete], destino="carta", stacklevel=5)
+    else:
+        g = t.forward(g)
     total = g.shape[0]
 
     def stage_fn(idx):
@@ -109,7 +129,8 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
         size = int(n_i[0]) if n_i.min() == n_i.max() else "variable"
         return [x_panel, d_panel], {"media": m, "sigma": sg, "subgrupos": k, "tamaño": size}
 
-    return build_chart(kind, total, stages, stage_fn, tests, test_params)
+    chart = build_chart(kind, total, stages, stage_fn, tests, test_params)
+    return chart if t is None else aplicar_escala(chart, t, scale)
 
 
 @con_etiquetas
@@ -125,6 +146,8 @@ def xbar_r_chart(
     stages=None,
     tests=(1,),
     test_params: dict[int, float] | None = None,
+    transform=None,
+    scale: str = "original",
 ) -> ControlChart:
     """Carta X-barra y R (Stat > Control Charts > Xbar-R).
 
@@ -140,10 +163,14 @@ def xbar_r_chart(
 
     ``sigma_method``: ``'rbar'`` (por defecto) o ``'pooled'``.
     Con tamaños desiguales, sigma se estima promediando R_i/d2(n_i) (ver README).
+
+    ``transform`` y ``scale`` funcionan como en :func:`imr_chart`: se normalizan todas las observaciones, los límites y
+    las pruebas se calculan en la escala transformada y, con ``scale='original'`` (por defecto), el panel X̄ se
+    devuelve en unidades originales; el panel R queda en la escala transformada.
     """
     check_method(sigma_method, ("rbar", "pooled"))
     return _xbar_chart("Xbar-R", "r", data, subgroup_size, subgroup, sigma_method,
-                       mu, sigma, stages, tests, test_params, value=value)
+                       mu, sigma, stages, tests, test_params, value=value, transform=transform, scale=scale)
 
 
 @con_etiquetas
@@ -159,12 +186,14 @@ def xbar_s_chart(
     stages=None,
     tests=(1,),
     test_params: dict[int, float] | None = None,
+    transform=None,
+    scale: str = "original",
 ) -> ControlChart:
     """Carta X-barra y S (Stat > Control Charts > Xbar-S).
 
-    Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
+    Acepta los mismos formatos de entrada que :func:`xbar_r_chart`, incluidos ``transform`` y ``scale``.
     ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``.
     """
     check_method(sigma_method, ("sbar", "pooled"))
     return _xbar_chart("Xbar-S", "s", data, subgroup_size, subgroup, sigma_method,
-                       mu, sigma, stages, tests, test_params, value=value)
+                       mu, sigma, stages, tests, test_params, value=value, transform=transform, scale=scale)

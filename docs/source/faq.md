@@ -139,6 +139,11 @@ Tienes tres opciones:
    ```
    El PPM observado (`cap.ppm_obs`) no depende de ninguna distribución.
 
+Para las **cartas de control** con datos asimétricos usa `transform=` (`'boxcox'`, `'yeo-johnson'` o `'johnson'`):
+`pp.imr_chart(x, transform='yeo-johnson')`. Los límites y las pruebas se calculan en la escala transformada y, por
+defecto, el panel de valores individuales (o de medias) se dibuja en unidades originales con límites asimétricos
+(`scale='transformed'` lo deja todo en la escala transformada).
+
 Las cartas de medias (Xbar-R, Xbar-S) son bastante robustas a la no normalidad cuando los subgrupos tienen
 más de 5 observaciones, por el teorema central del límite. Con subgrupos de 2 a 5 observaciones y datos
 asimétricos la librería avisa, y la carta de **individuales (I-MR)** no tiene esa protección: con datos

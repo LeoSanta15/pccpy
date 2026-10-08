@@ -249,7 +249,7 @@ def avisar_asimetria_subgrupos(g: np.ndarray, *, destino: str, stacklevel: int =
     if destino == "carta":
         warnings.warn(tr("Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = {asim:.2f}) las medias no "
                          "se aproximan bien a la normal: los límites de X̄ y de R/S pueden dar falsas alarmas del lado "
-                         "de la cola larga. Revisa los datos con diagnose() antes de fiarte de los límites.").format(
+                         "de la cola larga. Revisa los datos con diagnose() y, si hace falta, usa transform= para normalizarlos.").format(
                              n=n_sub, asim=asim), UserWarning, stacklevel=stacklevel)
     else:
         warnings.warn(tr("Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = {asim:.2f}) los índices y "

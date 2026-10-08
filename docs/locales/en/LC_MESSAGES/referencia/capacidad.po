@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:33+0000\n"
+"POT-Creation-Date: 2026-10-08 21:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -135,6 +135,9 @@ msgstr "Transforms values (scalar or array) to the normalized scale; NaNs are ke
 
 msgid "Deshace la transformación: de la escala normalizada a la original."
 msgstr "Undoes the transformation: from the normalized scale back to the original."
+
+msgid "Un valor fuera del rango que alcanza la transformación (p. ej. por debajo de ``−1/λ`` en Box-Cox con ``λ > 0``) se lleva al extremo del soporte original: ``0`` para Box-Cox por abajo, ``±∞`` en los demás casos."
+msgstr "A value outside the range the transformation reaches (e.g. below ``−1/λ`` in Box-Cox with ``λ > 0``) is taken to the edge of the original support: ``0`` for Box-Cox at the bottom, ``±∞`` in the other cases."
 
 msgid "Diccionario con el método y sus parámetros (es lo que guarda ``CapabilityResult.transform``)."
 msgstr "Dictionary with the method and its parameters (this is what ``CapabilityResult.transform`` stores)."

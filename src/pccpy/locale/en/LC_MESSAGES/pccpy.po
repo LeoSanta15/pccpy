@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:33+0000\n"
+"POT-Creation-Date: 2026-10-08 21:44+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1064,6 +1064,10 @@ msgstr ""
 "original units)"
 
 #, python-brace-format
+msgid "  Transformación {detalle}; paneles de posición en la escala {escala}"
+msgstr "  Transformation {detalle}; location panels on the {escala} scale"
+
+#, python-brace-format
 msgid "  Valor p         : {p:.4f}"
 msgstr "  p-value         : {p:.4f}"
 
@@ -1291,6 +1295,10 @@ msgstr "'point' must be between 1 and {m}."
 
 msgid "'process_avg' debe estar en (0, 1)."
 msgstr "'process_avg' must be in (0, 1)."
+
+#, python-brace-format
+msgid "'scale' debe ser 'original' o 'transformed' (recibido: {scale!r})."
+msgstr "'scale' must be 'original' or 'transformed' (received: {scale!r})."
 
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
 msgstr "'sides' must be 'two', 'lower' or 'upper'."
@@ -1628,11 +1636,11 @@ msgstr "With n={n} (< {minimo}) the bootstrap also loses coverage; interpret the
 msgid ""
 "Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = {asim:.2f}) las medias no se aproximan bien a la "
 "normal: los límites de X̄ y de R/S pueden dar falsas alarmas del lado de la cola larga. Revisa los datos con "
-"diagnose() antes de fiarte de los límites."
+"diagnose() y, si hace falta, usa transform= para normalizarlos."
 msgstr ""
 "With small subgroups (n ≈ {n:g}) and skewed data (skewness = {asim:.2f}) the means are not well approximated by a "
-"normal: the X̄ and R/S limits can give false alarms on the long-tail side. Check the data with diagnose() before "
-"trusting the limits."
+"normal: the X̄ and R/S limits can give false alarms on the long-tail side. Check the data with diagnose() and, if "
+"needed, use transform= to normalize them."
 
 #, python-brace-format
 msgid ""
@@ -1800,6 +1808,9 @@ msgstr "Description"
 
 msgid "Desv. est. de la muestra"
 msgstr "Sample std. dev."
+
+msgid "Desv. est. de la muestra (escala transformada)"
+msgstr "Sample std. dev. (transformed scale)"
 
 msgid "Desv. est. dentro del subgrupo"
 msgstr "Within-subgroup std. dev."
@@ -2231,6 +2242,13 @@ msgstr "Phase I did not converge: {reason}."
 msgid "La Fase I no está soportada para esta carta; usa {charts}."
 msgstr "Phase I is not supported for this chart; use {charts}."
 
+msgid ""
+"La Fase I todavía no admite 'transform': los límites congelados y la transformación tendrían que ajustarse juntos. "
+"Transforma los datos antes con fit_transformation()."
+msgstr ""
+"Phase I does not support 'transform' yet: the frozen limits and the transformation would have to be fitted together. "
+"Transform the data first with fit_transformation()."
+
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr "The NP chart requires a constant sample size; use the P chart."
 
@@ -2372,10 +2390,10 @@ msgstr "The data must be an N x p matrix (or 3-D: subgroups x n x p)."
 #, python-brace-format
 msgid ""
 "Los datos son asimétricos (asimetría = {skewness:.2f}): los límites de I-MR suponen normalidad y pueden dar falsas "
-"alarmas del lado de la cola larga."
+"alarmas del lado de la cola larga; usa imr_chart(..., transform='boxcox' | 'yeo-johnson' | 'johnson')."
 msgstr ""
 "The data are skewed (skewness = {skewness:.2f}): the I-MR limits assume normality and can give false alarms on the "
-"long-tail side."
+"long-tail side; use imr_chart(..., transform='boxcox' | 'yeo-johnson' | 'johnson')."
 
 msgid "Los datos son constantes: no se puede ajustar una transformación."
 msgstr "The data are constant: a transformation cannot be fitted."
@@ -2871,11 +2889,17 @@ msgstr "Range"
 msgid "Rango de la muestra"
 msgstr "Sample range"
 
+msgid "Rango de la muestra (escala transformada)"
+msgstr "Sample range (transformed scale)"
+
 msgid "Rango dentro del subgrupo"
 msgstr "Within-subgroup range"
 
 msgid "Rango móvil"
 msgstr "Moving range"
+
+msgid "Rango móvil (escala transformada)"
+msgstr "Moving range (transformed scale)"
 
 msgid "Rango móvil de Z"
 msgstr "Moving range of Z"
@@ -3422,6 +3446,9 @@ msgstr ""
 msgid "operador"
 msgstr "operator"
 
+msgid "original"
+msgstr "original"
+
 msgid "p Agrupamiento (clustering)"
 msgstr "p Clustering"
 
@@ -3553,6 +3580,9 @@ msgstr "size"
 msgid "tolerancia"
 msgstr "tolerance"
 
+msgid "transformada"
+msgstr "transformed"
+
 msgid "valor"
 msgstr "value"
 
@@ -3571,6 +3601,10 @@ msgstr "zone"
 #, python-brace-format
 msgid "{count} valor(es) atípico(s) detectado(s). Investiga su origen."
 msgstr "{count} outlier(s) detected. Investigate their origin."
+
+#, python-brace-format
+msgid "{detalle}; paneles de posición en la escala {escala}"
+msgstr "{detalle}; location panels on the {escala} scale"
 
 #, python-brace-format
 msgid "{kind} objetivo (%)"

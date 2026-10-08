@@ -31,7 +31,11 @@ def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
         ax.plot(xs, panel.center[m], color=GREEN, lw=1.3, **kw)
         ax.plot(xs, panel.ucl[m], color=RED, lw=1.3, **kw)
         ax.plot(xs, panel.lcl[m], color=RED, lw=1.3, **kw)
-        if zones:
+        if zones and panel.zones_upper is not None and panel.zones_lower is not None:
+            for k in (1, 2):  # escala original de una carta transformada: las zonas no son simétricas
+                for lineas in (panel.zones_upper, panel.zones_lower):
+                    ax.plot(xs, lineas[k][m], color=GRAY, lw=0.7, ls="--", **kw)
+        elif zones:
             for k in (1, 2):
                 for sgn in (1, -1):
                     ax.plot(xs, panel.center[m] + sgn * k * panel.sigma[m],
@@ -92,7 +96,12 @@ def plot_control_chart(chart: ControlChart, *, zones: bool = True, figsize=None,
         else:
             eje.xaxis.set_major_locator(MaxNLocator(integer=True))
         eje.set_xlabel(xlabel)
-        fig.suptitle(title or tr("Carta de control {kind}").format(kind=chart.kind), fontweight="bold")
+        titulo = title or tr("Carta de control {kind}").format(kind=chart.kind)
+        if chart.transformation is not None and title is None:
+            titulo += "\n" + tr("{detalle}; paneles de posición en la escala {escala}").format(
+                detalle=chart.transformation.describe(),
+                escala=tr("original") if chart.chart_scale == "original" else tr("transformada"))
+        fig.suptitle(titulo, fontweight="bold")
         fig.tight_layout(rect=(0, 0, 0.9, 0.97))
         return fig
 
