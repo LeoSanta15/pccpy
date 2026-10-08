@@ -87,7 +87,7 @@ Xbar-R/S pueden dar falsas alarmas. La librería avisa; la solución es `transfo
 
 ## Límites y precauciones
 
-- `phase_one` todavía no admite `transform`: transforma antes con `pp.fit_transformation()`.
+- `phase_one(..., transform="yeo-johnson")` (solo en I-MR, Xbar-R y Xbar-S) reajusta la transformación en cada pasada con los puntos que se conservan y congela la de la última para `phase2()`, junto con `mu` y `sigma` (en la escala transformada). Avisa si lambda cambia más de 0,5 entre la primera y la última pasada: la Fase I no es estable. Con una `Transformation` ya ajustada no se reajusta.
 - Con `transform=` y `ci_method="bootstrap"` los parámetros de la transformación se mantienen fijos en los remuestreos
   (el intervalo no recoge su incertidumbre). Con Johnson SB o SL un límite fuera del soporte no puede superarse: los
   índices salen infinitos.
