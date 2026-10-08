@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 22:53+0000\n"
+"POT-Creation-Date: 2026-10-08 23:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -84,6 +84,12 @@ msgstr "Phase I with a Box-Cox transformation (refit on each pass)"
 
 msgid "Fase I escrita aparte con `scipy.stats.boxcox`, I-MR con d2 = 2/√π y prueba 1"
 msgstr "Phase I written separately with `scipy.stats.boxcox`, I-MR with d2 = 2/√π and test 1"
+
+msgid "Fase II tras guardar y cargar una Fase I (JSON)"
+msgstr "Phase II after saving and loading a Phase I (JSON)"
+
+msgid "Los mismos límites e idéntica transformación pasados directamente a `imr_chart`; JSON de la biblioteca estándar"
+msgstr "The same limits and identical transformation passed directly to `imr_chart`; JSON from the standard library"
 
 msgid "Pruebas de atípicos (Grubbs y ESD generalizada)"
 msgstr "Outlier tests (Grubbs and generalized ESD)"

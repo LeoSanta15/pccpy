@@ -422,6 +422,35 @@ def _fase1_transformacion():
     return esperado, obtenido
 
 
+@_comprobacion("fase1-guardar", N_("Fase II tras guardar y cargar una Fase I (JSON) frente a los mismos límites dados a mano"),
+               "Límites históricos pasados directamente a imr_chart (mu, sigma, transform) y texto JSON de la biblioteca estándar", 1e-12)
+def _fase1_guardar():
+    import json
+
+    from .charts import imr_chart
+    from .phase1 import PhaseOneResult, phase_one
+
+    rng = np.random.default_rng(7)
+    x = rng.gamma(4.0, 2.0, 90) + 1.0
+    x[[12, 47]] *= 8.0
+    nuevos = rng.gamma(4.0, 2.0, 25) + 1.0
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        r = phase_one(imr_chart, x, transform="boxcox", tests=(1,))
+        cargado = PhaseOneResult.from_json(json.dumps(r.to_dict()))
+        directa = imr_chart(nuevos, mu=r.limits["mu"], sigma=r.limits["sigma"], transform=r.transformation, tests=(1,))
+        desde_json = cargado.phase2(nuevos)
+        externo = PhaseOneResult.from_limits(imr_chart, mu=r.limits["mu"], sigma=r.limits["sigma"],
+                                             transform=r.transformation, tests=(1,)).phase2(nuevos)
+
+    def campos(c):
+        return np.concatenate([c.panels[0].values, c.panels[0].ucl, c.panels[0].lcl])
+
+    esperado = campos(directa)
+    obtenido = np.concatenate([campos(desde_json), campos(externo)])
+    return np.tile(esperado, 2), obtenido
+
+
 @_comprobacion("resumen-clasico", N_("Intervalos clásicos del resumen (t de Student, chi-cuadrado, estadísticos de orden)"),
                "scipy.stats.t.interval; chi-cuadrado de la varianza; binomial(n, 0,5) para la mediana", 1e-9)
 def _resumen_clasico():
