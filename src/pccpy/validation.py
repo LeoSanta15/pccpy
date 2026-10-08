@@ -398,6 +398,30 @@ def _transformaciones():
     return np.concatenate(esperado), np.concatenate(obtenido)
 
 
+@_comprobacion("fase1-transformacion", N_("Fase I con transformación Box-Cox frente a un cálculo manual (reajuste por pasada)"),
+               "scipy.stats.boxcox; I-MR con d2 = 2/√π y prueba 1 escritas aparte", 1e-9)
+def _fase1_transformacion():
+    from .charts import imr_chart
+    from .phase1 import phase_one
+
+    x = np.random.default_rng(7).gamma(4.0, 2.0, 90) + 1.0
+    x[[12, 47]] *= 8.0  # dos puntos con causa especial
+    conservados = np.arange(x.size)
+    while True:  # Fase I a mano: transformar, calcular mu y sigma, excluir |z − mu| > 3 sigma y repetir
+        z, lam = stats.boxcox(x[conservados])
+        mu, sigma = z.mean(), np.abs(np.diff(z)).mean() / (2 / np.sqrt(np.pi))
+        fuera = np.abs(z - mu) > 3 * sigma
+        if not fuera.any():
+            break
+        conservados = conservados[~fuera]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")  # avisa de que lambda cambia entre pasadas
+        r = phase_one(imr_chart, x, transform="boxcox", tests=(1,))
+    esperado = np.array([lam, mu, sigma, x.size - conservados.size])
+    obtenido = np.array([r.transformation.params["lambda"], r.limits["mu"], r.limits["sigma"], r.excluded.size])
+    return esperado, obtenido
+
+
 @_comprobacion("resumen-clasico", N_("Intervalos clásicos del resumen (t de Student, chi-cuadrado, estadísticos de orden)"),
                "scipy.stats.t.interval; chi-cuadrado de la varianza; binomial(n, 0,5) para la mediana", 1e-9)
 def _resumen_clasico():

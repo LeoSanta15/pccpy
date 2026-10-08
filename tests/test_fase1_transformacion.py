@@ -130,3 +130,16 @@ def test_fase2_en_escala_transformada_y_en_original_son_coherentes():
     np.testing.assert_allclose(r_o.transformation.forward(co.panels[0].ucl), ct.panels[0].ucl)
     np.testing.assert_array_equal(ct.panels[0].flagged, co.panels[0].flagged)
     assert co.panels[0].ucl[0] - co.panels[0].center[0] != pytest.approx(co.panels[0].center[0] - co.panels[0].lcl[0])
+
+
+def test_simulacion_falsas_alarmas_de_fase2_con_datos_lognormales():
+    """Con la transformación la tasa de falsas alarmas de la prueba 1 queda cerca de la nominal (0,27 %); sin ella, no."""
+    rng = np.random.default_rng(11)
+    con, sin = [], []
+    for _ in range(60):
+        x = rng.lognormal(1, 0.6, 100)
+        nuevos = rng.lognormal(1, 0.6, 2000)
+        con.append(pp.phase_one(pp.imr_chart, x, transform="yeo-johnson", tests=(1,)).phase2(
+            nuevos, tests=(1,)).panels[0].flagged.size / 2000)
+        sin.append(pp.phase_one(pp.imr_chart, x, tests=(1,)).phase2(nuevos, tests=(1,)).panels[0].flagged.size / 2000)
+    assert np.mean(con) < 0.006 and np.mean(sin) > 0.03
