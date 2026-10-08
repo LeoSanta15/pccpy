@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:24+0000\n"
+"POT-Creation-Date: 2026-10-08 21:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -850,6 +850,12 @@ msgid ""
 msgstr ""
 
 #, python-brace-format
+msgid ""
+"  Transformación {detalle} (Media, Desv.Est. y Z.* están en la escala "
+"transformada; LEI/LES/objetivo y PPM observado, en unidades originales)"
+msgstr ""
+
+#, python-brace-format
 msgid "  Valor p         : {p:.4f}"
 msgstr ""
 
@@ -1083,6 +1089,11 @@ msgstr ""
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
 msgstr ""
 
+msgid ""
+"'sigma_within' no se puede combinar con 'transform' (está en la escala "
+"original)."
+msgstr ""
+
 msgid "'span' debe ser >= 2."
 msgstr ""
 
@@ -1120,6 +1131,10 @@ msgid ""
 msgstr ""
 
 msgid "'tests' debe ser 'all', None o una lista de enteros 1-8."
+msgstr ""
+
+#, python-brace-format
+msgid "'transform' debe ser uno de {opciones}."
 msgstr ""
 
 msgid "'units' debe contener valores positivos."
@@ -1805,6 +1820,10 @@ msgstr ""
 msgid "General (Box-Cox)"
 msgstr ""
 
+#, python-brace-format
+msgid "General ({metodo})"
+msgstr ""
+
 msgid "Gráfico de capacidad"
 msgstr ""
 
@@ -1895,6 +1914,10 @@ msgid ""
 msgstr ""
 
 msgid "Intervalos de tolerancia"
+msgstr ""
+
+#, python-brace-format
+msgid "Johnson {family} (a={a:.4g}, b={b:.4g}, loc={loc:.4g}, scale={scale:.4g})"
 msgstr ""
 
 msgid ""
@@ -2162,6 +2185,9 @@ msgid ""
 "larga."
 msgstr ""
 
+msgid "Los datos son constantes: no se puede ajustar una transformación."
+msgstr ""
+
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr ""
 
@@ -2365,6 +2391,9 @@ msgid "No normal (p ≤ 0.05)"
 msgstr ""
 
 msgid "No o no lo sé → P estándar"
+msgstr ""
+
+msgid "No se pudo ajustar ninguna distribución de Johnson a los datos."
 msgstr ""
 
 msgid "No — intentar transformación Box-Cox automática"
@@ -2726,6 +2755,10 @@ msgid "Se necesitan al menos 3 pares para la regresión."
 msgstr ""
 
 #, python-brace-format
+msgid "Se necesitan al menos {n} observaciones para ajustar la transformación."
+msgstr ""
+
+#, python-brace-format
 msgid "Se necesitan al menos {span} observaciones (span={span})."
 msgstr ""
 
@@ -2960,6 +2993,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "Verde lo={v:.4g}"
+msgstr ""
+
+msgid "Yeo-Johnson y familia de Johnson frente a las definiciones de scipy"
 msgstr ""
 
 msgid "Z del proceso"
@@ -3360,6 +3396,10 @@ msgstr ""
 
 #, python-brace-format
 msgid "{method}: estadístico = {statistic:.4f}, valor p {relation}{p} (n = {n})"
+msgstr ""
+
+#, python-brace-format
+msgid "{nombre} con lambda = {lam:.4f}"
 msgstr ""
 
 #, python-brace-format

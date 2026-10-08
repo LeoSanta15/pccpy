@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:49+0000\n"
+"POT-Creation-Date: 2026-10-08 21:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -66,6 +66,12 @@ msgstr "Bootstrap intervals of Pp and Ppk"
 
 msgid "Fórmulas de Pp y Ppk escritas aparte, con los mismos remuestreos"
 msgstr "Formulas of Pp and Ppk written separately, with the same resamples"
+
+msgid "Yeo-Johnson y familia de Johnson"
+msgstr "Yeo-Johnson and the Johnson family"
+
+msgid "`scipy.stats.yeojohnson`; `Φ⁻¹(F(x))` con las distribuciones de scipy"
+msgstr "`scipy.stats.yeojohnson`; `Φ⁻¹(F(x))` with the scipy distributions"
 
 msgid "Bootstrap (BCa y percentil)"
 msgstr "Bootstrap (BCa and percentile)"

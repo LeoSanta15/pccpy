@@ -27,7 +27,7 @@
 | F1 | Núcleo de bootstrap (`bootstrap_ci`, percentil y BCa) | `feat/bootstrap-nucleo` | _(ver PR de la rama)_ | en revisión |
 | F2 | Intervalos de capacidad por bootstrap (`capability_analysis`, `capability_boxcox`, `capability_nonnormal`) | `feat/bootstrap-capacidad` | _(ver PR de la rama)_ | en revisión |
 | F5 | `diagnose()` con asimetría, curtosis y positividad; arreglar la condición redundante | `feat/diagnose-asimetria` | _(ver PR de la rama)_ | en revisión |
-| F3 | Transformaciones: Yeo-Johnson y familia de Johnson; comprobación de normalidad posterior | | | pendiente |
+| F3 | Transformaciones: Yeo-Johnson y familia de Johnson (`transform=` en `capability_analysis`, `fit_transformation`) | `feat/transformaciones` | _(ver PR de la rama)_ | en revisión |
 | F4 | `transform=` en cartas de variables (escala original por defecto) | | | pendiente |
 | F6 | Bootstrap para media, mediana y desviación estándar | | | pendiente |
 | F7 | Guía «datos asimétricos», README, `wizard()`, validación, versión 0.13.0 | | | pendiente |

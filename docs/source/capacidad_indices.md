@@ -161,6 +161,31 @@ print(f"Z.Bench = {res.z_bench:.2f}  ({res.ppm_total:.0f} PPM)")
 - {doc}`faq` — "¿Por qué Cp ≠ Cpk?" y otras preguntas frecuentes
 
 
+## Transformar los datos: Box-Cox, Yeo-Johnson y Johnson
+
+Con `transform=` se normalizan los datos (y los límites de especificación y el objetivo) y los índices se calculan en la
+escala transformada; los límites, el objetivo y el PPM observado se informan en unidades originales.
+
+```python
+pp.capability_analysis(x, lsl=15, usl=32, transform="yeo-johnson")
+pp.capability_analysis(x, lsl=15, usl=32, transform="johnson")     # elige SU, SB o SL
+pp.capability_analysis(g, lsl=15, usl=32, transform="boxcox", ci_method="bootstrap")  # también con subgrupos
+```
+
+| `transform` | Datos admitidos | Notas |
+|-------------|-----------------|-------|
+| `"boxcox"` | estrictamente positivos (y límites positivos) | equivale a `capability_boxcox` |
+| `"yeo-johnson"` | cualquier valor (ceros y negativos) | lambda por máxima verosimilitud |
+| `"johnson"` | cualquier valor | ajusta las familias SU (sin límites), SB (acotada) y SL (lognormal de tres parámetros) y elige la que deja los datos más normales (mayor valor p de Anderson-Darling) |
+
+- Con Johnson SB o SL, un límite de especificación fuera del soporte de la distribución (por ejemplo más allá de la cota
+  superior de SB) no puede superarse: los índices salen infinitos. Es coherente, no un error.
+- `sigma_within` no se puede combinar con `transform` (está en la escala original).
+- `pp.fit_transformation(datos, método)` devuelve una `Transformation` con `forward()` (a la escala normal),
+  `inverse()` (a la original) e `info()`, por si quieres aplicarla a otros valores.
+- Con `ci_method="bootstrap"` los parámetros de la transformación se mantienen fijos en los remuestreos: el intervalo no
+  recoge su incertidumbre.
+
 ## Intervalos de confianza con datos asimétricos
 
 Los intervalos de Pp y Ppk por defecto (chi-cuadrado y Bissell) suponen normalidad. Con datos asimétricos pueden quedar

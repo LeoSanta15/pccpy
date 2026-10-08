@@ -7,6 +7,11 @@ Capacidad del proceso
 .. autofunction:: pccpy.capability_boxcox
 .. autofunction:: pccpy.capability_sixpack
 .. autofunction:: pccpy.plot_capability
+.. autofunction:: pccpy.fit_transformation
+
+.. autoclass:: pccpy.Transformation
+   :members: forward, inverse, info, from_info, describe
+
 .. autofunction:: pccpy.capability_binomial
 .. autofunction:: pccpy.capability_poisson
 
