@@ -115,9 +115,9 @@ def test_errores(llamada, texto):
         llamada()
 
 
-def test_fase_i_todavia_no_admite_transform():
-    with pytest.raises(ValueError, match="transform"):
-        pp.phase_one(pp.imr_chart, X, transform="boxcox")
+def test_fase_i_admite_transform_en_cartas_de_variables():
+    r = pp.phase_one(pp.imr_chart, X, transform="boxcox", tests=(1,))
+    assert r.transformation is not None and r.chart.transformation is r.transformation
 
 
 def test_sin_transform_no_cambia_nada():

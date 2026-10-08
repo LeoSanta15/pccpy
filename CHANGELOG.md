@@ -2,6 +2,9 @@
 
 ## [Sin publicar]
 
+### Añadido
+- **`phase_one(..., transform=…)`** (I-MR, Xbar-R y Xbar-S): la Fase I con datos asimétricos reajusta la transformación (`'boxcox'`, `'yeo-johnson'` o `'johnson'`) en cada pasada con los puntos que se conservan, de modo que los puntos con causa especial no influyen en el ajuste, y congela la de la última pasada en `PhaseOneResult.transformation`; `phase2()` la aplica sin reajustarla, junto con `mu` y `sigma` (en la escala transformada). Con una `Transformation` ya ajustada no se reajusta. Avisa si lambda cambia más de 0,5 entre la primera y la última pasada (Fase I inestable) y se detiene con `reason='transform_failed'` si no se puede reajustar. `PhaseOneIteration.transformation` guarda la de cada pasada. Primera fase (T1) de `docs/planes/PLAN_FASE1_TRANSFORMACION.md`.
+
 ## [0.13.0] - datos asimétricos: bootstrap, transformaciones y pruebas de atípicos
 
 ### Añadido

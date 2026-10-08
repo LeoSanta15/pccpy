@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 22:16+0000\n"
+"POT-Creation-Date: 2026-10-08 22:38+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -915,6 +915,12 @@ msgstr ""
 
 #, python-brace-format
 msgid ""
+"  Transformación congelada (los límites están en la escala transformada):"
+" {t}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
 "  Transformación {detalle} (Media, Desv.Est. y Z.* están en la escala "
 "transformada; LEI/LES/objetivo y PPM observado, en unidades originales)"
 msgstr ""
@@ -1232,6 +1238,10 @@ msgstr ""
 
 #, python-brace-format
 msgid "'transform' debe ser uno de {opciones}."
+msgstr ""
+
+#, python-brace-format
+msgid "'transform' solo se admite en {charts}."
 msgstr ""
 
 msgid "'units' debe contener valores positivos."
@@ -2160,12 +2170,6 @@ msgstr ""
 msgid "La Fase I no está soportada para esta carta; usa {charts}."
 msgstr ""
 
-msgid ""
-"La Fase I todavía no admite 'transform': los límites congelados y la "
-"transformación tendrían que ajustarse juntos. Transforma los datos antes "
-"con fit_transformation()."
-msgstr ""
-
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr ""
 
@@ -2219,6 +2223,12 @@ msgid ""
 "La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los"
 " planes que da pueden aceptar casi cualquier lote). Use los valores n y k"
 " de su ejemplar de ANSI/ASQ Z1.9 con n= y k=."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"La transformación cambió mucho al excluir puntos ({primera} → {ultima}): "
+"la Fase I no es estable y los límites dependen de qué puntos se excluyan."
 msgstr ""
 
 #, python-brace-format
@@ -3394,6 +3404,9 @@ msgid "n_subgrupo"
 msgstr ""
 
 msgid "no"
+msgstr ""
+
+msgid "no se pudo reajustar la transformación con los puntos que quedarían"
 msgstr ""
 
 msgid "objetivo"

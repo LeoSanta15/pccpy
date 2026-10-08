@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 22:16+0000\n"
+"POT-Creation-Date: 2026-10-08 22:38+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1132,6 +1132,10 @@ msgstr ""
 " and observed PPM, in original units)"
 
 #, python-brace-format
+msgid "  Transformación congelada (los límites están en la escala transformada): {t}"
+msgstr "  Frozen transformation (the limits are on the transformed scale): {t}"
+
+#, python-brace-format
 msgid ""
 "  Transformación {detalle} (Media, Desv.Est. y Z.* están en la escala transformada; LEI/LES/objetivo y PPM observado,"
 " en unidades originales)"
@@ -1446,6 +1450,10 @@ msgstr "'tests' must be 'all', None or a list of integers 1-8."
 #, python-brace-format
 msgid "'transform' debe ser uno de {opciones}."
 msgstr "'transform' must be one of {opciones}."
+
+#, python-brace-format
+msgid "'transform' solo se admite en {charts}."
+msgstr "'transform' is only supported in {charts}."
 
 msgid "'units' debe contener valores positivos."
 msgstr "'units' must contain positive values."
@@ -2362,13 +2370,6 @@ msgstr "Phase I did not converge: {reason}."
 msgid "La Fase I no está soportada para esta carta; usa {charts}."
 msgstr "Phase I is not supported for this chart; use {charts}."
 
-msgid ""
-"La Fase I todavía no admite 'transform': los límites congelados y la transformación tendrían que ajustarse juntos. "
-"Transforma los datos antes con fit_transformation()."
-msgstr ""
-"Phase I does not support 'transform' yet: the frozen limits and the transformation would have to be fitted together. "
-"Transform the data first with fit_transformation()."
-
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr "The NP chart requires a constant sample size; use the P chart."
 
@@ -2421,6 +2422,14 @@ msgid ""
 msgstr ""
 "The built-in Z1.9 table is an approximation that does not reproduce the standard (the plans it gives may accept "
 "almost any lot). Use the n and k values from your copy of ANSI/ASQ Z1.9 with n= and k=."
+
+#, python-brace-format
+msgid ""
+"La transformación cambió mucho al excluir puntos ({primera} → {ultima}): la Fase I no es estable y los límites "
+"dependen de qué puntos se excluyan."
+msgstr ""
+"The transformation changed a lot when points were excluded ({primera} → {ultima}): Phase I is not stable and the "
+"limits depend on which points are excluded."
 
 #, python-brace-format
 msgid "La variable PCCPY_LANG={valor!r} no es un idioma disponible; se usa {defecto!r}."
@@ -3602,6 +3611,9 @@ msgstr "n_subgroup"
 msgid "no"
 msgstr "no"
 
+msgid "no se pudo reajustar la transformación con los puntos que quedarían"
+msgstr "the transformation could not be refitted with the remaining points"
+
 msgid "objetivo"
 msgstr "target"
 
@@ -3961,4 +3973,13 @@ msgstr "✔ Recommended analysis: <code style='font-size:13px'>{function}</code>
 
 #~ msgid "Combinación de letra={letra} y AQL={aql_key} no disponible en la tabla."
 #~ msgstr "Letter={letra} and AQL={aql_key} combination not available in the table."
+
+#~ msgid ""
+#~ "La Fase I todavía no admite 'transform': los límites "
+#~ "congelados y la transformación tendrían que ajustarse juntos. "
+#~ "Transforma los datos antes con fit_transformation()."
+#~ msgstr ""
+#~ "Phase I does not support 'transform' yet: the frozen limits"
+#~ " and the transformation would have to be fitted together. "
+#~ "Transform the data first with fit_transformation()."
 

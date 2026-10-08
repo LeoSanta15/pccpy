@@ -14,6 +14,7 @@ from ._i18n import N_, tr
 from ._labels import detectar
 from .charts import c_chart, imr_chart, np_chart, p_chart, u_chart, xbar_r_chart, xbar_s_chart
 from .results import ControlChart, _texto_etiqueta
+from .transforms import Transformation, fit_transformation
 
 _COLUMNAS_HISTORIAL = {
     "iteration": N_("iteración"), "n_points": N_("puntos"), "n_flagged": N_("señales"), "center": N_("centro"),
@@ -21,7 +22,9 @@ _COLUMNAS_HISTORIAL = {
 }
 # argumentos que describen los datos de la Fase I (no se reutilizan con los datos nuevos de la Fase II)
 _ARGUMENTOS_DE_DATOS = ("subgroup_size", "subgroup", "value", "n")
-MOTIVOS = ("in_control", "max_iterations", "min_points", "too_many_excluded")
+MOTIVOS = ("in_control", "max_iterations", "min_points", "too_many_excluded", "transform_failed")
+_CARTAS_CON_TRANSFORMACION = ("imr_chart", "xbar_r_chart", "xbar_s_chart")
+_CAMBIO_LAMBDA_AVISO = 0.5  # cambio de lambda entre la primera y la última pasada que se considera inestable
 
 
 @dataclass(frozen=True)
@@ -54,6 +57,7 @@ class PhaseOneIteration:
     flagged: np.ndarray  # posiciones (base 0, en los datos originales) de los puntos con señal
     center: float
     sigma: float
+    transformation: Transformation | None = None  # la usada en esta pasada (solo con ``transform=``)
 
 
 @dataclass
@@ -74,12 +78,15 @@ class PhaseOneResult:
         ``True`` si la última carta no tiene ninguna señal en los paneles que cuentan (``chart.in_control`` mira todos
         los paneles).
     reason : str
-        ``'in_control'``, ``'max_iterations'``, ``'min_points'`` o ``'too_many_excluded'``.
+        ``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'`` o ``'transform_failed'``.
     limits : dict
         Argumentos de la función de la carta que congelan los límites (``mu``/``sigma``, ``p``, ``c`` o ``u``): es lo
         que :meth:`phase2` aplica a los datos nuevos.
     labels : numpy.ndarray or None
         Etiquetas (fechas, lotes…) de los puntos originales, si los datos las traían.
+    transformation : Transformation or None
+        Con ``transform=``: la transformación de la última pasada, que :meth:`phase2` aplica a los datos nuevos junto
+        con los límites congelados (``mu`` y ``sigma`` están en la escala transformada). ``None`` sin ``transform``.
     """
 
     chart: ControlChart
@@ -91,6 +98,7 @@ class PhaseOneResult:
     n_original: int
     limits: dict
     labels: np.ndarray | None = None
+    transformation: Transformation | None = None
     _funcion: Callable = field(default=imr_chart, repr=False)
     _argumentos: dict = field(default_factory=dict, repr=False)
 
@@ -137,6 +145,9 @@ class PhaseOneResult:
             lines.append(tr("  Puntos excluidos: {points}").format(points=puntos))
         lines.append(tr("  Límites congelados para la Fase II: {limits}").format(
             limits=", ".join(f"{k}={v:.6g}" for k, v in self.limits.items())))
+        if self.transformation is not None:
+            lines.append(tr("  Transformación congelada (los límites están en la escala transformada): {t}").format(
+                t=self.transformation.describe()))
         for h in self.history:
             lines.append(tr("    Pasada {iteration}: {n} puntos, {flagged} con señal").format(
                 iteration=h.iteration, n=h.n_points, flagged=int(h.flagged.size)))
@@ -157,6 +168,8 @@ class PhaseOneResult:
             ``subgroup_size=``); sustituyen a los usados en la Fase I.
         """
         argumentos = {**self._argumentos, **self.limits, **kwargs}
+        if self.transformation is not None:
+            argumentos["transform"] = self.transformation  # fija: no se reajusta a los datos nuevos
         return self._funcion(data, **argumentos)
 
     def plot(self, **kwargs):
@@ -169,6 +182,7 @@ def _describir_motivo(motivo: str) -> str:
         "max_iterations": tr("se alcanzó el máximo de pasadas"),
         "min_points": tr("quedarían menos puntos que el mínimo"),
         "too_many_excluded": tr("se excluiría una fracción excesiva de los puntos: el proceso no es estable"),
+        "transform_failed": tr("no se pudo reajustar la transformación con los puntos que quedarían"),
     }.get(motivo, motivo)
 
 
@@ -264,9 +278,9 @@ def phase_one(
         raise ValueError(tr("'max_iterations' debe ser >= 0, 'max_excluded' estar en (0, 1] y 'min_points' ser >= 2."))
     if "stages" in kwargs and kwargs["stages"] is not None:
         raise ValueError(tr("La Fase I no admite 'stages': hazla por separado en cada etapa."))
-    if kwargs.get("transform") is not None:
-        raise ValueError(tr("La Fase I todavía no admite 'transform': los límites congelados y la transformación tendrían "
-                            "que ajustarse juntos. Transforma los datos antes con fit_transformation()."))
+    transform = kwargs.pop("transform", None)
+    if transform is not None and chart.__name__ not in _CARTAS_CON_TRANSFORMACION:
+        raise ValueError(tr("'transform' solo se admite en {charts}.").format(charts=", ".join(_CARTAS_CON_TRANSFORMACION)))
     if kwargs.get("tests", (1,)) in (None, (), []):
         raise ValueError(tr("La Fase I necesita al menos una prueba de causas especiales ('tests')."))
 
@@ -279,8 +293,16 @@ def phase_one(
     paneles = tipo.paneles if exclude_panels is None else tuple(np.atleast_1d(exclude_panels).astype(str))
     n_const = float(np.atleast_1d(kwargs.get("n", 1.0))[0]) if tipo.entrada == "conteos" else 1.0
 
-    def calcular(conservados: np.ndarray) -> ControlChart:
+    def ajustar(conservados: np.ndarray) -> Transformation | None:
+        """Transformación para los puntos conservados: se reajusta en cada pasada salvo que el usuario dé una ya ajustada."""
+        if transform is None or isinstance(transform, Transformation):
+            return transform
+        return fit_transformation(arr[conservados].ravel(), transform)
+
+    def calcular(conservados: np.ndarray, t: Transformation | None) -> ControlChart:
         a = dict(argumentos)
+        if t is not None:
+            a["transform"] = t
         if kwargs.get("n") is not None and np.ndim(kwargs["n"]) > 0:
             a["n"] = np.asarray(kwargs["n"], dtype=float)[conservados]
         c = chart(arr[conservados], **a)
@@ -296,13 +318,15 @@ def phase_one(
     conservados = np.arange(n)
     historial: list[PhaseOneIteration] = []
     motivo = "in_control"
+    t_actual = ajustar(conservados)  # un error aquí (p. ej. Box-Cox con datos no positivos) se propaga: no hay Fase I
     while True:
-        carta = calcular(conservados)
+        carta = calcular(conservados, t_actual)
         marcados = con_senal(carta)
         prm = carta.params[0]
         historial.append(PhaseOneIteration(
             iteration=len(historial), n_points=int(conservados.size), flagged=conservados[marcados],
-            center=float(prm.get("media", prm.get("centro", np.nan))), sigma=float(prm.get("sigma", np.nan))))
+            center=float(prm.get("media", prm.get("centro", np.nan))), sigma=float(prm.get("sigma", np.nan)),
+            transformation=t_actual))
         if marcados.size == 0:
             break
         if len(historial) - 1 >= max_iterations:
@@ -315,18 +339,41 @@ def phase_one(
         if (n - restantes.size) / n > max_excluded:
             motivo = "too_many_excluded"
             break
-        conservados = restantes
+        try:
+            t_nueva = ajustar(restantes)
+        except ValueError:  # p. ej. quedan menos de 8 observaciones o Johnson no se ajusta: la carta actual es la última
+            motivo = "transform_failed"
+            break
+        conservados, t_actual = restantes, t_nueva
 
     convergio = motivo == "in_control"
     resultado = PhaseOneResult(
         chart=carta, history=historial, excluded=np.setdiff1d(np.arange(n), conservados), kept=conservados,
         converged=convergio, reason=motivo, n_original=n,
-        limits=tipo.congelar(carta.params[0], n_const), labels=etiquetas_x,
+        limits=tipo.congelar(carta.params[0], n_const), labels=etiquetas_x, transformation=t_actual,
         _funcion=chart, _argumentos=argumentos_fase2(argumentos))
+    _avisar_cambio_de_transformacion(historial)
     if not convergio:
         warnings.warn(
             tr("La Fase I no convergió: {reason}.").format(reason=_describir_motivo(motivo)), UserWarning, stacklevel=2)
     return resultado
+
+
+def _avisar_cambio_de_transformacion(historial: list[PhaseOneIteration]) -> None:
+    """Avisa si la transformación reajustada cambió mucho entre la primera y la última pasada (Fase I inestable)."""
+    primera, ultima = historial[0].transformation, historial[-1].transformation
+    if primera is None or ultima is None or primera is ultima or primera.method != ultima.method:
+        return
+    cambio = None
+    if "lambda" in primera.params:
+        d = abs(primera.params["lambda"] - ultima.params["lambda"])
+        cambio = d if d > _CAMBIO_LAMBDA_AVISO else None
+    elif primera.params.get("family") != ultima.params.get("family"):
+        cambio = float("nan")
+    if cambio is not None:
+        warnings.warn(tr("La transformación cambió mucho al excluir puntos ({primera} → {ultima}): la Fase I no es estable "
+                         "y los límites dependen de qué puntos se excluyan.").format(
+            primera=primera.describe(), ultima=ultima.describe()), UserWarning, stacklevel=3)
 
 
 def argumentos_fase2(argumentos: dict) -> dict:

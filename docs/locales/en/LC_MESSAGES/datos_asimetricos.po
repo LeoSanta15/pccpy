@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 22:00+0000\n"
+"POT-Creation-Date: 2026-10-08 22:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -174,8 +174,8 @@ msgstr "With subgroups of 5 observations or fewer and skewed data, the means are
 msgid "Límites y precauciones"
 msgstr "Limits and precautions"
 
-msgid "`phase_one` todavía no admite `transform`: transforma antes con `pp.fit_transformation()`."
-msgstr "`phase_one` does not support `transform` yet: transform first with `pp.fit_transformation()`."
+msgid "`phase_one(..., transform=\"yeo-johnson\")` (solo en I-MR, Xbar-R y Xbar-S) reajusta la transformación en cada pasada con los puntos que se conservan y congela la de la última para `phase2()`, junto con `mu` y `sigma` (en la escala transformada). Avisa si lambda cambia más de 0,5 entre la primera y la última pasada: la Fase I no es estable. Con una `Transformation` ya ajustada no se reajusta."
+msgstr "`phase_one(..., transform=\"yeo-johnson\")` (only in I-MR, Xbar-R and Xbar-S) refits the transformation on each pass with the points that are kept and freezes the last one for `phase2()`, together with `mu` and `sigma` (on the transformed scale). It warns if lambda changes by more than 0.5 between the first and the last pass: Phase I is not stable. A `Transformation` that is already fitted is not refitted."
 
 msgid "Con `transform=` y `ci_method=\"bootstrap\"` los parámetros de la transformación se mantienen fijos en los remuestreos (el intervalo no recoge su incertidumbre). Con Johnson SB o SL un límite fuera del soporte no puede superarse: los índices salen infinitos."
 msgstr "With `transform=` and `ci_method=\"bootstrap\"` the transformation parameters are kept fixed across resamples (the interval does not capture their uncertainty). With Johnson SB or SL a limit outside the support cannot be exceeded: the indices come out infinite."
@@ -188,4 +188,7 @@ msgstr "A transformation does not fix data with outliers or several mixed popula
 
 msgid "Los datos de atributos (binomial, Poisson) no se transforman: `capability_binomial` y `capability_poisson` usan intervalos exactos."
 msgstr "Attribute data (binomial, Poisson) are not transformed: `capability_binomial` and `capability_poisson` use exact intervals."
+
+#~ msgid "`phase_one` todavía no admite `transform`: transforma antes con `pp.fit_transformation()`."
+#~ msgstr "`phase_one` does not support `transform` yet: transform first with `pp.fit_transformation()`."
 

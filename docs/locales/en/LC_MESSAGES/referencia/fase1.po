@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:06+0000\n"
+"POT-Creation-Date: 2026-10-08 22:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -130,8 +130,8 @@ msgstr "reason"
 msgid "str"
 msgstr "str"
 
-msgid "``'in_control'``, ``'max_iterations'``, ``'min_points'`` o ``'too_many_excluded'``."
-msgstr "``'in_control'``, ``'max_iterations'``, ``'min_points'`` or ``'too_many_excluded'``."
+msgid "``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'`` o ``'transform_failed'``."
+msgstr "``'in_control'``, ``'max_iterations'``, ``'min_points'``, ``'too_many_excluded'`` or ``'transform_failed'``."
 
 msgid "limits"
 msgstr "limits"
@@ -150,6 +150,15 @@ msgstr "numpy.ndarray or None"
 
 msgid "Etiquetas (fechas, lotes…) de los puntos originales, si los datos las traían."
 msgstr "Labels (dates, lots…) of the original points, if the data carried them."
+
+msgid "transformation"
+msgstr "transformation"
+
+msgid "Transformation or None"
+msgstr "Transformation or None"
+
+msgid "Con ``transform=``: la transformación de la última pasada, que :meth:`phase2` aplica a los datos nuevos junto con los límites congelados (``mu`` y ``sigma`` están en la escala transformada). ``None`` sin ``transform``."
+msgstr "With ``transform=``: the transformation of the last pass, which :meth:`phase2` applies to the new data together with the frozen limits (``mu`` and ``sigma`` are on the transformed scale). ``None`` without ``transform``."
 
 msgid "Etiquetas de los puntos excluidos (``None`` si los datos no traían etiquetas)."
 msgstr "Labels of the excluded points (``None`` if the data carried no labels)."
