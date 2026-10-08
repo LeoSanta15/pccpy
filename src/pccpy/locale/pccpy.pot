@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 22:38+0000\n"
+"POT-Creation-Date: 2026-10-08 22:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -3365,6 +3365,9 @@ msgstr ""
 msgid "kappa"
 msgstr ""
 
+msgid "lambda"
+msgstr ""
+
 msgid "longitud"
 msgstr ""
 
@@ -3563,6 +3566,9 @@ msgid "tamaño"
 msgstr ""
 
 msgid "tolerancia"
+msgstr ""
+
+msgid "transformación"
 msgstr ""
 
 msgid "transformada"

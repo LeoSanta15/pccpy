@@ -20,6 +20,7 @@ _COLUMNAS_HISTORIAL = {
     "iteration": N_("iteración"), "n_points": N_("puntos"), "n_flagged": N_("señales"), "center": N_("centro"),
     "sigma": N_("sigma"),
 }
+_COLUMNAS_TRANSFORMACION = {"transformation": N_("transformación"), "lambda": N_("lambda")}
 # argumentos que describen los datos de la Fase I (no se reutilizan con los datos nuevos de la Fase II)
 _ARGUMENTOS_DE_DATOS = ("subgroup_size", "subgroup", "value", "n")
 MOTIVOS = ("in_control", "max_iterations", "min_points", "too_many_excluded", "transform_failed")
@@ -110,16 +111,23 @@ class PhaseOneResult:
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Historial: una fila por pasada (puntos incluidos, señales, centro y sigma).
 
+        Con ``transform=`` añade el método de la transformación de cada pasada y su ``lambda`` (``NaN`` en Johnson).
         Con ``stable=True`` las columnas llevan claves canónicas en inglés que no cambian con el idioma.
         """
         col = etiquetas(_COLUMNAS_HISTORIAL, stable)
-        return pd.DataFrame({
+        datos = {
             col["iteration"]: [h.iteration for h in self.history],
             col["n_points"]: [h.n_points for h in self.history],
             col["n_flagged"]: [h.flagged.size for h in self.history],
             col["center"]: [h.center for h in self.history],
             col["sigma"]: [h.sigma for h in self.history],
-        })
+        }
+        if self.transformation is not None:  # con transform=: la transformación de cada pasada (lambda es NaN en Johnson)
+            ct = etiquetas(_COLUMNAS_TRANSFORMACION, stable)
+            ts = [h.transformation for h in self.history if h.transformation is not None]
+            datos[ct["transformation"]] = [t.method for t in ts]
+            datos[ct["lambda"]] = [t.params.get("lambda", np.nan) for t in ts]
+        return pd.DataFrame(datos)
 
     def summary(self) -> str:
         """Resumen en texto: puntos excluidos, límites finales y estado de cada pasada."""
