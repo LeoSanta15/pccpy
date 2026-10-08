@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:58+0000\n"
+"POT-Creation-Date: 2026-10-08 22:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -563,9 +563,19 @@ msgstr ""
 msgid "  Asimetría       : {skewness:.4f}"
 msgstr ""
 
+#, python-brace-format
+msgid "  Atípicos declarados: {valores} (índices {indices})"
+msgstr ""
+
 msgid ""
 "  Aviso: la tasa no es constante entre muestras; el proceso no es estable"
 " y la capacidad calculada no es fiable (revise la carta U)."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  Aviso: los datos restantes no parecen normales (Shapiro-Wilk p = "
+"{p:.4f}); la prueba puede marcar puntos que no son atípicos."
 msgstr ""
 
 msgid ""
@@ -709,6 +719,11 @@ msgstr ""
 msgid "  LEI={lsl}  Objetivo={target}  LES={usl}"
 msgstr ""
 
+msgid ""
+"  La prueba supone datos normales. No es una regla para eliminar datos: "
+"investiga el origen."
+msgstr ""
+
 #, python-brace-format
 msgid "  Linealidad={linearity:.5g} ({pct:.2f}%)"
 msgstr ""
@@ -771,6 +786,9 @@ msgid ""
 "Desv.Est.(general)={overall:.5f}"
 msgstr ""
 
+msgid "  Ningún atípico declarado."
+msgstr ""
+
 #, python-brace-format
 msgid "  PPM defectivo={ppm:.1f}  IC: ({lo:.1f}, {hi:.1f})"
 msgstr ""
@@ -784,6 +802,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Parámetros sugeridos : {params}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  Paso {paso}: valor {valor:.6g} (índice {indice}), estadístico {est:.4f}"
+" {cmp} crítico {crit:.4f}"
 msgstr ""
 
 #, python-brace-format
@@ -1019,6 +1043,9 @@ msgstr ""
 msgid "%Var. estudio Gage R&R"
 msgstr ""
 
+msgid "'alpha' debe estar en (0, 1)."
+msgstr ""
+
 msgid "'aoql' debe estar en (0, 1)."
 msgstr ""
 
@@ -1083,6 +1110,10 @@ msgid ""
 "'min_points' ser >= 2."
 msgstr ""
 
+#, python-brace-format
+msgid "'max_outliers' debe estar entre 1 y n − 3 ({tope})."
+msgstr ""
+
 msgid "'measurements' y 'references' deben tener la misma longitud."
 msgstr ""
 
@@ -1096,6 +1127,10 @@ msgid "'method' debe ser 'bca' o 'percentile'."
 msgstr ""
 
 msgid "'method' debe ser 'normal' o 'nonparametric'."
+msgstr ""
+
+#, python-brace-format
+msgid "'method' debe ser uno de {opciones}."
 msgstr ""
 
 #, python-brace-format
@@ -1145,6 +1180,10 @@ msgid "'scale' debe ser 'original' o 'transformed' (recibido: {scale!r})."
 msgstr ""
 
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
+msgstr ""
+
+#, python-brace-format
+msgid "'sides' debe ser uno de {opciones}."
 msgstr ""
 
 msgid ""
@@ -1729,6 +1768,9 @@ msgstr ""
 msgid "Dos amarillas consecutivas en lados opuestos — varianza"
 msgstr ""
 
+msgid "ESD generalizada (Rosner)"
+msgstr ""
+
 msgid "EWMA para datos en subgrupos con alta sensibilidad"
 msgstr ""
 
@@ -1901,6 +1943,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "General ({metodo})"
+msgstr ""
+
+msgid "Grubbs"
 msgstr ""
 
 msgid "Gráfico de capacidad"
@@ -2280,6 +2325,9 @@ msgid "Los datos son asimétricos → I-MR con transformación"
 msgstr ""
 
 msgid "Los datos son constantes: no se puede ajustar una transformación."
+msgstr ""
+
+msgid "Los datos son constantes: no se puede calcular la prueba de atípicos."
 msgstr ""
 
 msgid "Los tamaños de muestra deben ser positivos."
@@ -2732,6 +2780,10 @@ msgid "Proporción EWMA"
 msgstr ""
 
 #, python-brace-format
+msgid "Prueba de atípicos: {metodo}, {lados}, α = {alpha:g}  (n = {n})"
+msgstr ""
+
+#, python-brace-format
 msgid "Prueba de causas especiales {t}: marca el punto que completa el patrón"
 msgstr ""
 
@@ -2739,6 +2791,11 @@ msgid "Prueba de normalidad (Anderson-Darling, Shapiro-Wilk)"
 msgstr ""
 
 msgid "Prueba de normalidad Anderson-Darling (compatible con Minitab)"
+msgstr ""
+
+msgid ""
+"Pruebas de atípicos: Grubbs frente a la tabla publicada y ESD "
+"generalizada frente al ejemplo de Rosner"
 msgstr ""
 
 #, python-brace-format
@@ -2845,6 +2902,12 @@ msgid ""
 "subgroup='nombre_columna'."
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"Se ignoraron {n} valor(es) no finito(s); los índices son los de la "
+"entrada original."
+msgstr ""
+
 msgid "Se necesita al menos una observación."
 msgstr ""
 
@@ -2865,6 +2928,10 @@ msgstr ""
 
 #, python-brace-format
 msgid "Se necesitan al menos {n} observaciones para ajustar la transformación."
+msgstr ""
+
+#, python-brace-format
+msgid "Se necesitan al menos {n} observaciones para esta prueba."
 msgstr ""
 
 #, python-brace-format
@@ -3137,6 +3204,12 @@ msgstr ""
 msgid "asimetría"
 msgstr ""
 
+msgid "atípico"
+msgstr ""
+
+msgid "bilateral"
+msgstr ""
+
 msgid "c (número de aceptación)"
 msgstr ""
 
@@ -3388,6 +3461,9 @@ msgstr ""
 msgid "partes"
 msgstr ""
 
+msgid "paso"
+msgstr ""
+
 msgid "pendiente"
 msgstr ""
 
@@ -3479,7 +3555,16 @@ msgstr ""
 msgid "transformada"
 msgstr ""
 
+msgid "unilateral inferior"
+msgstr ""
+
+msgid "unilateral superior"
+msgstr ""
+
 msgid "valor"
+msgstr ""
+
+msgid "valor crítico"
 msgstr ""
 
 msgid "valor_inferior"
@@ -3630,6 +3715,9 @@ msgid "Últimas 25 observaciones"
 msgstr ""
 
 msgid "Últimos 25 subgrupos"
+msgstr ""
+
+msgid "índice"
 msgstr ""
 
 msgid "α (riesgo productor)"

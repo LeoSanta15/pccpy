@@ -108,6 +108,34 @@ Si la prueba rechaza la normalidad, `diagnose` estudia la causa (`non_normal_rea
 La causa es una heurística: en simulación acierta ≈ 98 % con datos lognormales y ≈ 96 % con una normal contaminada con
 tres atípicos lejanos; con asimetría muy leve puede confundirla con atípicos.
 
+### Pruebas formales de atípicos
+
+`diagnose` marca los atípicos con la regla de Tukey (IQR × 1,5), que es descriptiva. Para una prueba de hipótesis usa
+`outlier_test`:
+
+```python
+r = pp.outlier_test(x)                        # Grubbs: un atípico (el más extremo)
+r = pp.outlier_test(x, method="esd")          # ESD generalizada de Rosner: hasta max_outliers atípicos
+r.outlier_indices, r.outlier_values, r.to_frame(), r.summary()
+pp.outlier_test(x, sides="upper")             # solo valores demasiado altos (o "lower")
+```
+
+| Método | Contrasta | Cuándo |
+|---|---|---|
+| `"grubbs"` | un solo atípico | muestras pequeñas con a lo sumo un punto sospechoso |
+| `"esd"` | hasta `max_outliers` (por defecto `min(10, (n − 1) // 2)`) | varios sospechosos; evita que se enmascaren entre sí (conviene `n ≥ 25`) |
+
+Los valores críticos se verificaron contra la tabla publicada de Grubbs y contra el ejemplo de Rosner (1983) del manual
+del NIST. Con datos normales Grubbs marca ≈ 5 % de las muestras, el nivel nominal.
+
+```{warning}
+Ambas pruebas **suponen que los datos sin los atípicos son normales** (el resultado incluye el valor p de Shapiro-Wilk
+de los datos restantes y avisa si es < 0,05). Declarar un punto atípico **no justifica eliminarlo**: investiga su origen.
+Con datos de proceso ordenados en el tiempo, usa las cartas de control y sus pruebas de causas especiales. No se
+recomienda elegir el método de análisis posterior según el resultado de esta prueba: distorsiona la cobertura de los
+intervalos.
+```
+
 ### Tendencia
 
 Detección simplificada basada en el porcentaje de incrementos consecutivos:

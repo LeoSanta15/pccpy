@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:52+0000\n"
+"POT-Creation-Date: 2026-10-08 22:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -78,6 +78,12 @@ msgstr "Classic intervals of the summary (mean, median and sigma)"
 
 msgid "`scipy.stats.t.interval`, chi-cuadrado de la varianza y binomial(n, 0,5)"
 msgstr "`scipy.stats.t.interval`, chi-square of the variance and binomial(n, 0.5)"
+
+msgid "Pruebas de atípicos (Grubbs y ESD generalizada)"
+msgstr "Outlier tests (Grubbs and generalized ESD)"
+
+msgid "Tabla publicada de Grubbs y ejemplo de Rosner (1983) del manual del NIST"
+msgstr "Published Grubbs table and Rosner's (1983) example from the NIST handbook"
 
 msgid "Bootstrap (BCa y percentil)"
 msgstr "Bootstrap (BCa and percentile)"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-08 22:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -36,6 +36,45 @@ msgstr "Return type"
 
 msgid "Gráfico de probabilidad normal (rangos medianos de Benard) con prueba de Anderson-Darling."
 msgstr "Normal probability plot (Benard median ranks) with the Anderson-Darling test."
+
+msgid "Prueba formal de valores atípicos (Grubbs o ESD generalizada de Rosner)."
+msgstr "Formal outlier test (Grubbs or Rosner's generalized ESD)."
+
+msgid "Muestra 1-D (los valores no finitos se ignoran con un aviso; los índices son los de la entrada original)."
+msgstr "1-D sample (non-finite values are ignored with a warning; the indices are those of the original input)."
+
+msgid "``'grubbs'`` contrasta un solo atípico (el más extremo); ``'esd'`` busca hasta ``max_outliers`` atípicos sin que se enmascaren entre sí."
+msgstr "``'grubbs'`` tests a single outlier (the most extreme); ``'esd'`` looks for up to ``max_outliers`` outliers without them masking each other."
+
+msgid "Nivel de significación (por defecto 0,05)."
+msgstr "Significance level (default 0.05)."
+
+msgid "Bilateral, o solo valores demasiado altos o demasiado bajos."
+msgstr "Two-sided, or only values that are too high or too low."
+
+msgid "Solo ESD: máximo de atípicos a buscar (por defecto ``min(10, (n − 1) // 2)``)."
+msgstr "ESD only: maximum number of outliers to look for (default ``min(10, (n − 1) // 2)``)."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*OutlierTestResult* -- ``outlier_indices`` y ``outlier_values`` de los atípicos declarados, y un paso por fila en ``to_frame()``."
+msgstr "*OutlierTestResult* -- ``outlier_indices`` and ``outlier_values`` of the declared outliers, and one step per row in ``to_frame()``."
+
+msgid "Notas"
+msgstr "Notes"
+
+msgid "Ambas pruebas suponen que los datos sin los atípicos son normales; el resultado incluye el valor p de Shapiro-Wilk de los datos restantes. Declarar un punto atípico no justifica eliminarlo."
+msgstr "Both tests assume the data without the outliers are normal; the result includes the Shapiro-Wilk p-value of the remaining data. Declaring a point an outlier does not justify deleting it."
+
+msgid "Resultado de ``outlier_test``: pasos de la prueba y puntos declarados atípicos."
+msgstr "Result of ``outlier_test``: the steps of the test and the points declared outliers."
+
+msgid "``True`` si se declaró al menos un atípico."
+msgstr "``True`` if at least one outlier was declared."
+
+msgid "Un paso por fila: índice (base 0 en los datos originales), valor, estadístico, crítico y si es atípico."
+msgstr "One step per row: index (0-based in the original data), value, statistic, critical value and whether it is an outlier."
 
 msgid "Tabla de Pareto ordenada de mayor a menor frecuencia."
 msgstr "Pareto table sorted from highest to lowest frequency."

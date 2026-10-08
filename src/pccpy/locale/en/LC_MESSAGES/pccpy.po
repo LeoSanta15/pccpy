@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:58+0000\n"
+"POT-Creation-Date: 2026-10-08 22:16+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -786,12 +786,24 @@ msgstr "  Up/down:"
 msgid "  Asimetría       : {skewness:.4f}"
 msgstr "  Skewness        : {skewness:.4f}"
 
+#, python-brace-format
+msgid "  Atípicos declarados: {valores} (índices {indices})"
+msgstr "  Declared outliers: {valores} (indices {indices})"
+
 msgid ""
 "  Aviso: la tasa no es constante entre muestras; el proceso no es estable y la capacidad calculada no es fiable "
 "(revise la carta U)."
 msgstr ""
 "  Warning: the rate is not constant across samples; the process is not stable and the computed capability is not "
 "reliable (check the U chart)."
+
+#, python-brace-format
+msgid ""
+"  Aviso: los datos restantes no parecen normales (Shapiro-Wilk p = {p:.4f}); la prueba puede marcar puntos que no son"
+" atípicos."
+msgstr ""
+"  Warning: the remaining data do not look normal (Shapiro-Wilk p = {p:.4f}); the test may flag points that are not "
+"outliers."
 
 msgid ""
 "  Aviso: p no es constante entre muestras; el proceso no es estable y la capacidad calculada no es fiable (revise la "
@@ -932,6 +944,9 @@ msgstr "  LSL={lsl}  USL={usl}  N={n}  logL={loglik:.3f}  AIC={aic:.3f}"
 msgid "  LEI={lsl}  Objetivo={target}  LES={usl}"
 msgstr "  LSL={lsl}  Target={target}  USL={usl}"
 
+msgid "  La prueba supone datos normales. No es una regla para eliminar datos: investiga el origen."
+msgstr "  The test assumes normal data. It is not a rule for deleting data: investigate the origin."
+
 #, python-brace-format
 msgid "  Linealidad={linearity:.5g} ({pct:.2f}%)"
 msgstr "  Linearity={linearity:.5g} ({pct:.2f}%)"
@@ -992,6 +1007,9 @@ msgstr "  N={n}  Coverage≥{coverage}%  Confidence={confidence}%"
 msgid "  N={n}  Media={mean:.5f}  Desv.Est.(dentro)={within:.5f} [{method}]  Desv.Est.(general)={overall:.5f}"
 msgstr "  N={n}  Mean={mean:.5f}  Std.Dev.(within)={within:.5f} [{method}]  Std.Dev.(overall)={overall:.5f}"
 
+msgid "  Ningún atípico declarado."
+msgstr "  No outliers declared."
+
 #, python-brace-format
 msgid "  PPM defectivo={ppm:.1f}  IC: ({lo:.1f}, {hi:.1f})"
 msgstr "  Defective PPM={ppm:.1f}  CI: ({lo:.1f}, {hi:.1f})"
@@ -1006,6 +1024,10 @@ msgstr "  Parameters"
 #, python-brace-format
 msgid "  Parámetros sugeridos : {params}"
 msgstr "  Suggested parameters : {params}"
+
+#, python-brace-format
+msgid "  Paso {paso}: valor {valor:.6g} (índice {indice}), estadístico {est:.4f} {cmp} crítico {crit:.4f}"
+msgstr "  Step {paso}: value {valor:.6g} (index {indice}), statistic {est:.4f} {cmp} critical {crit:.4f}"
 
 #, python-brace-format
 msgid "  Pendiente={slope:.5g}  Intercepto={intercept:.5g}"
@@ -1239,6 +1261,9 @@ msgstr "%Contribution reproducibility"
 msgid "%Var. estudio Gage R&R"
 msgstr "%Study var. Gage R&R"
 
+msgid "'alpha' debe estar en (0, 1)."
+msgstr "'alpha' must be in (0, 1)."
+
 msgid "'aoql' debe estar en (0, 1)."
 msgstr "'aoql' must be in (0, 1)."
 
@@ -1301,6 +1326,10 @@ msgstr "'ltpd' must be in (0, 1)."
 msgid "'max_iterations' debe ser >= 0, 'max_excluded' estar en (0, 1] y 'min_points' ser >= 2."
 msgstr "'max_iterations' must be >= 0, 'max_excluded' must be in (0, 1] and 'min_points' must be >= 2."
 
+#, python-brace-format
+msgid "'max_outliers' debe estar entre 1 y n − 3 ({tope})."
+msgstr "'max_outliers' must be between 1 and n − 3 ({tope})."
+
 msgid "'measurements' y 'references' deben tener la misma longitud."
 msgstr "'measurements' and 'references' must have the same length."
 
@@ -1315,6 +1344,10 @@ msgstr "'method' must be 'bca' or 'percentile'."
 
 msgid "'method' debe ser 'normal' o 'nonparametric'."
 msgstr "'method' must be 'normal' or 'nonparametric'."
+
+#, python-brace-format
+msgid "'method' debe ser uno de {opciones}."
+msgstr "'method' must be one of {opciones}."
 
 #, python-brace-format
 msgid "'mu' debe tener {p} elementos y 'cov' ser {p} x {p}."
@@ -1364,6 +1397,10 @@ msgstr "'scale' must be 'original' or 'transformed' (received: {scale!r})."
 
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
 msgstr "'sides' must be 'two', 'lower' or 'upper'."
+
+#, python-brace-format
+msgid "'sides' debe ser uno de {opciones}."
+msgstr "'sides' must be one of {opciones}."
 
 msgid "'sigma_within' no se puede combinar con 'transform' (está en la escala original)."
 msgstr "'sigma_within' cannot be combined with 'transform' (it is on the original scale)."
@@ -1938,6 +1975,9 @@ msgstr "Two consecutive yellows on the same side — adjust"
 msgid "Dos amarillas consecutivas en lados opuestos — varianza"
 msgstr "Two consecutive yellows on opposite sides — variance"
 
+msgid "ESD generalizada (Rosner)"
+msgstr "Generalized ESD (Rosner)"
+
 msgid "EWMA para datos en subgrupos con alta sensibilidad"
 msgstr "EWMA for subgrouped data with high sensitivity"
 
@@ -2116,6 +2156,9 @@ msgstr "Overall (Box-Cox)"
 #, python-brace-format
 msgid "General ({metodo})"
 msgstr "Overall ({metodo})"
+
+msgid "Grubbs"
+msgstr "Grubbs"
 
 msgid "Gráfico de capacidad"
 msgstr "Capability plot"
@@ -2477,6 +2520,9 @@ msgstr "The data are skewed → I-MR with transformation"
 
 msgid "Los datos son constantes: no se puede ajustar una transformación."
 msgstr "The data are constant: a transformation cannot be fitted."
+
+msgid "Los datos son constantes: no se puede calcular la prueba de atípicos."
+msgstr "The data are constant: the outlier test cannot be computed."
 
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr "Sample sizes must be positive."
@@ -2929,6 +2975,10 @@ msgid "Proporción EWMA"
 msgstr "EWMA proportion"
 
 #, python-brace-format
+msgid "Prueba de atípicos: {metodo}, {lados}, α = {alpha:g}  (n = {n})"
+msgstr "Outlier test: {metodo}, {lados}, α = {alpha:g}  (n = {n})"
+
+#, python-brace-format
 msgid "Prueba de causas especiales {t}: marca el punto que completa el patrón"
 msgstr "Special-cause test {t}: flags the point that completes the pattern"
 
@@ -2937,6 +2987,9 @@ msgstr "Normality test (Anderson-Darling, Shapiro-Wilk)"
 
 msgid "Prueba de normalidad Anderson-Darling (compatible con Minitab)"
 msgstr "Anderson-Darling normality test (Minitab-compatible)"
+
+msgid "Pruebas de atípicos: Grubbs frente a la tabla publicada y ESD generalizada frente al ejemplo de Rosner"
+msgstr "Outlier tests: Grubbs versus the published table and generalized ESD versus Rosner's example"
 
 #, python-brace-format
 msgid "Pruebas no válidas: {bad}. Use enteros entre 1 y 8."
@@ -3041,6 +3094,10 @@ msgstr ""
 "{n_dropped} non-numeric column(s) of the DataFrame were ignored: {dropped}. If you wanted to use one as a subgroup "
 "identifier, pass subgroup='column_name'."
 
+#, python-brace-format
+msgid "Se ignoraron {n} valor(es) no finito(s); los índices son los de la entrada original."
+msgstr "{n} non-finite value(s) were ignored; the indices are those of the original input."
+
 msgid "Se necesita al menos una observación."
 msgstr "At least one observation is needed."
 
@@ -3062,6 +3119,10 @@ msgstr "At least 3 pairs are needed for the regression."
 #, python-brace-format
 msgid "Se necesitan al menos {n} observaciones para ajustar la transformación."
 msgstr "At least {n} observations are needed to fit the transformation."
+
+#, python-brace-format
+msgid "Se necesitan al menos {n} observaciones para esta prueba."
+msgstr "At least {n} observations are needed for this test."
 
 #, python-brace-format
 msgid "Se necesitan al menos {span} observaciones (span={span})."
@@ -3330,6 +3391,12 @@ msgstr "alpha"
 
 msgid "asimetría"
 msgstr "skewness"
+
+msgid "atípico"
+msgstr "outlier"
+
+msgid "bilateral"
+msgstr "two-sided"
 
 msgid "c (número de aceptación)"
 msgstr "c (acceptance number)"
@@ -3604,6 +3671,9 @@ msgstr "panel"
 msgid "partes"
 msgstr "parts"
 
+msgid "paso"
+msgstr "step"
+
 msgid "pendiente"
 msgstr "pending"
 
@@ -3695,8 +3765,17 @@ msgstr "tolerance"
 msgid "transformada"
 msgstr "transformed"
 
+msgid "unilateral inferior"
+msgstr "one-sided lower"
+
+msgid "unilateral superior"
+msgstr "one-sided upper"
+
 msgid "valor"
 msgstr "value"
+
+msgid "valor crítico"
+msgstr "critical value"
 
 msgid "valor_inferior"
 msgstr "lower_value"
@@ -3848,6 +3927,9 @@ msgstr "Last 25 observations"
 
 msgid "Últimos 25 subgrupos"
 msgstr "Last 25 subgroups"
+
+msgid "índice"
+msgstr "index"
 
 msgid "α (riesgo productor)"
 msgstr "α (producer's risk)"
