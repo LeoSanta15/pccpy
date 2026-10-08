@@ -1,6 +1,6 @@
 # Plan — `phase_one` con `transform=`
 
-> **Estado:** propuesto el 2026-10-08, pendiente de aprobación. Una rama y un PR por fase; la versión va en un PR de versión aparte.
+> **Estado:** aprobado el 2026-10-08; T1–T3 fusionadas (PR #34–#36) y publicadas en la versión 0.13.0.
 > **Objetivo:** que `phase_one(chart, data, transform=…)` calcule la Fase I de datos asimétricos y congele la transformación junto con los límites para la Fase II.
 > **Fuera de alcance:** cartas de atributos (no usan transformación) y `stages=` (ya no se admite en Fase I).
 
