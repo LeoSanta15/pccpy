@@ -132,3 +132,14 @@ def test_el_readme_en_ingles_no_tiene_identificadores_en_espanol_en_el_codigo():
 def test_el_idioma_de_sphinx_se_puede_elegir_por_variable_de_entorno():
     texto = (RAIZ / "docs" / "source" / "conf.py").read_text(encoding="utf-8")
     assert "READTHEDOCS_LANGUAGE" in texto and 'locale_dirs = ["../locales"]' in texto
+
+
+def test_la_documentacion_no_usa_parametros_que_no_existen():
+    """``capability_nonnormal`` recibe ``distribution=``; ``dist=`` y ``'nonparametric'`` no existen."""
+    import inspect
+
+    assert "distribution" in inspect.signature(__import__("pccpy").capability_nonnormal).parameters
+    for ruta in [RAIZ / "README.md", RAIZ / "README_en.md", *(RAIZ / "docs" / "source").glob("*.md")]:
+        texto = ruta.read_text(encoding="utf-8")
+        assert 'dist="' not in texto, f"{ruta.name}: usa dist= (el parámetro es distribution=)"
+        assert 'distribution="nonparametric"' not in texto

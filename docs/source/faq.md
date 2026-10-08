@@ -124,21 +124,25 @@ carta = pp.imr_chart(x, stages=etapas, tests="all")
 
 Tienes tres opciones:
 
-1. **Transformación Box-Cox** (recomendada como primer paso):
+1. **Transformación Box-Cox** (primer paso si los datos y los límites son positivos):
    ```python
    cap = pp.capability_boxcox(x, lsl=44, usl=56)
    ```
 2. **Ajuste a una distribución no normal** (Weibull, lognormal, gamma, etc.):
    ```python
-   cap = pp.capability_nonnormal(x, lsl=44, usl=56, dist="weibull")
+   cap = pp.capability_nonnormal(x, lsl=44, usl=56, distribution="weibull")
    ```
-3. **Índices no paramétricos** (percentiles observados):
+   `diagnose(x, lsl=44, usl=56)` te dice cuál de las dos conviene (y por qué los datos no son normales).
+3. **Intervalos sin suponer normalidad** para Pp y Ppk, con cualquiera de las anteriores o con datos normales:
    ```python
-   cap = pp.capability_nonnormal(x, lsl=44, usl=56, dist="nonparametric")
+   cap = pp.capability_analysis(x, lsl=44, usl=56, ci_method="bootstrap", seed=1)
    ```
+   El PPM observado (`cap.ppm_obs`) no depende de ninguna distribución.
 
-Las cartas I-MR y Xbar-R son robustas a la no normalidad si n > 4 por subgrupo
-(por el teorema central del límite).
+Las cartas de medias (Xbar-R, Xbar-S) son bastante robustas a la no normalidad cuando los subgrupos tienen
+más de 5 observaciones, por el teorema central del límite. Con subgrupos de 2 a 5 observaciones y datos
+asimétricos la librería avisa, y la carta de **individuales (I-MR)** no tiene esa protección: con datos
+asimétricos sus límites pueden dar falsas alarmas del lado de la cola larga.
 
 ---
 

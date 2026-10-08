@@ -74,7 +74,7 @@ procedimiento de Minitab a la función equivalente en pccpy.
 | Minitab | pccpy | Notas |
 |---------|-------|-------|
 | Normal | `capability_analysis(x, lsl, usl)` | Cp, Cpk, Pp, Ppk, DPMO |
-| Nonnormal | `capability_nonnormal(x, lsl, usl, dist="weibull")` | Varias distribuciones |
+| Nonnormal | `capability_nonnormal(x, lsl, usl, distribution="weibull")` | Varias distribuciones |
 | Between/Within | `capability_analysis(x, lsl, usl, subgroup_size=n)` | |
 | Capability Sixpack | `capability_sixpack(x, lsl, usl)` | 6 gráficos en uno |
 | Box-Cox Transformation | `capability_boxcox(x, lsl, usl)` | Transforma y calcula |

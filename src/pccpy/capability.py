@@ -22,7 +22,7 @@ import pandas as pd
 from scipy import stats
 from scipy.special import boxcox as _boxcox
 
-from ._data import _excel_writer, as_1d, to_subgroups
+from ._data import _excel_writer, as_1d, avisar_asimetria_subgrupos, to_subgroups
 from ._frames import tabla_estadisticos
 from ._i18n import N_, tr
 from ._sigma import sigma_individuals, sigma_subgroups
@@ -292,6 +292,7 @@ def capability_analysis(
         if method not in ("pooled", "rbar", "sbar"):
             raise ValueError(tr("Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."))
         g_lim = g[:n_complete]
+        avisar_asimetria_subgrupos(g_lim, destino="capacidad", stacklevel=3)
         sw = float(sigma_within) if sigma_within is not None else sigma_subgroups(g_lim, method)
     else:
         x = as_1d(arr)

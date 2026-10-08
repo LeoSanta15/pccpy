@@ -138,7 +138,7 @@ Una vez que la carta indica proceso **bajo control estadístico**, calcula capac
 ¿Tus datos siguen una distribución normal?
   └─ Sí ──► capability_analysis(x, lsl, usl)
   └─ No ──► capability_boxcox(x, lsl, usl)   (transforma y calcula)
-         o  capability_nonnormal(x, lsl, usl, dist="weibull")
+         o  capability_nonnormal(x, lsl, usl, distribution="weibull")
 
 ¿Quieres la carta + capacidad en un solo gráfico (6 paneles)?
   └─ Sí ──► capability_sixpack(x, lsl, usl)

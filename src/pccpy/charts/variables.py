@@ -4,7 +4,7 @@ from __future__ import annotations
 import numpy as np
 
 from .._constants import c4, c5, d2, d3
-from .._data import as_1d, to_subgroups
+from .._data import as_1d, avisar_asimetria_subgrupos, to_subgroups
 from .._i18n import N_, tr
 from .._labels import con_etiquetas
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
@@ -73,6 +73,7 @@ def imr_chart(
 def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sigma,
                 stages, tests, test_params, value=None) -> ControlChart:
     g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
+    avisar_asimetria_subgrupos(g[:n_complete], destino="carta", stacklevel=5)
     total = g.shape[0]
 
     def stage_fn(idx):
