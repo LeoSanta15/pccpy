@@ -227,3 +227,41 @@ def test_wizard_default_mode_no_x(monkeypatch):
     monkeypatch.setattr("builtins.input", lambda _: next(inputs))
     res = pccpy.wizard()
     assert res.function == "imr_chart"
+
+
+# ── Datos asimétricos: transformaciones y bootstrap ───────────────────────────
+
+def test_wizard_cli_capacidad_con_transformacion(monkeypatch):
+    # raíz→capacidad→(No — hay ceros o negativos: Yeo-Johnson o Johnson)
+    res = _simulate_cli(["2", "4"], monkeypatch)
+    assert res.function == "capability_analysis" and res.params == {"transform": "yeo-johnson"}
+    assert "transform='yeo-johnson'" in res.snippet()
+
+
+def test_wizard_cli_capacidad_con_bootstrap(monkeypatch):
+    res = _simulate_cli(["2", "5"], monkeypatch)
+    assert res.function == "capability_analysis" and res.params == {"ci_method": "bootstrap"}
+    assert "ci_method='bootstrap'" in res.snippet()
+
+
+def test_wizard_cli_imr_con_transformacion(monkeypatch):
+    # raíz→cartas→cartas_ind→(Los datos son asimétricos → I-MR con transformación)
+    res = _simulate_cli(["1", "1", "5"], monkeypatch)
+    assert res.function == "imr_chart" and res.params == {"transform": "yeo-johnson"}
+
+
+@pytest.mark.parametrize("clave", ["r:cap_transform", "r:cap_bootstrap", "r:imr_transform"])
+def test_los_fragmentos_nuevos_del_asistente_se_ejecutan(clave):
+    from pccpy import _wizard
+
+    x = np.random.default_rng(3).gamma(2, 1, 80) * 2 - 1  # asimétrica con valores negativos
+    entorno = {"datos": x, "lsl": x.min() - 1, "usl": x.max() + 1}
+    exec(_wizard._RESULTS[clave].snippet(), entorno)  # noqa: S102
+    assert "res" in entorno or "carta" in entorno
+
+
+def test_wizard_auto_no_normal_con_negativos_no_recomienda_boxcox():
+    x = np.random.default_rng(3).gamma(2, 1, 80) * 2 - 1
+    assert (x <= 0).any()
+    res = pccpy.wizard(x, mode="auto")
+    assert res.function == "capability_analysis" and res.params == {"transform": "yeo-johnson"}

@@ -757,6 +757,19 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Datos asimétricos: guía rápida
+
+| Quiero… | Usa |
+|---|---|
+| Saber por qué no son normales | `pp.diagnose(x)` → `non_normal_reason`, recomendación lista para ejecutar |
+| Capacidad con datos asimétricos | `capability_analysis(x, lsl, usl, transform="yeo-johnson")`, `capability_boxcox` o `capability_nonnormal(distribution=…)` |
+| Una carta I-MR o Xbar fiable | `imr_chart(x, transform="yeo-johnson")` (límites asimétricos en unidades originales) |
+| Intervalos sin suponer normalidad | `ci_method="bootstrap"`, `pp.bootstrap_summary(x)`, `pp.bootstrap_ci(x, función)` |
+
+Guía completa, con los límites y los resultados de simulación: [`docs/source/datos_asimetricos.md`](https://github.com/LeoSanta15/pccpy/blob/main/docs/source/datos_asimetricos.md).
+
+---
+
 ### Intervalos bootstrap (datos asimétricos)
 
 Con datos asimétricos los intervalos normales (`x̄ ± t·s/√n`, chi-cuadrado para sigma, Bissell para Ppk) pierden cobertura. `bootstrap_ci` remuestrea tus datos y no supone ninguna forma: percentil o **BCa** (corrige sesgo y asimetría). Sirve para cualquier estadístico, escalar o vector, con los mismos remuestreos.

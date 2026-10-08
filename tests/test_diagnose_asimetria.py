@@ -135,3 +135,42 @@ def test_boxcox_no_se_recomienda_si_los_limites_no_son_positivos():
     assert any("Box-Cox" in i and "positivos" in i for i in d.issues)
     assert d.recommended_function == ("capability_nonnormal" if d.best_distribution else "capability_analysis")
     exec(d.recommended_snippet, {"datos": LOGNORMAL})  # noqa: S102
+
+
+# ── Yeo-Johnson y cartas ──────────────────────────────────────────────────────
+
+def _mixta(semilla):
+    r = np.random.default_rng(semilla)
+    return np.concatenate([-r.gamma(2, 1, 30), r.gamma(2, 1, 70)])
+
+
+def test_yeo_johnson_se_recomienda_si_box_cox_no_aplica_y_no_hay_mejor_distribucion():
+    x = _mixta(28)  # valores negativos: Box-Cox no aplica; ninguna distribución gana a la normal por AIC
+    d = pp.diagnose(x, **_specs(x))
+    assert d.transform_normalizes is None and d.best_distribution is None and d.yeo_johnson_normalizes is True
+    assert d.recommended_function == "capability_analysis" and "transform='yeo-johnson'" in d.recommended_snippet
+    y, _ = stats.yeojohnson(x)
+    assert stats.normaltest(y)[1] > 0.05  # referencia independiente
+    r = _ejecuta(d, x)
+    assert r.transform["method"] == "yeo-johnson"
+    assert not any("cautela" in i for i in d.issues)  # ya hay una transformación que normaliza
+
+
+@pytest.mark.parametrize("x, metodo", [(LOGNORMAL, "boxcox"), (NEGATIVA, "yeo-johnson")])
+def test_sin_especificaciones_recomienda_imr_con_transformacion(x, metodo):
+    d = pp.diagnose(x)
+    assert d.recommended_function == "imr_chart" and f"transform={metodo!r}" in d.recommended_snippet
+    assert type(_ejecuta(d, x)).__name__ == "ControlChart"
+
+
+def test_datos_normales_siguen_recomendando_imr_sin_transformacion():
+    d = pp.diagnose(NORMAL)
+    assert "transform" not in d.recommended_snippet and d.yeo_johnson_normalizes is None
+
+
+def test_frame_y_resumen_incluyen_yeo_johnson():
+    d = pp.diagnose(NEGATIVA, **_specs(NEGATIVA))
+    assert bool(d.to_frame(stable=True).loc["yeo_johnson_normalizes", "value"]) is True
+    assert "Yeo-Johnson normaliza: sí" in d.summary()
+    with pp.language("en"):
+        assert "Yeo-Johnson normalizes: yes" in d.summary()

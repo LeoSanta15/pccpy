@@ -109,6 +109,7 @@ _TREE: dict[str, tuple[str, list[tuple[str, str]]]] = {
             (N_("Sí — desplazamientos graduales sostenidos → EWMA"),      "r:ewma"),
             (N_("Sí — cambios abruptos pequeños → CUSUM"),                "r:cusum"),
             (N_("Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S"), "r:imr_rs"),
+            (N_("Los datos son asimétricos → I-MR con transformación"),   "r:imr_transform"),
         ],
     ),
 
@@ -199,6 +200,8 @@ _TREE: dict[str, tuple[str, list[tuple[str, str]]]] = {
             (N_("Sí (o no lo sé — puedes verificar con normality_test)"), "cap_normal"),
             (N_("No — se ajusta a otra distribución conocida"),           "r:cap_nn"),
             (N_("No — intentar transformación Box-Cox automática"),       "r:cap_bc"),
+            (N_("No — hay ceros o valores negativos: Yeo-Johnson o Johnson"), "r:cap_transform"),
+            (N_("Cualquiera — quiero intervalos de confianza sin suponer normalidad"), "r:cap_bootstrap"),
         ],
     ),
 
@@ -575,6 +578,43 @@ _RESULTS: dict[str, WizardResult] = {
             print(res.summary())   # incluye lambda estimada
         """),
     ),
+    "r:cap_transform": _r(
+        "capability_analysis",
+        N_("Capacidad normal tras transformar los datos con Yeo-Johnson (admite ceros y negativos) o Johnson"),
+        {"transform": "yeo-johnson"},
+        alts=["capability_nonnormal", "capability_boxcox"],
+        code=N_("""
+            import pccpy as pp
+            # transform: 'yeo-johnson' (ceros y negativos), 'johnson' (SU, SB o SL) o 'boxcox' (solo positivos)
+            res = pp.capability_analysis(datos, lsl=lsl, usl=usl, transform='yeo-johnson')
+            print(res.summary())   # índices en la escala transformada; límites en unidades originales
+        """),
+    ),
+    "r:cap_bootstrap": _r(
+        "capability_analysis",
+        N_("Capacidad con intervalos de Pp y Ppk por bootstrap, sin suponer normalidad"),
+        {"ci_method": "bootstrap"},
+        alts=["capability_nonnormal", "bootstrap_summary"],
+        code=N_("""
+            import pccpy as pp
+            res = pp.capability_analysis(datos, lsl=lsl, usl=usl, ci_method='bootstrap', seed=1)
+            print(res.summary())
+            # también: pp.bootstrap_summary(datos) para media, mediana y desviación estándar
+        """),
+    ),
+    "r:imr_transform": _r(
+        "imr_chart",
+        N_("Carta I-MR con datos asimétricos — se normalizan antes de calcular los límites"),
+        {"transform": "yeo-johnson"},
+        alts=["ewma_chart"],
+        code=N_("""
+            import pccpy as pp
+            # transform: 'boxcox' (solo positivos), 'yeo-johnson' o 'johnson'
+            carta = pp.imr_chart(datos, transform='yeo-johnson')   # el panel I se dibuja en unidades originales
+            print(carta.summary())
+            carta.plot()
+        """),
+    ),
     "r:gage_rr": _r(
         "gage_rr",
         N_("Crossed Gage R&R — ANOVA (todos los operadores miden todas las partes)"),
@@ -880,7 +920,7 @@ def _run_auto(x: np.ndarray) -> WizardResult:
         return _RESULTS["r:capability"]
 
     if n >= 30 and not is_normal:
-        return _RESULTS["r:cap_bc"]
+        return _RESULTS["r:cap_bc"] if x.min() > 0 else _RESULTS["r:cap_transform"]  # Box-Cox exige datos positivos
 
     # Pocos datos → carta de control
     return _RESULTS["r:imr"]

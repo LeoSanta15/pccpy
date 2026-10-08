@@ -1,6 +1,6 @@
 # Plan por fases — datos asimétricos (incertidumbre y transformaciones)
 
-> **Estado:** aprobado el 2026-10-08; en ejecución, **una rama y un PR por fase** (los PR se apilan).
+> **Estado:** aprobado el 2026-10-08; las siete fases están en revisión, **una rama y un PR por fase** (los PR se apilan). Falta el PR de versión 0.13.0.
 > **Objetivo:** que `pccpy` dé intervalos de confianza fiables cuando los datos no son normales y ofrezca más caminos que Box-Cox.
 > **Fuera de alcance:** comparaciones con Minitab; cualquier valor que dependa de una norma que no se pueda consultar.
 
@@ -30,7 +30,7 @@
 | F3 | Transformaciones: Yeo-Johnson y familia de Johnson (`transform=` en `capability_analysis`, `fit_transformation`) | `feat/transformaciones` | _(ver PR de la rama)_ | en revisión |
 | F4 | `transform=` en cartas de variables (escala original por defecto) | `feat/cartas-transformacion` | _(ver PR de la rama)_ | en revisión |
 | F6 | Bootstrap para media, mediana y desviación estándar (`bootstrap_summary`) | `feat/bootstrap-resumen` | _(ver PR de la rama)_ | en revisión |
-| F7 | Guía «datos asimétricos», README, `wizard()`, validación, versión 0.13.0 | | | pendiente |
+| F7 | Guía «datos asimétricos», README, `wizard()`, `diagnose` con Yeo-Johnson (la versión 0.13.0 va en un PR de versión aparte) | `feat/guia-asimetricos` | _(ver PR de la rama)_ | en revisión |
 
 Orden de ejecución: F1 → F2 → F5 → F3 → F4 → F6 → F7.
 

@@ -13,7 +13,9 @@
    [
     "Sí (o no lo sé — puedes verificar con normality_test)",
     "No — se ajusta a otra distribución conocida",
-    "No — intentar transformación Box-Cox automática"
+    "No — intentar transformación Box-Cox automática",
+    "No — hay ceros o valores negativos: Yeo-Johnson o Johnson",
+    "Cualquiera — quiero intervalos de confianza sin suponer normalidad"
    ]
   ],
   "cartas": [
@@ -48,7 +50,8 @@
     "No — sensibilidad estándar Shewhart",
     "Sí — desplazamientos graduales sostenidos → EWMA",
     "Sí — cambios abruptos pequeños → CUSUM",
-    "Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S"
+    "Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S",
+    "Los datos son asimétricos → I-MR con transformación"
    ]
   ],
   "cartas_mv": [
@@ -182,7 +185,7 @@
    ]
   ]
  },
- "cli": "\n  ╔══════════════════════════════════════════════════╗\n  ║   pccpy — Asistente de selección de análisis    ║\n  ╚══════════════════════════════════════════════════╝\n\n  ¿Cuál es tu objetivo principal?\n\n    [1] Monitorear el proceso (cartas de control)\n    [2] Analizar la capacidad del proceso\n    [3] Sistema de medición (MSA / Gage R&R)\n    [4] Muestreo de aceptación\n    [5] Análisis exploratorio (normalidad, Pareto)\n    [6] Intervalos de tolerancia\n    [7] Carta de corridas o pre-control\n\n  Selecciona una opción:   ✗ Ingresa un número entre 1 y 7.\n  Selecciona una opción:   ✗ Ingresa un número entre 1 y 7.\n  Selecciona una opción: \n  ¿Qué tipo de datos tienes?\n\n    [1] Mediciones continuas — una por instante (individual)\n    [2] Mediciones continuas — en subgrupos (varias por muestra)\n    [3] Fracción defectuosa  (piezas malas / total muestral)\n    [4] Número de defectos por unidad inspeccionada\n    [5] Varias variables simultáneas (multivariado)\n    [6] Eventos raros (muy poca frecuencia de defectos)\n    [7] Corridas cortas (piezas con distintas especificaciones)\n\n  Selecciona una opción: \n  ¿Necesitas detectar desplazamientos pequeños (< 1.5σ) con mayor rapidez?\n\n    [1] No — sensibilidad estándar Shewhart\n    [2] Sí — desplazamientos graduales sostenidos → EWMA\n    [3] Sí — cambios abruptos pequeños → CUSUM\n    [4] Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S\n\n  Selecciona una opción: \n════════════════════════════════════════════════════════\n  Análisis recomendado : imr_chart\n  Razón                : Datos continuos individuales — carta I-MR estándar Shewhart\n  Parámetros sugeridos : {'tests': (1, 2, 3, 4, 5, 6, 7, 8)}\n  Alternativas         : ewma_chart, cusum_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.imr_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n    print(carta.summary())\n    carta.plot()\n════════════════════════════════════════════════════════\n",
+ "cli": "\n  ╔══════════════════════════════════════════════════╗\n  ║   pccpy — Asistente de selección de análisis    ║\n  ╚══════════════════════════════════════════════════╝\n\n  ¿Cuál es tu objetivo principal?\n\n    [1] Monitorear el proceso (cartas de control)\n    [2] Analizar la capacidad del proceso\n    [3] Sistema de medición (MSA / Gage R&R)\n    [4] Muestreo de aceptación\n    [5] Análisis exploratorio (normalidad, Pareto)\n    [6] Intervalos de tolerancia\n    [7] Carta de corridas o pre-control\n\n  Selecciona una opción:   ✗ Ingresa un número entre 1 y 7.\n  Selecciona una opción:   ✗ Ingresa un número entre 1 y 7.\n  Selecciona una opción: \n  ¿Qué tipo de datos tienes?\n\n    [1] Mediciones continuas — una por instante (individual)\n    [2] Mediciones continuas — en subgrupos (varias por muestra)\n    [3] Fracción defectuosa  (piezas malas / total muestral)\n    [4] Número de defectos por unidad inspeccionada\n    [5] Varias variables simultáneas (multivariado)\n    [6] Eventos raros (muy poca frecuencia de defectos)\n    [7] Corridas cortas (piezas con distintas especificaciones)\n\n  Selecciona una opción: \n  ¿Necesitas detectar desplazamientos pequeños (< 1.5σ) con mayor rapidez?\n\n    [1] No — sensibilidad estándar Shewhart\n    [2] Sí — desplazamientos graduales sostenidos → EWMA\n    [3] Sí — cambios abruptos pequeños → CUSUM\n    [4] Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S\n    [5] Los datos son asimétricos → I-MR con transformación\n\n  Selecciona una opción: \n════════════════════════════════════════════════════════\n  Análisis recomendado : imr_chart\n  Razón                : Datos continuos individuales — carta I-MR estándar Shewhart\n  Parámetros sugeridos : {'tests': (1, 2, 3, 4, 5, 6, 7, 8)}\n  Alternativas         : ewma_chart, cusum_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    carta = pp.imr_chart(datos, tests=(1, 2, 3, 4, 5, 6, 7, 8))\n    print(carta.summary())\n    carta.plot()\n════════════════════════════════════════════════════════\n",
  "resultados": {
   "r:attr_agreement": {
    "snippet": "import pccpy as pp\nimport pandas as pd\n# df: DataFrame con una columna por operador\nres = pp.attribute_agreement(df, reference=referencia, replicates=n_replicas)\nprint(res.summary())",
@@ -196,6 +199,10 @@
    "snippet": "import pccpy as pp\nres = pp.capability_boxcox(datos, lsl=lsl, usl=usl)\nprint(res.summary())   # incluye lambda estimada",
    "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_boxcox\n  Razón                : Transformación Box-Cox automática para normalizar los datos\n  Alternativas         : capability_nonnormal\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.capability_boxcox(datos, lsl=lsl, usl=usl)\n    print(res.summary())   # incluye lambda estimada\n════════════════════════════════════════════════════════"
   },
+  "r:cap_bootstrap": {
+   "snippet": "import pccpy as pp\nres = pp.capability_analysis(datos, lsl=lsl, usl=usl, ci_method='bootstrap', seed=1)\nprint(res.summary())\n# también: pp.bootstrap_summary(datos) para media, mediana y desviación estándar",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_analysis\n  Razón                : Capacidad con intervalos de Pp y Ppk por bootstrap, sin suponer normalidad\n  Parámetros sugeridos : {'ci_method': 'bootstrap'}\n  Alternativas         : capability_nonnormal, bootstrap_summary\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.capability_analysis(datos, lsl=lsl, usl=usl, ci_method='bootstrap', seed=1)\n    print(res.summary())\n    # también: pp.bootstrap_summary(datos) para media, mediana y desviación estándar\n════════════════════════════════════════════════════════"
+  },
   "r:cap_nn": {
    "snippet": "import pccpy as pp\n# distribution: 'weibull', 'lognormal', 'gamma', 'loglogistic', ...\nres = pp.capability_nonnormal(datos, lsl=lsl, usl=usl,\n                              distribution='weibull')\nprint(res.summary())",
    "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_nonnormal\n  Razón                : Capacidad no normal — ajuste por máxima verosimilitud a distribución alternativa\n  Parámetros sugeridos : {'distribution': 'weibull'}\n  Alternativas         : capability_boxcox\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # distribution: 'weibull', 'lognormal', 'gamma', 'loglogistic', ...\n    res = pp.capability_nonnormal(datos, lsl=lsl, usl=usl,\n                                  distribution='weibull')\n    print(res.summary())\n════════════════════════════════════════════════════════"
@@ -203,6 +210,10 @@
   "r:cap_summary": {
    "snippet": "import pccpy as pp\nres = pp.capability_analysis_summary(\n    mean=media, std_overall=sigma, n=n,\n    lsl=lsl, usl=usl,\n)\nprint(res.summary())",
    "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_analysis_summary\n  Razón                : Capacidad desde estadísticos resumen (media, σ, n)\n  Alternativas         : capability_analysis\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    res = pp.capability_analysis_summary(\n        mean=media, std_overall=sigma, n=n,\n        lsl=lsl, usl=usl,\n    )\n    print(res.summary())\n════════════════════════════════════════════════════════"
+  },
+  "r:cap_transform": {
+   "snippet": "import pccpy as pp\n# transform: 'yeo-johnson' (ceros y negativos), 'johnson' (SU, SB o SL) o 'boxcox' (solo positivos)\nres = pp.capability_analysis(datos, lsl=lsl, usl=usl, transform='yeo-johnson')\nprint(res.summary())   # índices en la escala transformada; límites en unidades originales",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : capability_analysis\n  Razón                : Capacidad normal tras transformar los datos con Yeo-Johnson (admite ceros y negativos) o Johnson\n  Parámetros sugeridos : {'transform': 'yeo-johnson'}\n  Alternativas         : capability_nonnormal, capability_boxcox\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # transform: 'yeo-johnson' (ceros y negativos), 'johnson' (SU, SB o SL) o 'boxcox' (solo positivos)\n    res = pp.capability_analysis(datos, lsl=lsl, usl=usl, transform='yeo-johnson')\n    print(res.summary())   # índices en la escala transformada; límites en unidades originales\n════════════════════════════════════════════════════════"
   },
   "r:capability": {
    "snippet": "import pccpy as pp\nres = pp.capability_analysis(datos, lsl=lsl, usl=usl)\nprint(res.summary())\nres.plot()",
@@ -255,6 +266,10 @@
   "r:imr_rs": {
    "snippet": "import pccpy as pp\n# datos: matriz 2-D (n_subgrupos × tamaño_subgrupo)\ncarta = pp.imr_rs_chart(datos)\ncarta.plot()",
    "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : imr_rs_chart\n  Razón                : Variación entre y dentro de subgrupos — descompone ambas fuentes\n  Alternativas         : imr_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # datos: matriz 2-D (n_subgrupos × tamaño_subgrupo)\n    carta = pp.imr_rs_chart(datos)\n    carta.plot()\n════════════════════════════════════════════════════════"
+  },
+  "r:imr_transform": {
+   "snippet": "import pccpy as pp\n# transform: 'boxcox' (solo positivos), 'yeo-johnson' o 'johnson'\ncarta = pp.imr_chart(datos, transform='yeo-johnson')   # el panel I se dibuja en unidades originales\nprint(carta.summary())\ncarta.plot()",
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : imr_chart\n  Razón                : Carta I-MR con datos asimétricos — se normalizan antes de calcular los límites\n  Parámetros sugeridos : {'transform': 'yeo-johnson'}\n  Alternativas         : ewma_chart\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    # transform: 'boxcox' (solo positivos), 'yeo-johnson' o 'johnson'\n    carta = pp.imr_chart(datos, transform='yeo-johnson')   # el panel I se dibuja en unidades originales\n    print(carta.summary())\n    carta.plot()\n════════════════════════════════════════════════════════"
   },
   "r:laney_p": {
    "snippet": "import pccpy as pp\ncarta = pp.laney_p_chart(defectuosos, n=tamaños)\ncarta.plot()",
@@ -387,6 +402,7 @@
    "2. Sí — desplazamientos graduales sostenidos → EWMA",
    "3. Sí — cambios abruptos pequeños → CUSUM",
    "4. Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S",
+   "5. Los datos son asimétricos → I-MR con transformación",
    "← Volver"
   ],
   [
@@ -401,6 +417,7 @@
    "2. Sí — desplazamientos graduales sostenidos → EWMA",
    "3. Sí — cambios abruptos pequeños → CUSUM",
    "4. Hay variación entre subgrupos (turno, lote, cavidad) → I-MR-R/S",
+   "5. Los datos son asimétricos → I-MR con transformación",
    "← Volver"
   ]
  ],

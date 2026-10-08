@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:52+0000\n"
+"POT-Creation-Date: 2026-10-08 21:58+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -80,6 +80,38 @@ msgstr ""
 "            res = pp.capability_nonnormal(data, lsl=lsl, usl=usl,\n"
 "                                          distribution='weibull')\n"
 "            print(res.summary())\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            # transform: 'boxcox' (solo positivos), 'yeo-johnson' o 'johnson'\n"
+"            carta = pp.imr_chart(datos, transform='yeo-johnson')   # el panel I se dibuja en unidades originales\n"
+"            print(carta.summary())\n"
+"            carta.plot()\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            # transform: 'boxcox' (positive only), 'yeo-johnson' or 'johnson'\n"
+"            chart = pp.imr_chart(data, transform='yeo-johnson')   # the I panel is drawn in original units\n"
+"            print(chart.summary())\n"
+"            chart.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            # transform: 'yeo-johnson' (ceros y negativos), 'johnson' (SU, SB o SL) o 'boxcox' (solo positivos)\n"
+"            res = pp.capability_analysis(datos, lsl=lsl, usl=usl, transform='yeo-johnson')\n"
+"            print(res.summary())   # índices en la escala transformada; límites en unidades originales\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            # transform: 'yeo-johnson' (zeros and negatives), 'johnson' (SU, SB or SL) or 'boxcox' (positive only)\n"
+"            res = pp.capability_analysis(data, lsl=lsl, usl=usl, transform='yeo-johnson')\n"
+"            print(res.summary())   # indices on the transformed scale; limits in original units\n"
 "        "
 
 msgid ""
@@ -499,6 +531,21 @@ msgstr ""
 "            res = pp.capability_analysis(data, lsl=lsl, usl=usl)\n"
 "            print(res.summary())\n"
 "            res.plot()\n"
+"        "
+
+msgid ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_analysis(datos, lsl=lsl, usl=usl, ci_method='bootstrap', seed=1)\n"
+"            print(res.summary())\n"
+"            # también: pp.bootstrap_summary(datos) para media, mediana y desviación estándar\n"
+"        "
+msgstr ""
+"\n"
+"            import pccpy as pp\n"
+"            res = pp.capability_analysis(data, lsl=lsl, usl=usl, ci_method='bootstrap', seed=1)\n"
+"            print(res.summary())\n"
+"            # also: pp.bootstrap_summary(data) for the mean, the median and the standard deviation\n"
 "        "
 
 msgid ""
@@ -1083,6 +1130,10 @@ msgid "  Verde={green}  Amarillo={yellow}  Rojo={red}"
 msgstr "  Green={green}  Yellow={yellow}  Red={red}"
 
 #, python-brace-format
+msgid "  Yeo-Johnson normaliza: {answer}"
+msgstr "  Yeo-Johnson normalizes: {answer}"
+
+#, python-brace-format
 msgid "  Z del proceso={z:.3f}  IC: ({lo:.3f}, {hi:.3f})"
 msgstr "  Process Z={z:.3f}  CI: ({lo:.3f}, {hi:.3f})"
 
@@ -1503,11 +1554,11 @@ msgid "Bilateral  — límite inferior y superior"
 msgstr "Two-sided  — lower and upper limit"
 
 msgid ""
-"Box-Cox normalizaría los datos, pero requiere límites de especificación y objetivo positivos; se recomienda ajustar "
-"una distribución no normal."
+"Box-Cox normalizaría los datos, pero requiere límites de especificación y objetivo positivos; alternativas: una "
+"distribución no normal o transform='yeo-johnson'."
 msgstr ""
-"Box-Cox would normalize the data, but it requires positive specification limits and target; fitting a non-normal "
-"distribution is recommended."
+"Box-Cox would normalize the data, but it requires positive specification limits and target; alternatives: a non-"
+"normal distribution or transform='yeo-johnson'."
 
 msgid "Box-Cox requiere datos estrictamente positivos."
 msgstr "Box-Cox requires strictly positive data."
@@ -1555,6 +1606,9 @@ msgstr "Binomial capability"
 msgid "Capacidad binomial: p̄, intervalo exacto de Clopper-Pearson y Z del proceso"
 msgstr "Binomial capability: p̄, exact Clopper-Pearson interval and process Z"
 
+msgid "Capacidad con intervalos de Pp y Ppk por bootstrap, sin suponer normalidad"
+msgstr "Capability with bootstrap intervals for Pp and Ppk, without assuming normality"
+
 msgid "Capacidad del proceso — datos Poisson"
 msgstr "Process capability — Poisson data"
 
@@ -1567,8 +1621,14 @@ msgstr "Capability from summary statistics (mean, σ, n)"
 msgid "Capacidad no normal — ajuste por máxima verosimilitud a distribución alternativa"
 msgstr "Non-normal capability — maximum likelihood fit to an alternative distribution"
 
+msgid "Capacidad normal tras transformar los datos con Yeo-Johnson (admite ceros y negativos) o Johnson"
+msgstr "Normal capability after transforming the data with Yeo-Johnson (allows zeros and negatives) or Johnson"
+
 msgid "Capacidad normal — Cp, Cpk, Pp, Ppk, PPM, Z.Bench"
 msgstr "Normal capability — Cp, Cpk, Pp, Ppk, PPM, Z.Bench"
+
+msgid "Carta I-MR con datos asimétricos — se normalizan antes de calcular los límites"
+msgstr "I-MR chart with skewed data — normalized before computing the limits"
 
 #, python-brace-format
 msgid "Carta de control {kind}"
@@ -1731,6 +1791,9 @@ msgstr "Crossed Gage R&R — ANOVA (all operators measure all parts)"
 
 msgid "Crossed Gage R&R — todos los operadores miden todas las partes"
 msgstr "Crossed Gage R&R — all operators measure all parts"
+
+msgid "Cualquiera — quiero intervalos de confianza sin suponer normalidad"
+msgstr "Any — I want confidence intervals without assuming normality"
 
 msgid "Curtosis"
 msgstr "Kurtosis"
@@ -2409,6 +2472,9 @@ msgstr ""
 "The data are skewed (skewness = {skewness:.2f}): the I-MR limits assume normality and can give false alarms on the "
 "long-tail side; use imr_chart(..., transform='boxcox' | 'yeo-johnson' | 'johnson')."
 
+msgid "Los datos son asimétricos → I-MR con transformación"
+msgstr "The data are skewed → I-MR with transformation"
+
 msgid "Los datos son constantes: no se puede ajustar una transformación."
 msgstr "The data are constant: a transformation cannot be fitted."
 
@@ -2624,6 +2690,9 @@ msgstr "No or I don't know → standard P"
 
 msgid "No se pudo ajustar ninguna distribución de Johnson a los datos."
 msgstr "No Johnson distribution could be fitted to the data."
+
+msgid "No — hay ceros o valores negativos: Yeo-Johnson o Johnson"
+msgstr "No — there are zeros or negative values: Yeo-Johnson or Johnson"
 
 msgid "No — intentar transformación Box-Cox automática"
 msgstr "No — try an automatic Box-Cox transformation"
@@ -3229,6 +3298,9 @@ msgstr "Green hi={v:.4g}"
 msgid "Verde lo={v:.4g}"
 msgstr "Green lo={v:.4g}"
 
+msgid "Yeo-Johnson normaliza"
+msgstr "Yeo-Johnson normalizes"
+
 msgid "Yeo-Johnson y familia de Johnson frente a las definiciones de scipy"
 msgstr "Yeo-Johnson and the Johnson family versus the scipy definitions"
 
@@ -3353,6 +3425,14 @@ msgstr ""
 #, python-brace-format
 msgid ""
 "import pccpy as pp\n"
+"resultado = pp.capability_analysis(datos, {args}, transform='yeo-johnson')"
+msgstr ""
+"import pccpy as pp\n"
+"result = pp.capability_analysis(data, {args}, transform='yeo-johnson')"
+
+#, python-brace-format
+msgid ""
+"import pccpy as pp\n"
 "resultado = pp.capability_boxcox(datos, {args})"
 msgstr ""
 "import pccpy as pp\n"
@@ -3372,6 +3452,14 @@ msgid ""
 msgstr ""
 "import pccpy as pp\n"
 "result = pp.imr_chart(data)"
+
+#, python-brace-format
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.imr_chart(datos, transform={transform!r})"
+msgstr ""
+"import pccpy as pp\n"
+"result = pp.imr_chart(data, transform={transform!r})"
 
 msgid ""
 "import pccpy as pp\n"
