@@ -41,7 +41,8 @@ print(res.summary())              # explicación completa
 | 2-D, 9-10 columnas | subgrupos medianos | `xbar_s_chart` |
 | 1-D, tendencia clara | > 80 % o < 20 % incrementos | `run_chart` |
 | 1-D, n ≥ 30, normal | p > 0.05 con especificaciones | `capability_analysis` |
-| 1-D, n ≥ 30, no normal | p ≤ 0.05 | `capability_boxcox` |
+| 1-D, n ≥ 30, no normal, todos los datos positivos | p ≤ 0.05 | `capability_boxcox` |
+| 1-D, n ≥ 30, no normal, con ceros o negativos | p ≤ 0.05 | `capability_analysis(..., transform='yeo-johnson')` |
 | 1-D, n < 30 | pocos datos | `imr_chart` |
 
 ### Ejecutar directamente

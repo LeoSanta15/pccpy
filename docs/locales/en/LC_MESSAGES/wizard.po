@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-08 23:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -117,14 +117,20 @@ msgstr "p > 0.05 with specifications"
 msgid "`capability_analysis`"
 msgstr "`capability_analysis`"
 
-msgid "1-D, n ≥ 30, no normal"
-msgstr "1-D, n ≥ 30, non-normal"
+msgid "1-D, n ≥ 30, no normal, todos los datos positivos"
+msgstr "1-D, n ≥ 30, not normal, all data positive"
 
 msgid "p ≤ 0.05"
 msgstr "p ≤ 0.05"
 
 msgid "`capability_boxcox`"
 msgstr "`capability_boxcox`"
+
+msgid "1-D, n ≥ 30, no normal, con ceros o negativos"
+msgstr "1-D, n ≥ 30, not normal, with zeros or negatives"
+
+msgid "`capability_analysis(..., transform='yeo-johnson')`"
+msgstr "`capability_analysis(..., transform='yeo-johnson')`"
 
 msgid "1-D, n < 30"
 msgstr "1-D, n < 30"

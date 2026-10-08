@@ -209,7 +209,7 @@ msgid "AQL en porcentaje (p.ej. 1.0 para 1%). Valores válidos de Z1.4: 0.010, 0
 msgstr "AQL in percent (e.g. 1.0 for 1%). Valid Z1.4 values: 0.010, 0.015, 0.025, 0.040, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.0, 1.5, 2.5, 4.0, 6.5, 10.0."
 
 msgid "Nivel de inspección general (1, 2 o 3). Por defecto 2."
-msgstr "General inspection level (1, 2 or 3), with the code letter from Z1.4 table I."
+msgstr "General inspection level (1, 2 or 3). Default 2."
 
 msgid "Tamaño de muestra personalizado (omite la tabla Z1.4)."
 msgstr "Custom sample size (skips the Z1.4 table)."

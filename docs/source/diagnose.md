@@ -167,8 +167,10 @@ Cpk = min(USL − x̄, x̄ − LSL) / (3 · s)
 | Con especificaciones, no normal por valores atípicos | `capability_analysis` (y alerta para investigarlos) |
 | Con especificaciones, no normal y Box-Cox normaliza (datos, límites y objetivo positivos) | `capability_boxcox` |
 | Con especificaciones, no normal y una distribución gana a la normal por AIC | `capability_nonnormal(distribution=…)` |
+| Con especificaciones, no normal, sin Box-Cox ni distribución mejor, y Yeo-Johnson normaliza | `capability_analysis(..., transform='yeo-johnson')` |
 | Con especificaciones, no normal y sin un modelo claramente mejor | `capability_analysis` (con aviso de cautela y `ci_method='bootstrap'`) |
-| Sin especificaciones | `imr_chart` (con aviso si los datos son asimétricos) |
+| Sin especificaciones, datos asimétricos que Box-Cox o Yeo-Johnson normalizan | `imr_chart(datos, transform='boxcox' \| 'yeo-johnson')` |
+| Sin especificaciones, en los demás casos | `imr_chart` (con aviso si los datos son asimétricos) |
 
 ---
 
@@ -205,6 +207,7 @@ Cpk = min(USL − x̄, x̄ − LSL) / (3 · s)
 | `outlier_indices` | `list[int]` | Índices de los valores atípicos. |
 | `non_normal_reason` | `str` | `'outliers'`, `'skewed'`, `'shape'` o `''` (si es normal). |
 | `transform_normalizes` | `bool \| None` | ¿Box-Cox normaliza los datos? `None` si no aplica. |
+| `yeo_johnson_normalizes` | `bool \| None` | ¿Yeo-Johnson normaliza los datos? `None` si no aplica. Admite ceros y negativos. |
 | `best_distribution` | `str \| None` | Distribución de menor AIC si gana a la normal. |
 | `recommended_function` | `str` | Nombre de la función recomendada. |
 | `recommended_snippet` | `str` | Código listo para copiar. |
