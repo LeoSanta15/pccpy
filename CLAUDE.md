@@ -116,7 +116,7 @@ for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA 
 - Textos: `tr("…")` se traduce al mostrar; `N_("…")` marca constantes de módulo (se traducen con `tr()` al usarlas). Los f-strings **no** se pueden traducir: usa `tr("… {x} …").format(x=x)`.
 - Comandos: `make i18n-update` (extraer + actualizar `.po`), `make i18n-compile` (los `.mo` se versionan) y `make i18n-check` (lo exige el CI).
 - Estado por fases (una rama y PR por fase): ver la tabla de `docs/planes/PLAN_MULTILENGUAJE.md`. Fases 0 a 3b hechas (mecanismo, errores/avisos, `summary()` y `to_frame()`, gráficos y `wizard`, otras tablas); fases 4 y 5 hechas (documentación y README en inglés, glosario, guía `docs/source/traducir.md`, versión 0.11.0); falta la revisión humana del inglés y el tag.
-- Fase I y fechas: `phase_one()` (`src/pccpy/phase1.py`) y las etiquetas de eje (`src/pccpy/_labels.py`, decorador `@con_etiquetas` en las funciones de cartas: toda carta nueva con datos de entrada debe llevarlo; `tests/test_fase1.py`, `tests/test_fechas.py`).
+- Fase I y fechas: `phase_one()` (`src/pccpy/phase1.py`) y las etiquetas de eje (`src/pccpy/_labels.py`, decorador `@con_etiquetas` en las funciones de cartas: toda carta nueva con datos de entrada debe llevarlo; `tests/test_fase1.py`, `tests/test_fase1_transformacion.py`, `tests/test_fase1_guardar.py`, `tests/test_fechas.py`).
 - Validación: `src/pccpy/validation.py` (`run_validation()`, `python -m pccpy.validation`) contrasta la biblioteca con referencias independientes (no con Minitab). Toda función numérica nueva debería sumar una comprobación con su referencia; cualquier cambio de un valor esperado se justifica en el CHANGELOG. La validación ya encontró dos errores reales (Cg del Tipo 1 y tabla Z1.4).
 - Documentación en inglés: catálogos en `docs/locales/en` (uno por página, incluida la API); tras cambiar un `.md`/`.rst` o un docstring, `make docs-update`, traduce los `msgstr` nuevos y `make docs-check docs-en`. En páginas Markdown, los roles de Sphinx traducidos van con sintaxis MyST (`{func}`x``). `README_en.md` se mantiene a mano junto a `README.md` (`tests/test_docs_i18n.py` comprueba su estructura).
 - `to_frame(stable=True)` da claves canónicas en inglés (no cambian con el idioma); sin `stable`, cabeceras en el idioma activo. Lo mismo vale para `pareto`, `oc_curve`, `aoq_curve`, `anova_frame` y `kappa_*_frame` (golden `tests/golden/i18n_tablas_es.json`). Al añadir filas o columnas, define su clave estable (los tests comparan con `tests/golden/i18n_stable.json`).
@@ -146,7 +146,11 @@ src/pccpy/
     run_chart.py     # carta de corridas
     advanced.py      # MA, Z-MR, I-MR-R/S, Zona, G, T
   multivariate.py    # T², |S|, MEWMA, MCUSUM
-  capability.py      # capacidad normal/no normal/Box-Cox, sixpack
+  capability.py      # capacidad normal/no normal/Box-Cox, sixpack (transform=, ci_method='bootstrap')
+  bootstrap.py       # bootstrap_ci (percentil y BCa), bootstrap_summary
+  transforms.py      # Transformation, fit_transformation: Box-Cox, Yeo-Johnson, Johnson SU/SB/SL
+  outliers.py        # outlier_test: Grubbs y ESD generalizada de Rosner
+  phase1.py          # phase_one() y PhaseOneResult (transform=, to_dict/to_json, from_limits)
   msa.py             # MSA / Gage R&R / acuerdo por atributos
   acceptance.py      # muestreo de aceptación
   tolerance.py       # intervalos de tolerancia

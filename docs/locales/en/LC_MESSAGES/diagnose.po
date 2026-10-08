@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 22:16+0000\n"
+"POT-Creation-Date: 2026-10-08 23:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -227,14 +227,26 @@ msgstr "With specifications, non-normal and a distribution beats the normal by A
 msgid "`capability_nonnormal(distribution=…)`"
 msgstr "`capability_nonnormal(distribution=…)`"
 
+msgid "Con especificaciones, no normal, sin Box-Cox ni distribución mejor, y Yeo-Johnson normaliza"
+msgstr "With specifications, not normal, no Box-Cox or better distribution, and Yeo-Johnson normalizes"
+
+msgid "`capability_analysis(..., transform='yeo-johnson')`"
+msgstr "`capability_analysis(..., transform='yeo-johnson')`"
+
 msgid "Con especificaciones, no normal y sin un modelo claramente mejor"
 msgstr "With specifications, non-normal and no clearly better model"
 
 msgid "`capability_analysis` (con aviso de cautela y `ci_method='bootstrap'`)"
 msgstr "`capability_analysis` (with a caution warning and `ci_method='bootstrap'`)"
 
-msgid "Sin especificaciones"
-msgstr "Without specifications"
+msgid "Sin especificaciones, datos asimétricos que Box-Cox o Yeo-Johnson normalizan"
+msgstr "Without specifications, skewed data that Box-Cox or Yeo-Johnson normalize"
+
+msgid "`imr_chart(datos, transform='boxcox' | 'yeo-johnson')`"
+msgstr "`imr_chart(data, transform='boxcox' | 'yeo-johnson')`"
+
+msgid "Sin especificaciones, en los demás casos"
+msgstr "Without specifications, in all other cases"
 
 msgid "`imr_chart` (con aviso si los datos son asimétricos)"
 msgstr "`imr_chart` (with a warning if the data are skewed)"
@@ -382,6 +394,12 @@ msgstr "`bool | None`"
 
 msgid "¿Box-Cox normaliza los datos? `None` si no aplica."
 msgstr "Does Box-Cox normalize the data? `None` if it does not apply."
+
+msgid "`yeo_johnson_normalizes`"
+msgstr "`yeo_johnson_normalizes`"
+
+msgid "¿Yeo-Johnson normaliza los datos? `None` si no aplica. Admite ceros y negativos."
+msgstr "Does Yeo-Johnson normalize the data? `None` if it does not apply. It accepts zeros and negatives."
 
 msgid "`best_distribution`"
 msgstr "`best_distribution`"

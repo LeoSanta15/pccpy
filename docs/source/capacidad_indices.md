@@ -101,7 +101,7 @@ print(f"Cp  = {res.cp:.3f}")
 print(f"Cpk = {res.cpk:.3f}")
 print(f"Pp  = {res.pp:.3f}")
 print(f"Ppk = {res.ppk:.3f}")
-print(f"PPM total = {res.ppm_total:.0f}")
+print(f"PPM total = {res.ppm_overall[2]:.0f}")
 ```
 
 ---
@@ -142,7 +142,7 @@ equipo directivo:
 
 ```python
 # El mismo índice, calculado internamente por pccpy
-print(f"Z.Bench = {res.z_bench:.2f}  ({res.ppm_total:.0f} PPM)")
+print(f"Z.Bench = {res.z_bench_overall:.2f}  ({res.ppm_overall[2]:.0f} PPM)")
 ```
 
 | Z.Bench | PPM aprox. | Nivel sigma (con desplazamiento 1.5σ) |

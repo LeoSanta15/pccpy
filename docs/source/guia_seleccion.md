@@ -84,7 +84,7 @@ Detecta desplazamientos pequeños acumulando historia. Ideal para cambios de
 0.5σ–1.5σ.
 
 ```python
-carta = pp.ewma_chart(x, lam=0.2, L=3.0)
+carta = pp.ewma_chart(x, weight=0.2, k=3.0)
 ```
 
 ### `cusum_chart` — CUSUM
