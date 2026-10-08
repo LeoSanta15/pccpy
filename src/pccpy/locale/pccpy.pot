@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 23:00+0000\n"
+"POT-Creation-Date: 2026-10-08 23:06+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -740,6 +740,9 @@ msgstr ""
 msgid "  Límites congelados para la Fase II: {limits}"
 msgstr ""
 
+msgid "  Límites dados por el usuario (no se calcularon con phase_one)"
+msgstr ""
+
 #, python-brace-format
 msgid "  Media           : {mean:.4f}"
 msgstr ""
@@ -1192,6 +1195,9 @@ msgstr ""
 msgid "'sides' debe ser uno de {opciones}."
 msgstr ""
 
+msgid "'sigma' debe ser positiva."
+msgstr ""
+
 msgid ""
 "'sigma_within' no se puede combinar con 'transform' (está en la escala "
 "original)."
@@ -1539,6 +1545,11 @@ msgstr ""
 msgid "Con datos 3-D no se debe indicar 'subgroup_size'."
 msgstr ""
 
+msgid ""
+"Con from_limits() 'transform' debe ser una Transformation ya ajustada (no"
+" un nombre)."
+msgstr ""
+
 msgid "Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'."
 msgstr ""
 
@@ -1816,6 +1827,10 @@ msgstr ""
 
 #, python-brace-format
 msgid "El tamaño de subgrupo debe ser >= 2 (recibido: {n})."
+msgstr ""
+
+#, python-brace-format
+msgid "El texto no es un JSON válido: {error}"
 msgstr ""
 
 msgid "Error"
@@ -2357,6 +2372,10 @@ msgid "Los datos son constantes: no se puede calcular la prueba de atípicos."
 msgstr ""
 
 #, python-brace-format
+msgid "Los límites deben ser números: {error}"
+msgstr ""
+
+#, python-brace-format
 msgid ""
 "Los límites guardados ({got}) no corresponden a la carta {chart}: se "
 "esperaban {expected}."
@@ -2571,6 +2590,10 @@ msgid "No o no lo sé → P estándar"
 msgstr ""
 
 msgid "No se pudo ajustar ninguna distribución de Johnson a los datos."
+msgstr ""
+
+#, python-brace-format
+msgid "No se pudo leer '{source}': {error}"
 msgstr ""
 
 msgid "No — hay ceros o valores negativos: Yeo-Johnson o Johnson"

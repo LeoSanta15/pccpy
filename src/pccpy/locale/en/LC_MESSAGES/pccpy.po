@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 23:00+0000\n"
+"POT-Creation-Date: 2026-10-08 23:06+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -963,6 +963,9 @@ msgstr "  Lot N={N}  Sample n={n}  k={k:.4f}"
 msgid "  Límites congelados para la Fase II: {limits}"
 msgstr "  Limits frozen for Phase II: {limits}"
 
+msgid "  Límites dados por el usuario (no se calcularon con phase_one)"
+msgstr "  Limits given by the user (not computed with phase_one)"
+
 #, python-brace-format
 msgid "  Media           : {mean:.4f}"
 msgstr "  Mean            : {mean:.4f}"
@@ -1406,6 +1409,9 @@ msgstr "'sides' must be 'two', 'lower' or 'upper'."
 msgid "'sides' debe ser uno de {opciones}."
 msgstr "'sides' must be one of {opciones}."
 
+msgid "'sigma' debe ser positiva."
+msgstr "'sigma' must be positive."
+
 msgid "'sigma_within' no se puede combinar con 'transform' (está en la escala original)."
 msgstr "'sigma_within' cannot be combined with 'transform' (it is on the original scale)."
 
@@ -1741,6 +1747,9 @@ msgstr "With 2-D data, neither 'subgroup_size' nor 'subgroup' should be given."
 msgid "Con datos 3-D no se debe indicar 'subgroup_size'."
 msgstr "With 3-D data, 'subgroup_size' should not be given."
 
+msgid "Con from_limits() 'transform' debe ser una Transformation ya ajustada (no un nombre)."
+msgstr "With from_limits() 'transform' must be an already fitted Transformation (not a name)."
+
 msgid "Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'."
 msgstr "With individual observations, within_method must be 'mr', 'median_mr' or 'mssd'."
 
@@ -2018,6 +2027,10 @@ msgstr "The subgroup size ({n}) must be greater than the number of variables ({p
 #, python-brace-format
 msgid "El tamaño de subgrupo debe ser >= 2 (recibido: {n})."
 msgstr "The subgroup size must be >= 2 (received: {n})."
+
+#, python-brace-format
+msgid "El texto no es un JSON válido: {error}"
+msgstr "The text is not valid JSON: {error}"
 
 msgid "Error"
 msgstr "Error"
@@ -2544,6 +2557,10 @@ msgid "Los datos son constantes: no se puede calcular la prueba de atípicos."
 msgstr "The data are constant: the outlier test cannot be computed."
 
 #, python-brace-format
+msgid "Los límites deben ser números: {error}"
+msgstr "The limits must be numbers: {error}"
+
+#, python-brace-format
 msgid "Los límites guardados ({got}) no corresponden a la carta {chart}: se esperaban {expected}."
 msgstr "The saved limits ({got}) do not match the {chart} chart: expected {expected}."
 
@@ -2762,6 +2779,10 @@ msgstr "No or I don't know → standard P"
 
 msgid "No se pudo ajustar ninguna distribución de Johnson a los datos."
 msgstr "No Johnson distribution could be fitted to the data."
+
+#, python-brace-format
+msgid "No se pudo leer '{source}': {error}"
+msgstr "Could not read '{source}': {error}"
 
 msgid "No — hay ceros o valores negativos: Yeo-Johnson o Johnson"
 msgstr "No — there are zeros or negative values: Yeo-Johnson or Johnson"
