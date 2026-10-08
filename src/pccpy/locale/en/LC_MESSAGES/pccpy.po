@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:00+0000\n"
+"POT-Creation-Date: 2026-10-08 21:24+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1608,6 +1608,25 @@ msgstr "With individual observations, within_method must be 'mr', 'median_mr' or
 #, python-brace-format
 msgid "Con n={n} (< {minimo}) el bootstrap también pierde cobertura; interprete el intervalo con cautela."
 msgstr "With n={n} (< {minimo}) the bootstrap also loses coverage; interpret the interval with caution."
+
+#, python-brace-format
+msgid ""
+"Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = {asim:.2f}) las medias no se aproximan bien a la "
+"normal: los límites de X̄ y de R/S pueden dar falsas alarmas del lado de la cola larga. Revisa los datos con "
+"diagnose() antes de fiarte de los límites."
+msgstr ""
+"With small subgroups (n ≈ {n:g}) and skewed data (skewness = {asim:.2f}) the means are not well approximated by a "
+"normal: the X̄ and R/S limits can give false alarms on the long-tail side. Check the data with diagnose() before "
+"trusting the limits."
+
+#, python-brace-format
+msgid ""
+"Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = {asim:.2f}) los índices y los intervalos de "
+"capacidad normales pueden no ser fiables: considera capability_nonnormal o capability_boxcox, y ci_method='bootstrap'"
+" para los intervalos."
+msgstr ""
+"With small subgroups (n ≈ {n:g}) and skewed data (skewness = {asim:.2f}) the normal capability indices and intervals "
+"may not be reliable: consider capability_nonnormal or capability_boxcox, and ci_method='bootstrap' for the intervals."
 
 msgid "Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."
 msgstr "With subgroups, within_method must be 'pooled', 'rbar' or 'sbar'."

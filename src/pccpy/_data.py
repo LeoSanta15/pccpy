@@ -5,6 +5,7 @@ import warnings
 
 import numpy as np
 import pandas as pd
+from scipy import stats
 
 from ._i18n import tr
 
@@ -225,3 +226,34 @@ def stage_slices(n_points: int, stages) -> list:
             out.append((label, np.arange(start, i)))
             start = i
     return out
+
+
+#: Tamaño de subgrupo hasta el cual las medias de datos asimétricos no se aproximan bien a la normal.
+SUBGRUPO_PEQUENO = 5
+
+
+def avisar_asimetria_subgrupos(g: np.ndarray, *, destino: str, stacklevel: int = 3) -> bool:
+    """Avisa si los subgrupos son pequeños (≤ 5) y los datos son claramente asimétricos.
+
+    ``destino`` es ``'carta'`` o ``'capacidad'`` y elige el texto. Devuelve ``True`` si avisó. Exige al menos 20
+    observaciones, una asimetría de al menos 0,5 en valor absoluto y que la prueba de asimetría (D'Agostino) dé
+    p < 0,01 sobre todas las observaciones.
+    """
+    x = g[~np.isnan(g)]
+    n_sub = float(np.median((~np.isnan(g)).sum(axis=1)))
+    if n_sub > SUBGRUPO_PEQUENO or x.size < 20 or np.ptp(x) == 0:
+        return False
+    asim = float(stats.skew(x))
+    if abs(asim) < 0.5 or float(stats.skewtest(x)[1]) >= 0.01:
+        return False
+    if destino == "carta":
+        warnings.warn(tr("Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = {asim:.2f}) las medias no "
+                         "se aproximan bien a la normal: los límites de X̄ y de R/S pueden dar falsas alarmas del lado "
+                         "de la cola larga. Revisa los datos con diagnose() antes de fiarte de los límites.").format(
+                             n=n_sub, asim=asim), UserWarning, stacklevel=stacklevel)
+    else:
+        warnings.warn(tr("Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = {asim:.2f}) los índices y "
+                         "los intervalos de capacidad normales pueden no ser fiables: considera capability_nonnormal o "
+                         "capability_boxcox, y ci_method='bootstrap' para los intervalos.").format(n=n_sub, asim=asim),
+                      UserWarning, stacklevel=stacklevel)
+    return True
