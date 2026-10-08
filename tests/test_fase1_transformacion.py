@@ -105,3 +105,28 @@ def test_avisa_si_lambda_cambia_mucho(monkeypatch):
     monkeypatch.setattr(phase1, "fit_transformation", falso)
     with pytest.warns(UserWarning, match="Fase I no es estable"):
         pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,))
+
+
+def test_historial_con_la_transformacion_de_cada_pasada():
+    r = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,))
+    f = r.to_frame(stable=True)
+    assert list(f["transformation"]) == ["boxcox"] * len(r.history)
+    np.testing.assert_allclose(f["lambda"], [h.transformation.params["lambda"] for h in r.history])
+    assert f["lambda"].iloc[0] != f["lambda"].iloc[-1]
+    assert "transformation" not in pp.phase_one(pp.imr_chart, _datos(), tests=(1,)).to_frame(stable=True)
+
+
+def test_johnson_en_el_historial_tiene_lambda_nan():
+    r = pp.phase_one(pp.imr_chart, _datos(), transform="johnson", tests=(1,))
+    f = r.to_frame(stable=True)
+    assert set(f["transformation"]) == {"johnson"} and f["lambda"].isna().all()
+
+
+def test_fase2_en_escala_transformada_y_en_original_son_coherentes():
+    r_t = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", scale="transformed", tests=(1,))
+    r_o = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,))
+    nuevos = np.random.default_rng(4).gamma(4.0, 2.0, 25) + 1.0
+    ct, co = r_t.phase2(nuevos), r_o.phase2(nuevos)
+    np.testing.assert_allclose(r_o.transformation.forward(co.panels[0].ucl), ct.panels[0].ucl)
+    np.testing.assert_array_equal(ct.panels[0].flagged, co.panels[0].flagged)
+    assert co.panels[0].ucl[0] - co.panels[0].center[0] != pytest.approx(co.panels[0].center[0] - co.panels[0].lcl[0])
