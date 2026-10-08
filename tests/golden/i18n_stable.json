@@ -1628,7 +1628,13 @@
     null
    ],
    [
-    "capability_boxcox"
+    "capability_nonnormal"
+   ],
+   [
+    "skewed"
+   ],
+   [
+    "lognormal"
    ]
   ],
   "index": [
@@ -1652,7 +1658,9 @@
    "target",
    "cp_estimated",
    "cpk_estimated",
-   "recommended_function"
+   "recommended_function",
+   "non_normal_reason",
+   "best_distribution"
   ],
   "index_name": "statistic"
  },
@@ -1911,6 +1919,12 @@
    ],
    [
     "run_chart"
+   ],
+   [
+    "shape"
+   ],
+   [
+    null
    ]
   ],
   "index": [
@@ -1934,7 +1948,9 @@
    "target",
    "cp_estimated",
    "cpk_estimated",
-   "recommended_function"
+   "recommended_function",
+   "non_normal_reason",
+   "best_distribution"
   ],
   "index_name": "statistic"
  },

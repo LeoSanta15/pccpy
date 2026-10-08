@@ -64,6 +64,11 @@ class DiagnoseResult:
     cp: float | None = None
     cpk: float | None = None
 
+    # ── Asimetría y forma (solo si no es normal) ────────────────────────────
+    non_normal_reason: str = ""            # 'outliers', 'skewed', 'shape' o ''
+    transform_normalizes: bool | None = None  # ¿Box-Cox deja los datos normales? (None si no aplica)
+    best_distribution: str | None = None    # distribución con menor AIC si gana a la normal
+
     # ══════════════════════════════════════════════════════════════════════
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico).
@@ -86,6 +91,9 @@ class DiagnoseResult:
             ("cp_estimated", N_("Cp estimado"), o.cp), ("cpk_estimated", N_("Cpk estimado"), o.cpk),
             ("recommended_function", N_("Función recomendada"), o.recommended_function),
         ]
+        if o.non_normal_reason:
+            rows += [("non_normal_reason", N_("Motivo de la no normalidad"), o.non_normal_reason),
+                     ("best_distribution", N_("Mejor distribución (AIC)"), o.best_distribution)]
         return tabla_estadisticos(rows, stable)
 
     def to_excel(self, path) -> None:
@@ -118,6 +126,16 @@ class DiagnoseResult:
             tr("  Valor p         : {p:.4f}").format(p=self.normality_p),
             tr("  Distribución    : {distribution}").format(distribution=distribucion),
         ]
+        if self.non_normal_reason:
+            motivos = {"outliers": tr("valores atípicos (sin ellos los datos son normales)"),
+                       "skewed": tr("asimetría"), "shape": tr("forma de la distribución (colas, varias modas)")}
+            lines += ["", tr("  ── Por qué no es normal ──"),
+                      tr("  Motivo          : {reason}").format(reason=motivos.get(self.non_normal_reason, ""))]
+            if self.transform_normalizes is not None:
+                lines.append(tr("  Box-Cox normaliza: {answer}").format(
+                    answer=tr("sí") if self.transform_normalizes else tr("no")))
+            if self.best_distribution:
+                lines.append(tr("  Mejor distribución (AIC): {distribution}").format(distribution=self.best_distribution))
         if self.has_trend:
             lines += [
                 "",
@@ -220,6 +238,58 @@ class DiagnoseResult:
 # Función pública
 # ══════════════════════════════════════════════════════════════════════════════
 
+def _p_normalidad(x: np.ndarray) -> float:
+    return float(stats.normaltest(x)[1]) if len(x) >= 8 else float("nan")
+
+
+def _estudiar_no_normalidad(x: np.ndarray, skewness: float, outlier_mask: np.ndarray) -> tuple:
+    """Motivo de la no normalidad, si Box-Cox normaliza y la distribución de menor AIC (si gana a la normal)."""
+    # Atípicos como causa: hay algún punto muy lejano (a más de 3·RIC de los cuartiles, "far out" de Tukey), sin ellos
+    # los datos son normales y simétricos. Una cola larga normal (p. ej. lognormal) no cumple esto: es asimetría.
+    sin_atipicos = x[~outlier_mask]
+    if outlier_mask.any() and len(sin_atipicos) >= 8:
+        q1, q3 = np.percentile(x, [25, 75])
+        lejanos = (x < q1 - 3 * (q3 - q1)) | (x > q3 + 3 * (q3 - q1))
+        if lejanos.any() and _p_normalidad(sin_atipicos) > 0.05 and abs(stats.skew(sin_atipicos)) < 0.5:
+            return "outliers", None, None
+    razon = "skewed" if abs(skewness) >= 0.5 else "shape"
+
+    from scipy.special import boxcox
+
+    from .capability import _DISTS
+
+    normaliza = None
+    positivo = bool(x.min() > 0)
+    if positivo:
+        try:
+            _, lam = stats.boxcox(x)
+            normaliza = bool(_p_normalidad(boxcox(x, lam)) > 0.05)
+        except Exception:  # noqa: BLE001 - un ajuste que falla no impide el diagnóstico
+            normaliza = None
+
+    candidatas = (["lognormal", "weibull", "gamma", "loglogistic"] if positivo
+                  else ["logistic", "largest_extreme", "smallest_extreme"])
+    aic = {}
+    import warnings
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        for nombre in ["normal", *candidatas]:
+            dist, fit_kw, _ = _DISTS[nombre]
+            try:
+                p = dist.fit(x, **fit_kw)
+                aic[nombre] = 2 * (len(p) - len(fit_kw)) - 2 * float(np.sum(dist(*p).logpdf(x)))
+            except Exception:  # noqa: BLE001 - un ajuste que falla simplemente no compite
+                aic.pop(nombre, None)
+    mejor = None
+    otras = {k: v for k, v in aic.items() if k != "normal"}
+    if otras and "normal" in aic:
+        k = min(otras, key=lambda nombre: otras[nombre])
+        if otras[k] < aic["normal"] - 2:  # diferencia de AIC > 2: mejora apreciable sobre la normal
+            mejor = k
+    return razon, normaliza, mejor
+
+
 def diagnose(
     x,
     *,
@@ -293,30 +363,34 @@ def diagnose(
     outlier_mask = (x < q1 - 1.5 * iqr) | (x > q3 + 1.5 * iqr)
     outlier_idx = [int(i) for i in np.where(outlier_mask)[0]]
 
+    # ── Por qué no es normal (solo con prueba de normalidad válida) ─────────
+    razon, normaliza, mejor = "", None, None
+    if not is_normal:
+        razon, normaliza, mejor = _estudiar_no_normalidad(x, skewness, outlier_mask)
+
     # ── Recomendación ──────────────────────────────────────────────────────
+    con_specs = lsl is not None or usl is not None
+    specs_positivas = all(v is None or v > 0 for v in (lsl, usl, target))  # Box-Cox transforma también los límites
+    args_specs = ", ".join(f"{k}={v!r}" for k, v in [("lsl", lsl), ("usl", usl), ("target", target)] if v is not None)
     if has_trend:
         rec_fn = "run_chart"
         rec_snippet = tr("import pccpy as pp\nresultado = pp.run_chart(datos)")
-    elif lsl is not None or usl is not None:
-        if is_normal:
+    elif con_specs:
+        if is_normal or razon == "outliers":
             rec_fn = "capability_analysis"
-            args = ", ".join(
-                f"{k}={v!r}"
-                for k, v in [("lsl", lsl), ("usl", usl), ("target", target)]
-                if v is not None
-            )
-            rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_analysis(datos, {args})").format(args=args)
-        else:
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_analysis(datos, {args})").format(args=args_specs)
+        elif normaliza and specs_positivas:
             rec_fn = "capability_boxcox"
-            args = ", ".join(
-                f"{k}={v!r}"
-                for k, v in [("lsl", lsl), ("usl", usl)]
-                if v is not None
-            )
+            args = ", ".join(f"{k}={v!r}" for k, v in [("lsl", lsl), ("usl", usl)] if v is not None)
             rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_boxcox(datos, {args})").format(args=args)
-    elif n >= 30 and is_normal or n >= 30:
-        rec_fn = "imr_chart"
-        rec_snippet = tr("import pccpy as pp\nresultado = pp.imr_chart(datos)")
+        elif mejor:
+            rec_fn = "capability_nonnormal"
+            args = ", ".join(f"{k}={v!r}" for k, v in [("lsl", lsl), ("usl", usl)] if v is not None)
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_nonnormal(datos, {args}, distribution={distribution!r})"
+                             ).format(args=args, distribution=mejor)
+        else:
+            rec_fn = "capability_analysis"
+            rec_snippet = tr("import pccpy as pp\nresultado = pp.capability_analysis(datos, {args})").format(args=args_specs)
     else:
         rec_fn = "imr_chart"
         rec_snippet = tr("import pccpy as pp\nresultado = pp.imr_chart(datos)")
@@ -331,6 +405,18 @@ def diagnose(
     issues: list[str] = []
     if not is_normal:
         issues.append(tr("La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico."))
+    if razon == "outliers":
+        issues.append(tr("La no normalidad se debe a valores atípicos (sin ellos los datos son normales): investiga su "
+                         "origen antes de transformar los datos."))
+    elif razon in ("skewed", "shape") and con_specs and rec_fn == "capability_analysis":
+        issues.append(tr("Ninguna transformación ni distribución ajusta claramente mejor que la normal: interpreta con "
+                         "cautela los índices de capacidad normales (usa ci_method='bootstrap' para los intervalos)."))
+    if normaliza and con_specs and not specs_positivas:
+        issues.append(tr("Box-Cox normalizaría los datos, pero requiere límites de especificación y objetivo positivos; "
+                         "se recomienda ajustar una distribución no normal."))
+    if razon == "skewed" and not con_specs:
+        issues.append(tr("Los datos son asimétricos (asimetría = {skewness:.2f}): los límites de I-MR suponen "
+                         "normalidad y pueden dar falsas alarmas del lado de la cola larga.").format(skewness=skewness))
     if has_trend:
         issues.append(tr(
             "Se detectó tendencia {direction}. Verifica causas asignables antes de calcular capacidad."
@@ -353,6 +439,7 @@ def diagnose(
         recommended_function=rec_fn, recommended_snippet=rec_snippet,
         issues=issues, lsl=lsl, usl=usl, target=target,
         cp=cp, cpk=cpk,
+        non_normal_reason=razon, transform_normalizes=normaliza, best_distribution=mejor,
     )
     result._x = x
     return result

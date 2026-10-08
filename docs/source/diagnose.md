@@ -94,6 +94,20 @@ distribución aproximadamente normal.
 > Con menos de 8 observaciones la prueba no es válida; `diagnose` devuelve
 > `is_normal = True` y `normality_p = nan` en ese caso.
 
+#### Por qué no es normal
+
+Si la prueba rechaza la normalidad, `diagnose` estudia la causa (`non_normal_reason`):
+
+- `'outliers'`: hay algún punto muy lejano (a más de 3·RIC de los cuartiles) y sin los atípicos los datos son normales y
+  simétricos. Conviene investigar esos puntos antes de transformar nada.
+- `'skewed'`: la asimetría es marcada (|asimetría| ≥ 0,5). `transform_normalizes` dice si Box-Cox (solo con datos
+  positivos) deja los datos normales y `best_distribution` da la distribución de menor AIC si mejora a la normal en más
+  de 2 puntos (lognormal, Weibull, gamma o log-logística con datos positivos; logística o valores extremos si no).
+- `'shape'`: no normal sin asimetría marcada (colas pesadas, varias modas…).
+
+La causa es una heurística: en simulación acierta ≈ 98 % con datos lognormales y ≈ 96 % con una normal contaminada con
+tres atípicos lejanos; con asimetría muy leve puede confundirla con atípicos.
+
 ### Tendencia
 
 Detección simplificada basada en el porcentaje de incrementos consecutivos:
@@ -122,8 +136,11 @@ Cpk = min(USL − x̄, x̄ − LSL) / (3 · s)
 |-----------|---------------------|
 | Tendencia detectada | `run_chart` |
 | Con especificaciones y distribución normal | `capability_analysis` |
-| Con especificaciones y distribución no normal | `capability_boxcox` |
-| Sin especificaciones | `imr_chart` |
+| Con especificaciones, no normal por valores atípicos | `capability_analysis` (y alerta para investigarlos) |
+| Con especificaciones, no normal y Box-Cox normaliza (datos, límites y objetivo positivos) | `capability_boxcox` |
+| Con especificaciones, no normal y una distribución gana a la normal por AIC | `capability_nonnormal(distribution=…)` |
+| Con especificaciones, no normal y sin un modelo claramente mejor | `capability_analysis` (con aviso de cautela y `ci_method='bootstrap'`) |
+| Sin especificaciones | `imr_chart` (con aviso si los datos son asimétricos) |
 
 ---
 
@@ -158,6 +175,9 @@ Cpk = min(USL − x̄, x̄ − LSL) / (3 · s)
 | `trend_direction` | `str` | `'creciente'`, `'decreciente'` o `''`. |
 | `outlier_count` | `int` | Número de valores atípicos detectados (IQR). |
 | `outlier_indices` | `list[int]` | Índices de los valores atípicos. |
+| `non_normal_reason` | `str` | `'outliers'`, `'skewed'`, `'shape'` o `''` (si es normal). |
+| `transform_normalizes` | `bool \| None` | ¿Box-Cox normaliza los datos? `None` si no aplica. |
+| `best_distribution` | `str \| None` | Distribución de menor AIC si gana a la normal. |
 | `recommended_function` | `str` | Nombre de la función recomendada. |
 | `recommended_snippet` | `str` | Código listo para copiar. |
 | `issues` | `list[str]` | Lista de alertas (distribución, tendencia, capacidad). |

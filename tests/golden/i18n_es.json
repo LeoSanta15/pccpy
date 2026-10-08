@@ -1662,7 +1662,13 @@
      null
     ],
     [
-     "capability_boxcox"
+     "capability_nonnormal"
+    ],
+    [
+     "skewed"
+    ],
+    [
+     "lognormal"
     ]
    ],
    "index": [
@@ -1686,11 +1692,13 @@
     "Objetivo",
     "Cp estimado",
     "Cpk estimado",
-    "Función recomendada"
+    "Función recomendada",
+    "Motivo de la no normalidad",
+    "Mejor distribución (AIC)"
    ],
    "index_name": "estadístico"
   },
-  "summary": "════════════════════════════════════════════════════════════\n  DIAGNÓSTICO RÁPIDO DEL PROCESO\n════════════════════════════════════════════════════════════\n  N               : 52\n  Media           : 3.5763\n  Desv. estándar  : 6.4005\n  CV              : 178.97 %\n  Mínimo / Máximo : 0.0643  /  35.0000\n  Mediana         : 1.7985\n  Asimetría       : 3.7766\n  Curtosis        : 14.5627\n\n  ── Normalidad (prueba de normalidad) ──\n  Estadístico     : 70.7273\n  Valor p         : 0.0000\n  Distribución    : No normal (p ≤ 0.05)\n\n  ── Valores atípicos (IQR) ──\n  Cantidad : 7\n  Índices  : [0, 2, 14, 20, 31, 50, 51]\n\n  ── Alertas ──\n  ⚠  La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico.\n  ⚠  7 valor(es) atípico(s) detectado(s). Investiga su origen.\n\n  ── Análisis recomendado ──\n  Función : capability_boxcox\n\n  import pccpy as pp\n  resultado = pp.capability_boxcox(datos, lsl=0)\n════════════════════════════════════════════════════════════"
+  "summary": "════════════════════════════════════════════════════════════\n  DIAGNÓSTICO RÁPIDO DEL PROCESO\n════════════════════════════════════════════════════════════\n  N               : 52\n  Media           : 3.5763\n  Desv. estándar  : 6.4005\n  CV              : 178.97 %\n  Mínimo / Máximo : 0.0643  /  35.0000\n  Mediana         : 1.7985\n  Asimetría       : 3.7766\n  Curtosis        : 14.5627\n\n  ── Normalidad (prueba de normalidad) ──\n  Estadístico     : 70.7273\n  Valor p         : 0.0000\n  Distribución    : No normal (p ≤ 0.05)\n\n  ── Por qué no es normal ──\n  Motivo          : asimetría\n  Box-Cox normaliza: sí\n  Mejor distribución (AIC): lognormal\n\n  ── Valores atípicos (IQR) ──\n  Cantidad : 7\n  Índices  : [0, 2, 14, 20, 31, 50, 51]\n\n  ── Alertas ──\n  ⚠  La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico.\n  ⚠  Box-Cox normalizaría los datos, pero requiere límites de especificación y objetivo positivos; se recomienda ajustar una distribución no normal.\n  ⚠  7 valor(es) atípico(s) detectado(s). Investiga su origen.\n\n  ── Análisis recomendado ──\n  Función : capability_nonnormal\n\n  import pccpy as pp\n  resultado = pp.capability_nonnormal(datos, lsl=0, distribution='lognormal')\n════════════════════════════════════════════════════════════"
  },
  "diagnose_n5": {
   "frame": {
@@ -1954,6 +1962,12 @@
     ],
     [
      "run_chart"
+    ],
+    [
+     "shape"
+    ],
+    [
+     null
     ]
    ],
    "index": [
@@ -1977,11 +1991,13 @@
     "Objetivo",
     "Cp estimado",
     "Cpk estimado",
-    "Función recomendada"
+    "Función recomendada",
+    "Motivo de la no normalidad",
+    "Mejor distribución (AIC)"
    ],
    "index_name": "estadístico"
   },
-  "summary": "════════════════════════════════════════════════════════════\n  DIAGNÓSTICO RÁPIDO DEL PROCESO\n════════════════════════════════════════════════════════════\n  N               : 40\n  Media           : 19.5014\n  Desv. estándar  : 11.6700\n  CV              : 59.84 %\n  Mínimo / Máximo : 0.1728  /  39.0545\n  Mediana         : 19.4377\n  Asimetría       : 0.0162\n  Curtosis        : -1.2065\n\n  ── Normalidad (prueba de normalidad) ──\n  Estadístico     : 8.5727\n  Valor p         : 0.0138\n  Distribución    : No normal (p ≤ 0.05)\n\n  ── Tendencia ──\n  Se detectó tendencia creciente.\n\n  ── Capacidad (estimada) ──\n  Cp  : 0.857\n  Cpk : 0.557\n\n  ── Alertas ──\n  ⚠  La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico.\n  ⚠  Se detectó tendencia creciente. Verifica causas asignables antes de calcular capacidad.\n  ⚠  Cp = 0.86 < 1.0: el proceso no es capaz con las especificaciones dadas.\n  ⚠  Cpk = 0.56 < 1.0: el proceso no está centrado o no es capaz.\n\n  ── Análisis recomendado ──\n  Función : run_chart\n\n  import pccpy as pp\n  resultado = pp.run_chart(datos)\n════════════════════════════════════════════════════════════"
+  "summary": "════════════════════════════════════════════════════════════\n  DIAGNÓSTICO RÁPIDO DEL PROCESO\n════════════════════════════════════════════════════════════\n  N               : 40\n  Media           : 19.5014\n  Desv. estándar  : 11.6700\n  CV              : 59.84 %\n  Mínimo / Máximo : 0.1728  /  39.0545\n  Mediana         : 19.4377\n  Asimetría       : 0.0162\n  Curtosis        : -1.2065\n\n  ── Normalidad (prueba de normalidad) ──\n  Estadístico     : 8.5727\n  Valor p         : 0.0138\n  Distribución    : No normal (p ≤ 0.05)\n\n  ── Por qué no es normal ──\n  Motivo          : forma de la distribución (colas, varias modas)\n  Box-Cox normaliza: sí\n\n  ── Tendencia ──\n  Se detectó tendencia creciente.\n\n  ── Capacidad (estimada) ──\n  Cp  : 0.857\n  Cpk : 0.557\n\n  ── Alertas ──\n  ⚠  La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico.\n  ⚠  Box-Cox normalizaría los datos, pero requiere límites de especificación y objetivo positivos; se recomienda ajustar una distribución no normal.\n  ⚠  Se detectó tendencia creciente. Verifica causas asignables antes de calcular capacidad.\n  ⚠  Cp = 0.86 < 1.0: el proceso no es capaz con las especificaciones dadas.\n  ⚠  Cpk = 0.56 < 1.0: el proceso no está centrado o no es capaz.\n\n  ── Análisis recomendado ──\n  Función : run_chart\n\n  import pccpy as pp\n  resultado = pp.run_chart(datos)\n════════════════════════════════════════════════════════════"
  },
  "dodge_romig_aoql": {
   "frame": {

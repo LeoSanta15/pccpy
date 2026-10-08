@@ -122,10 +122,10 @@ msgid "Tamaño de las muestras (constante o uno por muestra)."
 msgstr "Sample size (constant or one per sample)."
 
 msgid "Nivel de confianza de los intervalos (por defecto 0,95)."
-msgstr "Confidence level of the Pp and Ppk intervals (default 0.95)."
+msgstr "Confidence level of the intervals (default 0.95)."
 
 msgid "*BinomialCapabilityResult*"
-msgstr "*CapabilityResult*"
+msgstr "*BinomialCapabilityResult*"
 
 msgid "Capacidad del proceso con datos Poisson (defectos por muestra de ``units`` unidades)."
 msgstr "Process capability with Poisson data (defects per sample of ``units`` units)."
@@ -140,10 +140,10 @@ msgid "Oportunidades de defecto por unidad. Si se indica, se calculan el DPMO y 
 msgstr "Defect opportunities per unit. If given, the DPMO and the Z level are computed."
 
 msgid "Nivel de confianza del intervalo (por defecto 0,95)."
-msgstr "Confidence level of the Pp and Ppk intervals (default 0.95)."
+msgstr "Confidence level of the interval (default 0.95)."
 
 msgid "*PoissonCapabilityResult*"
-msgstr "*CapabilityResult*"
+msgstr "*PoissonCapabilityResult*"
 
 msgid "Capacidad binomial: proporción defectiva, PPM y nivel Z con sus intervalos."
 msgstr "Binomial capability: proportion defective, PPM and Z level with their intervals."

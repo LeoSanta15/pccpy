@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 20:49+0000\n"
+"POT-Creation-Date: 2026-10-08 21:00+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -758,6 +758,10 @@ msgid "  Aviso: quedan señales en otros paneles ({panels}); no se excluyeron po
 msgstr "  Warning: signals remain in other panels ({panels}); they were not excluded because they do not count for Phase I"
 
 #, python-brace-format
+msgid "  Box-Cox normaliza: {answer}"
+msgstr "  Box-Cox normalizes: {answer}"
+
+#, python-brace-format
 msgid "  CV              : {cv:.2f} %"
 msgstr "  CV              : {cv:.2f} %"
 
@@ -901,6 +905,14 @@ msgstr "  Mean={mean:.5g}  Std.Dev.={std:.5g}"
 #, python-brace-format
 msgid "  Mediana         : {median:.4f}"
 msgstr "  Median          : {median:.4f}"
+
+#, python-brace-format
+msgid "  Mejor distribución (AIC): {distribution}"
+msgstr "  Best distribution (AIC): {distribution}"
+
+#, python-brace-format
+msgid "  Motivo          : {reason}"
+msgstr "  Reason          : {reason}"
 
 #, python-brace-format
 msgid "  Muestras={k}  Unidades={n:g}  Defectuosas={d:g}"
@@ -1082,6 +1094,9 @@ msgstr "  ── Capability (estimated) ──"
 
 msgid "  ── Normalidad (prueba de normalidad) ──"
 msgstr "  ── Normality (normality test) ──"
+
+msgid "  ── Por qué no es normal ──"
+msgstr "  ── Why it is not normal ──"
 
 msgid "  ── Tendencia ──"
 msgstr "  ── Trend ──"
@@ -1452,6 +1467,13 @@ msgstr ""
 
 msgid "Bilateral  — límite inferior y superior"
 msgstr "Two-sided  — lower and upper limit"
+
+msgid ""
+"Box-Cox normalizaría los datos, pero requiere límites de especificación y objetivo positivos; se recomienda ajustar "
+"una distribución no normal."
+msgstr ""
+"Box-Cox would normalize the data, but it requires positive specification limits and target; fitting a non-normal "
+"distribution is recommended."
 
 msgid "Box-Cox requiere datos estrictamente positivos."
 msgstr "Box-Cox requires strictly positive data."
@@ -2203,6 +2225,13 @@ msgstr ""
 "The covariance matrix is singular or nearly singular: some variables are (nearly) linearly dependent or there are too"
 " few observations (if you use 'stages', check that each stage has enough points)."
 
+msgid ""
+"La no normalidad se debe a valores atípicos (sin ellos los datos son normales): investiga su origen antes de "
+"transformar los datos."
+msgstr ""
+"The non-normality is due to outliers (without them the data are normal): investigate their origin before transforming"
+" the data."
+
 msgid "La suma de frecuencias debe ser positiva."
 msgstr "The sum of the frequencies must be positive."
 
@@ -2298,6 +2327,14 @@ msgstr "The data must be 1-D or 3-D."
 msgid "Los datos deben ser una matriz N x p (o 3-D: subgrupos x n x p)."
 msgstr "The data must be an N x p matrix (or 3-D: subgroups x n x p)."
 
+#, python-brace-format
+msgid ""
+"Los datos son asimétricos (asimetría = {skewness:.2f}): los límites de I-MR suponen normalidad y pueden dar falsas "
+"alarmas del lado de la cola larga."
+msgstr ""
+"The data are skewed (skewness = {skewness:.2f}): the I-MR limits assume normality and can give false alarms on the "
+"long-tail side."
+
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr "Sample sizes must be positive."
 
@@ -2376,6 +2413,9 @@ msgstr "Continuous measurements — in subgroups (several per sample)"
 msgid "Mediciones continuas — una por instante (individual)"
 msgstr "Continuous measurements — one per time point (individual)"
 
+msgid "Mejor distribución (AIC)"
+msgstr "Best distribution (AIC)"
+
 msgid "Mezclas"
 msgstr "Mixtures"
 
@@ -2384,6 +2424,9 @@ msgstr "Minimize total inspection (Dodge-Romig)"
 
 msgid "Monitorear el proceso (cartas de control)"
 msgstr "Monitor the process (control charts)"
+
+msgid "Motivo de la no normalidad"
+msgstr "Reason for non-normality"
 
 msgid "Muestra"
 msgstr "Sample"
@@ -2461,6 +2504,13 @@ msgstr "NDC (number of distinct categories)"
 
 msgid "Nested Gage R&R — cada operador mide partes distintas"
 msgstr "Nested Gage R&R — each operator measures different parts"
+
+msgid ""
+"Ninguna transformación ni distribución ajusta claramente mejor que la normal: interpreta con cautela los índices de "
+"capacidad normales (usa ci_method='bootstrap' para los intervalos)."
+msgstr ""
+"No transformation or distribution fits clearly better than the normal: interpret the normal capability indices with "
+"caution (use ci_method='bootstrap' for the intervals)."
 
 msgid "Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma."
 msgstr "No subgroup has 2 or more observations; sigma cannot be estimated."
@@ -3109,6 +3159,9 @@ msgstr "cumulative"
 msgid "alfa"
 msgstr "alpha"
 
+msgid "asimetría"
+msgstr "skewness"
+
 msgid "c (número de aceptación)"
 msgstr "c (acceptance number)"
 
@@ -3176,6 +3229,9 @@ msgstr "phase"
 msgid "forma"
 msgstr "shape"
 
+msgid "forma de la distribución (colas, varias modas)"
+msgstr "shape of the distribution (tails, several modes)"
+
 #, python-brace-format
 msgid "formas distintas {e} y {o}"
 msgstr "different shapes {e} and {o}"
@@ -3198,6 +3254,14 @@ msgid ""
 msgstr ""
 "import pccpy as pp\n"
 "result = pp.capability_boxcox(data, {args})"
+
+#, python-brace-format
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.capability_nonnormal(datos, {args}, distribution={distribution!r})"
+msgstr ""
+"import pccpy as pp\n"
+"result = pp.capability_nonnormal(data, {args}, distribution={distribution!r})"
 
 msgid ""
 "import pccpy as pp\n"
@@ -3276,6 +3340,9 @@ msgstr "n_points"
 
 msgid "n_subgrupo"
 msgstr "n_subgroup"
+
+msgid "no"
+msgstr "no"
 
 msgid "objetivo"
 msgstr "target"
@@ -3419,6 +3486,9 @@ msgstr "sigma_method must be 'rbar', 'sbar' or 'pooled'."
 msgid "subgrupos"
 msgstr "subgroups"
 
+msgid "sí"
+msgstr "yes"
+
 msgid "t"
 msgstr "t"
 
@@ -3433,6 +3503,9 @@ msgstr "value"
 
 msgid "valor_inferior"
 msgstr "lower_value"
+
+msgid "valores atípicos (sin ellos los datos son normales)"
+msgstr "outliers (without them the data are normal)"
 
 msgid "variables"
 msgstr "variables"
