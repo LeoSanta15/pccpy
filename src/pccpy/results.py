@@ -10,6 +10,7 @@ from ._data import _excel_writer
 from ._frames import etiquetas
 from ._i18n import N_, tr
 from .rules import DEFAULT_K, describe
+from .transforms import Transformation
 
 # Claves estables (inglés) → texto de la columna en español, marcado para traducir.
 _COLUMNAS_PANEL = {
@@ -61,6 +62,8 @@ class Panel:
     violations: dict[int, np.ndarray] = field(default_factory=dict)
     secondary: np.ndarray | None = None  # 2ª serie (CUSUM inferior)
     symmetric: bool = True  # ¿tiene sentido dibujar zonas de 1 y 2 sigma?
+    zones_upper: dict[int, np.ndarray] | None = None  # líneas de 1 y 2 sigma si no son simétricas (escala original)
+    zones_lower: dict[int, np.ndarray] | None = None
 
     @property
     def flagged(self) -> np.ndarray:
@@ -108,6 +111,8 @@ class ControlChart:
     test1_text: str | None = None  # plantilla (msgid) de la descripción propia de la prueba 1; se traduce al mostrarla
     test1_params: dict = field(default_factory=dict)  # valores de los marcadores de test1_text
     labels: np.ndarray | None = None  # etiqueta de cada punto graficado (fechas, lotes…); ver :meth:`with_labels`
+    transformation: Transformation | None = None  # transformación con la que se calculó la carta (``transform=``)
+    chart_scale: str = ""  # escala en que se guardan y dibujan los paneles de posición: 'original' o 'transformed'
 
     def with_labels(self, labels) -> ControlChart:
         """Asocia una etiqueta a cada punto graficado (fechas, lotes…) y devuelve la propia carta.
@@ -187,6 +192,10 @@ class ControlChart:
 
     def summary(self) -> str:
         lines = [tr("Carta de control {kind}").format(kind=self.kind)]
+        if self.transformation is not None:
+            lines.append(tr("  Transformación {detalle}; paneles de posición en la escala {escala}").format(
+                detalle=self.transformation.describe(),
+                escala=tr("original") if self.chart_scale == "original" else tr("transformada")))
         for prm in self.params:
             head = tr("  Etapa {stage}").format(stage=prm["stage"]) if len(self.params) > 1 else tr("  Parámetros")
             body = ", ".join(

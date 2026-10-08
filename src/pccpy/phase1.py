@@ -264,6 +264,9 @@ def phase_one(
         raise ValueError(tr("'max_iterations' debe ser >= 0, 'max_excluded' estar en (0, 1] y 'min_points' ser >= 2."))
     if "stages" in kwargs and kwargs["stages"] is not None:
         raise ValueError(tr("La Fase I no admite 'stages': hazla por separado en cada etapa."))
+    if kwargs.get("transform") is not None:
+        raise ValueError(tr("La Fase I todavía no admite 'transform': los límites congelados y la transformación tendrían "
+                            "que ajustarse juntos. Transforma los datos antes con fit_transformation()."))
     if kwargs.get("tests", (1,)) in (None, (), []):
         raise ValueError(tr("La Fase I necesita al menos una prueba de causas especiales ('tests')."))
 

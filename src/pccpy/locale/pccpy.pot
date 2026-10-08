@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:33+0000\n"
+"POT-Creation-Date: 2026-10-08 21:44+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -856,6 +856,10 @@ msgid ""
 msgstr ""
 
 #, python-brace-format
+msgid "  Transformación {detalle}; paneles de posición en la escala {escala}"
+msgstr ""
+
+#, python-brace-format
 msgid "  Valor p         : {p:.4f}"
 msgstr ""
 
@@ -1084,6 +1088,10 @@ msgid "'point' debe estar entre 1 y {m}."
 msgstr ""
 
 msgid "'process_avg' debe estar en (0, 1)."
+msgstr ""
+
+#, python-brace-format
+msgid "'scale' debe ser 'original' o 'transformed' (recibido: {scale!r})."
 msgstr ""
 
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
@@ -1432,7 +1440,8 @@ msgid ""
 "Con subgrupos pequeños (n ≈ {n:g}) y datos asimétricos (asimetría = "
 "{asim:.2f}) las medias no se aproximan bien a la normal: los límites de "
 "X̄ y de R/S pueden dar falsas alarmas del lado de la cola larga. Revisa "
-"los datos con diagnose() antes de fiarte de los límites."
+"los datos con diagnose() y, si hace falta, usa transform= para "
+"normalizarlos."
 msgstr ""
 
 #, python-brace-format
@@ -1596,6 +1605,9 @@ msgid "Descripción"
 msgstr ""
 
 msgid "Desv. est. de la muestra"
+msgstr ""
+
+msgid "Desv. est. de la muestra (escala transformada)"
 msgstr ""
 
 msgid "Desv. est. dentro del subgrupo"
@@ -2031,6 +2043,12 @@ msgstr ""
 msgid "La Fase I no está soportada para esta carta; usa {charts}."
 msgstr ""
 
+msgid ""
+"La Fase I todavía no admite 'transform': los límites congelados y la "
+"transformación tendrían que ajustarse juntos. Transforma los datos antes "
+"con fit_transformation()."
+msgstr ""
+
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr ""
 
@@ -2182,7 +2200,8 @@ msgstr ""
 msgid ""
 "Los datos son asimétricos (asimetría = {skewness:.2f}): los límites de "
 "I-MR suponen normalidad y pueden dar falsas alarmas del lado de la cola "
-"larga."
+"larga; usa imr_chart(..., transform='boxcox' | 'yeo-johnson' | "
+"'johnson')."
 msgstr ""
 
 msgid "Los datos son constantes: no se puede ajustar una transformación."
@@ -2678,10 +2697,16 @@ msgstr ""
 msgid "Rango de la muestra"
 msgstr ""
 
+msgid "Rango de la muestra (escala transformada)"
+msgstr ""
+
 msgid "Rango dentro del subgrupo"
 msgstr ""
 
 msgid "Rango móvil"
+msgstr ""
+
+msgid "Rango móvil (escala transformada)"
 msgstr ""
 
 msgid "Rango móvil de Z"
@@ -3212,6 +3237,9 @@ msgstr ""
 msgid "operador"
 msgstr ""
 
+msgid "original"
+msgstr ""
+
 msgid "p Agrupamiento (clustering)"
 msgstr ""
 
@@ -3343,6 +3371,9 @@ msgstr ""
 msgid "tolerancia"
 msgstr ""
 
+msgid "transformada"
+msgstr ""
+
 msgid "valor"
 msgstr ""
 
@@ -3360,6 +3391,10 @@ msgstr ""
 
 #, python-brace-format
 msgid "{count} valor(es) atípico(s) detectado(s). Investiga su origen."
+msgstr ""
+
+#, python-brace-format
+msgid "{detalle}; paneles de posición en la escala {escala}"
 msgstr ""
 
 #, python-brace-format

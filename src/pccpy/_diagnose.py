@@ -416,7 +416,8 @@ def diagnose(
                          "se recomienda ajustar una distribución no normal."))
     if razon == "skewed" and not con_specs:
         issues.append(tr("Los datos son asimétricos (asimetría = {skewness:.2f}): los límites de I-MR suponen "
-                         "normalidad y pueden dar falsas alarmas del lado de la cola larga.").format(skewness=skewness))
+                         "normalidad y pueden dar falsas alarmas del lado de la cola larga; usa "
+                         "imr_chart(..., transform='boxcox' | 'yeo-johnson' | 'johnson').").format(skewness=skewness))
     if has_trend:
         issues.append(tr(
             "Se detectó tendencia {direction}. Verifica causas asignables antes de calcular capacidad."

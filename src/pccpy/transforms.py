@@ -40,9 +40,17 @@ def _yj_inversa(z: np.ndarray, lam: float) -> np.ndarray:
     out = np.empty_like(z, dtype=float)
     pos = z >= 0
     zp, zn = z[pos], z[~pos]
-    with np.errstate(invalid="ignore", divide="ignore"):
-        out[pos] = np.expm1(zp) if lam == 0 else np.power(lam * zp + 1, 1 / lam) - 1
-        out[~pos] = 1 - np.exp(-zn) if lam == 2 else 1 - np.power(1 - (2 - lam) * zn, 1 / (2 - lam))
+    with np.errstate(invalid="ignore", divide="ignore", over="ignore"):
+        if lam == 0:
+            out[pos] = np.expm1(zp)
+        else:
+            t = lam * zp + 1
+            out[pos] = np.where(t > 0, np.power(np.where(t > 0, t, 1.0), 1 / lam) - 1, np.inf)
+        if lam == 2:
+            out[~pos] = 1 - np.exp(-zn)
+        else:
+            t = 1 - (2 - lam) * zn
+            out[~pos] = np.where(t > 0, 1 - np.power(np.where(t > 0, t, 1.0), 1 / (2 - lam)), -np.inf)
     return out
 
 
@@ -77,7 +85,11 @@ class Transformation:
         return float(out[0]) if escalar else out
 
     def inverse(self, values):
-        """Deshace la transformación: de la escala normalizada a la original."""
+        """Deshace la transformación: de la escala normalizada a la original.
+
+        Un valor fuera del rango que alcanza la transformación (p. ej. por debajo de ``−1/λ`` en Box-Cox con
+        ``λ > 0``) se lleva al extremo del soporte original: ``0`` para Box-Cox por abajo, ``±∞`` en los demás casos.
+        """
         z = np.asarray(values, dtype=float)
         escalar = z.ndim == 0
         z = np.atleast_1d(z)
@@ -85,7 +97,12 @@ class Transformation:
         with np.errstate(invalid="ignore", over="ignore", divide="ignore"):
             if self.method == "boxcox":
                 lam = p["lambda"]
-                out = np.exp(z) if lam == 0 else np.power(lam * z + 1, 1 / lam)
+                if lam == 0:
+                    out = np.exp(z)
+                else:
+                    t = lam * z + 1
+                    fuera = np.where(t > 0, 0.0, (0.0 if lam > 0 else np.inf))
+                    out = np.where(t > 0, np.power(np.where(t > 0, t, 1.0), 1 / lam), fuera)
             elif self.method == "yeo-johnson":
                 out = _yj_inversa(z, p["lambda"])
             else:
@@ -97,6 +114,7 @@ class Transformation:
                 else:
                     u = np.exp(t)
                 out = p["loc"] + p["scale"] * u
+        out = np.where(np.isnan(z), np.nan, out)
         return float(out[0]) if escalar else out
 
     def info(self) -> dict:
