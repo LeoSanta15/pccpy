@@ -1,6 +1,6 @@
 # Plan — guardar y reutilizar los resultados de una Fase I
 
-> **Estado:** propuesto el 2026-10-08, pendiente de aprobación. Una rama y un PR por fase; la versión va en un PR de versión aparte.
+> **Estado:** aprobado el 2026-10-08; G1–G3 fusionadas (PR #38–#40) y publicadas en la versión 0.13.0.
 > **Objetivo:** que quien ya tiene una Fase I (de otra sesión, otro script o calculada por otra vía) pueda pasar a la Fase II sin repetir `phase_one`, y que ese camino esté documentado y probado.
 > **Fuera de alcance:** guardar los datos de la Fase I (solo lo que `phase2()` necesita); formatos distintos de un diccionario serializable en JSON.
 
