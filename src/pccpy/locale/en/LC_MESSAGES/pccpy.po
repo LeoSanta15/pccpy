@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:44+0000\n"
+"POT-Creation-Date: 2026-10-08 21:52+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -776,6 +776,13 @@ msgstr "  Potential (within) capability:"
 msgid "  Cg={cg}  Cgk={cgk}"
 msgstr "  Cg={cg}  Cgk={cgk}"
 
+msgid ""
+"  Clásico: t de Student (media), chi-cuadrado (desviación estándar) y estadísticos de orden (mediana); los dos "
+"primeros suponen normalidad."
+msgstr ""
+"  Classic: Student's t (mean), chi-square (standard deviation) and order statistics (median); the first two assume "
+"normality."
+
 #, python-brace-format
 msgid "  Confianza alcanzada: {confidence:.2f}%"
 msgstr "  Achieved confidence: {confidence:.2f}%"
@@ -1090,6 +1097,10 @@ msgstr "  Constant p: chi²={c:.2f} (DF={gl}), p-value={p:.4f}"
 #, python-brace-format
 msgid "  {kind} objetivo={target:.3g}%  Promedio proceso={process_avg:.3g}%"
 msgstr "  {kind} target={target:.3g}%  Process average={process_avg:.3g}%"
+
+#, python-brace-format
+msgid "  {nombre:<10}{est:.6g}  bootstrap ({lo:.6g}, {hi:.6g})  clásico ({clo:.6g}, {chi:.6g})"
+msgstr "  {nombre:<10}{est:.6g}  bootstrap ({lo:.6g}, {hi:.6g})  classic ({clo:.6g}, {chi:.6g})"
 
 #, python-brace-format
 msgid "  Índices  : {indices}"
@@ -2128,6 +2139,9 @@ msgstr "One-sided upper tolerance interval — P(X ≤ UL) ≥ coverage"
 msgid "Intervalos bootstrap de Pp y Ppk frente a un cálculo manual con los mismos remuestreos"
 msgstr "Bootstrap intervals of Pp and Ppk versus a manual calculation with the same resamples"
 
+msgid "Intervalos clásicos del resumen (t de Student, chi-cuadrado, estadísticos de orden)"
+msgstr "Classic intervals of the summary (Student's t, chi-square, order statistics)"
+
 msgid "Intervalos de tolerancia"
 msgstr "Tolerance intervals"
 
@@ -2933,6 +2947,10 @@ msgstr "Result"
 msgid "Resumen"
 msgstr "Summary"
 
+#, python-brace-format
+msgid "Resumen con intervalos bootstrap {metodo} al {nivel:g}%  (n={n}, remuestreos={b})"
+msgstr "Summary with bootstrap {metodo} intervals at {nivel:g}%  (n={n}, resamples={b})"
+
 msgid "R²"
 msgstr "R²"
 
@@ -3249,6 +3267,12 @@ msgstr "category"
 
 msgid "centro"
 msgstr "center"
+
+msgid "clásico inferior"
+msgstr "classic lower"
+
+msgid "clásico superior"
+msgstr "classic upper"
 
 msgid "conteo"
 msgstr "count"

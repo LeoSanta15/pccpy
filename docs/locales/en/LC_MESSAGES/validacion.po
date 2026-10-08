@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:33+0000\n"
+"POT-Creation-Date: 2026-10-08 21:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -72,6 +72,12 @@ msgstr "Yeo-Johnson and the Johnson family"
 
 msgid "`scipy.stats.yeojohnson`; `Φ⁻¹(F(x))` con las distribuciones de scipy"
 msgstr "`scipy.stats.yeojohnson`; `Φ⁻¹(F(x))` with the scipy distributions"
+
+msgid "Intervalos clásicos del resumen (media, mediana y sigma)"
+msgstr "Classic intervals of the summary (mean, median and sigma)"
+
+msgid "`scipy.stats.t.interval`, chi-cuadrado de la varianza y binomial(n, 0,5)"
+msgstr "`scipy.stats.t.interval`, chi-square of the variance and binomial(n, 0.5)"
 
 msgid "Bootstrap (BCa y percentil)"
 msgstr "Bootstrap (BCa and percentile)"

@@ -8,7 +8,7 @@ versión instalada calcula bien (por ejemplo, en un sistema de calidad regulado)
 import pccpy as pp
 
 informe = pp.run_validation()
-print(informe.summary())      # «Validación de pccpy …: 37 de 37 comprobaciones correctas»
+print(informe.summary())      # «Validación de pccpy …: 38 de 38 comprobaciones correctas»
 informe.passed                # True si todo coincide
 informe.to_frame()            # una fila por comprobación (error y tolerancia)
 ```
@@ -29,6 +29,7 @@ python -m pccpy.validation --markdown validacion.md
 | Cp, Cpk, Pp, Ppk, Z.Bench y PPM | Fórmulas con la distribución normal |
 | Intervalos bootstrap de Pp y Ppk | Fórmulas de Pp y Ppk escritas aparte, con los mismos remuestreos |
 | Yeo-Johnson y familia de Johnson | `scipy.stats.yeojohnson`; `Φ⁻¹(F(x))` con las distribuciones de scipy |
+| Intervalos clásicos del resumen (media, mediana y sigma) | `scipy.stats.t.interval`, chi-cuadrado de la varianza y binomial(n, 0,5) |
 | Bootstrap (BCa y percentil) | `scipy.stats.bootstrap` (diferencia dentro del error de Monte Carlo) |
 | Capacidad binomial y Poisson | Intervalos exactos de SciPy (Clopper-Pearson) y cuantiles de la gamma (Garwood) |
 | Anderson-Darling | Estadístico A² calculado por separado |

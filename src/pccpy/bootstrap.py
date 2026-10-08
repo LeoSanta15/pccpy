@@ -215,3 +215,110 @@ def bootstrap_ci(
     return BootstrapResult(
         estimate=np.asarray(est), lower=np.asarray(lo), upper=np.asarray(hi), method=usado, n=n, n_boot=int(n_boot),
         n_valid=n_valid, confidence=float(confidence), seed=seed, replicates=reps)
+
+
+# ───────────────────────────────────────────────── resumen: media, mediana y sigma ──
+_NOMBRES = {"mean": N_("Media"), "median": N_("Mediana"), "std": N_("Desv.Est.")}
+
+
+def _estadisticas_basicas(m: np.ndarray, axis: int = -1) -> np.ndarray:
+    """Media, mediana y desviación estándar (n − 1) a lo largo de ``axis``; la salida añade un eje final de 3."""
+    return np.stack([m.mean(axis=axis), np.median(m, axis=axis), m.std(axis=axis, ddof=1)], axis=-1)
+
+
+def _mediana_sin_distribucion(x: np.ndarray, confianza: float) -> tuple[float, float]:
+    """Intervalo de la mediana por estadísticos de orden (binomial con p = 0,5): cobertura ≥ ``confianza``."""
+    xs, n = np.sort(x), x.size
+    alfa = 1 - confianza
+    k = 1  # mayor k tal que P(B ≤ k − 1) ≤ α/2, con B ~ Binomial(n, 0,5)
+    while k < n and stats.binom.cdf(k, n, 0.5) <= alfa / 2:
+        k += 1
+    if stats.binom.cdf(k - 1, n, 0.5) > alfa / 2:  # muestra demasiado pequeña para esa confianza
+        return float(xs[0]), float(xs[-1])
+    return float(xs[k - 1]), float(xs[n - k])
+
+
+@dataclass
+class BootstrapSummary:
+    """Media, mediana y desviación estándar con su intervalo bootstrap y el intervalo clásico de referencia."""
+
+    statistics: tuple
+    estimate: np.ndarray
+    lower: np.ndarray
+    upper: np.ndarray
+    classic_lower: np.ndarray
+    classic_upper: np.ndarray
+    n: int
+    method: str
+    n_boot: int
+    confidence: float
+    seed: int | None
+    bootstrap: BootstrapResult = field(repr=False, default=None)  # type: ignore[assignment]
+
+    def ci(self, statistic: str) -> tuple:
+        """Intervalo bootstrap ``(inferior, superior)`` de ``'mean'``, ``'median'`` o ``'std'``."""
+        i = self.statistics.index(statistic)
+        return float(self.lower[i]), float(self.upper[i])
+
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Una fila por estadístico: estimación, intervalo bootstrap e intervalo clásico (de referencia)."""
+        frame = pd.DataFrame({
+            N_("estimación"): self.estimate, N_("límite inferior"): self.lower, N_("límite superior"): self.upper,
+            N_("clásico inferior"): self.classic_lower, N_("clásico superior"): self.classic_upper,
+        }, index=[_NOMBRES[s] for s in self.statistics])
+        out = renombrar(frame, {
+            N_("estimación"): "estimate", N_("límite inferior"): "lower", N_("límite superior"): "upper",
+            N_("clásico inferior"): "classic_lower", N_("clásico superior"): "classic_upper"}, stable)
+        out.index = list(self.statistics) if stable else [tr(_NOMBRES[s]) for s in self.statistics]
+        out.index.name = "statistic" if stable else tr(N_("estadístico"))
+        return out
+
+    def summary(self) -> str:
+        lines = [tr("Resumen con intervalos bootstrap {metodo} al {nivel:g}%  (n={n}, remuestreos={b})").format(
+            metodo=self.method, nivel=100 * self.confidence, n=self.n, b=self.bootstrap.n_valid)]
+        for i, s in enumerate(self.statistics):
+            lines.append(tr("  {nombre:<10}{est:.6g}  bootstrap ({lo:.6g}, {hi:.6g})  clásico ({clo:.6g}, {chi:.6g})").format(
+                nombre=tr(_NOMBRES[s]), est=self.estimate[i], lo=self.lower[i], hi=self.upper[i],
+                clo=self.classic_lower[i], chi=self.classic_upper[i]))
+        lines.append(tr("  Clásico: t de Student (media), chi-cuadrado (desviación estándar) y estadísticos de orden "
+                        "(mediana); los dos primeros suponen normalidad."))
+        return "\n".join(lines)
+
+    def __str__(self) -> str:  # pragma: no cover
+        return self.summary()
+
+
+def bootstrap_summary(data, *, method: str = "bca", n_boot: int = 2000, confidence: float = 0.95,
+                      seed: int | None = None) -> BootstrapSummary:
+    """Media, mediana y desviación estándar con intervalos bootstrap, junto a los intervalos clásicos.
+
+    Los intervalos clásicos (t de Student para la media, chi-cuadrado para la desviación estándar y estadísticos de orden
+    para la mediana) van como referencia: los dos primeros suponen normalidad y con datos asimétricos pueden perder
+    cobertura (el de la desviación estándar, mucho). Los tres estadísticos se calculan sobre los mismos remuestreos.
+
+    Parameters
+    ----------
+    data : array-like
+        Muestra 1-D.
+    method, n_boot, confidence, seed :
+        Ver :func:`bootstrap_ci`.
+
+    Returns
+    -------
+    BootstrapSummary
+    """
+    r = bootstrap_ci(data, _estadisticas_basicas, method=method, n_boot=n_boot, confidence=confidence, seed=seed,
+                     vectorized=True)
+    x = as_1d(data, "data")
+    n = x.size
+    media, s = float(x.mean()), float(x.std(ddof=1))
+    alfa = 1 - confidence
+    h = stats.t.ppf(1 - alfa / 2, n - 1) * s / np.sqrt(n)
+    med_lo, med_hi = _mediana_sin_distribucion(x, confidence)
+    cl = [media - h, med_lo, s * np.sqrt((n - 1) / stats.chi2.ppf(1 - alfa / 2, n - 1))]
+    ch = [media + h, med_hi, s * np.sqrt((n - 1) / stats.chi2.ppf(alfa / 2, n - 1))]
+    lo, hi = r.ci
+    return BootstrapSummary(
+        statistics=("mean", "median", "std"), estimate=np.asarray(r.estimate), lower=np.asarray(lo),
+        upper=np.asarray(hi), classic_lower=np.array(cl), classic_upper=np.array(ch), n=n, method=r.method,
+        n_boot=r.n_boot, confidence=float(confidence), seed=seed, bootstrap=r)

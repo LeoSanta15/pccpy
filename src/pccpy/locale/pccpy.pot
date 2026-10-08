@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:44+0000\n"
+"POT-Creation-Date: 2026-10-08 21:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -563,6 +563,11 @@ msgstr ""
 msgid "  Cg={cg}  Cgk={cgk}"
 msgstr ""
 
+msgid ""
+"  Clásico: t de Student (media), chi-cuadrado (desviación estándar) y "
+"estadísticos de orden (mediana); los dos primeros suponen normalidad."
+msgstr ""
+
 #, python-brace-format
 msgid "  Confianza alcanzada: {confidence:.2f}%"
 msgstr ""
@@ -881,6 +886,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "  {kind} objetivo={target:.3g}%  Promedio proceso={process_avg:.3g}%"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"  {nombre:<10}{est:.6g}  bootstrap ({lo:.6g}, {hi:.6g})  clásico "
+"({clo:.6g}, {chi:.6g})"
 msgstr ""
 
 #, python-brace-format
@@ -1925,6 +1936,11 @@ msgid ""
 "mismos remuestreos"
 msgstr ""
 
+msgid ""
+"Intervalos clásicos del resumen (t de Student, chi-cuadrado, estadísticos"
+" de orden)"
+msgstr ""
+
 msgid "Intervalos de tolerancia"
 msgstr ""
 
@@ -2739,6 +2755,12 @@ msgstr ""
 msgid "Resumen"
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"Resumen con intervalos bootstrap {metodo} al {nivel:g}%  (n={n}, "
+"remuestreos={b})"
+msgstr ""
+
 msgid "R²"
 msgstr ""
 
@@ -3057,6 +3079,12 @@ msgid "categoría"
 msgstr ""
 
 msgid "centro"
+msgstr ""
+
+msgid "clásico inferior"
+msgstr ""
+
+msgid "clásico superior"
 msgstr ""
 
 msgid "conteo"

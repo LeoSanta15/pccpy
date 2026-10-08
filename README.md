@@ -773,6 +773,8 @@ sd = lambda v, axis=-1: np.std(v, axis=axis, ddof=1)
 pp.bootstrap_ci(datos, sd, vectorized=True, seed=1).ci
 ```
 
+Con `pp.bootstrap_summary(datos, seed=1)` obtienes de una vez la media, la mediana y la desviación estándar con su intervalo bootstrap y, como referencia, el intervalo clásico (`t` de Student, chi-cuadrado y estadísticos de orden).
+
 En simulación (gamma(2), n = 60) el intervalo BCa de la desviación estándar cubre ≈ 92 % frente a ≈ 83 % del intervalo chi-cuadrado; para la media el intervalo t ya aguanta bien. Con n < 20 avisa: el bootstrap también pierde cobertura.
 
 ---

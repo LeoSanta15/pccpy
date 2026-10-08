@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.12.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:40+0000\n"
+"POT-Creation-Date: 2026-10-08 21:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -81,4 +81,28 @@ msgstr "``(lower, upper)``"
 
 msgid "Una fila por componente: estimación y límites del intervalo."
 msgstr "One row per component: estimate and interval limits."
+
+msgid "Media, mediana y desviación estándar con intervalos bootstrap, junto a los intervalos clásicos."
+msgstr "Mean, median and standard deviation with bootstrap intervals, alongside the classic intervals."
+
+msgid "Los intervalos clásicos (t de Student para la media, chi-cuadrado para la desviación estándar y estadísticos de orden para la mediana) van como referencia: los dos primeros suponen normalidad y con datos asimétricos pueden perder cobertura (el de la desviación estándar, mucho). Los tres estadísticos se calculan sobre los mismos remuestreos."
+msgstr "The classic intervals (Student's t for the mean, chi-square for the standard deviation and order statistics for the median) are given as a reference: the first two assume normality and with skewed data they can lose coverage (the one for the standard deviation, a lot). The three statistics are computed on the same resamples."
+
+msgid "Muestra 1-D."
+msgstr "1-D sample."
+
+msgid "Ver :func:`bootstrap_ci`."
+msgstr "See :func:`bootstrap_ci`."
+
+msgid "*BootstrapSummary*"
+msgstr "*BootstrapSummary*"
+
+msgid "Media, mediana y desviación estándar con su intervalo bootstrap y el intervalo clásico de referencia."
+msgstr "Mean, median and standard deviation with their bootstrap interval and the classic reference interval."
+
+msgid "Intervalo bootstrap ``(inferior, superior)`` de ``'mean'``, ``'median'`` o ``'std'``."
+msgstr "Bootstrap interval ``(lower, upper)`` of ``'mean'``, ``'median'`` or ``'std'``."
+
+msgid "Una fila por estadístico: estimación, intervalo bootstrap e intervalo clásico (de referencia)."
+msgstr "One row per statistic: estimate, bootstrap interval and classic (reference) interval."
 

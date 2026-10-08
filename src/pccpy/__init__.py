@@ -11,7 +11,7 @@ from .acceptance import (
     acceptance_sampling_variables,
     dodge_romig,
 )
-from .bootstrap import BootstrapResult, bootstrap_ci
+from .bootstrap import BootstrapResult, BootstrapSummary, bootstrap_ci, bootstrap_summary
 from .capability import (
     CapabilityResult,
     NonNormalCapabilityResult,
@@ -102,6 +102,7 @@ __all__ = [
     "AttributeAgreementResult",
     "BinomialCapabilityResult",
     "BootstrapResult",
+    "BootstrapSummary",
     "CapabilityResult",
     "ControlChart",
     "DiagnoseResult",
@@ -130,6 +131,7 @@ __all__ = [
     "attribute_agreement",
     "available_languages",
     "bootstrap_ci",
+    "bootstrap_summary",
     "c4",
     "c5",
     "c_chart",
