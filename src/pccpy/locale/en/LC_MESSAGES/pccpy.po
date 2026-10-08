@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 23:42+0000\n"
+"POT-Creation-Date: 2026-10-08 20:40+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1207,6 +1207,9 @@ msgstr "'median_mr' is only available with span = 2."
 msgid "'method' debe ser 'anova' o 'xbar_r'."
 msgstr "'method' must be 'anova' or 'xbar_r'."
 
+msgid "'method' debe ser 'bca' o 'percentile'."
+msgstr "'method' must be 'bca' or 'percentile'."
+
 msgid "'method' debe ser 'normal' o 'nonparametric'."
 msgstr "'method' must be 'normal' or 'nonparametric'."
 
@@ -1226,6 +1229,9 @@ msgstr "'n' must be a number or have the same length as the data ({k})."
 
 msgid "'n' debe ser ≥ 2."
 msgstr "'n' must be >= 2."
+
+msgid "'n_boot' debe ser un entero ≥ 100."
+msgstr "'n_boot' must be an integer ≥ 100."
 
 msgid "'n_hist' debe ser mayor que el número de variables."
 msgstr "'n_hist' must be greater than the number of variables."
@@ -1261,6 +1267,12 @@ msgstr "'spec_type' must be 'one' or 'two'."
 #, python-brace-format
 msgid "'stages' debe tener una etiqueta por punto graficado ({n_points}); recibido: {shape}."
 msgstr "'stages' must have one label per plotted point ({n_points}); received: {shape}."
+
+msgid "'statistic' debe devolver siempre el mismo número de valores."
+msgstr "'statistic' must always return the same number of values."
+
+msgid "'statistic' debe ser una función."
+msgstr "'statistic' must be a function."
 
 msgid "'std' debe ser positivo."
 msgstr "'std' must be positive."
@@ -1417,6 +1429,13 @@ msgstr "Skewness"
 msgid "Atípicos"
 msgstr "Outliers"
 
+msgid ""
+"BCa no se puede calcular para alguna componente (el estimador queda en un extremo de la distribución bootstrap); se "
+"usa el percentil en ella."
+msgstr ""
+"BCa cannot be computed for some component (the estimate lies at an extreme of the bootstrap distribution); the "
+"percentile method is used for it."
+
 msgid "Bilateral  — límite inferior y superior"
 msgstr "Two-sided  — lower and upper limit"
 
@@ -1549,6 +1568,10 @@ msgstr "With 3-D data, 'subgroup_size' should not be given."
 
 msgid "Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'."
 msgstr "With individual observations, within_method must be 'mr', 'median_mr' or 'mssd'."
+
+#, python-brace-format
+msgid "Con n={n} (< {minimo}) el bootstrap también pierde cobertura; interprete el intervalo con cautela."
+msgstr "With n={n} (< {minimo}) the bootstrap also loses coverage; interpret the interval with caution."
 
 msgid "Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."
 msgstr "With subgroups, within_method must be 'pooled', 'rbar' or 'sbar'."
@@ -1988,6 +2011,13 @@ msgstr "Part×operator interaction"
 msgid "Intercepto"
 msgstr "Intercept"
 
+msgid "Intervalo bootstrap BCa y percentil de la media frente a scipy.stats.bootstrap"
+msgstr "BCa and percentile bootstrap interval of the mean versus scipy.stats.bootstrap"
+
+#, python-brace-format
+msgid "Intervalo bootstrap {metodo} al {nivel:g}%  (n={n}, remuestreos={b})"
+msgstr "Bootstrap interval {metodo} at {nivel:g}%  (n={n}, resamples={b})"
+
 msgid "Intervalo de tolerancia"
 msgstr "Tolerance interval"
 
@@ -2126,12 +2156,21 @@ msgstr "The NP chart requires a constant sample size; use the P chart."
 msgid "La carta no tiene media/covarianza calculadas para este punto."
 msgstr "The chart has no mean/covariance computed for this point."
 
+msgid ""
+"La distribución bootstrap es degenerada (todos los remuestreos dan el mismo valor); el intervalo se reduce a la "
+"estimación."
+msgstr "The bootstrap distribution is degenerate (all resamples give the same value); the interval collapses to the estimate."
+
 msgid "La distribución no es normal (p ≤ 0.05). Considera transformación o análisis no paramétrico."
 msgstr "The distribution is not normal (p ≤ 0.05). Consider a transformation or a nonparametric analysis."
 
 #, python-brace-format
 msgid "La distribución {key} requiere datos estrictamente positivos."
 msgstr "The {key} distribution requires strictly positive data."
+
+#, python-brace-format
+msgid "La estadística no fue finita en {mal} de {total} remuestreos; se descartan."
+msgstr "The statistic was not finite in {mal} of {total} resamples; they are discarded."
 
 #, python-brace-format
 msgid "La etapa {label!r} aparece en bloques separados; cada etapa debe ser contigua."
@@ -2356,6 +2395,10 @@ msgstr "Study multiplier (K)"
 
 msgid "Muy pocos datos para el número de variables (grados de libertad <= 0)."
 msgstr "Too little data for the number of variables (degrees of freedom <= 0)."
+
+#, python-brace-format
+msgid "Muy pocos remuestreos válidos ({n}); revise la estadística."
+msgstr "Too few valid resamples ({n}); check the statistic."
 
 msgid "Máximo"
 msgstr "Maximum"
@@ -3089,6 +3132,9 @@ msgstr "expected"
 msgid "estadístico"
 msgstr "statistic"
 
+msgid "estimación"
+msgstr "estimate"
+
 msgid "etapa"
 msgstr "stage"
 
@@ -3169,6 +3215,12 @@ msgstr "length"
 
 msgid "lsl debe ser menor que usl."
 msgstr "lsl must be less than usl."
+
+msgid "límite inferior"
+msgstr "lower limit"
+
+msgid "límite superior"
+msgstr "upper limit"
 
 msgid "media"
 msgstr "mean"

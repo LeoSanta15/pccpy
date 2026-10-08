@@ -757,6 +757,26 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Intervalos bootstrap (datos asimétricos)
+
+Con datos asimétricos los intervalos normales (`x̄ ± t·s/√n`, chi-cuadrado para sigma, Bissell para Ppk) pierden cobertura. `bootstrap_ci` remuestrea tus datos y no supone ninguna forma: percentil o **BCa** (corrige sesgo y asimetría). Sirve para cualquier estadístico, escalar o vector, con los mismos remuestreos.
+
+```python
+import numpy as np
+
+r = pp.bootstrap_ci(datos, np.mean, method="bca", n_boot=2000, seed=1)
+r.estimate, r.ci            # estimación e intervalo (inferior, superior)
+print(r.summary())
+
+# varios estadísticos a la vez; vectorized=True (np.mean, np.std…) es mucho más rápido
+sd = lambda v, axis=-1: np.std(v, axis=axis, ddof=1)
+pp.bootstrap_ci(datos, sd, vectorized=True, seed=1).ci
+```
+
+En simulación (gamma(2), n = 60) el intervalo BCa de la desviación estándar cubre ≈ 92 % frente a ≈ 83 % del intervalo chi-cuadrado; para la media el intervalo t ya aguanta bien. Con n < 20 avisa: el bootstrap también pierde cobertura.
+
+---
+
 ### Capacidad para atributos (binomial y Poisson)
 
 Cuando el dato es «defectuoso / bueno» o un conteo de defectos, no hay Cp ni Cpk: la capacidad es la **tasa de

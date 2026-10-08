@@ -1,0 +1,84 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.12.2\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-08 20:40+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "Bootstrap"
+msgstr "Bootstrap"
+
+msgid "Intervalos de confianza por bootstrap (percentil y BCa) para cualquier estadístico de una muestra; útil cuando los datos son asimétricos y los intervalos normales pierden cobertura."
+msgstr "Bootstrap confidence intervals (percentile and BCa) for any sample statistic; useful when the data are skewed and the normal intervals lose coverage."
+
+msgid "Intervalo de confianza bootstrap para ``statistic(data)``."
+msgstr "Bootstrap confidence interval for ``statistic(data)``."
+
+msgid "Parámetros"
+msgstr "Parameters"
+
+msgid "Muestra 1-D (los valores no finitos se eliminan con un aviso)."
+msgstr "1-D sample (non-finite values are removed with a warning)."
+
+msgid "Función de una muestra 1-D que devuelve un escalar o un vector (``np.mean``, ``np.std``, …). Con ``vectorized=True`` debe aceptar ``axis=-1`` y se llama una sola vez con todos los remuestreos (mucho más rápido, p. ej. ``np.mean``)."
+msgstr "Function of a 1-D sample returning a scalar or a vector (``np.mean``, ``np.std``, …). With ``vectorized=True`` it must accept ``axis=-1`` and is called once with all the resamples (much faster, e.g. ``np.mean``)."
+
+msgid "``'bca'`` (por defecto) o ``'percentile'``."
+msgstr "``'bca'`` (default) or ``'percentile'``."
+
+msgid "Número de remuestreos (por defecto 2000)."
+msgstr "Number of resamples (default 2000)."
+
+msgid "Nivel de confianza (por defecto 0,95)."
+msgstr "Confidence level (default 0.95)."
+
+msgid "Semilla del generador aleatorio, para resultados reproducibles."
+msgstr "Seed of the random generator, for reproducible results."
+
+msgid "Ver ``statistic``."
+msgstr "See ``statistic``."
+
+msgid "Devuelve"
+msgstr "Returns"
+
+msgid "*BootstrapResult* -- ``result.ci`` da ``(inferior, superior)``; ``result.estimate`` la estimación con la muestra original."
+msgstr "*BootstrapResult* -- ``result.ci`` gives ``(lower, upper)``; ``result.estimate`` the estimate on the original sample."
+
+msgid "Tipo del valor devuelto"
+msgstr "Return type"
+
+msgid "Notas"
+msgstr "Notes"
+
+msgid "Si la distribución bootstrap de una componente es degenerada (todos los remuestreos iguales) el intervalo se reduce a la estimación y se avisa; si BCa no se puede calcular (corrección de sesgo infinita) se usa el percentil y se avisa. Las estadísticas no finitas en algún remuestreo se descartan (con aviso si son más del 5 %)."
+msgstr "If the bootstrap distribution of a component is degenerate (all resamples equal) the interval collapses to the estimate and a warning is issued; if BCa cannot be computed (infinite bias correction) the percentile method is used and a warning is issued. Non-finite statistics in some resamples are discarded (with a warning if more than 5 %)."
+
+msgid "Resultado de ``bootstrap_ci``: estimación puntual e intervalo (por componente si la estadística es un vector)."
+msgstr "Result of ``bootstrap_ci``: point estimate and interval (per component if the statistic is a vector)."
+
+msgid "escalares si la estadística devuelve un escalar, arreglos si devuelve un vector."
+msgstr "scalars if the statistic returns a scalar, arrays if it returns a vector."
+
+msgid "type"
+msgstr "type"
+
+msgid "``(inferior, superior)``"
+msgstr "``(lower, upper)``"
+
+msgid "Una fila por componente: estimación y límites del intervalo."
+msgstr "One row per component: estimate and interval limits."
+
