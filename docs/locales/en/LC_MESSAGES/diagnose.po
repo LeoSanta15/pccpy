@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-08 21:01+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -110,6 +110,25 @@ msgstr "Normality test (`scipy.stats.normaltest`). A p-value > 0.05 indicates an
 msgid "Con menos de 8 observaciones la prueba no es válida; `diagnose` devuelve `is_normal = True` y `normality_p = nan` en ese caso."
 msgstr "With fewer than 8 observations the test is not valid; `diagnose` returns `is_normal = True` and `normality_p = nan` in that case."
 
+msgid "Por qué no es normal"
+msgstr "Why it is not normal"
+
+msgid "Si la prueba rechaza la normalidad, `diagnose` estudia la causa (`non_normal_reason`):"
+msgstr "If the test rejects normality, `diagnose` studies the cause (`non_normal_reason`):"
+
+msgid "`'outliers'`: hay algún punto muy lejano (a más de 3·RIC de los cuartiles) y sin los atípicos los datos son normales y simétricos. Conviene investigar esos puntos antes de transformar nada."
+msgstr "`'outliers'`: there is some very distant point (more than 3·IQR beyond the quartiles) and without the outliers the data are normal and symmetric. It is worth investigating those points before transforming anything."
+
+msgid "`'skewed'`: la asimetría es marcada (|asimetría| ≥ 0,5). `transform_normalizes` dice si Box-Cox (solo con datos positivos) deja los datos normales y `best_distribution` da la distribución de menor AIC si mejora a la normal en más de 2 puntos (lognormal, Weibull, gamma o log-logística con datos positivos; logística o valores extremos si no)."
+msgstr "`'skewed'`: the skewness is marked (|skewness| ≥ 0.5). `transform_normalizes` says whether Box-Cox (only with positive data) leaves the data normal, and `best_distribution` gives the distribution with the lowest AIC if it improves on the normal by more than 2 points (lognormal, Weibull, gamma or log-logistic with positive data; logistic or extreme-value otherwise)."
+
+msgid "`'shape'`: no normal sin asimetría marcada (colas pesadas, varias modas…)."
+msgstr "`'shape'`: non-normal without marked skewness (heavy tails, several modes…)."
+
+#, python-format
+msgid "La causa es una heurística: en simulación acierta ≈ 98 % con datos lognormales y ≈ 96 % con una normal contaminada con tres atípicos lejanos; con asimetría muy leve puede confundirla con atípicos."
+msgstr "The cause is a heuristic: in simulation it is right ≈ 98 % of the time with lognormal data and ≈ 96 % with a normal contaminated with three distant outliers; with very mild skewness it can confuse it with outliers."
+
 msgid "Tendencia"
 msgstr "Trend"
 
@@ -150,17 +169,35 @@ msgstr "With specifications and normal distribution"
 msgid "`capability_analysis`"
 msgstr "`capability_analysis`"
 
-msgid "Con especificaciones y distribución no normal"
-msgstr "With specifications and non-normal distribution"
+msgid "Con especificaciones, no normal por valores atípicos"
+msgstr "With specifications, non-normal due to outliers"
+
+msgid "`capability_analysis` (y alerta para investigarlos)"
+msgstr "`capability_analysis` (and an alert to investigate them)"
+
+msgid "Con especificaciones, no normal y Box-Cox normaliza (datos, límites y objetivo positivos)"
+msgstr "With specifications, non-normal and Box-Cox normalizes (positive data, limits and target)"
 
 msgid "`capability_boxcox`"
 msgstr "`capability_boxcox`"
 
+msgid "Con especificaciones, no normal y una distribución gana a la normal por AIC"
+msgstr "With specifications, non-normal and a distribution beats the normal by AIC"
+
+msgid "`capability_nonnormal(distribution=…)`"
+msgstr "`capability_nonnormal(distribution=…)`"
+
+msgid "Con especificaciones, no normal y sin un modelo claramente mejor"
+msgstr "With specifications, non-normal and no clearly better model"
+
+msgid "`capability_analysis` (con aviso de cautela y `ci_method='bootstrap'`)"
+msgstr "`capability_analysis` (with a caution warning and `ci_method='bootstrap'`)"
+
 msgid "Sin especificaciones"
 msgstr "Without specifications"
 
-msgid "`imr_chart`"
-msgstr "`imr_chart`"
+msgid "`imr_chart` (con aviso si los datos son asimétricos)"
+msgstr "`imr_chart` (with a warning if the data are skewed)"
 
 msgid "Referencia de `DiagnoseResult`"
 msgstr "`DiagnoseResult` reference"
@@ -291,6 +328,30 @@ msgstr "`list[int]`"
 msgid "Índices de los valores atípicos."
 msgstr "Indices of the outliers."
 
+msgid "`non_normal_reason`"
+msgstr "`non_normal_reason`"
+
+msgid "`'outliers'`, `'skewed'`, `'shape'` o `''` (si es normal)."
+msgstr "`'outliers'`, `'skewed'`, `'shape'` or `''` (if normal)."
+
+msgid "`transform_normalizes`"
+msgstr "`transform_normalizes`"
+
+msgid "`bool | None`"
+msgstr "`bool | None`"
+
+msgid "¿Box-Cox normaliza los datos? `None` si no aplica."
+msgstr "Does Box-Cox normalize the data? `None` if it does not apply."
+
+msgid "`best_distribution`"
+msgstr "`best_distribution`"
+
+msgid "`str | None`"
+msgstr "`str | None`"
+
+msgid "Distribución de menor AIC si gana a la normal."
+msgstr "Distribution with the lowest AIC if it beats the normal."
+
 msgid "`recommended_function`"
 msgstr "`recommended_function`"
 
@@ -326,4 +387,7 @@ msgstr "`cp`, `cpk`"
 
 msgid "Índices de capacidad estimados (requieren `lsl` y `usl`)."
 msgstr "Estimated capability indices (require `lsl` and `usl`)."
+
+#~ msgid "`imr_chart`"
+#~ msgstr "`imr_chart`"
 

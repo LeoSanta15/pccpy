@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 20:49+0000\n"
+"POT-Creation-Date: 2026-10-08 21:00+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -545,6 +545,10 @@ msgid ""
 msgstr ""
 
 #, python-brace-format
+msgid "  Box-Cox normaliza: {answer}"
+msgstr ""
+
+#, python-brace-format
 msgid "  CV              : {cv:.2f} %"
 msgstr ""
 
@@ -691,6 +695,14 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Mediana         : {median:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Mejor distribución (AIC): {distribution}"
+msgstr ""
+
+#, python-brace-format
+msgid "  Motivo          : {reason}"
 msgstr ""
 
 #, python-brace-format
@@ -875,6 +887,9 @@ msgid "  ── Capacidad (estimada) ──"
 msgstr ""
 
 msgid "  ── Normalidad (prueba de normalidad) ──"
+msgstr ""
+
+msgid "  ── Por qué no es normal ──"
 msgstr ""
 
 msgid "  ── Tendencia ──"
@@ -1247,6 +1262,11 @@ msgid ""
 msgstr ""
 
 msgid "Bilateral  — límite inferior y superior"
+msgstr ""
+
+msgid ""
+"Box-Cox normalizaría los datos, pero requiere límites de especificación y"
+" objetivo positivos; se recomienda ajustar una distribución no normal."
 msgstr ""
 
 msgid "Box-Cox requiere datos estrictamente positivos."
@@ -2013,6 +2033,11 @@ msgid ""
 " 'stages', que cada etapa tenga suficientes puntos)."
 msgstr ""
 
+msgid ""
+"La no normalidad se debe a valores atípicos (sin ellos los datos son "
+"normales): investiga su origen antes de transformar los datos."
+msgstr ""
+
 msgid "La suma de frecuencias debe ser positiva."
 msgstr ""
 
@@ -2114,6 +2139,13 @@ msgstr ""
 msgid "Los datos deben ser una matriz N x p (o 3-D: subgrupos x n x p)."
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"Los datos son asimétricos (asimetría = {skewness:.2f}): los límites de "
+"I-MR suponen normalidad y pueden dar falsas alarmas del lado de la cola "
+"larga."
+msgstr ""
+
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr ""
 
@@ -2192,6 +2224,9 @@ msgstr ""
 msgid "Mediciones continuas — una por instante (individual)"
 msgstr ""
 
+msgid "Mejor distribución (AIC)"
+msgstr ""
+
 msgid "Mezclas"
 msgstr ""
 
@@ -2199,6 +2234,9 @@ msgid "Minimizar inspección total (Dodge-Romig)"
 msgstr ""
 
 msgid "Monitorear el proceso (cartas de control)"
+msgstr ""
+
+msgid "Motivo de la no normalidad"
 msgstr ""
 
 msgid "Muestra"
@@ -2274,6 +2312,12 @@ msgid "NDC (núm. categorías distintas)"
 msgstr ""
 
 msgid "Nested Gage R&R — cada operador mide partes distintas"
+msgstr ""
+
+msgid ""
+"Ninguna transformación ni distribución ajusta claramente mejor que la "
+"normal: interpreta con cautela los índices de capacidad normales (usa "
+"ci_method='bootstrap' para los intervalos)."
 msgstr ""
 
 msgid "Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma."
@@ -2926,6 +2970,9 @@ msgstr ""
 msgid "alfa"
 msgstr ""
 
+msgid "asimetría"
+msgstr ""
+
 msgid "c (número de aceptación)"
 msgstr ""
 
@@ -2993,6 +3040,9 @@ msgstr ""
 msgid "forma"
 msgstr ""
 
+msgid "forma de la distribución (colas, varias modas)"
+msgstr ""
+
 #, python-brace-format
 msgid "formas distintas {e} y {o}"
 msgstr ""
@@ -3010,6 +3060,13 @@ msgstr ""
 msgid ""
 "import pccpy as pp\n"
 "resultado = pp.capability_boxcox(datos, {args})"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"import pccpy as pp\n"
+"resultado = pp.capability_nonnormal(datos, {args}, "
+"distribution={distribution!r})"
 msgstr ""
 
 msgid ""
@@ -3079,6 +3136,9 @@ msgid "n_puntos"
 msgstr ""
 
 msgid "n_subgrupo"
+msgstr ""
+
+msgid "no"
 msgstr ""
 
 msgid "objetivo"
@@ -3219,6 +3279,9 @@ msgstr ""
 msgid "subgrupos"
 msgstr ""
 
+msgid "sí"
+msgstr ""
+
 msgid "t"
 msgstr ""
 
@@ -3232,6 +3295,9 @@ msgid "valor"
 msgstr ""
 
 msgid "valor_inferior"
+msgstr ""
+
+msgid "valores atípicos (sin ellos los datos son normales)"
 msgstr ""
 
 msgid "variables"
