@@ -11,6 +11,7 @@ avanzadas
 multivariadas
 run_chart_y_precontrol
 capacidad
+bootstrap
 tolerancia
 muestreo_aceptacion
 msa

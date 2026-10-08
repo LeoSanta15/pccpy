@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-05 23:42+0000\n"
+"POT-Creation-Date: 2026-10-08 20:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1001,6 +1001,9 @@ msgstr ""
 msgid "'method' debe ser 'anova' o 'xbar_r'."
 msgstr ""
 
+msgid "'method' debe ser 'bca' o 'percentile'."
+msgstr ""
+
 msgid "'method' debe ser 'normal' o 'nonparametric'."
 msgstr ""
 
@@ -1019,6 +1022,9 @@ msgid "'n' debe ser un número o tener la misma longitud que los datos ({k})."
 msgstr ""
 
 msgid "'n' debe ser ≥ 2."
+msgstr ""
+
+msgid "'n_boot' debe ser un entero ≥ 100."
 msgstr ""
 
 msgid "'n_hist' debe ser mayor que el número de variables."
@@ -1056,6 +1062,12 @@ msgstr ""
 msgid ""
 "'stages' debe tener una etiqueta por punto graficado ({n_points}); "
 "recibido: {shape}."
+msgstr ""
+
+msgid "'statistic' debe devolver siempre el mismo número de valores."
+msgstr ""
+
+msgid "'statistic' debe ser una función."
 msgstr ""
 
 msgid "'std' debe ser positivo."
@@ -1213,6 +1225,11 @@ msgstr ""
 msgid "Atípicos"
 msgstr ""
 
+msgid ""
+"BCa no se puede calcular para alguna componente (el estimador queda en un"
+" extremo de la distribución bootstrap); se usa el percentil en ella."
+msgstr ""
+
 msgid "Bilateral  — límite inferior y superior"
 msgstr ""
 
@@ -1351,6 +1368,12 @@ msgid "Con datos 3-D no se debe indicar 'subgroup_size'."
 msgstr ""
 
 msgid "Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Con n={n} (< {minimo}) el bootstrap también pierde cobertura; interprete "
+"el intervalo con cautela."
 msgstr ""
 
 msgid "Con subgrupos, within_method debe ser 'pooled', 'rbar' o 'sbar'."
@@ -1783,6 +1806,15 @@ msgstr ""
 msgid "Intercepto"
 msgstr ""
 
+msgid ""
+"Intervalo bootstrap BCa y percentil de la media frente a "
+"scipy.stats.bootstrap"
+msgstr ""
+
+#, python-brace-format
+msgid "Intervalo bootstrap {metodo} al {nivel:g}%  (n={n}, remuestreos={b})"
+msgstr ""
+
 msgid "Intervalo de tolerancia"
 msgstr ""
 
@@ -1926,12 +1958,23 @@ msgid "La carta no tiene media/covarianza calculadas para este punto."
 msgstr ""
 
 msgid ""
+"La distribución bootstrap es degenerada (todos los remuestreos dan el "
+"mismo valor); el intervalo se reduce a la estimación."
+msgstr ""
+
+msgid ""
 "La distribución no es normal (p ≤ 0.05). Considera transformación o "
 "análisis no paramétrico."
 msgstr ""
 
 #, python-brace-format
 msgid "La distribución {key} requiere datos estrictamente positivos."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"La estadística no fue finita en {mal} de {total} remuestreos; se "
+"descartan."
 msgstr ""
 
 #, python-brace-format
@@ -2163,6 +2206,10 @@ msgid "Mult. estudio (K)"
 msgstr ""
 
 msgid "Muy pocos datos para el número de variables (grados de libertad <= 0)."
+msgstr ""
+
+#, python-brace-format
+msgid "Muy pocos remuestreos válidos ({n}); revise la estadística."
 msgstr ""
 
 msgid "Máximo"
@@ -2898,6 +2945,9 @@ msgstr ""
 msgid "estadístico"
 msgstr ""
 
+msgid "estimación"
+msgstr ""
+
 msgid "etapa"
 msgstr ""
 
@@ -2964,6 +3014,12 @@ msgid "longitud"
 msgstr ""
 
 msgid "lsl debe ser menor que usl."
+msgstr ""
+
+msgid "límite inferior"
+msgstr ""
+
+msgid "límite superior"
 msgstr ""
 
 msgid "media"

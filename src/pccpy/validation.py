@@ -340,6 +340,22 @@ def _cap_poisson():
     return np.array(esperado), np.array([r.dpu, r.dpu_ci[0], r.dpu_ci[1]])
 
 
+@_comprobacion("bootstrap-bca", N_("Intervalo bootstrap BCa y percentil de la media frente a scipy.stats.bootstrap"),
+               "scipy.stats.bootstrap (BCa y percentil); error de Monte Carlo", 3e-2)
+def _bootstrap():
+    from .bootstrap import bootstrap_ci
+
+    x = np.random.default_rng(1).lognormal(0, 1, 60)
+    esperado, obtenido = [], []
+    for metodo, ref in (("bca", "BCa"), ("percentile", "percentile")):
+        sc = stats.bootstrap((x,), np.mean, confidence_level=0.95, n_resamples=20000, method=ref,
+                             random_state=3).confidence_interval
+        r = bootstrap_ci(x, np.mean, method=metodo, n_boot=20000, seed=3, vectorized=True)
+        esperado += [sc.low, sc.high]
+        obtenido += list(r.ci)
+    return np.array(esperado), np.array(obtenido)
+
+
 # ── 7. sistemas de medición ──────────────────────────────────────────────────
 @_comprobacion("gage-rr-anova", N_("Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con interacción)"),
                "Cuadrados medios esperados del ANOVA cruzado; AIAG MSA 4ª ed.", 1e-9)

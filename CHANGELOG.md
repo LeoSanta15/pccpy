@@ -2,6 +2,10 @@
 
 ## [Sin publicar]
 
+### Añadido
+- **Bootstrap:** `bootstrap_ci(datos, estadistico, method="bca"|"percentile", n_boot=2000, confidence=0.95, seed=None)` da un intervalo de confianza para cualquier estadístico (escalar o vector) sin suponer normalidad. BCa con corrección de sesgo y aceleración por jackknife; avisa con muestras pequeñas (n < 20), distribuciones degeneradas y remuestreos no finitos. Es reproducible con `seed=`. Contrastado con `scipy.stats.bootstrap`; en simulación, para la desviación estándar de una gamma(2) con n = 60 cubre ≈ 92 % frente a ≈ 83 % del intervalo chi-cuadrado (para la media el intervalo t ya aguanta bien por el teorema central del límite). Primera fase de `docs/planes/PLAN_NO_NORMALIDAD.md`.
+- Una comprobación más en la validación (bootstrap frente a `scipy.stats.bootstrap`).
+
 ## [0.12.2] - niveles de inspección de Z1.4 y aviso en Z1.9
 
 ### Corregido

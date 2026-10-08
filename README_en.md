@@ -760,6 +760,26 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Bootstrap intervals (skewed data)
+
+With skewed data the normal intervals (`x̄ ± t·s/√n`, chi-square for sigma, Bissell for Ppk) lose coverage. `bootstrap_ci` resamples your data and assumes no shape: percentile or **BCa** (corrects bias and skewness). It works for any statistic, scalar or vector, with the same resamples.
+
+```python
+import numpy as np
+
+r = pp.bootstrap_ci(data, np.mean, method="bca", n_boot=2000, seed=1)
+r.estimate, r.ci            # estimate and (lower, upper) interval
+print(r.summary())
+
+# several statistics at once; vectorized=True (np.mean, np.std…) is much faster
+sd = lambda v, axis=-1: np.std(v, axis=axis, ddof=1)
+pp.bootstrap_ci(data, sd, vectorized=True, seed=1).ci
+```
+
+In simulation (gamma(2), n = 60) the BCa interval for the standard deviation covers ≈ 92 % versus ≈ 83 % for the chi-square interval; for the mean the t interval already holds up well. With n < 20 it warns: the bootstrap also loses coverage.
+
+---
+
 ### Capability for attribute data (binomial and Poisson)
 
 When the data are "defective / good" or a count of defects there is no Cp or Cpk: capability is the **defect rate**
