@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 21:24+0000\n"
+"POT-Creation-Date: 2026-10-08 21:33+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1056,6 +1056,14 @@ msgstr ""
 " and observed PPM, in original units)"
 
 #, python-brace-format
+msgid ""
+"  Transformación {detalle} (Media, Desv.Est. y Z.* están en la escala transformada; LEI/LES/objetivo y PPM observado,"
+" en unidades originales)"
+msgstr ""
+"  Transformation {detalle} (Mean, Std.Dev. and Z.* are on the transformed scale; LSL/USL/target and observed PPM, in "
+"original units)"
+
+#, python-brace-format
 msgid "  Valor p         : {p:.4f}"
 msgstr "  p-value         : {p:.4f}"
 
@@ -1287,6 +1295,9 @@ msgstr "'process_avg' must be in (0, 1)."
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
 msgstr "'sides' must be 'two', 'lower' or 'upper'."
 
+msgid "'sigma_within' no se puede combinar con 'transform' (está en la escala original)."
+msgstr "'sigma_within' cannot be combined with 'transform' (it is on the original scale)."
+
 msgid "'span' debe ser >= 2."
 msgstr "'span' must be >= 2."
 
@@ -1324,6 +1335,10 @@ msgstr ""
 
 msgid "'tests' debe ser 'all', None o una lista de enteros 1-8."
 msgstr "'tests' must be 'all', None or a list of integers 1-8."
+
+#, python-brace-format
+msgid "'transform' debe ser uno de {opciones}."
+msgstr "'transform' must be one of {opciones}."
 
 msgid "'units' debe contener valores positivos."
 msgstr "'units' must contain positive values."
@@ -2013,6 +2028,10 @@ msgstr "Overall"
 msgid "General (Box-Cox)"
 msgstr "Overall (Box-Cox)"
 
+#, python-brace-format
+msgid "General ({metodo})"
+msgstr "Overall ({metodo})"
+
 msgid "Gráfico de capacidad"
 msgstr "Capability plot"
 
@@ -2100,6 +2119,10 @@ msgstr "Bootstrap intervals of Pp and Ppk versus a manual calculation with the s
 
 msgid "Intervalos de tolerancia"
 msgstr "Tolerance intervals"
+
+#, python-brace-format
+msgid "Johnson {family} (a={a:.4g}, b={b:.4g}, loc={loc:.4g}, scale={scale:.4g})"
+msgstr "Johnson {family} (a={a:.4g}, b={b:.4g}, loc={loc:.4g}, scale={scale:.4g})"
 
 msgid "Kappa de Cohen de un operador frente a la referencia (50 piezas; po = 0,7, pe = 0,5 → κ = 0,4)"
 msgstr "Cohen's kappa of one operator against the reference (50 parts; po = 0.7, pe = 0.5 → κ = 0.4)"
@@ -2354,6 +2377,9 @@ msgstr ""
 "The data are skewed (skewness = {skewness:.2f}): the I-MR limits assume normality and can give false alarms on the "
 "long-tail side."
 
+msgid "Los datos son constantes: no se puede ajustar una transformación."
+msgstr "The data are constant: a transformation cannot be fitted."
+
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr "Sample sizes must be positive."
 
@@ -2563,6 +2589,9 @@ msgstr "Not normal (p ≤ 0.05)"
 
 msgid "No o no lo sé → P estándar"
 msgstr "No or I don't know → standard P"
+
+msgid "No se pudo ajustar ninguna distribución de Johnson a los datos."
+msgstr "No Johnson distribution could be fitted to the data."
 
 msgid "No — intentar transformación Box-Cox automática"
 msgstr "No — try an automatic Box-Cox transformation"
@@ -2920,6 +2949,10 @@ msgid "Se necesitan al menos 3 pares para la regresión."
 msgstr "At least 3 pairs are needed for the regression."
 
 #, python-brace-format
+msgid "Se necesitan al menos {n} observaciones para ajustar la transformación."
+msgstr "At least {n} observations are needed to fit the transformation."
+
+#, python-brace-format
 msgid "Se necesitan al menos {span} observaciones (span={span})."
 msgstr "At least {span} observations are needed (span={span})."
 
@@ -3153,6 +3186,9 @@ msgstr "Green hi={v:.4g}"
 #, python-brace-format
 msgid "Verde lo={v:.4g}"
 msgstr "Green lo={v:.4g}"
+
+msgid "Yeo-Johnson y familia de Johnson frente a las definiciones de scipy"
+msgstr "Yeo-Johnson and the Johnson family versus the scipy definitions"
 
 msgid "Z del proceso"
 msgstr "Process Z"
@@ -3571,6 +3607,10 @@ msgstr "{k} consecutive points, all increasing or all decreasing"
 #, python-brace-format
 msgid "{method}: estadístico = {statistic:.4f}, valor p {relation}{p} (n = {n})"
 msgstr "{method}: statistic = {statistic:.4f}, p-value {relation}{p} (n = {n})"
+
+#, python-brace-format
+msgid "{nombre} con lambda = {lam:.4f}"
+msgstr "{nombre} with lambda = {lam:.4f}"
 
 #, python-brace-format
 msgid "{rows} filas no se pueden dividir en subgrupos de {subgroup_size}."

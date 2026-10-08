@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 20:49+0000\n"
+"POT-Creation-Date: 2026-10-08 21:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -48,6 +48,9 @@ msgstr "``'normal'`` (default: chi-square for Pp and Bissell for Ppk, which assu
 
 msgid "Con ``ci_method='bootstrap'``: número de remuestreos (2000), ``'bca'`` o ``'percentile'`` y semilla."
 msgstr "With ``ci_method='bootstrap'``: number of resamples (2000), ``'bca'`` or ``'percentile'``, and seed."
+
+msgid "Transforma los datos (y los límites de especificación y el objetivo) antes de calcular: Box-Cox (solo datos y límites positivos), Yeo-Johnson (admite ceros y negativos) o Johnson (SU, SB o SL, la que deje los datos más normales). Los índices se calculan en la escala transformada; los límites, el objetivo y el PPM observado se informan en unidades originales. ``sigma_within`` no se puede combinar con ``transform`` (está en la escala original). Ver :mod:`pccpy.transforms`."
+msgstr "Transforms the data (and the specification limits and the target) before computing: Box-Cox (positive data and limits only), Yeo-Johnson (allows zeros and negatives) or Johnson (SU, SB or SL, whichever leaves the data most normal). The indices are computed on the transformed scale; the limits, the target and the observed PPM are reported in original units. ``sigma_within`` cannot be combined with ``transform`` (it is on the original scale). See :mod:`pccpy.transforms`."
 
 msgid "Tipo del valor devuelto"
 msgstr "Return type"
@@ -111,6 +114,36 @@ msgstr "Returns ``(figure, capability_result, control_chart)``. Accepts the same
 
 msgid "Histograma de capacidad con curvas normales (dentro / general) y especificaciones."
 msgstr "Capability histogram with normal curves (within / overall) and specifications."
+
+msgid "Ajusta una transformación de normalización a ``data`` (1-D, sin NaN)."
+msgstr "Fits a normalizing transformation to ``data`` (1-D, no NaN)."
+
+msgid "Observaciones (todas, no por subgrupos)."
+msgstr "Observations (all of them, not by subgroup)."
+
+msgid "Método; ver el módulo."
+msgstr "Method; see the module."
+
+msgid "*Transformation*"
+msgstr "*Transformation*"
+
+msgid "Transformación ya ajustada. ``params`` depende del método (ver ``info()``)."
+msgstr "Already fitted transformation. ``params`` depends on the method (see ``info()``)."
+
+msgid "Transforma valores (escalar o arreglo) a la escala normalizada; los NaN se conservan."
+msgstr "Transforms values (scalar or array) to the normalized scale; NaNs are kept."
+
+msgid "Deshace la transformación: de la escala normalizada a la original."
+msgstr "Undoes the transformation: from the normalized scale back to the original."
+
+msgid "Diccionario con el método y sus parámetros (es lo que guarda ``CapabilityResult.transform``)."
+msgstr "Dictionary with the method and its parameters (this is what ``CapabilityResult.transform`` stores)."
+
+msgid "Reconstruye la transformación a partir de ``info()``."
+msgstr "Rebuilds the transformation from ``info()``."
+
+msgid "Texto corto con el método y sus parámetros."
+msgstr "Short text with the method and its parameters."
 
 msgid "Capacidad del proceso con datos binomiales (unidades defectuosas por muestra)."
 msgstr "Process capability with binomial data (defective units per sample)."

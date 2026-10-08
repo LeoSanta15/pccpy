@@ -374,6 +374,30 @@ def _cap_bootstrap():
     return np.array([lo[0], hi[0], lo[1], hi[1]]), np.array([*r.pp_ci, *r.ppk_ci])
 
 
+@_comprobacion("transformaciones", N_("Yeo-Johnson y familia de Johnson frente a las definiciones de scipy"),
+               "scipy.stats.yeojohnson; z = Φ⁻¹(F(x)) con johnsonsu, johnsonsb y lognorm", 1e-8)
+def _transformaciones():
+    from .transforms import Transformation
+
+    rng = np.random.default_rng(3)
+    x = np.concatenate([-rng.gamma(2, 1, 20), rng.gamma(2, 1, 40)])
+    esperado, obtenido = [], []
+    for lam in (-1.0, 0.0, 0.5, 2.0, 2.5):
+        esperado.append(stats.yeojohnson(x, lmbda=lam))
+        obtenido.append(Transformation("yeo-johnson", {"lambda": lam}).forward(x))
+    casos = [("SU", stats.johnsonsu, (0.5, 1.5, 10.0, 2.0), (0.5, 1.5, 10.0, 2.0)),
+             ("SB", stats.johnsonsb, (0.3, 1.2, 0.0, 10.0), (0.3, 1.2, 0.0, 10.0))]
+    for familia, dist, args, (a, b, loc, scale) in casos:
+        v = dist.rvs(*args, size=40, random_state=1)
+        esperado.append(stats.norm.ppf(dist.cdf(v, *args)))
+        obtenido.append(Transformation("johnson", {"family": familia, "a": a, "b": b, "loc": loc,
+                                                   "scale": scale}).forward(v))
+    v = stats.lognorm.rvs(0.5, 2.0, 3.0, size=40, random_state=2)
+    esperado.append(stats.norm.ppf(stats.lognorm.cdf(v, 0.5, 2.0, 3.0)))
+    obtenido.append(Transformation("johnson", {"family": "SL", "a": 0.0, "b": 2.0, "loc": 2.0, "scale": 3.0}).forward(v))
+    return np.concatenate(esperado), np.concatenate(obtenido)
+
+
 # ── 7. sistemas de medición ──────────────────────────────────────────────────
 @_comprobacion("gage-rr-anova", N_("Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con interacción)"),
                "Cuadrados medios esperados del ANOVA cruzado; AIAG MSA 4ª ed.", 1e-9)

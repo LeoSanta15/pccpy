@@ -27,6 +27,7 @@ from ._frames import tabla_estadisticos
 from ._i18n import N_, tr
 from ._sigma import sigma_individuals, sigma_subgroups
 from .bootstrap import bootstrap_ci
+from .transforms import Transformation, fit_transformation
 
 NAN = float("nan")
 
@@ -160,7 +161,13 @@ class CapabilityResult:
             tr("  N={n}  Media={mean:.5f}  Desv.Est.(dentro)={within:.5f} [{method}]  Desv.Est.(general)={overall:.5f}").format(
                 n=o.n, mean=o.mean, within=o.sigma_within, method=o.within_method, overall=o.sigma_overall),
         ]
-        if o.transform:
+        if o.transform and o.transform.get("method", "boxcox") != "boxcox":
+            L.append(
+                tr("  Transformación {detalle} (Media, Desv.Est. y Z.* están en la escala transformada; "
+                   "LEI/LES/objetivo y PPM observado, en unidades originales)").format(
+                    detalle=Transformation.from_info(o.transform).describe())
+            )
+        elif o.transform:
             L.append(
                 tr("  Transformación Box-Cox con lambda = {lam:.4f} (Media, Desv.Est. y Z.* están en la escala transformada; "
                    "LEI/LES/objetivo y PPM observado, en unidades originales)").format(lam=o.transform["lambda"])
@@ -253,6 +260,7 @@ def capability_analysis(
     n_boot: int = 2000,
     bootstrap_method: str = "bca",
     seed: int | None = None,
+    transform: str | None = None,
 ) -> CapabilityResult:
     """Capacidad del proceso para datos con distribución normal.
 
@@ -276,6 +284,12 @@ def capability_analysis(
         (recomendado con datos asimétricos; ver :func:`pccpy.bootstrap_ci`).
     n_boot, bootstrap_method, seed :
         Con ``ci_method='bootstrap'``: número de remuestreos (2000), ``'bca'`` o ``'percentile'`` y semilla.
+    transform : {None, 'boxcox', 'yeo-johnson', 'johnson'}
+        Transforma los datos (y los límites de especificación y el objetivo) antes de calcular: Box-Cox (solo datos y
+        límites positivos), Yeo-Johnson (admite ceros y negativos) o Johnson (SU, SB o SL, la que deje los datos más
+        normales). Los índices se calculan en la escala transformada; los límites, el objetivo y el PPM observado se
+        informan en unidades originales. ``sigma_within`` no se puede combinar con ``transform`` (está en la escala
+        original). Ver :mod:`pccpy.transforms`.
     """
     _check_specs(lsl, usl)
     if not 0 < ci_level < 1:
@@ -305,6 +319,24 @@ def capability_analysis(
     if x.size < 2:
         raise ValueError(tr("Se necesitan al menos 2 observaciones."))
 
+    transformacion = None
+    if transform is not None:
+        if sigma_within is not None:
+            raise ValueError(tr("'sigma_within' no se puede combinar con 'transform' (está en la escala original)."))
+        transformacion = fit_transformation(x, transform)
+        lsl_o, usl_o, target_o, x_o = lsl, usl, target, x
+        if transform == "boxcox":
+            for nombre, v in (("lsl", lsl), ("usl", usl), ("target", target)):
+                if v is not None and v <= 0:
+                    raise ValueError(tr("Box-Cox requiere que {name} sea positivo.").format(name=nombre))
+        x = transformacion.forward(x)
+        lsl, usl, target = (None if v is None else transformacion.forward(v) for v in (lsl, usl, target))
+        if grouped:
+            g_lim = transformacion.forward(g_lim)
+            sw = sigma_subgroups(g_lim, method)
+        else:
+            sw = sigma_individuals(x, method)
+
     n, mean = x.size, float(x.mean())
     so = float(x.std(ddof=1))
     cp, cpl, cpu, cpk = _indices(mean, sw, lsl, usl)
@@ -333,7 +365,7 @@ def capability_analysis(
     ppm_w = _expected_ppm(mean, sw, lsl, usl)
     ppm_o = _expected_ppm(mean, so, lsl, usl)
     so_safe = so if so > 0 else NAN
-    return CapabilityResult(
+    res = CapabilityResult(
         n=n, mean=mean, sigma_within=sw, sigma_overall=so, within_method=method,
         lsl=lsl, usl=usl, target=target,
         cp=cp, cpl=cpl, cpu=cpu, cpk=cpk, pp=pp, ppl=ppl, ppu=ppu, ppk=ppk, cpm=cpm,
@@ -344,6 +376,12 @@ def capability_analysis(
         pp_ci=pp_ci, ppk_ci=ppk_ci, ci_level=ci_level, data=x,
         ci_method=f"bootstrap:{bootstrap_method}:{n_boot}" if ci_method == "bootstrap" else "normal",
     )
+    if transformacion is not None:  # se informa en unidades originales (como capability_boxcox)
+        res.lsl, res.usl, res.target = lsl_o, usl_o, target_o
+        res.data = x_o
+        res.ppm_obs = _observed_ppm(x_o, lsl_o, usl_o)
+        res.transform = transformacion.info()
+    return res
 
 
 def capability_analysis_summary(

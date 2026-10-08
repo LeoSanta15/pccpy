@@ -113,7 +113,19 @@ def plot_capability(res, *, bins=None, ax=None):
     grid = np.linspace(min(pts) - pad, max(pts) + pad, 400)
 
     if isinstance(res, CapabilityResult):
-        if res.transform:
+        if res.transform and res.transform.get("method", "boxcox") != "boxcox":
+            from .transforms import Transformation
+
+            t = Transformation.from_info(res.transform)
+            y = t.forward(x)
+            h = 1e-6 * (grid.max() - grid.min())
+            with np.errstate(invalid="ignore", divide="ignore"):
+                z = t.forward(grid)
+                dz = (t.forward(grid + h) - t.forward(grid - h)) / (2 * h)  # densidad en la escala original
+                dens = stats.norm.pdf(z, y.mean(), y.std(ddof=1)) * np.abs(dz)
+            ok = np.isfinite(dens)
+            ax.plot(grid[ok], dens[ok], color=BLUE, lw=1.6, label=tr("General ({metodo})").format(metodo=res.transform["method"]))
+        elif res.transform:
             lam = res.transform["lambda"]
             y = _boxcox(x, lam)
             g = grid[grid > 0]

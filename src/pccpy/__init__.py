@@ -94,6 +94,7 @@ from .precontrol import PreControlResult, precontrol
 from .quality_tools import pareto, plot_pareto
 from .results import ControlChart, MultivariateChart, Panel
 from .tolerance import ToleranceResult, tolerance_interval, tolerance_interval_summary
+from .transforms import Transformation, fit_transformation
 
 __version__ = "0.12.2"
 
@@ -119,6 +120,7 @@ __all__ = [
     "SamplingPlanAttributes",
     "SamplingPlanVariables",
     "ToleranceResult",
+    "Transformation",
     "Type1Result",
     "ValidationReport",
     "WidgetSession",
@@ -151,6 +153,7 @@ __all__ = [
     "ewma_chart",
     "ewma_p_chart",
     "ewma_u_chart",
+    "fit_transformation",
     "g_chart",
     "gage_linearity",
     "gage_rr",
