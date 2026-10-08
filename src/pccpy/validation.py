@@ -356,6 +356,24 @@ def _bootstrap():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("capacidad-bootstrap", N_("Intervalos bootstrap de Pp y Ppk frente a un cálculo manual con los mismos remuestreos"),
+               "Fórmulas de Pp y Ppk escritas aparte; remuestreo con la misma semilla", 1e-9)
+def _cap_bootstrap():
+    from .bootstrap import bootstrap_ci
+    from .capability import capability_analysis
+
+    x = np.random.default_rng(2).gamma(4, 1, 80) + 5
+    lsl, usl = 6.0, 22.0
+
+    def manual(m):
+        mu, s = np.mean(m), np.std(m, ddof=1)
+        return np.array([(usl - lsl) / (6 * s), min(mu - lsl, usl - mu) / (3 * s)])
+
+    lo, hi = bootstrap_ci(x, manual, n_boot=500, seed=5).ci
+    r = capability_analysis(x, lsl, usl, ci_method="bootstrap", n_boot=500, seed=5)
+    return np.array([lo[0], hi[0], lo[1], hi[1]]), np.array([*r.pp_ci, *r.ppk_ci])
+
+
 # ── 7. sistemas de medición ──────────────────────────────────────────────────
 @_comprobacion("gage-rr-anova", N_("Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con interacción)"),
                "Cuadrados medios esperados del ANOVA cruzado; AIAG MSA 4ª ed.", 1e-9)

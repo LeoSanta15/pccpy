@@ -5,6 +5,7 @@
 ### Añadido
 - **Bootstrap:** `bootstrap_ci(datos, estadistico, method="bca"|"percentile", n_boot=2000, confidence=0.95, seed=None)` da un intervalo de confianza para cualquier estadístico (escalar o vector) sin suponer normalidad. BCa con corrección de sesgo y aceleración por jackknife; avisa con muestras pequeñas (n < 20), distribuciones degeneradas y remuestreos no finitos. Es reproducible con `seed=`. Contrastado con `scipy.stats.bootstrap`; en simulación, para la desviación estándar de una gamma(2) con n = 60 cubre ≈ 92 % frente a ≈ 83 % del intervalo chi-cuadrado (para la media el intervalo t ya aguanta bien por el teorema central del límite). Primera fase de `docs/planes/PLAN_NO_NORMALIDAD.md`.
 - Una comprobación más en la validación (bootstrap frente a `scipy.stats.bootstrap`).
+- **Intervalos de capacidad por bootstrap (opt-in):** `capability_analysis` y `capability_boxcox` aceptan `ci_method="bootstrap"` (con `n_boot`, `bootstrap_method="bca"|"percentile"` y `seed`) para los intervalos de Pp y Ppk sin suponer normalidad. `capability_nonnormal` no daba ningún intervalo: ahora, con `ci_method="bootstrap"`, da intervalos de Pp y Ppk re-ajustando la distribución en cada remuestreo (`pp_ci`, `ppk_ci`; por defecto 1000 remuestreos y percentil, por coste). Sin `ci_method` nada cambia. En simulación (gamma(2), n = 150) el intervalo normal de Pp cubre ≈ 81 % y BCa ≈ 92 %; para Ppk ambos son razonables. Segunda fase de `docs/planes/PLAN_NO_NORMALIDAD.md`.
 
 ## [0.12.2] - niveles de inspección de Z1.4 y aviso en Z1.9
 

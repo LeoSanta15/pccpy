@@ -161,6 +161,29 @@ print(f"Z.Bench = {res.z_bench:.2f}  ({res.ppm_total:.0f} PPM)")
 - {doc}`faq` — "¿Por qué Cp ≠ Cpk?" y otras preguntas frecuentes
 
 
+## Intervalos de confianza con datos asimétricos
+
+Los intervalos de Pp y Ppk por defecto (chi-cuadrado y Bissell) suponen normalidad. Con datos asimétricos pueden quedar
+cortos, sobre todo el de **Pp**, que depende de la desviación estándar. Con `ci_method="bootstrap"` los intervalos salen
+de remuestrear los datos:
+
+```python
+r = pp.capability_analysis(datos, lsl=6, usl=22, ci_method="bootstrap", seed=1)
+r.pp_ci, r.ppk_ci          # BCa por defecto; bootstrap_method="percentile" para el percentil
+pp.capability_boxcox(datos, 6, 22, ci_method="bootstrap", seed=1)   # sobre los datos transformados
+
+# no normal: se vuelve a ajustar la distribución en cada remuestreo (más lento: n_boot=1000 por defecto)
+pp.capability_nonnormal(datos, 6, 22, distribution="weibull", ci_method="bootstrap", seed=1).ppk_ci
+```
+
+- Es opt-in: sin `ci_method` nada cambia.
+- Se remuestrean las observaciones (Pp y Ppk usan la desviación estándar general). Con Box-Cox el lambda se mantiene fijo
+  en los remuestreos: el intervalo no recoge la incertidumbre de lambda.
+- En simulación (gamma(2), n = 150) el intervalo normal de Pp cubre ≈ 81 % y BCa ≈ 92 %; para Ppk ambos son razonables
+  (≈ 88 % y ≈ 91 %), porque ahí el intervalo normal ya aguanta mejor.
+- `capability_nonnormal` no daba ningún intervalo: con el bootstrap da el de Pp y Ppk, que incluye la incertidumbre del
+  ajuste de la distribución.
+
 ## Capacidad para atributos
 
 Con datos de atributos (unidades defectuosas o conteo de defectos) no existen Cp ni Cpk: la capacidad es la **tasa de

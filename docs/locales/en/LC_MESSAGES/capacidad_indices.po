@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:48+0000\n"
+"POT-Creation-Date: 2026-10-08 20:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -312,6 +312,24 @@ msgstr "{doc}`referencia/capacidad` — full reference of `capability_analysis`"
 #, python-brace-format
 msgid "{doc}`faq` — \"¿Por qué Cp ≠ Cpk?\" y otras preguntas frecuentes"
 msgstr "{doc}`faq` — \"Why is Cp ≠ Cpk?\" and other frequently asked questions"
+
+msgid "Intervalos de confianza con datos asimétricos"
+msgstr "Confidence intervals with skewed data"
+
+msgid "Los intervalos de Pp y Ppk por defecto (chi-cuadrado y Bissell) suponen normalidad. Con datos asimétricos pueden quedar cortos, sobre todo el de **Pp**, que depende de la desviación estándar. Con `ci_method=\"bootstrap\"` los intervalos salen de remuestrear los datos:"
+msgstr "The default Pp and Ppk intervals (chi-square and Bissell) assume normality. With skewed data they can come out too narrow, especially the one for **Pp**, which depends on the standard deviation. With `ci_method=\"bootstrap\"` the intervals come from resampling the data:"
+
+msgid "Es opt-in: sin `ci_method` nada cambia."
+msgstr "It is opt-in: without `ci_method` nothing changes."
+
+msgid "Se remuestrean las observaciones (Pp y Ppk usan la desviación estándar general). Con Box-Cox el lambda se mantiene fijo en los remuestreos: el intervalo no recoge la incertidumbre de lambda."
+msgstr "The observations are resampled (Pp and Ppk use the overall standard deviation). With Box-Cox, lambda is kept fixed across resamples: the interval does not capture the uncertainty of lambda."
+
+msgid "En simulación (gamma(2), n = 150) el intervalo normal de Pp cubre ≈ 81 % y BCa ≈ 92 %; para Ppk ambos son razonables (≈ 88 % y ≈ 91 %), porque ahí el intervalo normal ya aguanta mejor."
+msgstr "In simulation (gamma(2), n = 150) the normal interval for Pp covers ≈ 81 % and BCa ≈ 92 %; for Ppk both are reasonable (≈ 88 % and ≈ 91 %), because there the normal interval already holds up better."
+
+msgid "`capability_nonnormal` no daba ningún intervalo: con el bootstrap da el de Pp y Ppk, que incluye la incertidumbre del ajuste de la distribución."
+msgstr "`capability_nonnormal` gave no interval at all: with the bootstrap it gives the one for Pp and Ppk, which includes the uncertainty of the distribution fit."
 
 msgid "Capacidad para atributos"
 msgstr "Capability for attribute data"

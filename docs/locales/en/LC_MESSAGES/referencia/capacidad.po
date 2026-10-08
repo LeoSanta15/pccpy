@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:48+0000\n"
+"POT-Creation-Date: 2026-10-08 20:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -42,6 +42,12 @@ msgstr "Already known within-subgroup sigma (overrides the estimate)."
 
 msgid "Nivel de confianza de los intervalos de Pp y Ppk (por defecto 0.95)."
 msgstr "Confidence level of the Pp and Ppk intervals (default 0.95)."
+
+msgid "``'normal'`` (por defecto: chi-cuadrado para Pp y Bissell para Ppk, que suponen normalidad) o ``'bootstrap'``: intervalos de Pp y Ppk por remuestreo de las observaciones, sin suponer normalidad (recomendado con datos asimétricos; ver :func:`pccpy.bootstrap_ci`)."
+msgstr "``'normal'`` (default: chi-square for Pp and Bissell for Ppk, which assume normality) or ``'bootstrap'``: intervals for Pp and Ppk by resampling the observations, without assuming normality (recommended with skewed data; see :func:`pccpy.bootstrap_ci`)."
+
+msgid "Con ``ci_method='bootstrap'``: número de remuestreos (2000), ``'bca'`` o ``'percentile'`` y semilla."
+msgstr "With ``ci_method='bootstrap'``: number of resamples (2000), ``'bca'`` or ``'percentile'``, and seed."
 
 msgid "Tipo del valor devuelto"
 msgstr "Return type"
@@ -87,6 +93,9 @@ msgstr "Fits by maximum likelihood one of: ``normal``, ``lognormal``, ``weibull`
 
 msgid "Pp = (LES - LEI) / (X99.865 - X0.135); PPU = (LES - X50) / (X99.865 - X50); PPL = (X50 - LEI) / (X50 - X0.135); Ppk = min(PPL, PPU)."
 msgstr "Pp = (USL - LSL) / (X99.865 - X0.135); PPU = (USL - X50) / (X99.865 - X50); PPL = (X50 - LSL) / (X50 - X0.135); Ppk = min(PPL, PPU)."
+
+msgid "Con ``ci_method='bootstrap'`` se añaden intervalos de Pp y Ppk: en cada remuestreo de las observaciones se **vuelve a ajustar** la distribución y se recalculan los índices, de modo que el intervalo recoge también la incertidumbre del ajuste. Es más lento que con datos normales (un ajuste por remuestreo): por eso ``n_boot`` es 1000 y el método ``'percentile'`` por defecto (``'bca'`` hace además un ajuste por observación). Con ``ci_method='none'`` (por defecto) no se calcula ningún intervalo."
+msgstr "With ``ci_method='bootstrap'`` intervals for Pp and Ppk are added: in each resample of the observations the distribution is **refitted** and the indices are recomputed, so the interval also captures the uncertainty of the fit. It is slower than with normal data (one fit per resample): that is why ``n_boot`` is 1000 and the method ``'percentile'`` by default (``'bca'`` also does one fit per observation). With ``ci_method='none'`` (default) no interval is computed."
 
 msgid "Capacidad tras una transformación Box-Cox (datos positivos, 1-D)."
 msgstr "Capability after a Box-Cox transformation (positive data, 1-D)."
