@@ -106,8 +106,8 @@ msgstr "Published Grubbs table and Rosner's (1983) example from the NIST handboo
 msgid "Prueba de Dixon (valores críticos calculados)"
 msgstr "Dixon test (computed critical values)"
 
-msgid "Tablas de r10 de Dixon (1951) y Rorabacher (1991) para 90, 95 y 99 %"
-msgstr "r10 tables of Dixon (1951) and Rorabacher (1991) for 90, 95 and 99 %"
+msgid "Tabla de r10 de Rorabacher (1991) para 90, 95 y 99 %"
+msgstr "r10 table of Rorabacher (1991) for 90, 95 and 99 %"
 
 msgid "Bootstrap (BCa y percentil)"
 msgstr "Bootstrap (BCa and percentile)"

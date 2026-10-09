@@ -130,7 +130,7 @@ pp.outlier_test(x, sides="upper")             # solo valores demasiado altos (o 
 Los valores críticos se verificaron contra la tabla publicada de Grubbs y contra el ejemplo de Rosner (1983) del manual
 del NIST. Con datos normales Grubbs marca ≈ 5 % de las muestras, el nivel nominal. Los de Dixon **se calculan** (no se
 tabulan): bajo normalidad la cola de la razón es una integral doble que se resuelve por cuadratura y se invierte; con
-`r10` reproduce las tablas publicadas de Dixon (1951) y Rorabacher (1991) a menos de 0,006, y las otras tres razones se
+`r10` reproduce la tabla publicada de Rorabacher (1991) a menos de 0,006, y las otras tres razones se
 comprobaron por simulación. En la prueba bilateral cada cola usa `α/2` (ligeramente conservador).
 
 ```{warning}

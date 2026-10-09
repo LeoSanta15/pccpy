@@ -466,7 +466,7 @@ def _ajuste_robusto():
 
 
 @_comprobacion("dixon", N_("Prueba de Dixon: valores críticos calculados frente a las tablas publicadas de r10 y estadístico a mano"),
-               "Tablas de r10 de Dixon (1951) y Rorabacher (1991) para 90, 95 y 99 %; razón escrita aparte", 6e-3)
+               "Tabla de r10 de Rorabacher (1991) para 90, 95 y 99 %; razón escrita aparte", 6e-3)
 def _dixon():
     from .outliers import outlier_test
 

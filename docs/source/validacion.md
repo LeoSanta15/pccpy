@@ -34,7 +34,7 @@ python -m pccpy.validation --markdown validacion.md
 | Fase II tras guardar y cargar una Fase I (JSON) | Los mismos límites e idéntica transformación pasados directamente a `imr_chart`; JSON de la biblioteca estándar |
 | Fase I con ajuste robusto de la transformación | Medcouple y diagrama de cajas ajustado escritos con bucles; `scipy.stats.boxcox` |
 | Pruebas de atípicos (Grubbs y ESD generalizada) | Tabla publicada de Grubbs y ejemplo de Rosner (1983) del manual del NIST |
-| Prueba de Dixon (valores críticos calculados) | Tablas de r10 de Dixon (1951) y Rorabacher (1991) para 90, 95 y 99 % |
+| Prueba de Dixon (valores críticos calculados) | Tabla de r10 de Rorabacher (1991) para 90, 95 y 99 % |
 | Bootstrap (BCa y percentil) | `scipy.stats.bootstrap` (diferencia dentro del error de Monte Carlo) |
 | Capacidad binomial y Poisson | Intervalos exactos de SciPy (Clopper-Pearson) y cuantiles de la gamma (Garwood) |
 | Anderson-Darling | Estadístico A² calculado por separado |

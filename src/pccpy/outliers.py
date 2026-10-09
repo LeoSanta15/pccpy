@@ -12,7 +12,7 @@ pruebas de causas especiales son la herramienta adecuada.
   r21, 14–30 r22). Pensada para muestras pequeñas. Los valores críticos **se calculan**, no se tabulan: bajo normalidad
   ``P(Q > c)`` es una integral doble sobre el mínimo y el ``(n−m)``-ésimo estadístico de orden con una cola binomial, que
   se resuelve por cuadratura de Gauss-Legendre y se invierte con ``brentq``. Reproduce las tablas publicadas de r10
-  (Dixon, 1951; Rorabacher, 1991) a ≤ 0,005. En la prueba bilateral se usa ``α/2`` en cada cola (conservador).
+  (Rorabacher, 1991) a ≤ 0,005. En la prueba bilateral se usa ``α/2`` en cada cola (conservador).
 * **ESD generalizada** (Rosner, 1983): quita de uno en uno el punto más alejado hasta ``max_outliers`` veces, calcula
   ``Rᵢ`` y el valor crítico ``λᵢ`` y declara atípicos los ``k`` primeros, donde ``k`` es el mayor ``i`` con ``Rᵢ > λᵢ``.
   Evita el enmascaramiento; conviene con ``n ≥ 25``.

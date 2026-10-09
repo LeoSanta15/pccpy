@@ -8,7 +8,8 @@ import pytest
 import pccpy as pp
 from pccpy import outliers
 
-# Q crítico de r10 para el sospechoso mínimo o máximo, bilateral (Rorabacher, 1991; Dixon, 1951)
+# Q crítico de r10, bilateral, de la tabla de Rorabacher (1991) (transcrita sin acceso a la fuente: la coincidencia de las 24 cifras
+# con el cálculo a ≤ 0,005 es lo que la respalda)
 PUBLICADOS = {
     0.10: {3: .941, 4: .765, 5: .642, 6: .560, 7: .507, 8: .468, 9: .437, 10: .412},
     0.05: {3: .970, 4: .829, 5: .710, 6: .625, 7: .568, 8: .526, 9: .493, 10: .466},
