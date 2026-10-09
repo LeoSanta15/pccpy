@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 22:16+0000\n"
+"POT-Creation-Date: 2026-10-09 18:23+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -37,14 +37,14 @@ msgstr "Return type"
 msgid "Gráfico de probabilidad normal (rangos medianos de Benard) con prueba de Anderson-Darling."
 msgstr "Normal probability plot (Benard median ranks) with the Anderson-Darling test."
 
-msgid "Prueba formal de valores atípicos (Grubbs o ESD generalizada de Rosner)."
-msgstr "Formal outlier test (Grubbs or Rosner's generalized ESD)."
+msgid "Prueba formal de valores atípicos (Grubbs, ESD generalizada de Rosner o Dixon)."
+msgstr "Formal outlier test (Grubbs, Rosner's generalized ESD or Dixon)."
 
 msgid "Muestra 1-D (los valores no finitos se ignoran con un aviso; los índices son los de la entrada original)."
 msgstr "1-D sample (non-finite values are ignored with a warning; the indices are those of the original input)."
 
-msgid "``'grubbs'`` contrasta un solo atípico (el más extremo); ``'esd'`` busca hasta ``max_outliers`` atípicos sin que se enmascaren entre sí."
-msgstr "``'grubbs'`` tests a single outlier (the most extreme); ``'esd'`` looks for up to ``max_outliers`` outliers without them masking each other."
+msgid "``'grubbs'`` contrasta un solo atípico (el más extremo); ``'esd'`` busca hasta ``max_outliers`` atípicos sin que se enmascaren entre sí; ``'dixon'`` contrasta un solo atípico con la razón de Dixon (muestras pequeñas, 3 ≤ n ≤ 100; se recomienda n ≤ 30)."
+msgstr "``'grubbs'`` tests a single outlier (the most extreme); ``'esd'`` looks for up to ``max_outliers`` outliers without them masking each other; ``'dixon'`` tests a single outlier with the Dixon ratio (small samples, 3 ≤ n ≤ 100; n ≤ 30 recommended)."
 
 msgid "Nivel de significación (por defecto 0,05)."
 msgstr "Significance level (default 0.05)."
@@ -54,6 +54,9 @@ msgstr "Two-sided, or only values that are too high or too low."
 
 msgid "Solo ESD: máximo de atípicos a buscar (por defecto ``min(10, (n − 1) // 2)``)."
 msgstr "ESD only: maximum number of outliers to look for (default ``min(10, (n − 1) // 2)``)."
+
+msgid "Solo Dixon: la razón. ``'auto'`` usa la de Dixon (1951) según ``n``. ``r21`` y ``r22`` saltan al vecino del sospechoso (``x₃`` en vez de ``x₂``), de modo que un segundo atípico del mismo lado no enmascara el contraste; ``r11`` y ``r22`` quitan del denominador el extremo opuesto, de modo que un atípico en el otro extremo no lo infla."
+msgstr "Dixon only: the ratio. ``'auto'`` uses Dixon's (1951) according to ``n``. ``r21`` and ``r22`` skip the suspect's neighbor (``x₃`` instead of ``x₂``), so a second outlier on the same side does not mask the test; ``r11`` and ``r22`` remove the opposite extreme from the denominator, so an outlier at the other end does not inflate it."
 
 msgid "Devuelve"
 msgstr "Returns"
