@@ -243,7 +243,7 @@ import numpy as np, pccpy as pp
 fase1 = pp.phase_one(pp.imr_chart, x_historico, tests=(1, 2, 3))
 print(fase1.summary())        # puntos excluidos, límites congelados y cada pasada
 fase1.excluded                # posiciones (base 0) de los puntos excluidos
-fase1.chart.plot()            # carta con los límites definitivos
+fase1.chart.plot()            # carta con los límites definitivos (en I-MR los excluidos quedan como huecos)
 
 # ── Fase II: datos nuevos con los límites congelados ────────────
 carta_ii = fase1.phase2(x_nuevo, tests=(1, 2))

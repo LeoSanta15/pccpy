@@ -124,7 +124,8 @@ class PhaseOneResult:
     Atributos
     ---------
     chart : ControlChart or None
-        Carta final, calculada solo con los puntos que no se excluyeron. ``None`` si el resultado se cargó con
+        Carta final, calculada solo con los puntos que no se excluyeron (en ``imr_chart`` los excluidos quedan como
+        huecos NaN en su posición, de modo que ningún rango móvil une puntos no consecutivos). ``None`` si el resultado se cargó con
         :meth:`from_dict` (la carta no se guarda: sin los datos no se puede reconstruir).
     history : list of PhaseOneIteration
         Una entrada por pasada (la 0 es la carta con todos los datos).

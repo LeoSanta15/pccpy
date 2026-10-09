@@ -311,9 +311,10 @@ fig.savefig("carta_custom.png", dpi=150, bbox_inches="tight")
 
 ### ¿Mis datos tienen valores faltantes (NaN) o infinitos?
 
-pccpy **no cancela el análisis**: filtra automáticamente los valores no finitos y
-emite un `UserWarning` indicando cuántos y en qué posiciones. El análisis continúa
-con los valores válidos restantes.
+pccpy **no cancela el análisis**: emite un `UserWarning` indicando cuántos valores no finitos hay y en qué
+posiciones, y continúa con los valores válidos restantes. En `imr_chart` los valores no finitos se conservan
+como **huecos** (NaN) en su posición: ningún rango móvil ni racha une las observaciones que separan, y las fechas
+del índice quedan alineadas. Las demás cartas los eliminan y compactan la serie.
 
 ```python
 import numpy as np, warnings
@@ -324,7 +325,7 @@ with warnings.catch_warnings(record=True) as w:
     warnings.simplefilter("always")
     carta = pp.imr_chart(x)
 # w[0].message describe los valores excluidos
-# carta tiene 4 puntos (2 NaN/inf eliminados)
+# carta tiene 6 posiciones: las 2 con NaN/inf quedan como huecos; carta["MR"] es NaN en las posiciones 0, 1, 2, 4 y 5
 ```
 
 > Si quieres que los valores faltantes **sí detengan** el análisis, filtra el array

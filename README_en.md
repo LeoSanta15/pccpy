@@ -272,7 +272,7 @@ x_new = rng.normal(100, 2, 20)
 phase1 = pp.phase_one(pp.imr_chart, x_historical, tests=(1, 2, 3))
 print(phase1.summary())    # excluded points, frozen limits and every pass
 phase1.excluded            # positions (0-based) of the excluded points
-phase1.chart.plot()        # chart with the final limits
+phase1.chart.plot()        # chart with the final limits (in I-MR the excluded points stay as gaps)
 
 chart_ii = phase1.phase2(x_new, tests=(1, 2))   # Phase II with the Phase I limits
 ```
