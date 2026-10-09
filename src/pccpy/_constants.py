@@ -46,6 +46,18 @@ def d2(n: int) -> float:
     return float(val)
 
 
+def d2_star(m: int, g: float) -> float:
+    """``d2*(m, g)`` de AIAG: media del rango relativo cuando se promedian ``g`` rangos de ``m`` valores.
+
+    Aproximación ``sqrt(d2(m)² + d3(m)²/g)``: con ``g = 1`` es exacta (raíz de ``E[W²]``, p. ej. ``√2`` para ``m = 2``) y
+    con ``g`` grande tiende a ``d2(m)``. Reproduce las constantes K2 y K3 del manual MSA de AIAG a ~1e-3
+    (``1/d2*(3, 1) = 0,5231`` y ``1/d2*(10, 1) = 0,3146``).
+    """
+    if g <= 0:
+        raise ValueError(tr("'g' debe ser positivo (recibido: {g}).").format(g=g))
+    return math.sqrt(d2(m) ** 2 + d3(m) ** 2 / g)
+
+
 @cache
 def d3(n: int) -> float:
     """Desviación estándar del rango relativo W = R/sigma."""

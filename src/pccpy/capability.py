@@ -6,7 +6,8 @@ Definiciones (como en Minitab):
   (rango móvil para individuales; pooled / Rbar / Sbar para subgrupos).
 * **Overall (desempeño)**: Pp, PPL, PPU, Ppk con la desviación estándar muestral
   de *todos* los datos (n-1).
-* Cpm = (LES - LEI) / (6 * sqrt(s_overall^2 + (media - objetivo)^2)).
+* Cpm = min(T - LEI, LES - T) / (3 * s_T), con s_T^2 = sum((x_i - T)^2) / (n - 1) = s^2 + n/(n-1) * (media - T)^2.
+  Con T en el punto medio de la especificación es (LES - LEI) / (6 * s_T).
 * Z.Bench = Phi^-1(1 - P(defecto total)).
 * Los intervalos de confianza de Pp y Ppk usan las aproximaciones estándar
   (chi-cuadrado y Bissell), bilaterales.
@@ -39,6 +40,18 @@ def _fmt(v, nd: int = 2) -> str:
 def _check_specs(lsl, usl):
     if lsl is not None and usl is not None and lsl >= usl:
         raise ValueError(tr("El límite inferior (lsl) debe ser menor que el superior (usl)."))
+
+
+def _cpm(lsl: float, usl: float, target: float, s_target: float) -> float:
+    """Cpm = min(T − LEI, LES − T) / (3·s_T); con T en el punto medio es (LES − LEI) / (6·s_T).
+
+    ``s_target`` es la desviación respecto al objetivo, ``s_T² = Σ(xᵢ − T)²/(n − 1)``.
+    """
+    if s_target <= 0:
+        return NAN
+    if math.isclose(target, (lsl + usl) / 2):
+        return (usl - lsl) / (6 * s_target)
+    return min(target - lsl, usl - target) / (3 * s_target)
 
 
 def _indices(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float, float]:
@@ -344,7 +357,7 @@ def capability_analysis(
 
     cpm = NAN
     if target is not None and lsl is not None and usl is not None:
-        cpm = (usl - lsl) / (6 * math.sqrt(so**2 + (mean - target) ** 2))
+        cpm = _cpm(lsl, usl, target, math.sqrt(float(np.sum((x - target) ** 2)) / (n - 1)))
 
     alpha = 1 - ci_level
     pp_ci = (NAN, NAN)
@@ -445,7 +458,7 @@ def capability_analysis_summary(
 
     cpm = NAN
     if target is not None and lsl is not None and usl is not None:
-        cpm = (usl - lsl) / (6 * math.sqrt(so**2 + (mean - target) ** 2))
+        cpm = _cpm(lsl, usl, target, math.sqrt(so**2 + n / (n - 1) * (mean - target) ** 2))
 
     alpha = 1 - ci_level
     pp_ci = (NAN, NAN)

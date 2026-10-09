@@ -21,7 +21,8 @@ def test_individuals_match_hand_calculation():
     assert r.pp == pytest.approx((USL - LSL) / (6 * so))
     assert r.ppk == pytest.approx(min(m - LSL, USL - m) / (3 * so))
     assert r.cpl == pytest.approx((m - LSL) / (3 * sw)) and r.cpu == pytest.approx((USL - m) / (3 * sw))
-    assert r.cpm == pytest.approx((USL - LSL) / (6 * math.sqrt(so**2 + (m - T) ** 2)))
+    s_t = math.sqrt(np.sum((X - T) ** 2) / (len(X) - 1))  # desviación respecto al objetivo, con n − 1
+    assert r.cpm == pytest.approx((USL - LSL) / (6 * s_t))
     assert r.within_method == "mr"
 
 

@@ -122,8 +122,14 @@ print(f"PPM total = {res.ppm_overall[2]:.0f}")
 `Cpm` penaliza la distancia al objetivo (target) además de la dispersión:
 
 ```
-Cpm = (USL − LSL) / (6 · √(σ² + (x̄ − target)²))
+s_T² = Σ(xᵢ − T)² / (n − 1) = s² + n/(n − 1) · (x̄ − T)²
+
+Cpm = min(T − LSL, USL − T) / (3 · s_T)
 ```
+
+Con el objetivo en el punto medio de la especificación, `min(T − LSL, USL − T) = (USL − LSL)/2` y la fórmula queda
+`Cpm = (USL − LSL) / (6 · s_T)`. Con un objetivo descentrado se usa la distancia al límite más cercano, como Minitab. Con
+`capability_analysis_summary` (sin datos crudos) se usa la misma `s_T²` a partir de `s` y `x̄`.
 
 Se activa automáticamente en `capability_analysis` si pasas `target`:
 

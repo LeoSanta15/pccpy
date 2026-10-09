@@ -176,6 +176,10 @@ carta_s = pp.xbar_s_chart(
 | `'pooled'` | `S_pooled / c4(n_total)` | Xbar-R o Xbar-S, mejor estimación con muchos subgrupos |
 | `'sbar'` | `S_prom / c4(n)` | Xbar-S, subgrupos de tamaño fijo (igual que Minitab) |
 
+Con **tamaños de subgrupo desiguales**, `'rbar'` y `'sbar'` promedian las estimaciones de cada subgrupo con pesos de varianza
+inversa: `Σ wᵢ·Rᵢ/d2(nᵢ) / Σ wᵢ` con `wᵢ = d2(nᵢ)²/d3(nᵢ)²`, y `Σ hᵢ·sᵢ/c4(nᵢ) / Σ hᵢ` con `hᵢ = c4(nᵢ)²/(1 − c4(nᵢ)²)`. Con tamaño
+constante los pesos son iguales y el resultado es el promedio simple de siempre.
+
 ---
 
 ### Formatos de entrada de datos

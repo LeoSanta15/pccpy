@@ -487,7 +487,7 @@
      1.0460975446426066
     ],
     [
-     1.0946463467286145
+     1.0941595102494195
     ],
     [
      2.9721513582534094
@@ -1077,7 +1077,7 @@
      1.333111237754837
     ],
     [
-     1.3656967047611352
+     1.365598394992689
     ],
     [
      4.08040778481666
@@ -3021,49 +3021,49 @@
      0.189226
     ],
     [
-     0.052055
+     0.050189
     ],
     [
      0.0
     ],
     [
-     0.052055
+     0.050189
     ],
     [
-     0.24128
+     0.239415
     ],
     [
-     2.203085
+     2.196867
     ],
     [
-     2.444365
-    ],
-    [
-     ""
-    ],
-    [
-     9.87
-    ],
-    [
-     7.74
-    ],
-    [
-     2.13
-    ],
-    [
-     90.13
+     2.436282
     ],
     [
      ""
     ],
     [
-     2.947218
+     9.83
     ],
     [
-     9.380679
+     7.77
     ],
     [
-     31.42
+     2.06
+    ],
+    [
+     90.17
+    ],
+    [
+     ""
+    ],
+    [
+     2.935803
+    ],
+    [
+     9.365156
+    ],
+    [
+     31.35
     ],
     [
      4
@@ -3096,7 +3096,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Gage R&R (anova) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.18923     7.74%\n  Reproducibilidad       0.05205     2.13%\n    Operador             0.05205\n    Interacción          0.00000\n  Gage R&R               0.24128     9.87%\n  Parte a parte          2.20308    90.13%\n  Total                  2.44436  100.00%\n\n  %Var. estudio Gage R&R = 31.42%   NDC = 4"
+  "summary": "Gage R&R (anova) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.18923     7.77%\n  Reproducibilidad       0.05019     2.06%\n    Operador             0.05019\n    Interacción          0.00000\n  Gage R&R               0.23942     9.83%\n  Parte a parte          2.19687    90.17%\n  Total                  2.43628  100.00%\n\n  %Var. estudio Gage R&R = 31.35%   NDC = 4\n  La interacción partes×operadores no es significativa: se agrupó con el error (modelo reducido)."
  },
  "gage_rr_sin_tolerancia": {
   "frame": {
@@ -3126,49 +3126,49 @@
      0.189226
     ],
     [
-     0.052055
+     0.050189
     ],
     [
      0.0
     ],
     [
-     0.052055
+     0.050189
     ],
     [
-     0.24128
+     0.239415
     ],
     [
-     2.203085
+     2.196867
     ],
     [
-     2.444365
-    ],
-    [
-     ""
-    ],
-    [
-     9.87
-    ],
-    [
-     7.74
-    ],
-    [
-     2.13
-    ],
-    [
-     90.13
+     2.436282
     ],
     [
      ""
     ],
     [
-     2.947218
+     9.83
     ],
     [
-     9.380679
+     7.77
     ],
     [
-     31.42
+     2.06
+    ],
+    [
+     90.17
+    ],
+    [
+     ""
+    ],
+    [
+     2.935803
+    ],
+    [
+     9.365156
+    ],
+    [
+     31.35
     ],
     [
      4
@@ -3201,7 +3201,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Gage R&R (anova) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.18923     7.74%\n  Reproducibilidad       0.05205     2.13%\n    Operador             0.05205\n    Interacción          0.00000\n  Gage R&R               0.24128     9.87%\n  Parte a parte          2.20308    90.13%\n  Total                  2.44436  100.00%\n\n  %Var. estudio Gage R&R = 31.42%   NDC = 4"
+  "summary": "Gage R&R (anova) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.18923     7.77%\n  Reproducibilidad       0.05019     2.06%\n    Operador             0.05019\n    Interacción          0.00000\n  Gage R&R               0.23942     9.83%\n  Parte a parte          2.19687    90.17%\n  Total                  2.43628  100.00%\n\n  %Var. estudio Gage R&R = 31.35%   NDC = 4\n  La interacción partes×operadores no es significativa: se agrupó con el error (modelo reducido)."
  },
  "gage_rr_xbar_r": {
   "frame": {
@@ -3228,52 +3228,52 @@
      ""
     ],
     [
-     0.209407
+     0.205497
     ],
     [
-     0.055632
+     0.041551
     ],
     [
      0.0
     ],
     [
-     0.055632
+     0.041551
     ],
     [
-     0.265039
+     0.247048
     ],
     [
-     2.605082
+     2.474032
     ],
     [
-     2.870121
-    ],
-    [
-     ""
-    ],
-    [
-     9.23
-    ],
-    [
-     7.3
-    ],
-    [
-     1.94
-    ],
-    [
-     90.77
+     2.72108
     ],
     [
      ""
     ],
     [
-     3.088919
+     9.08
     ],
     [
-     10.164859
+     7.55
     ],
     [
-     30.39
+     1.53
+    ],
+    [
+     90.92
+    ],
+    [
+     ""
+    ],
+    [
+     2.982235
+    ],
+    [
+     9.897418
+    ],
+    [
+     30.13
     ],
     [
      4
@@ -3306,7 +3306,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Gage R&R (xbar_r) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.20941     7.30%\n  Reproducibilidad       0.05563     1.94%\n    Operador             0.05563\n    Interacción          0.00000\n  Gage R&R               0.26504     9.23%\n  Parte a parte          2.60508    90.77%\n  Total                  2.87012  100.00%\n\n  %Var. estudio Gage R&R = 30.39%   NDC = 4"
+  "summary": "Gage R&R (xbar_r) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.20550     7.55%\n  Reproducibilidad       0.04155     1.53%\n    Operador             0.04155\n    Interacción          0.00000\n  Gage R&R               0.24705     9.08%\n  Parte a parte          2.47403    90.92%\n  Total                  2.72108  100.00%\n\n  %Var. estudio Gage R&R = 30.13%   NDC = 4"
  },
  "gage_tipo1": {
   "frame": {
@@ -3684,7 +3684,7 @@
      2.00849982262155,
      6.5608287804787855,
      0.0,
-     "3"
+     ""
     ],
     [
      14,
@@ -3782,7 +3782,7 @@
      2.00849982262155,
      6.5608287804787855,
      0.0,
-     "2"
+     ""
     ],
     [
      21,
@@ -3796,7 +3796,7 @@
      2.00849982262155,
      6.5608287804787855,
      0.0,
-     "2"
+     ""
     ],
     [
      22,
@@ -3810,7 +3810,7 @@
      2.00849982262155,
      6.5608287804787855,
      0.0,
-     "2"
+     ""
     ],
     [
      23,
@@ -3824,7 +3824,7 @@
      2.00849982262155,
      6.5608287804787855,
      0.0,
-     "2"
+     ""
     ],
     [
      24,
@@ -3838,7 +3838,7 @@
      2.00849982262155,
      6.5608287804787855,
      0.0,
-     "2"
+     ""
     ],
     [
      25,
@@ -3852,7 +3852,7 @@
      2.00849982262155,
      6.5608287804787855,
      0.0,
-     "2"
+     ""
     ],
     [
      26,
@@ -4109,7 +4109,7 @@
    ],
    "index_name": null
   },
-  "summary": "Carta de control I-MR\n  Parámetros: media=9.96367, sigma=1.77999, MR_prom=2.0085, n=40\n  Pruebas solicitadas: 1, 2, 3, 4, 5, 6\n  Puntos marcados: 12\n    [I] punto 8: prueba 1 (valor 17) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [I] punto 26: prueba 1 (valor 3.5) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [MR] punto 8: prueba 1 (valor 9.01999) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [MR] punto 9: prueba 1 (valor 7.86521) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [MR] punto 13: prueba 3 (valor 0.0713434) - 6 puntos consecutivos, todos ascendentes o todos descendentes\n    [MR] punto 20: prueba 2 (valor 1.15756) - 9 puntos consecutivos del mismo lado de la línea central\n    [MR] punto 21: prueba 2 (valor 0.224062) - 9 puntos consecutivos del mismo lado de la línea central\n    [MR] punto 22: prueba 2 (valor 1.52156) - 9 puntos consecutivos del mismo lado de la línea central\n    [MR] punto 23: prueba 2 (valor 1.00072) - 9 puntos consecutivos del mismo lado de la línea central\n    [MR] punto 24: prueba 2 (valor 1.05033) - 9 puntos consecutivos del mismo lado de la línea central\n    [MR] punto 25: prueba 2 (valor 0.32239) - 9 puntos consecutivos del mismo lado de la línea central\n    [MR] punto 27: prueba 1 (valor 8.43509) - 1 punto a más de 3 desviaciones estándar de la línea central"
+  "summary": "Carta de control I-MR\n  Parámetros: media=9.96367, sigma=1.77999, MR_prom=2.0085, n=40\n  Pruebas solicitadas: 1, 2, 3, 4, 5, 6\n  Puntos marcados: 5\n    [I] punto 8: prueba 1 (valor 17) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [I] punto 26: prueba 1 (valor 3.5) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [MR] punto 8: prueba 1 (valor 9.01999) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [MR] punto 9: prueba 1 (valor 7.86521) - 1 punto a más de 3 desviaciones estándar de la línea central\n    [MR] punto 27: prueba 1 (valor 8.43509) - 1 punto a más de 3 desviaciones estándar de la línea central"
  },
  "imr_con_etapas": {
   "frame": {
@@ -9904,13 +9904,13 @@
      "two"
     ],
     [
-     1.0
+     0.9216
     ],
     [
-     44.966480578358976
+     46.19755452039831
     ],
     [
-     54.4895132529721
+     52.877045183312305
     ]
    ],
    "index": [
@@ -9927,7 +9927,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Intervalo de tolerancia (nonparametric, two)\n  N=120  Cobertura≥90.0%  Confianza=90.0%\n  Media=49.707  Desv.Est.=1.7313\n  Confianza alcanzada: 100.00%\n  LI = 44.966   LS = 54.49"
+  "summary": "Intervalo de tolerancia (nonparametric, two)\n  N=120  Cobertura≥90.0%  Confianza=90.0%\n  Media=49.707  Desv.Est.=1.7313\n  Confianza alcanzada: 92.16%\n  LI = 46.198   LS = 52.877"
  },
  "tolerancia_normal": {
   "frame": {

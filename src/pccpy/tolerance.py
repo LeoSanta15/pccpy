@@ -47,19 +47,20 @@ def _k_normal_one(n: int, p: float, confidence: float) -> float:
 def _nonparam_indices(n: int, p: float, confidence: float, sides: str):
     """Devuelve (r, achieved_conf) para el intervalo no paramétrico.
 
-    r es el índice inferior (1-based); el superior es n-r+1 para dos lados,
-    o r para la cota unilateral.
+    Bilateral: el intervalo es ``[X_(r), X_(n+1-r)]`` y su cobertura sigue una Beta(n − 2r + 1, 2r), de modo que la
+    confianza de cubrir al menos ``p`` es ``1 − I_p(n − 2r + 1, 2r)``. Disminuye al crecer ``r``; se devuelve el mayor
+    ``r`` que todavía alcanza la confianza pedida, es decir, el intervalo más estrecho válido (``(None, nan)`` si ni
+    ``r = 1`` la alcanza). Unilateral: ``r`` es el índice de la cota (``X_(r)``).
     """
     alpha = 1.0 - confidence
     if sides == "two":
+        mejor: tuple[int | None, float] = (None, NAN)
         for r in range(1, n // 2 + 1):
-            # P(cobertura >= p) = P(Beta(n-2r+1, 2r-1) >= p)
-            # = P(Beta >= p) = 1 - I_p(n-2r+1, 2r-1)... wait, regularized
-            # = betainc complement
-            achieved = 1.0 - stats.beta.cdf(p, n - 2 * r + 1, 2 * r - 1)
-            if achieved >= 1.0 - alpha:
-                return r, float(achieved)
-        return None, NAN
+            achieved = float(1.0 - stats.beta.cdf(p, n - 2 * r + 1, 2 * r))
+            if achieved < 1.0 - alpha:
+                break
+            mejor = (r, achieved)
+        return mejor
     else:  # one-sided
         for r in range(1, n + 1):
             if sides == "lower":

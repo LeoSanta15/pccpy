@@ -42,8 +42,8 @@ DEFAULT_K: dict[int, float] = {1: 3, 2: 9, 3: 6, 4: 14, 5: 2, 6: 4, 7: 15, 8: 8}
 #: Pruebas disponibles según la familia de gráfico.
 FAMILIES: dict[str, tuple] = {
     "full": (1, 2, 3, 4, 5, 6, 7, 8),  # I, X-barra
-    "basic": (1, 2, 3, 4),  # MR, R, S, P, NP, C, U, Laney
-    "only1": (1,),  # EWMA, CUSUM
+    "basic": (1, 2, 3, 4),  # R, S (aproximadas: los rangos no son normales), P, NP, C, U, Laney
+    "only1": (1,),  # MR (rangos móviles autocorrelacionados y asimétricos), EWMA, CUSUM
 }
 
 

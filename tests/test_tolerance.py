@@ -58,8 +58,9 @@ def test_normal_lower_upper_k_equal():
 def test_nonparam_two_uses_order_stats():
     res = pccpy.tolerance_interval(X300, coverage=0.95, confidence=0.95, method="nonparametric")
     xs = np.sort(X300)
-    assert res.lower == pytest.approx(xs[0])
-    assert res.upper is not None
+    # el intervalo bilateral más estrecho con confianza ≥ 0,95 para n = 300 usa r = 4 (ver test_auditoria_regresion)
+    assert res.lower == pytest.approx(xs[3])
+    assert res.upper == pytest.approx(xs[300 - 4])
     assert res.achieved_confidence is not None
     assert res.achieved_confidence >= 0.95
     assert res.k_factor is None

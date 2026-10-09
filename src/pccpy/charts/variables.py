@@ -78,7 +78,7 @@ def imr_chart(
         mr_panel = StagePanel(
             "MR", moving_range(xs, span), full(c, n), full(c + 3 * dd3 * s, n),
             full(max(0.0, c - 3 * dd3 * s), n), full(dd3 * s, n),
-            N_("Rango móvil"), "basic", symmetric=False,
+            N_("Rango móvil"), "only1", symmetric=False,
         )
         return [i_panel, mr_panel], {"media": m, "sigma": s, "MR_prom": c, "n": n}
 
@@ -162,7 +162,8 @@ def xbar_r_chart(
       numérica): convierte automáticamente al formato matricial.
 
     ``sigma_method``: ``'rbar'`` (por defecto) o ``'pooled'``.
-    Con tamaños desiguales, sigma se estima promediando R_i/d2(n_i) (ver README).
+    Con tamaños desiguales, sigma es el promedio de R_i/d2(n_i) ponderado por d2(n_i)²/d3(n_i)² (varianza inversa,
+    como Minitab); con tamaño constante es el promedio simple.
 
     ``transform`` y ``scale`` funcionan como en :func:`imr_chart`: se normalizan todas las observaciones, los límites y
     las pruebas se calculan en la escala transformada y, con ``scale='original'`` (por defecto), el panel X̄ se
@@ -192,7 +193,8 @@ def xbar_s_chart(
     """Carta X-barra y S (Stat > Control Charts > Xbar-S).
 
     Acepta los mismos formatos de entrada que :func:`xbar_r_chart`, incluidos ``transform`` y ``scale``.
-    ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``.
+    ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``. Con tamaños desiguales, sigma es el promedio de s_i/c4(n_i)
+    ponderado por c4(n_i)²/(1 − c4(n_i)²) (varianza inversa).
     """
     check_method(sigma_method, ("sbar", "pooled"))
     return _xbar_chart("Xbar-S", "s", data, subgroup_size, subgroup, sigma_method,

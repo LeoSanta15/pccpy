@@ -178,6 +178,10 @@ chart_s = pp.xbar_s_chart(
 | `'pooled'` | `S_pooled / c4(n_total)` | Xbar-R or Xbar-S, better estimate with many subgroups |
 | `'sbar'` | `S_avg / c4(n)` | Xbar-S, fixed-size subgroups (same as Minitab) |
 
+With **unequal subgroup sizes**, `'rbar'` and `'sbar'` average the per-subgroup estimates with inverse-variance weights:
+`Σ wᵢ·Rᵢ/d2(nᵢ) / Σ wᵢ` with `wᵢ = d2(nᵢ)²/d3(nᵢ)²`, and `Σ hᵢ·sᵢ/c4(nᵢ) / Σ hᵢ` with `hᵢ = c4(nᵢ)²/(1 − c4(nᵢ)²)`. With a
+constant size the weights are equal and the result is the usual simple average.
+
 ---
 
 ### Data input formats
