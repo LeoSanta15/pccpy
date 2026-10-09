@@ -2,6 +2,8 @@
 
 ## [Sin publicar]
 
+## [0.13.1] - correcciones de la documentación
+
 ### Corregido
 - Documentación: `capacidad_indices.md` usaba `res.ppm_total` y `res.z_bench`, que no existen (son `res.ppm_overall[2]`, el PPM total de la tupla (< LEI, > LES, total), y `res.z_bench_overall`), y `guia_seleccion.md` llamaba a `ewma_chart(x, lam=0.2, L=3.0)` (los parámetros son `weight=` y `k=`); ahora los ejemplos funcionan.
 - Documentación: `wizard.md` y `diagnose.md` no recogían las recomendaciones con Yeo-Johnson (`capability_analysis(..., transform='yeo-johnson')` e `imr_chart(..., transform=…)`) ni el campo `yeo_johnson_normalizes`; el mapa del código de `CLAUDE.md` no listaba `bootstrap.py`, `transforms.py`, `outliers.py` ni los tests nuevos.
