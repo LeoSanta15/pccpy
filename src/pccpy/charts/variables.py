@@ -1,10 +1,12 @@
 """Cartas de control para datos continuos: I-MR, X-barra-R y X-barra-S."""
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 
 from .._constants import c4, c5, d2, d3
-from .._data import as_1d, avisar_asimetria_subgrupos, to_subgroups
+from .._data import as_1d_con_huecos, avisar_asimetria_subgrupos, to_subgroups
 from .._i18n import N_, tr
 from .._labels import con_etiquetas
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
@@ -55,8 +57,8 @@ def imr_chart(
         valores, los límites y las líneas de 1 y 2 sigma en unidades originales (los límites quedan asimétricos);
         el panel MR se queda en la escala transformada. ``'transformed'`` deja todo en la escala transformada.
     """
-    x = as_1d(x)
-    t = resolver_transformacion(transform, x, scale)
+    x = as_1d_con_huecos(x)
+    t = resolver_transformacion(transform, x[np.isfinite(x)], scale)
     x_original = x
     if t is not None:
         x = t.forward(x)
@@ -67,17 +69,20 @@ def imr_chart(
 
     def stage_fn(idx):
         xs = x[idx]
-        n = xs.size
-        m = float(xs.mean()) if mu is None else float(mu)
+        n = int(np.count_nonzero(~np.isnan(xs)))  # observaciones válidas (los huecos no cuentan)
+        m = float(np.nanmean(xs)) if mu is None else float(mu)
         s = float(sigma) if sigma is not None else sigma_individuals(xs, sigma_method, span)
+        if s == 0:
+            warnings.warn(tr("Sigma estimada = 0 (los datos no varían): los límites de control coinciden con la línea "
+                             "central y ningún punto es informativo."), UserWarning, stacklevel=5)
         i_panel = StagePanel(
-            "I", xs, full(m, n), full(m + 3 * s, n), full(m - 3 * s, n), full(s, n),
+            "I", xs, full(m, xs.size), full(m + 3 * s, xs.size), full(m - 3 * s, xs.size), full(s, xs.size),
             N_("Valor individual"), "full",
         )
         c = dd2 * s
         mr_panel = StagePanel(
-            "MR", moving_range(xs, span), full(c, n), full(c + 3 * dd3 * s, n),
-            full(max(0.0, c - 3 * dd3 * s), n), full(dd3 * s, n),
+            "MR", moving_range(xs, span), full(c, xs.size), full(c + 3 * dd3 * s, xs.size),
+            full(max(0.0, c - 3 * dd3 * s), xs.size), full(dd3 * s, xs.size),
             N_("Rango móvil"), "only1", symmetric=False,
         )
         return [i_panel, mr_panel], {"media": m, "sigma": s, "MR_prom": c, "n": n}

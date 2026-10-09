@@ -45,20 +45,30 @@ def moving_range(x: np.ndarray, span: int = 2) -> np.ndarray:
 
 def sigma_individuals(x: np.ndarray, method: str = "mr", span: int = 2) -> float:
     """Sigma a partir de observaciones individuales."""
-    if x.size < 2:
+    if np.count_nonzero(~np.isnan(x)) < 2:
         raise ValueError(tr("Se necesitan al menos 2 observaciones para estimar sigma."))
     if method == "mr":
         if x.size < span:
             raise ValueError(tr(
                 "Se necesitan al menos {span} observaciones (span={span})."
             ).format(span=span))
-        return float(np.nanmean(moving_range(x, span)) / d2(span))
+        mr = moving_range(x, span)
+        if np.all(np.isnan(mr)):
+            raise ValueError(tr("Se necesitan al menos 2 observaciones consecutivas para estimar sigma."))
+        return float(np.nanmean(mr) / d2(span))
     if method == "median_mr":
         if span != 2:
             raise ValueError(tr("'median_mr' solo está disponible con span = 2."))
-        return float(np.nanmedian(moving_range(x, 2)) / MEDIAN_MR_CONSTANT)
+        mr = moving_range(x, 2)
+        if np.all(np.isnan(mr)):
+            raise ValueError(tr("Se necesitan al menos 2 observaciones consecutivas para estimar sigma."))
+        return float(np.nanmedian(mr) / MEDIAN_MR_CONSTANT)
     if method == "mssd":
-        return float(np.sqrt(np.sum(np.diff(x) ** 2) / (2.0 * (x.size - 1))))
+        d = np.diff(x)
+        d = d[~np.isnan(d)]  # una diferencia que cruza un hueco (NaN) no se usa
+        if d.size == 0:
+            raise ValueError(tr("Se necesitan al menos 2 observaciones consecutivas para estimar sigma."))
+        return float(np.sqrt(np.sum(d**2) / (2.0 * d.size)))
     raise ValueError(tr("sigma_method debe ser 'mr', 'median_mr' o 'mssd'."))
 
 

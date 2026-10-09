@@ -207,7 +207,10 @@ def tolerance_interval(
         (cota superior). Por defecto ``'two'``.
     method : str
         ``'normal'`` — asume distribución normal; usa la aproximación de Howe
-        (1969) para bilateral y la t no central exacta para unilateral.
+        (1969) para bilateral y la t no central exacta para unilateral. La
+        aproximación de Howe se desvía del factor k exacto menos de un 0,7 % con
+        ``n ≥ 10`` (y hasta un 3,8 % con ``n = 3``); en el bilateral con n pequeña
+        la confianza real puede quedar unas décimas por debajo de la pedida.
 
         ``'nonparametric'`` — libre de distribución; se basa en estadísticos
         de orden; requiere muestras más grandes para la misma cobertura y

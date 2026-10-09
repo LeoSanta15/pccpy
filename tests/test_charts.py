@@ -88,13 +88,15 @@ def test_non_contiguous_stages_rejected():
 
 
 def test_missing_values_warning():
-    # NaN ya no lanza ValueError: se excluye con UserWarning
+    # NaN no lanza ValueError: se conserva como hueco (posición intacta) con UserWarning
     import warnings
     data = [1.0, np.nan, 3.0, 2.5, 2.8, 3.1, 2.9, 3.0, 2.7, 3.2]
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
         chart = pccpy.imr_chart(data)
-    assert len(chart.panels[0].values) == 9  # 10 - 1 NaN
+    assert len(chart.panels[0].values) == 10 and np.isnan(chart.panels[0].values[1])  # el hueco conserva su posición
+    assert np.isnan(chart["MR"].values[[1, 2]]).all()  # ningún rango móvil cruza el hueco
+    assert chart.params[0]["n"] == 9
     assert any("no finito" in str(wi.message) for wi in w)
 
 

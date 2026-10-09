@@ -26,13 +26,17 @@ def test_excluye_los_atipicos_y_converge():
     assert r.converged and r.reason == "in_control"
     assert r.excluded.tolist() == [10, 33]
     assert r.kept.size == 58 and r.n_original == 60
-    assert r.chart.panels[0].values.size == 58
+    # los puntos excluidos quedan como huecos (NaN) en su posición: la carta conserva las 60 posiciones
+    assert r.chart.panels[0].values.size == 60
+    assert np.isnan(r.chart.panels[0].values[[10, 33]]).all() and np.isfinite(r.chart.panels[0].values[r.kept]).all()
 
 
 def test_la_carta_final_es_la_de_los_datos_conservados():
     x = _x()
     r = pp.phase_one(pp.imr_chart, x, tests=(1,))
-    directa = pp.imr_chart(x[r.kept], tests=(1,))
+    con_huecos = x.copy()
+    con_huecos[r.excluded] = np.nan
+    directa = pp.imr_chart(con_huecos, tests=(1,))
     for a, b in zip(r.chart.panels, directa.panels):
         np.testing.assert_array_equal(a.values, b.values)
         np.testing.assert_array_equal(a.ucl, b.ucl)
@@ -45,8 +49,8 @@ def test_los_limites_congelados_son_los_de_la_carta_final():
     p = r.chart.params[0]
     assert r.limits == {"mu": p["media"], "sigma": p["sigma"]}
     fase2 = r.phase2(x[r.kept], tests=(1,))                       # los mismos datos con límites congelados
-    np.testing.assert_allclose(fase2.panels[0].ucl, r.chart.panels[0].ucl)
-    np.testing.assert_allclose(fase2.panels[0].lcl, r.chart.panels[0].lcl)
+    np.testing.assert_allclose(fase2.panels[0].ucl[0], r.chart.panels[0].ucl[0])
+    np.testing.assert_allclose(fase2.panels[0].lcl[0], r.chart.panels[0].lcl[0])
 
 
 def test_la_fase_ii_detecta_un_cambio_con_los_limites_de_la_fase_i():
@@ -177,7 +181,7 @@ def test_con_una_serie_con_fechas_el_resultado_conserva_las_fechas():
     s = pd.Series(x, index=pd.date_range("2026-03-01", periods=60, freq="D"))
     r = pp.phase_one(pp.imr_chart, s, tests=(1,))
     assert [pd.Timestamp(v) for v in r.excluded_labels] == [s.index[10], s.index[33]]
-    assert len(r.chart.labels) == 58 and pd.Timestamp(r.chart.labels[10]) == s.index[11]
+    assert len(r.chart.labels) == 60 and pd.Timestamp(r.chart.labels[11]) == s.index[11]
     assert "11 (2026-03-11)" in r.summary()
     fase2 = r.phase2(s.iloc[:10])
     assert fase2.labels is not None
@@ -257,3 +261,13 @@ def test_las_claves_estables_del_historial_no_cambian_con_el_idioma():
         en = r.to_frame(stable=True)
         assert list(r.to_frame().columns) == ["iteration", "points", "signals", "center", "sigma"]
     assert r.to_frame(stable=True).equals(en)
+
+
+def test_ningun_rango_movil_une_observaciones_que_no_eran_consecutivas():
+    x = _x()
+    r = pp.phase_one(pp.imr_chart, x, tests=(1,))
+    mr = r.chart["MR"].values
+    assert np.isnan(mr[[10, 11, 33, 34]]).all()           # los rangos que tocan un punto excluido
+    resto = np.abs(np.diff(x))
+    esperado = np.nanmean(np.where(np.isin(np.arange(1, 60), [10, 11, 33, 34]), np.nan, resto)) / 1.128379167
+    assert r.limits["sigma"] == pytest.approx(esperado, rel=1e-6)

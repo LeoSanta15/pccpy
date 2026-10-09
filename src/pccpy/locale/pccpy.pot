@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-09 18:29+0000\n"
+"POT-Creation-Date: 2026-10-09 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -720,6 +720,11 @@ msgid "  LEI={lsl}  Objetivo={target}  LES={usl}"
 msgstr ""
 
 msgid ""
+"  La interacción partes×operadores no es significativa: se agrupó con el "
+"error (modelo reducido)."
+msgstr ""
+
+msgid ""
 "  La prueba supone datos normales. No es una regla para eliminar datos: "
 "investiga el origen."
 msgstr ""
@@ -1055,6 +1060,9 @@ msgstr ""
 msgid "'alpha' debe estar en (0, 1)."
 msgstr ""
 
+msgid "'alpha_interaction' debe estar entre 0 y 1."
+msgstr ""
+
 msgid "'aoql' debe estar en (0, 1)."
 msgstr ""
 
@@ -1092,14 +1100,24 @@ msgstr ""
 msgid "'coverage' debe estar en (0, 1)."
 msgstr ""
 
+msgid "'data' no tiene valores válidos tras eliminar NaN/inf."
+msgstr ""
+
 #, python-brace-format
 msgid "'dixon_ratio' debe ser 'auto' o uno de {opciones}."
+msgstr ""
+
+#, python-brace-format
+msgid "'g' debe ser positivo (recibido: {g})."
 msgstr ""
 
 msgid "'h' debe ser > 0 y 'k' >= 0."
 msgstr ""
 
 msgid "'h' debe ser > 0."
+msgstr ""
+
+msgid "'headstart' debe cumplir 0 <= headstart < h."
 msgstr ""
 
 msgid "'inspection_level' debe ser 1, 2 o 3."
@@ -1278,6 +1296,13 @@ msgstr ""
 msgid ""
 "'{name}' contiene {n_bad} valor(es) no finito(s) (NaN/inf) en las "
 "posiciones {positions}. Se excluyen del análisis."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"'{name}' contiene {n_bad} valor(es) no finito(s) (NaN/inf) en las "
+"posiciones {positions}. Se tratan como huecos: no se unen las "
+"observaciones que los separan."
 msgstr ""
 
 #, python-brace-format
@@ -1599,6 +1624,9 @@ msgstr ""
 msgid "Confianza alcanzada"
 msgstr ""
 
+msgid "Constantes K2 y K3 del manual MSA de AIAG con d2*"
+msgstr ""
+
 #, python-brace-format
 msgid "Constantes d2, d3, c4, A2, A3, D3, D4, B3 y B4 para n = {n}"
 msgstr ""
@@ -1646,6 +1674,11 @@ msgid "Cpk estimado"
 msgstr ""
 
 msgid "Cpm"
+msgstr ""
+
+msgid ""
+"Cpm con objetivo descentrado y centrado frente a la fórmula de Minitab "
+"escrita aparte"
 msgstr ""
 
 msgid "Crossed Gage R&R — ANOVA (todos los operadores miden todas las partes)"
@@ -1841,6 +1874,12 @@ msgstr ""
 msgid "El texto no es un JSON válido: {error}"
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"En las cartas P, NP y Laney P' los tamaños de muestra deben ser enteros "
+"(recibido: {valor}). Con áreas de oportunidad no enteras usa la carta U."
+msgstr ""
+
 msgid "Error"
 msgstr ""
 
@@ -1994,6 +2033,16 @@ msgid ""
 "{replicates} réplicas"
 msgstr ""
 
+msgid ""
+"Gage R&R cruzado con la interacción agrupada frente al modelo reducido "
+"calculado aparte"
+msgstr ""
+
+msgid ""
+"Gage R&R necesita al menos 2 réplicas por parte y operador para estimar "
+"la repetibilidad."
+msgstr ""
+
 msgid "General"
 msgstr ""
 
@@ -2083,6 +2132,11 @@ msgid "Intervalo de tolerancia ({method}, {sides})"
 msgstr ""
 
 msgid "Intervalo de tolerancia desde estadísticos resumen (media, σ, n)"
+msgstr ""
+
+msgid ""
+"Intervalo de tolerancia no paramétrico bilateral frente a la cola "
+"binomial y al mínimo n = 93"
 msgstr ""
 
 msgid "Intervalo de tolerancia no paramétrico — estadísticos de orden"
@@ -3013,6 +3067,9 @@ msgstr ""
 msgid "Se necesitan al menos 2 mediciones."
 msgstr ""
 
+msgid "Se necesitan al menos 2 observaciones consecutivas para estimar sigma."
+msgstr ""
+
 msgid "Se necesitan al menos 2 observaciones para estimar sigma."
 msgstr ""
 
@@ -3068,6 +3125,16 @@ msgid "Sesgo promedio"
 msgstr ""
 
 msgid "Sesgo promedio (%)"
+msgstr ""
+
+msgid ""
+"Sigma Rbar y Sbar con subgrupos de distinto tamaño frente a los pesos de "
+"varianza inversa"
+msgstr ""
+
+msgid ""
+"Sigma estimada = 0 (los datos no varían): los límites de control "
+"coinciden con la línea central y ningún punto es informativo."
 msgstr ""
 
 msgid "Sistema de medición (MSA / Gage R&R)"

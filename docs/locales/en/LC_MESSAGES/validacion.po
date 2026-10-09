@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 18:23+0000\n"
+"POT-Creation-Date: 2026-10-09 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -96,6 +96,36 @@ msgstr "Phase I with a robust fit of the transformation"
 
 msgid "Medcouple y diagrama de cajas ajustado escritos con bucles; `scipy.stats.boxcox`"
 msgstr "Medcouple and adjusted boxplot written with loops; `scipy.stats.boxcox`"
+
+msgid "Tolerancia no paramétrica bilateral"
+msgstr "Two-sided nonparametric tolerance"
+
+msgid "Cola binomial `P(Bin(n, p) ≤ n − 2r)` y tamaño mínimo 93 para 95 % / 95 %"
+msgstr "Binomial tail `P(Bin(n, p) ≤ n − 2r)` and minimum size 93 for 95 % / 95 %"
+
+msgid "Cpm con objetivo descentrado y centrado"
+msgstr "Cpm with an off-center and a centered target"
+
+msgid "Fórmula de Minitab `min(T − LEI, LES − T) / (3·s_T)` escrita aparte"
+msgstr "Minitab formula `min(T − LSL, USL − T) / (3·s_T)` written separately"
+
+msgid "Sigma Rbar y Sbar con subgrupos desiguales"
+msgstr "Rbar and Sbar sigma with unequal subgroups"
+
+msgid "Constantes de Montgomery y pesos de varianza inversa escritos aparte"
+msgstr "Montgomery constants and inverse-variance weights written separately"
+
+msgid "Gage R&R con la interacción agrupada"
+msgstr "Gage R&R with the interaction pooled"
+
+msgid "ANOVA sin interacción calculado aparte con NumPy"
+msgstr "ANOVA without interaction computed separately with NumPy"
+
+msgid "Constantes K2 y K3 de AIAG (`d2*`)"
+msgstr "AIAG K2 and K3 constants (`d2*`)"
+
+msgid "Valores del manual MSA de AIAG (4.ª ed.)"
+msgstr "Values from the AIAG MSA manual (4th ed.)"
 
 msgid "Pruebas de atípicos (Grubbs y ESD generalizada)"
 msgstr "Outlier tests (Grubbs and generalized ESD)"

@@ -201,3 +201,128 @@ def test_los_paneles_r_y_s_mantienen_las_pruebas_1_a_4():
     g = np.random.default_rng(3).normal(size=(40, 5))
     for carta in (pp.xbar_r_chart(g, tests="all"), pp.xbar_s_chart(g, tests="all")):
         assert set(carta.panels[1].violations) <= {1, 2, 3, 4}
+
+
+def test_un_hueco_en_imr_no_une_observaciones_no_consecutivas():
+    x = np.random.default_rng(1).normal(50, 2, 30)
+    x[2] = np.nan
+    with pytest.warns(UserWarning, match="huecos"):
+        c = pp.imr_chart(x)
+    mr = c["MR"].values
+    assert np.isnan(mr[[2, 3]]).all()
+    validos = np.abs(np.diff(x))
+    validos = validos[~np.isnan(validos)]  # no incluye |x[3] − x[1]|
+    assert c.params[0]["sigma"] == pytest.approx(validos.mean() / d2(2), rel=1e-12)
+
+
+def test_una_racha_no_cruza_un_hueco():
+    from pccpy import rules
+    valores = np.r_[np.full(5, 1.0), np.nan, np.full(5, 1.0)]
+    marcados = rules.apply_tests(valores, np.zeros(11), np.ones(11), [2], {2: 9})
+    assert marcados[2].size == 0  # 5 + 5 puntos del mismo lado, pero separados por un hueco: no son 9 seguidos
+    sin_hueco = rules.apply_tests(np.full(11, 1.0), np.zeros(11), np.ones(11), [2], {2: 9})
+    assert sin_hueco[2].size > 0
+
+
+def _longitud_de_racha(carta):
+    marcados = carta.panels[0].violations.get(1, [])
+    return int(marcados[0]) + 1 if len(marcados) else None
+
+
+def test_cusum_bilateral_arl0_con_sigma_conocida():
+    """Hawkins y Olwell: la CUSUM tabular bilateral con h = 4 y k = 0,5 tiene ARL₀ ≈ 168 (≈ 336 por lado)."""
+    rng = np.random.default_rng(21)
+    rachas = [_longitud_de_racha(pp.cusum_chart(rng.normal(size=1500), target=0.0, sigma=1.0, h=4.0, k=0.5))
+              for _ in range(300)]
+    assert np.mean([r for r in rachas if r]) == pytest.approx(168, rel=0.15)
+
+
+def test_ewma_arl0_con_sigma_conocida():
+    """Lucas y Saccucci (1990): λ = 0,2 y L = 3 dan un ARL₀ de unos 550 con límites asintóticos; con los límites exactos
+    que ensanchan al inicio, la simulación da ≈ 570."""
+    rng = np.random.default_rng(22)
+    rachas = [_longitud_de_racha(pp.ewma_chart(rng.normal(size=4000), weight=0.2, k=3.0, target=0.0, sigma=1.0))
+              for _ in range(300)]
+    assert 440 < np.mean([r for r in rachas if r]) < 650
+
+
+def test_cusum_con_arranque_rapido_senala_antes_un_desplazamiento_inicial():
+    rng = np.random.default_rng(23)
+    x = rng.normal(size=60) + 1.0  # desplazamiento de 1 sigma desde el inicio
+    sin = _longitud_de_racha(pp.cusum_chart(x, target=0.0, sigma=1.0))
+    con = _longitud_de_racha(pp.cusum_chart(x, target=0.0, sigma=1.0, headstart=2.0))
+    assert con is not None and (sin is None or con <= sin)
+    primer = pp.cusum_chart(np.array([0.0, 0.0]), target=0.0, sigma=1.0, headstart=2.0)
+    assert primer.panels[0].values[0] == pytest.approx(max(0.0, 2.0 + 0.0 - 0.5))  # S⁺₀ = headstart
+
+
+def test_cusum_headstart_se_valida():
+    with pytest.raises(ValueError, match="headstart"):
+        pp.cusum_chart(np.arange(10.0), headstart=-1.0)
+    with pytest.raises(ValueError, match="headstart"):
+        pp.cusum_chart(np.arange(10.0), headstart=5.0, h=4.0)
+
+
+@pytest.mark.parametrize("funcion", [pp.ewma_chart, pp.cusum_chart])
+def test_ewma_y_cusum_con_etapas_calculan_limites_por_etapa(funcion):
+    rng = np.random.default_rng(24)
+    x = np.r_[rng.normal(10, 1, 40), rng.normal(20, 3, 40)]
+    etapas = np.r_[np.ones(40), np.full(40, 2)]
+    c = funcion(x, stages=etapas)
+    assert [p["stage"] for p in c.params] == [1, 2]
+    assert c.params[0]["objetivo"] == pytest.approx(10, abs=1) and c.params[1]["objetivo"] == pytest.approx(20, abs=2)
+    assert c.params[1]["sigma"] > 2 * c.params[0]["sigma"]
+
+
+def test_ewma_y_cusum_aceptan_sigma_method_con_subgrupos():
+    from pccpy._sigma import sigma_subgroups
+    g = np.random.default_rng(25).normal(50, 2, (30, 5))
+    for funcion in (pp.ewma_chart, pp.cusum_chart):
+        for metodo in ("rbar", "sbar", "pooled"):
+            assert funcion(g, sigma_method=metodo).params[0]["sigma"] == pytest.approx(sigma_subgroups(g, metodo))
+        with pytest.raises(ValueError, match="sigma_method"):
+            funcion(g, sigma_method="mr")
+
+
+def test_capability_boxcox_acepta_matrices_2d_como_dice_su_docstring():
+    g = np.random.default_rng(1).lognormal(2, 0.3, (20, 4))
+    a = pp.capability_boxcox(g, 5, 20)
+    b = pp.capability_boxcox(g.ravel(), 5, 20, subgroup_size=4)
+    c = pp.capability_analysis(g, 5, 20, transform="boxcox")
+    assert a.cp == pytest.approx(b.cp, rel=1e-12) and a.cp == pytest.approx(c.cp, rel=1e-9)
+    assert a.transform["lambda"] == pytest.approx(b.transform["lambda"])
+
+
+# ── Fase 4 ───────────────────────────────────────────────────────────────────
+
+
+def test_imr_avisa_cuando_sigma_es_cero():
+    with pytest.warns(UserWarning, match="Sigma estimada = 0"):
+        pp.imr_chart(np.full(10, 5.0))
+
+
+@pytest.mark.parametrize("carta", [pp.p_chart, pp.np_chart, pp.laney_p_chart])
+def test_cartas_p_np_y_laney_rechazan_tamanos_de_muestra_no_enteros(carta):
+    defectuosos = np.array([2, 3, 1, 4, 2, 3, 2, 1])
+    with pytest.raises(ValueError, match="enteros"):
+        carta(defectuosos, np.full(8, 50.5))
+    carta(defectuosos, np.full(8, 50.0))  # enteros representados como float: válidos
+
+
+def test_u_chart_si_admite_areas_de_oportunidad_no_enteras():
+    pp.u_chart(np.array([2, 3, 1, 4, 2, 3, 2, 1]), np.full(8, 2.5))
+
+
+def test_ci_de_ppk_con_ppk_infinito_no_emite_runtimewarning():
+    import warnings as w
+    rng = np.random.default_rng(2)
+    x = rng.lognormal(0, 0.3, 40)
+    from pccpy.capability import _ci_ppk
+    with w.catch_warnings():
+        w.simplefilter("error")
+        assert _ci_ppk(float("inf"), 40, 0.05) == (float("inf"), float("inf"))
+        lo, hi = _ci_ppk(1.2, 40, 0.05)
+    assert lo < 1.2 < hi
+    with w.catch_warnings():
+        w.simplefilter("error", RuntimeWarning)
+        pp.capability_analysis(x, 0.0001, 1e9, transform="yeo-johnson")  # límite lejanísimo → índices muy grandes

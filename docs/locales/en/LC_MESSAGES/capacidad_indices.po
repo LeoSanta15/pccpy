@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:33+0000\n"
+"POT-Creation-Date: 2026-10-09 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -249,6 +249,9 @@ msgstr "Cpm — centering index (Taguchi)"
 
 msgid "`Cpm` penaliza la distancia al objetivo (target) además de la dispersión:"
 msgstr "`Cpm` penalizes the distance from the target in addition to the dispersion:"
+
+msgid "Con el objetivo en el punto medio de la especificación, `min(T − LSL, USL − T) = (USL − LSL)/2` y la fórmula queda `Cpm = (USL − LSL) / (6 · s_T)`. Con un objetivo descentrado se usa la distancia al límite más cercano, como Minitab. Con `capability_analysis_summary` (sin datos crudos) se usa la misma `s_T²` a partir de `s` y `x̄`."
+msgstr "With the target at the midpoint of the specification, `min(T − LSL, USL − T) = (USL − LSL)/2` and the formula becomes `Cpm = (USL − LSL) / (6 · s_T)`. With an off-center target the distance to the nearest limit is used, as Minitab does. With `capability_analysis_summary` (no raw data) the same `s_T²` is used, computed from `s` and `x̄`."
 
 msgid "Se activa automáticamente en `capability_analysis` si pasas `target`:"
 msgstr "It is activated automatically in `capability_analysis` if you pass `target`:"

@@ -100,11 +100,20 @@ def test_las_cartas_de_atributos_y_las_multivariadas_tambien_las_conservan():
     assert len(pp.t2_chart(m).labels) == 30
 
 
+def test_imr_conserva_los_huecos_y_con_ellos_las_etiquetas_alineadas():
+    s = _serie()
+    s.iloc[5] = np.nan
+    with pytest.warns(UserWarning, match="huecos"):
+        c = pp.imr_chart(s)
+    assert len(c.labels) == len(s) and pd.Timestamp(c.labels[6]) == s.index[6]
+    assert np.isnan(c["I"].values[5]) and np.isnan(c["MR"].values[[5, 6]]).all()
+
+
 def test_si_se_descartan_valores_no_finitos_no_se_adjuntan_etiquetas_en_vez_de_desalinearlas():
     s = _serie()
     s.iloc[5] = np.nan
     with pytest.warns(UserWarning):
-        c = pp.imr_chart(s)
+        c = pp.ewma_chart(s)  # las demás cartas aún compactan la serie
     assert c.labels is None
 
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 18:13+0000\n"
+"POT-Creation-Date: 2026-10-09 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -100,11 +100,14 @@ msgstr "Pp = (USL - LSL) / (X99.865 - X0.135); PPU = (USL - X50) / (X99.865 - X5
 msgid "Con ``ci_method='bootstrap'`` se añaden intervalos de Pp y Ppk: en cada remuestreo de las observaciones se **vuelve a ajustar** la distribución y se recalculan los índices, de modo que el intervalo recoge también la incertidumbre del ajuste. Es más lento que con datos normales (un ajuste por remuestreo): por eso ``n_boot`` es 1000 y el método ``'percentile'`` por defecto (``'bca'`` hace además un ajuste por observación). Con ``ci_method='none'`` (por defecto) no se calcula ningún intervalo."
 msgstr "With ``ci_method='bootstrap'`` intervals for Pp and Ppk are added: in each resample of the observations the distribution is **refitted** and the indices are recomputed, so the interval also captures the uncertainty of the fit. It is slower than with normal data (one fit per resample): that is why ``n_boot`` is 1000 and the method ``'percentile'`` by default (``'bca'`` also does one fit per observation). With ``ci_method='none'`` (default) no interval is computed."
 
-msgid "Capacidad tras una transformación Box-Cox (datos positivos, 1-D)."
-msgstr "Capability after a Box-Cox transformation (positive data, 1-D)."
+msgid "Capacidad tras una transformación Box-Cox (datos estrictamente positivos)."
+msgstr "Capability after a Box-Cox transformation (strictly positive data)."
 
-msgid "``lam`` fija lambda; si no se da, se estima por máxima verosimilitud. Con ``round_lambda=True`` se redondea al múltiplo de 0.5 más cercano. Los límites de especificación y el objetivo se transforman con el mismo lambda. Acepta los mismos argumentos opcionales que :func:`capability_analysis` (subgrupos, etc.)."
-msgstr "``lam`` fixes lambda; if not given, it is estimated by maximum likelihood. With ``round_lambda=True`` it is rounded to the nearest multiple of 0.5. The specification limits and the target are transformed with the same lambda. Accepts the same optional arguments as :func:`capability_analysis` (subgroups, etc.)."
+msgid "``data`` puede ser un vector 1-D (con ``subgroup_size=`` para subgrupos de tamaño fijo, en ``kwargs``) o una matriz 2-D / DataFrame ancho con un subgrupo por fila. Para un DataFrame en formato largo (``subgroup=`` + ``value=``) usa ``capability_analysis(..., transform='boxcox')``, que admite todos los formatos de entrada."
+msgstr "``data`` can be a 1-D vector (with ``subgroup_size=`` for fixed-size subgroups, in ``kwargs``) or a 2-D matrix / wide DataFrame with one subgroup per row. For a long-format DataFrame (``subgroup=`` + ``value=``) use ``capability_analysis(..., transform='boxcox')``, which accepts all input formats."
+
+msgid "``lam`` fija lambda; si no se da, se estima por **máxima verosimilitud** con ``scipy.stats.boxcox`` sobre todas las observaciones. Ese lambda puede diferir ligeramente del que calcula Minitab (otro optimizador y otro criterio de redondeo), así que usa ``lam=`` o ``round_lambda=True`` si necesitas el mismo valor. Con ``round_lambda=True`` se redondea al múltiplo de 0.5 más cercano. Los límites de especificación y el objetivo se transforman con el mismo lambda. Acepta los mismos argumentos opcionales que :func:`capability_analysis`."
+msgstr "``lam`` fixes lambda; if not given, it is estimated by **maximum likelihood** with ``scipy.stats.boxcox`` over all the observations. That lambda can differ slightly from the one Minitab computes (another optimizer and another rounding criterion), so use ``lam=`` or ``round_lambda=True`` if you need the same value. With ``round_lambda=True`` it is rounded to the nearest multiple of 0.5. The specification limits and the target are transformed with the same lambda. It accepts the same optional arguments as :func:`capability_analysis`."
 
 msgid "Capability Sixpack de Minitab: carta de control, últimos 25, histograma, probabilidad normal y gráfico de capacidad."
 msgstr "Minitab's Capability Sixpack: control chart, last 25, histogram, normal probability and capability plot."

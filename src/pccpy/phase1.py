@@ -493,21 +493,34 @@ def phase_one(
             return transform
         return fit_transformation(arr[conservados].ravel(), transform, robust=robust_fit)
 
+    # I-MR: los puntos excluidos se dejan como huecos (NaN) en su posición en lugar de borrarlos, para que ningún rango
+    # móvil ni racha una observaciones que no eran consecutivas. En las demás cartas se compacta la serie.
+    huecos = chart is imr_chart
+
     def calcular(conservados: np.ndarray, t: Transformation | None) -> ControlChart:
         a = dict(argumentos)
         if t is not None:
             a["transform"] = t
         if kwargs.get("n") is not None and np.ndim(kwargs["n"]) > 0:
             a["n"] = np.asarray(kwargs["n"], dtype=float)[conservados]
+        if huecos:
+            datos = np.full(n, np.nan)
+            datos[conservados] = arr[conservados]
+            c = chart(datos, **a)
+            if etiquetas_x is not None:
+                c.with_labels(etiquetas_x)
+            return c
         c = chart(arr[conservados], **a)
         if etiquetas_x is not None:
             c.with_labels(etiquetas_x[conservados])
         return c
 
-    def con_senal(carta: ControlChart) -> np.ndarray:
+    def con_senal(carta: ControlChart, conservados: np.ndarray) -> np.ndarray:
+        """Posiciones (dentro de ``conservados``) de los puntos con señal en los paneles que cuentan."""
         idx = [np.asarray(v, dtype=int) for p in carta.panels if paneles is None or p.name in paneles
                for t, v in p.violations.items() if cuantos is None or t in cuantos]
-        return np.unique(np.concatenate(idx)) if idx else np.array([], dtype=int)
+        marcados = np.unique(np.concatenate(idx)) if idx else np.array([], dtype=int)
+        return np.searchsorted(conservados, marcados) if huecos else marcados
 
     conservados = np.arange(n)
     historial: list[PhaseOneIteration] = []
@@ -515,7 +528,7 @@ def phase_one(
     t_actual = ajustar(conservados)  # un error aquí (p. ej. Box-Cox con datos no positivos) se propaga: no hay Fase I
     while True:
         carta = calcular(conservados, t_actual)
-        marcados = con_senal(carta)
+        marcados = con_senal(carta, conservados)
         prm = carta.params[0]
         historial.append(PhaseOneIteration(
             iteration=len(historial), n_points=int(conservados.size), flagged=conservados[marcados],

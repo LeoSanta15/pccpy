@@ -370,6 +370,10 @@ chart = pp.ewma_chart(
 # EWMA applies only test 1 (it has no tests parameter)
 ```
 
+With subgroups, `sigma_method` picks the estimator (`'rbar'` by default, `'sbar'` or `'pooled'`; with individuals
+`'mr'`, `'median_mr'` or `'mssd'`). `stages=` computes the target and sigma per stage and **restarts** the EWMA at the
+start of each one. In-control ARL with known σ and exact limits: ≈ 570 with λ = 0.2 and L = 3 (simulation; Lucas and Saccucci, 1990, give ≈ 550 with asymptotic limits).
+
 **Guide for choosing λ:**
 
 | λ | Detects best | Memory |
@@ -391,12 +395,15 @@ chart = pp.cusum_chart(
     x,
     h=4.0,    # decision limit H (in sigma units); default: 4 (= 4σ)
     k=0.5,    # reference zone K (in sigma units); default: 0.5
-    # With H=4, K=0.5 the in-control ARL is ≈370 (industry standard)
+    headstart=0.0,  # fast initial response (FIR) in sigma units; 0 <= headstart < H (e.g. H/2)
+    # With H=4, K=0.5 the in-control ARL of the two-sided CUSUM is ≈ 168 (Hawkins and Olwell)
 )
 ```
 
 > **Rule of thumb:** `H = 4σ` and `K = 0.5σ` balance the detection of a 1σ shift
-> with an out-of-control ARL ≈ 10 and an in-control ARL ≈ 370.
+> (out-of-control ARL ≈ 8) with an in-control ARL ≈ 168 (two-sided). For a larger in-control ARL
+> raise `H` (with `H = 5`, ≈ 470). `sigma_method=` and `stages=` work as in the EWMA (the sums
+> restart at `headstart` at the beginning of each stage).
 
 ---
 
@@ -667,8 +674,10 @@ chart.panels[0].flagged     # indices (0-based) of points flagged on the I panel
 
 Each type of chart applies the corresponding subset:
 - **Full (1-8):** I, Xbar, Z charts
-- **Basic (1-4):** MR, R, S, G, T charts, attributes (P, NP, C, U, Laney)
-- **Test 1 only:** EWMA, CUSUM, MA, T², MEWMA, MCUSUM
+- **Basic (1-4):** R, S, G, T charts, attributes (P, NP, C, U, Laney). On R and S they are approximate: ranges and
+  standard deviations are not normal
+- **Test 1 only:** MR chart (moving ranges are autocorrelated and skewed: with `tests="all"` test 2 fired in 45 % of
+  stable series), EWMA, CUSUM, MA, T², MEWMA, MCUSUM
 
 ---
 
@@ -1157,7 +1166,11 @@ grr.anova_frame()       # the same table in the active language (stable=True: df
 grr.to_frame()
 grr.plot()
 
-# Xbar-R method (classic AIAG)
+# If the part×operator interaction is not significant (p > alpha_interaction, 0.25 by default) it is removed from
+# the model: the components come from the reduced model (grr.anova_reduced); alpha_interaction=1.0 always keeps it.
+# At least 2 replicates are required.
+
+# Xbar-R method (classic AIAG: d2* constants; K2 = 0.5231 with 3 operators, K3 = 0.3146 with 10 parts)
 grr_xr = pp.gage_rr(data, parts=10, operators=3, replicates=2,
                     method="xbar_r", tolerance=20.0)
 # grr_xr.anova_table is None (the Xbar-R method does not produce an ANOVA table)

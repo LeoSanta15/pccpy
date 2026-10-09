@@ -407,9 +407,10 @@ def _fase1_transformacion():
     x = np.random.default_rng(7).gamma(4.0, 2.0, 90) + 1.0
     x[[12, 47]] *= 8.0  # dos puntos con causa especial
     conservados = np.arange(x.size)
-    while True:  # Fase I a mano: transformar, calcular mu y sigma, excluir |z − mu| > 3 sigma y repetir
+    while True:  # Fase I a mano: transformar, calcular mu y sigma (sin unir puntos separados por un excluido), excluir |z − mu| > 3 sigma y repetir
         z, lam = stats.boxcox(x[conservados])
-        mu, sigma = z.mean(), np.abs(np.diff(z)).mean() / (2 / np.sqrt(np.pi))
+        d = np.abs(np.diff(z))[np.diff(conservados) == 1]  # solo rangos móviles entre puntos consecutivos
+        mu, sigma = z.mean(), d.mean() / (2 / np.sqrt(np.pi))
         fuera = np.abs(z - mu) > 3 * sigma
         if not fuera.any():
             break
@@ -452,7 +453,8 @@ def _ajuste_robusto():
         v = x[conservados]
         _, lam = stats.boxcox(v[dentro(v)])
         z = stats.boxcox(v, lmbda=lam)
-        mu, sigma = z.mean(), np.abs(np.diff(z)).mean() / (2 / np.sqrt(np.pi))
+        d = np.abs(np.diff(z))[np.diff(conservados) == 1]  # solo rangos móviles entre puntos consecutivos
+        mu, sigma = z.mean(), d.mean() / (2 / np.sqrt(np.pi))
         fuera = np.abs(z - mu) > 3 * sigma
         if not fuera.any():
             break
@@ -485,6 +487,96 @@ def _dixon():
     esperado.append((3.9 - 2.4) / (3.9 - 2.0))  # r10 con el máximo como sospechoso
     obtenido.append(outlier_test(x, method="dixon").steps.iloc[0]["statistic"])
     return np.array(esperado), np.array(obtenido)
+
+
+@_comprobacion("tolerancia-no-parametrica", N_("Intervalo de tolerancia no paramétrico bilateral frente a la cola binomial y al mínimo n = 93"),
+               "P(cobertura de [X(r), X(n+1−r)] ≥ p) = P(Bin(n, p) ≤ n − 2r); tamaño mínimo 93 para 95 % / 95 %", 1e-12)
+def _tolerancia_no_parametrica():
+    from .tolerance import tolerance_interval
+
+    def a_mano(n, r, p=0.95):
+        return float(stats.binom.cdf(n - 2 * r, n, p))
+
+    rng = np.random.default_rng(0)
+    r93 = tolerance_interval(rng.normal(size=93), coverage=0.95, confidence=0.95, method="nonparametric", sides="two")
+    r300 = tolerance_interval(rng.normal(size=300), coverage=0.95, confidence=0.95, method="nonparametric", sides="two")
+    minimo = next(n for n in range(30, 200) if a_mano(n, 1) >= 0.95)  # tamaño mínimo según la fórmula binomial
+    primero = 0
+    for n in range(30, 200):
+        try:
+            tolerance_interval(rng.normal(size=n), coverage=0.95, confidence=0.95, method="nonparametric", sides="two")
+            primero = n
+            break
+        except ValueError:
+            continue
+    return (np.array([a_mano(93, 1), a_mano(300, 4), minimo]),
+            np.array([r93.achieved_confidence, r300.achieved_confidence, primero]))
+
+
+@_comprobacion("cpm-descentrado", N_("Cpm con objetivo descentrado y centrado frente a la fórmula de Minitab escrita aparte"),
+               "Cpm = min(T − LEI, LES − T) / (3·s_T), con s_T² = Σ(xᵢ − T)²/(n − 1)", 1e-12)
+def _cpm_descentrado():
+    from .capability import capability_analysis, capability_analysis_summary
+
+    x = np.random.default_rng(3).normal(10.6, 0.6, 60)
+    esperado, obtenido = [], []
+    for objetivo in (10.0, 10.5):  # descentrado y en el punto medio de [8, 13]
+        s_t = np.sqrt(np.sum((x - objetivo) ** 2) / (x.size - 1))
+        esperado.append(min(objetivo - 8, 13 - objetivo) / (3 * s_t))
+        obtenido.append(capability_analysis(x, 8, 13, objetivo).cpm)
+        obtenido.append(capability_analysis_summary(mean=x.mean(), std_overall=x.std(ddof=1), n=x.size, lsl=8, usl=13,
+                                                    target=objetivo).cpm)
+        esperado.append(esperado[-1])
+    return np.array(esperado), np.array(obtenido)
+
+
+@_comprobacion("sigma-subgrupos-desiguales", N_("Sigma Rbar y Sbar con subgrupos de distinto tamaño frente a los pesos de varianza inversa"),
+               "Constantes d2, d3 y c4 de Montgomery (apéndice VI) y los pesos d2²/d3² y c4²/(1 − c4²) escritos aparte", 2e-3,
+               relative=True)
+def _sigma_desiguales():
+    from ._sigma import sigma_subgroups
+
+    d2t, d3t, c4t = {2: 1.128, 9: 2.970, 10: 3.078}, {2: 0.853, 9: 0.820, 10: 0.797}, {2: 0.7979, 9: 0.9693, 10: 0.9727}
+    tamanos = [2, 2, 10, 9, 2, 10]
+    rng = np.random.default_rng(7)
+    g = np.full((len(tamanos), 10), np.nan)
+    for i, n in enumerate(tamanos):
+        g[i, :n] = rng.normal(50, 2, n)
+    r = np.array([np.nanmax(f) - np.nanmin(f) for f in g])
+    sd = np.array([np.nanstd(f, ddof=1) for f in g])
+    f = np.array([d2t[n] ** 2 / d3t[n] ** 2 for n in tamanos])
+    h = np.array([c4t[n] ** 2 / (1 - c4t[n] ** 2) for n in tamanos])
+    rbar = np.sum(f * r / np.array([d2t[n] for n in tamanos])) / np.sum(f)
+    sbar = np.sum(h * sd / np.array([c4t[n] for n in tamanos])) / np.sum(h)
+    return np.array([rbar, sbar]), np.array([sigma_subgroups(g, "rbar"), sigma_subgroups(g, "sbar")])
+
+
+@_comprobacion("gage-rr-reducido", N_("Gage R&R cruzado con la interacción agrupada frente al modelo reducido calculado aparte"),
+               "ANOVA de dos factores sin interacción: MS_err' = (SS_int + SS_err)/(gl_int + gl_err)", 1e-9, relative=True)
+def _gage_reducido():
+    from .msa import gage_rr
+
+    rng = np.random.default_rng(11)
+    d = 50 + rng.normal(0, 2, (10, 1, 1)) + rng.normal(0, 0.4, (1, 3, 1)) + rng.normal(0, 0.5, (10, 3, 2))
+    p, o, r = d.shape
+    gm, pm, om, cm = d.mean(), d.mean(axis=(1, 2)), d.mean(axis=(0, 2)), d.mean(axis=2)
+    ss_int = r * np.sum((cm - pm[:, None] - om[None, :] + gm) ** 2)
+    ss_err = np.sum((d - cm[:, :, None]) ** 2)
+    ms_e = (ss_int + ss_err) / ((p - 1) * (o - 1) + p * o * (r - 1))
+    var_o = max((p * r * np.sum((om - gm) ** 2) / (o - 1) - ms_e) / (p * r), 0.0)
+    var_p = max((o * r * np.sum((pm - gm) ** 2) / (p - 1) - ms_e) / (o * r), 0.0)
+    res = gage_rr(d, p, o, r)
+    return (np.array([ms_e, var_o, var_p, ms_e + var_o + var_p]),
+            np.array([res.var_repeatability, res.var_operator, res.var_part, res.var_total]))
+
+
+@_comprobacion("constantes-aiag", N_("Constantes K2 y K3 del manual MSA de AIAG con d2*"),
+               "AIAG MSA 4.ª ed.: K2 = 0,7071 (2 operadores), 0,5231 (3); K3 = 0,3146 (10 partes)", 1e-3)
+def _constantes_aiag():
+    from ._constants import d2_star
+
+    return (np.array([0.7071, 0.5231, 0.3146]),
+            np.array([1 / d2_star(2, 1), 1 / d2_star(3, 1), 1 / d2_star(10, 1)]))
 
 
 @_comprobacion("fase1-guardar", N_("Fase II tras guardar y cargar una Fase I (JSON) frente a los mismos límites dados a mano"),

@@ -58,6 +58,32 @@ def as_1d(x, name: str = "x", allow_nan: bool = False) -> np.ndarray:
     return arr
 
 
+def as_1d_con_huecos(x, name: str = "x") -> np.ndarray:
+    """Como :func:`as_1d`, pero los valores no finitos se **conservan como NaN** (huecos) en su posición.
+
+    Una serie con huecos no se compacta: los rangos móviles que cruzan un hueco quedan en NaN y las pruebas de rachas se
+    cortan en él, de modo que nunca se unen observaciones que no eran consecutivas.
+    """
+    arr = np.asarray(x, dtype=float)
+    if arr.ndim == 0:
+        arr = arr.reshape(1)
+    if arr.ndim != 1:
+        raise ValueError(tr("'{name}' debe ser unidimensional (recibido: {ndim}-D).").format(name=name, ndim=arr.ndim))
+    if arr.size == 0:
+        raise ValueError(tr("'{name}' está vacío.").format(name=name))
+    mala = ~np.isfinite(arr)
+    if mala.any():
+        warnings.warn(
+            tr("'{name}' contiene {n_bad} valor(es) no finito(s) (NaN/inf) en las posiciones {positions}. Se tratan como "
+               "huecos: no se unen las observaciones que los separan.").format(
+                name=name, n_bad=int(mala.sum()), positions=np.where(mala)[0].tolist()),
+            UserWarning, stacklevel=3)
+        arr = np.where(mala, np.nan, arr)
+        if mala.all():
+            raise ValueError(tr("'{name}' no tiene valores válidos tras eliminar NaN/inf.").format(name=name))
+    return arr
+
+
 def to_subgroups(
     data,
     subgroup_size: int | None = None,

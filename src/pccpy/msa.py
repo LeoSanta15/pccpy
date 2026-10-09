@@ -108,7 +108,8 @@ class GageRRResult:
     pct_study_var : float
         % Variación de estudio del Gage vs total.
     ndc : int
-        Número de categorías distintas.
+        Número de categorías distintas: ``int(√2 · σ_parte / σ_gage)`` (truncado, mínimo 1). El manual de AIAG escribe
+        ``1,41`` en lugar de ``√2``; la diferencia solo cambia el entero en casos límite.
     anova_table : pd.DataFrame o None
         Tabla ANOVA (solo método 'anova').
     anova_reduced : pd.DataFrame o None
