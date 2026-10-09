@@ -74,11 +74,15 @@ res_np = pp.tolerance_interval(
     x300, coverage=0.95, confidence=0.95, method='nonparametric'
 )
 print(res_np.summary())
-# Confianza alcanzada: 95.13%   LI = 95.81   LS = 103.93
+# Confianza alcanzada: 98.40%   LI = 95.44   LS = 104.04
 ```
 
-> El método no paramétrico puede no ser factible para muestras pequeñas.
-> Si `n` es insuficiente, `tolerance_interval` lanza `ValueError`.
+El intervalo bilateral es `[X₍ᵣ₎, X₍ₙ₊₁₋ᵣ₎]` y su cobertura sigue una Beta(n − 2r + 1, 2r); se elige el **mayor `r`** que
+todavía alcanza la confianza pedida, es decir, el intervalo más estrecho válido (con `n = 300`, `r = 4` y confianza
+98,4 %; la confianza lograda suele superar la pedida porque `r` es un entero).
+
+> El método no paramétrico puede no ser factible para muestras pequeñas: el bilateral con cobertura 0,95 y confianza
+> 0,95 necesita al menos `n = 93`. Si `n` es insuficiente, `tolerance_interval` lanza `ValueError`.
 
 ### Desde estadísticos resumen
 

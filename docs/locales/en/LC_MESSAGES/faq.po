@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:52+0000\n"
+"POT-Creation-Date: 2026-10-09 19:41+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -202,8 +202,8 @@ msgstr "Input data"
 msgid "¿Mis datos tienen valores faltantes (NaN) o infinitos?"
 msgstr "Does my data have missing (NaN) or infinite values?"
 
-msgid "pccpy **no cancela el análisis**: filtra automáticamente los valores no finitos y emite un `UserWarning` indicando cuántos y en qué posiciones. El análisis continúa con los valores válidos restantes."
-msgstr "pccpy **does not abort the analysis**: it automatically filters out non-finite values and emits a `UserWarning` stating how many and at which positions. The analysis continues with the remaining valid values."
+msgid "pccpy **no cancela el análisis**: emite un `UserWarning` indicando cuántos valores no finitos hay y en qué posiciones, y continúa con los valores válidos restantes. En `imr_chart` los valores no finitos se conservan como **huecos** (NaN) en su posición: ningún rango móvil ni racha une las observaciones que separan, y las fechas del índice quedan alineadas. Las demás cartas los eliminan y compactan la serie."
+msgstr "pccpy **does not cancel the analysis**: it issues a `UserWarning` saying how many non-finite values there are and at which positions, and continues with the remaining valid values. In `imr_chart` non-finite values are kept as **gaps** (NaN) in their position: no moving range or run joins the observations they separate, and the index dates stay aligned. The other charts drop them and compact the series."
 
 msgid "Si quieres que los valores faltantes **sí detengan** el análisis, filtra el array antes de pasarlo: `x = x[np.isfinite(x)]` + comprueba que `len(x) > 0`."
 msgstr "If you want missing values to **stop** the analysis, filter the array before passing it: `x = x[np.isfinite(x)]` + check that `len(x) > 0`."
@@ -298,4 +298,7 @@ msgstr "{doc}`minitab` — equivalences with Minitab"
 
 #~ msgid "Las cartas I-MR y Xbar-R son robustas a la no normalidad si n > 4 por subgrupo (por el teorema central del límite)."
 #~ msgstr "The I-MR and Xbar-R charts are robust to non-normality if n > 4 per subgroup (because of the central limit theorem)."
+
+#~ msgid "pccpy **no cancela el análisis**: filtra automáticamente los valores no finitos y emite un `UserWarning` indicando cuántos y en qué posiciones. El análisis continúa con los valores válidos restantes."
+#~ msgstr "pccpy **does not abort the analysis**: it automatically filters out non-finite values and emits a `UserWarning` stating how many and at which positions. The analysis continues with the remaining valid values."
 
