@@ -4,7 +4,10 @@ Fórmulas según la documentación de métodos de Minitab:
 
 * Individuales: rango móvil promedio / d2(span), mediana del rango móvil / 0.954
   (span = 2) o raíz cuadrada de la media de las diferencias cuadradas sucesivas (MSSD).
-* Subgrupos: Rbar, Sbar o desviación estándar combinada (pooled) con factor c4.
+* Subgrupos: Rbar, Sbar o desviación estándar combinada (pooled) con factor c4. Con tamaños de subgrupo desiguales,
+  Rbar y Sbar promedian las estimaciones de cada subgrupo con pesos de varianza inversa (los de Minitab):
+  ``w_i = d2(n_i)² / d3(n_i)²`` para ``R_i / d2(n_i)`` y ``w_i = c4(n_i)² / (1 − c4(n_i)²)`` para ``s_i / c4(n_i)``.
+  Con tamaño constante los pesos son iguales y es el promedio simple.
 """
 from __future__ import annotations
 
@@ -14,7 +17,7 @@ from typing import Callable
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 
-from ._constants import c4, d2
+from ._constants import c4, d2, d3
 from ._i18n import tr
 
 MEDIAN_MR_CONSTANT = 0.954  # constante que usa Minitab para span = 2
@@ -42,20 +45,30 @@ def moving_range(x: np.ndarray, span: int = 2) -> np.ndarray:
 
 def sigma_individuals(x: np.ndarray, method: str = "mr", span: int = 2) -> float:
     """Sigma a partir de observaciones individuales."""
-    if x.size < 2:
+    if np.count_nonzero(~np.isnan(x)) < 2:
         raise ValueError(tr("Se necesitan al menos 2 observaciones para estimar sigma."))
     if method == "mr":
         if x.size < span:
             raise ValueError(tr(
                 "Se necesitan al menos {span} observaciones (span={span})."
             ).format(span=span))
-        return float(np.nanmean(moving_range(x, span)) / d2(span))
+        mr = moving_range(x, span)
+        if np.all(np.isnan(mr)):
+            raise ValueError(tr("Se necesitan al menos 2 observaciones consecutivas para estimar sigma."))
+        return float(np.nanmean(mr) / d2(span))
     if method == "median_mr":
         if span != 2:
             raise ValueError(tr("'median_mr' solo está disponible con span = 2."))
-        return float(np.nanmedian(moving_range(x, 2)) / MEDIAN_MR_CONSTANT)
+        mr = moving_range(x, 2)
+        if np.all(np.isnan(mr)):
+            raise ValueError(tr("Se necesitan al menos 2 observaciones consecutivas para estimar sigma."))
+        return float(np.nanmedian(mr) / MEDIAN_MR_CONSTANT)
     if method == "mssd":
-        return float(np.sqrt(np.sum(np.diff(x) ** 2) / (2.0 * (x.size - 1))))
+        d = np.diff(x)
+        d = d[~np.isnan(d)]  # una diferencia que cruza un hueco (NaN) no se usa
+        if d.size == 0:
+            raise ValueError(tr("Se necesitan al menos 2 observaciones consecutivas para estimar sigma."))
+        return float(np.sqrt(np.sum(d**2) / (2.0 * d.size)))
     raise ValueError(tr("sigma_method debe ser 'mr', 'median_mr' o 'mssd'."))
 
 
@@ -80,10 +93,19 @@ def sigma_subgroups(g: np.ndarray, method: str = "pooled") -> float:
         raise ValueError(
             tr("Ningún subgrupo tiene 2 o más observaciones; no se puede estimar sigma.")
         )
+    iguales = bool(np.all(n_i[valid] == n_i[valid][0]))  # con tamaño constante los pesos son iguales: promedio simple
     if method == "rbar":
-        return float(np.mean(rng[valid] / vec(d2, n_i)[valid]))
+        d2v, d3v = vec(d2, n_i)[valid], vec(d3, n_i)[valid]
+        if iguales:
+            return float(np.mean(rng[valid] / d2v))
+        w = d2v**2 / d3v**2  # 1 / Var(R_i / d2) ∝ d2² / d3²
+        return float(np.sum(w * rng[valid] / d2v) / np.sum(w))
     if method == "sbar":
-        return float(np.mean(s[valid] / vec(c4, n_i)[valid]))
+        c4v = vec(c4, n_i)[valid]
+        if iguales:
+            return float(np.mean(s[valid] / c4v))
+        w = c4v**2 / (1.0 - c4v**2)  # 1 / Var(s_i / c4) ∝ c4² / (1 − c4²)
+        return float(np.sum(w * s[valid] / c4v) / np.sum(w))
     if method == "pooled":
         dof = float(np.sum(n_i[valid] - 1))
         sp = np.sqrt(np.sum((n_i[valid] - 1) * s[valid] ** 2) / dof)

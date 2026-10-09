@@ -6,7 +6,8 @@ Definiciones (como en Minitab):
   (rango móvil para individuales; pooled / Rbar / Sbar para subgrupos).
 * **Overall (desempeño)**: Pp, PPL, PPU, Ppk con la desviación estándar muestral
   de *todos* los datos (n-1).
-* Cpm = (LES - LEI) / (6 * sqrt(s_overall^2 + (media - objetivo)^2)).
+* Cpm = min(T - LEI, LES - T) / (3 * s_T), con s_T^2 = sum((x_i - T)^2) / (n - 1) = s^2 + n/(n-1) * (media - T)^2.
+  Con T en el punto medio de la especificación es (LES - LEI) / (6 * s_T).
 * Z.Bench = Phi^-1(1 - P(defecto total)).
 * Los intervalos de confianza de Pp y Ppk usan las aproximaciones estándar
   (chi-cuadrado y Bissell), bilaterales.
@@ -39,6 +40,27 @@ def _fmt(v, nd: int = 2) -> str:
 def _check_specs(lsl, usl):
     if lsl is not None and usl is not None and lsl >= usl:
         raise ValueError(tr("El límite inferior (lsl) debe ser menor que el superior (usl)."))
+
+
+def _ci_ppk(ppk: float, n: int, alpha: float) -> tuple[float, float]:
+    """IC aproximado de Ppk (Bissell): ``Ppk ± z·sqrt(1/(9n) + Ppk²/(2(n − 1)))``; con Ppk infinito es (inf, inf)."""
+    if math.isinf(ppk):
+        return (ppk, ppk)
+    zc = stats.norm.ppf(1 - alpha / 2)
+    half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
+    return (ppk - half, ppk + half)
+
+
+def _cpm(lsl: float, usl: float, target: float, s_target: float) -> float:
+    """Cpm = min(T − LEI, LES − T) / (3·s_T); con T en el punto medio es (LES − LEI) / (6·s_T).
+
+    ``s_target`` es la desviación respecto al objetivo, ``s_T² = Σ(xᵢ − T)²/(n − 1)``.
+    """
+    if s_target <= 0:
+        return NAN
+    if math.isclose(target, (lsl + usl) / 2):
+        return (usl - lsl) / (6 * s_target)
+    return min(target - lsl, usl - target) / (3 * s_target)
 
 
 def _indices(mean: float, sigma: float, lsl, usl) -> tuple[float, float, float, float]:
@@ -344,7 +366,7 @@ def capability_analysis(
 
     cpm = NAN
     if target is not None and lsl is not None and usl is not None:
-        cpm = (usl - lsl) / (6 * math.sqrt(so**2 + (mean - target) ** 2))
+        cpm = _cpm(lsl, usl, target, math.sqrt(float(np.sum((x - target) ** 2)) / (n - 1)))
 
     alpha = 1 - ci_level
     pp_ci = (NAN, NAN)
@@ -358,9 +380,7 @@ def capability_analysis(
                 pp * math.sqrt(stats.chi2.ppf(1 - alpha / 2, n - 1) / (n - 1)),
             )
         if not math.isnan(ppk):
-            zc = stats.norm.ppf(1 - alpha / 2)
-            half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
-            ppk_ci = (ppk - half, ppk + half)
+            ppk_ci = _ci_ppk(ppk, n, alpha)
 
     ppm_w = _expected_ppm(mean, sw, lsl, usl)
     ppm_o = _expected_ppm(mean, so, lsl, usl)
@@ -445,7 +465,7 @@ def capability_analysis_summary(
 
     cpm = NAN
     if target is not None and lsl is not None and usl is not None:
-        cpm = (usl - lsl) / (6 * math.sqrt(so**2 + (mean - target) ** 2))
+        cpm = _cpm(lsl, usl, target, math.sqrt(so**2 + n / (n - 1) * (mean - target) ** 2))
 
     alpha = 1 - ci_level
     pp_ci = (NAN, NAN)
@@ -456,9 +476,7 @@ def capability_analysis_summary(
             pp * math.sqrt(stats.chi2.ppf(1 - alpha / 2, n - 1) / (n - 1)),
         )
     if not math.isnan(ppk):
-        zc = stats.norm.ppf(1 - alpha / 2)
-        half = zc * math.sqrt(1.0 / (9 * n) + ppk**2 / (2 * (n - 1)))
-        ppk_ci = (ppk - half, ppk + half)
+        ppk_ci = _ci_ppk(ppk, n, alpha)
 
     ppm_w = _expected_ppm(mean, sw, lsl, usl)
     ppm_o = _expected_ppm(mean, so, lsl, usl)
@@ -488,14 +506,25 @@ def capability_boxcox(
     round_lambda: bool = False,
     **kwargs,
 ) -> CapabilityResult:
-    """Capacidad tras una transformación Box-Cox (datos positivos, 1-D).
+    """Capacidad tras una transformación Box-Cox (datos estrictamente positivos).
 
-    ``lam`` fija lambda; si no se da, se estima por máxima verosimilitud. Con
-    ``round_lambda=True`` se redondea al múltiplo de 0.5 más cercano. Los límites de
-    especificación y el objetivo se transforman con el mismo lambda. Acepta los
-    mismos argumentos opcionales que :func:`capability_analysis` (subgrupos, etc.).
+    ``data`` puede ser un vector 1-D (con ``subgroup_size=`` para subgrupos de tamaño fijo, en ``kwargs``) o una matriz
+    2-D / DataFrame ancho con un subgrupo por fila. Para un DataFrame en formato largo (``subgroup=`` + ``value=``) usa
+    ``capability_analysis(..., transform='boxcox')``, que admite todos los formatos de entrada.
+
+    ``lam`` fija lambda; si no se da, se estima por **máxima verosimilitud** con ``scipy.stats.boxcox`` sobre todas las
+    observaciones. Ese lambda puede diferir ligeramente del que calcula Minitab (otro optimizador y otro criterio de
+    redondeo), así que usa ``lam=`` o ``round_lambda=True`` si necesitas el mismo valor. Con ``round_lambda=True`` se
+    redondea al múltiplo de 0.5 más cercano. Los límites de especificación y el objetivo se transforman con el mismo
+    lambda. Acepta los mismos argumentos opcionales que :func:`capability_analysis`.
     """
-    x = as_1d(data, "data")
+    arr = np.asarray(data, dtype=float)
+    if arr.ndim == 2:
+        x = arr[np.isfinite(arr)]
+        if x.size == 0:
+            raise ValueError(tr("'data' no tiene valores válidos tras eliminar NaN/inf."))
+    else:
+        arr = x = as_1d(data, "data")
     if x.min() <= 0:
         raise ValueError(tr("Box-Cox requiere datos estrictamente positivos."))
     for name, v in (("lsl", lsl), ("usl", usl), ("target", target)):
@@ -505,7 +534,9 @@ def capability_boxcox(
         _, lam = stats.boxcox(x)
         if round_lambda:
             lam = round(lam * 2) / 2
-    y = _boxcox(x, lam)
+    y = _boxcox(np.where(np.isfinite(arr), arr, 1.0), lam) if arr.ndim == 2 else _boxcox(x, lam)
+    if arr.ndim == 2:
+        y = np.where(np.isfinite(arr), y, np.nan)
     t = lambda v: None if v is None else float(_boxcox(v, lam))
     res = capability_analysis(y, t(lsl), t(usl), t(target), **kwargs)
     res.transform = {"lambda": float(lam)}

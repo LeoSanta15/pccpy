@@ -176,6 +176,10 @@ carta_s = pp.xbar_s_chart(
 | `'pooled'` | `S_pooled / c4(n_total)` | Xbar-R o Xbar-S, mejor estimación con muchos subgrupos |
 | `'sbar'` | `S_prom / c4(n)` | Xbar-S, subgrupos de tamaño fijo (igual que Minitab) |
 
+Con **tamaños de subgrupo desiguales**, `'rbar'` y `'sbar'` promedian las estimaciones de cada subgrupo con pesos de varianza
+inversa: `Σ wᵢ·Rᵢ/d2(nᵢ) / Σ wᵢ` con `wᵢ = d2(nᵢ)²/d3(nᵢ)²`, y `Σ hᵢ·sᵢ/c4(nᵢ) / Σ hᵢ` con `hᵢ = c4(nᵢ)²/(1 − c4(nᵢ)²)`. Con tamaño
+constante los pesos son iguales y el resultado es el promedio simple de siempre.
+
 ---
 
 ### Formatos de entrada de datos
@@ -363,6 +367,10 @@ carta = pp.ewma_chart(
 # EWMA aplica solo la prueba 1 (no tiene parámetro tests)
 ```
 
+Con subgrupos, `sigma_method` elige el estimador (`'rbar'` por defecto, `'sbar'` o `'pooled'`; con individuales
+`'mr'`, `'median_mr'` o `'mssd'`). `stages=` calcula el objetivo y sigma por etapa y **reinicia** la EWMA al empezar
+cada una. ARL en control con σ conocida y límites exactos: ≈ 570 con λ = 0,2 y L = 3 (simulación; Lucas y Saccucci, 1990, dan ≈ 550 con límites asintóticos).
+
 **Guía de selección de λ:**
 
 | λ | Detecta mejor | Memoria |
@@ -384,12 +392,15 @@ carta = pp.cusum_chart(
     x,
     h=4.0,    # límite de decisión H (en unidades de sigma); defecto: 4 (= 4σ)
     k=0.5,    # zona de referencia K (en unidades de sigma); defecto: 0.5
-    # Con H=4, K=0.5 el ARL en control es ≋370 (estándar de la industria)
+    headstart=0.0,  # arranque rápido (FIR) en unidades de sigma; 0 ≤ headstart < H (p. ej. H/2)
+    # Con H=4, K=0.5 el ARL en control de la CUSUM bilateral es ≈ 168 (Hawkins y Olwell)
 )
 ```
 
 > **Regla práctica:** `H = 4σ` y `K = 0.5σ` equilibran la detección de un desplazamiento
-> de 1σ con un ARL fuera de control ≈ 10 y un ARL en control ≈ 370.
+> de 1σ (ARL fuera de control ≈ 8) con un ARL en control ≈ 168 (bilateral). Para un ARL en
+> control mayor sube `H` (con `H = 5`, ≈ 470). `sigma_method=` y `stages=` funcionan como en la EWMA
+> (las sumas se reinician en `headstart` al empezar cada etapa).
 
 ---
 
@@ -660,8 +671,10 @@ carta.panels[0].flagged     # índices (base 0) de puntos marcados en el panel I
 
 Cada tipo de carta aplica el subconjunto que corresponde:
 - **Completo (1-8):** carta I, Xbar, Z
-- **Básicas (1-4):** carta MR, R, S, G, T, atributos (P, NP, C, U, Laney)
-- **Solo prueba 1:** EWMA, CUSUM, MA, T², MEWMA, MCUSUM
+- **Básicas (1-4):** carta R, S, G, T, atributos (P, NP, C, U, Laney). En R y S son aproximadas: los rangos y las
+  desviaciones no son normales
+- **Solo prueba 1:** carta MR (los rangos móviles están autocorrelacionados y son asimétricos: con `tests="all"` la
+  prueba 2 saltaba en el 45 % de las series estables), EWMA, CUSUM, MA, T², MEWMA, MCUSUM
 
 ---
 
@@ -1150,7 +1163,11 @@ grr.anova_frame()       # la misma tabla en el idioma activo (stable=True: df, s
 grr.to_frame()
 grr.plot()
 
-# Método Xbar-R (clásico AIAG)
+# Si la interacción partes×operadores no es significativa (p > alpha_interaction, 0.25 por defecto) se quita del
+# modelo: los componentes salen del modelo reducido (grr.anova_reduced); alpha_interaction=1.0 la conserva siempre.
+# Hacen falta al menos 2 réplicas.
+
+# Método Xbar-R (clásico AIAG: constantes d2*; K2 = 0,5231 con 3 operadores, K3 = 0,3146 con 10 partes)
 grr_xr = pp.gage_rr(data, parts=10, operators=3, replicates=2,
                     method="xbar_r", tolerance=20.0)
 # grr_xr.anova_table es None (el método Xbar-R no produce tabla ANOVA)

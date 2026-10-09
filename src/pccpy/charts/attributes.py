@@ -32,6 +32,10 @@ def _prep(counts, n, need_n: bool):
 def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
                      historical, laney) -> ControlChart:
     c, n_arr = _prep(counts, n, need_n=code != "c")
+    if code in ("p", "np") and not np.all(n_arr == np.round(n_arr)):
+        raise ValueError(tr("En las cartas P, NP y Laney P' los tamaños de muestra deben ser enteros (recibido: {valor}). "
+                            "Con áreas de oportunidad no enteras usa la carta U.").format(
+            valor=float(n_arr[np.flatnonzero(n_arr != np.round(n_arr))[0]])))
     if code in ("p", "np") and np.any(c > n_arr):
         raise ValueError(tr("Hay conteos de defectuosos mayores que el tamaño de la muestra."))
     if code == "np" and not np.all(n_arr == n_arr[0]):

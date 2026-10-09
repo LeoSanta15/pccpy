@@ -181,7 +181,7 @@ def zmr_chart(
         mr_panel = StagePanel(
             "MR", moving_range(z, 2), full(dd2, n), full(dd2 + 3 * dd3, n),
             full(max(0.0, dd2 - 3 * dd3), n), full(dd3, n),
-            N_("Rango móvil de Z"), "basic", symmetric=False,
+            N_("Rango móvil de Z"), "only1", symmetric=False,
         )
         params = {"método": "histórica" if sigma is not None else sigma_method, "partes": len(labels), "corridas": len(runs), "n": n}
         if len(set(run_sigma)) == 1:
@@ -267,7 +267,7 @@ def imr_rs_chart(
         mr_panel = StagePanel(
             "MR", moving_range(means, 2), full(c, k), full(c + 3 * d3(2) * sx, k),
             full(max(0.0, c - 3 * d3(2) * sx), k), full(d3(2) * sx, k),
-            N_("Rango móvil de las medias"), "basic", symmetric=False,
+            N_("Rango móvil de las medias"), "only1", symmetric=False,
         )
         if within == "r":
             cc, sd = sw * vec(d2, n_i), sw * vec(d3, n_i)

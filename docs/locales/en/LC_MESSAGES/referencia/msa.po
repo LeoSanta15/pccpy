@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 22:30+0000\n"
+"POT-Creation-Date: 2026-10-09 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -83,11 +83,20 @@ msgstr "K multiplier for the study variation (= K·σ). Default 6 (equivalent to
 msgid "Tolerancia del proceso (LES − LEI). Si se proporciona, se incluye el % sobre tolerancia en el resumen."
 msgstr "Process tolerance (USL − LSL). If given, the % of tolerance is included in the summary."
 
+msgid "Solo ``method='anova'``. Nivel para decidir si la interacción partes×operadores se quita del modelo: si su p-valor es mayor que este umbral (por defecto 0,25, como Minitab), la interacción se agrupa con el error y los componentes se calculan con el modelo reducido (``result.anova_reduced``). Con ``1.0`` la interacción siempre se conserva."
+msgstr "``method='anova'`` only. Level used to decide whether the part×operator interaction is removed from the model: if its p-value is greater than this threshold (0.25 by default, as Minitab), the interaction is pooled with the error and the components are computed with the reduced model (``result.anova_reduced``). With ``1.0`` the interaction is always kept."
+
 msgid "Devuelve"
 msgstr "Returns"
 
 msgid "*GageRRResult*"
 msgstr "*GageRRResult*"
+
+msgid "Muestra"
+msgstr "Raises"
+
+msgid "Si ``replicates < 2``: sin réplicas no se puede estimar la repetibilidad."
+msgstr "If ``replicates < 2``: without replicates repeatability cannot be estimated."
 
 msgid "Tipo del valor devuelto"
 msgstr "Return type"
@@ -212,8 +221,8 @@ msgstr "ndc"
 msgid "int"
 msgstr "int"
 
-msgid "Número de categorías distintas."
-msgstr "Number of distinct categories."
+msgid "Número de categorías distintas: ``int(√2 · σ_parte / σ_gage)`` (truncado, mínimo 1). El manual de AIAG escribe ``1,41`` en lugar de ``√2``; la diferencia solo cambia el entero en casos límite."
+msgstr "Number of distinct categories: ``int(√2 · σ_part / σ_gage)`` (truncated, minimum 1). The AIAG manual writes ``1.41`` instead of ``√2``; the difference only changes the integer in borderline cases."
 
 msgid "anova_table"
 msgstr "anova_table"
@@ -223,6 +232,12 @@ msgstr "pd.DataFrame or None"
 
 msgid "Tabla ANOVA (solo método 'anova')."
 msgstr "ANOVA table (method 'anova' only)."
+
+msgid "anova_reduced"
+msgstr "anova_reduced"
+
+msgid "Tabla ANOVA del modelo reducido (sin la interacción partes×operadores, agrupada con el error), solo si la interacción no fue significativa (``p > alpha_interaction``); en ese caso los componentes de varianza salen de este modelo. ``None`` si se mantuvo la interacción."
+msgstr "ANOVA table of the reduced model (without the part×operator interaction, pooled with the error), only if the interaction was not significant (``p > alpha_interaction``); in that case the variance components come from this model. ``None`` if the interaction was kept."
 
 msgid "Tabla resumen (una fila por estadístico; con ``stable=True`` sin filas separadoras y con claves canónicas en inglés)."
 msgstr "Summary table (one row per statistic; with ``stable=True``, without separator rows and with canonical English keys)."
@@ -238,6 +253,9 @@ msgstr "ANOVA table with the headers of the active language (``None`` if the met
 
 msgid "``anova_table`` conserva siempre las cabeceras en español; con ``stable=True`` esta tabla usa el índice ``source`` y las columnas ``df``, ``ss``, ``ms``, ``f`` y ``p_value``, y las filas ``parts``, ``operators``, ``parts_x_operators``, ``error_repeatability`` (cruzado) o ``parts_nested``, ``error`` (anidado)."
 msgstr "``anova_table`` always keeps its Spanish headers; with ``stable=True`` this table uses the index ``source`` and the columns ``df``, ``ss``, ``ms``, ``f`` and ``p_value``, and the rows ``parts``, ``operators``, ``parts_x_operators``, ``error_repeatability`` (crossed) or ``parts_nested``, ``error`` (nested)."
+
+msgid "Tabla ANOVA del modelo reducido con las cabeceras del idioma activo (``None`` si no se redujo el modelo)."
+msgstr "ANOVA table of the reduced model with the headers of the active language (``None`` if the model was not reduced)."
 
 msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
 msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
@@ -572,4 +590,7 @@ msgstr "Exports the attribute agreement analysis to an Excel (.xlsx) file."
 
 msgid "Requiere ``openpyxl`` (``pip install openpyxl``). Hojas: Resumen, KappaVsReferencia (si hay más de un operador)."
 msgstr "Requires ``openpyxl`` (``pip install openpyxl``). Sheets: Summary, KappaVsReference (if there is more than one operator)."
+
+#~ msgid "Número de categorías distintas."
+#~ msgstr "Number of distinct categories."
 

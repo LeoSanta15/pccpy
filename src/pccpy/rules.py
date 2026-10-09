@@ -42,8 +42,8 @@ DEFAULT_K: dict[int, float] = {1: 3, 2: 9, 3: 6, 4: 14, 5: 2, 6: 4, 7: 15, 8: 8}
 #: Pruebas disponibles según la familia de gráfico.
 FAMILIES: dict[str, tuple] = {
     "full": (1, 2, 3, 4, 5, 6, 7, 8),  # I, X-barra
-    "basic": (1, 2, 3, 4),  # MR, R, S, P, NP, C, U, Laney
-    "only1": (1,),  # EWMA, CUSUM
+    "basic": (1, 2, 3, 4),  # R, S (aproximadas: los rangos no son normales), P, NP, C, U, Laney
+    "only1": (1,),  # MR (rangos móviles autocorrelacionados y asimétricos), EWMA, CUSUM
 }
 
 
@@ -130,6 +130,18 @@ def test8(z: np.ndarray, k: int = 8) -> np.ndarray:
     return np.flatnonzero(_run_positions(np.abs(z) > 1.0) >= k)
 
 
+def _aplicar_prueba(t: int, k: float, v: np.ndarray, zz: np.ndarray) -> np.ndarray:
+    """Posiciones (dentro de ``v``) que marca la prueba ``t`` con parámetro ``k``; las pruebas 3 y 4 usan los valores."""
+    if t == 1:
+        return test1(zz, k)
+    if t == 3:
+        return test3(v, int(k))
+    if t == 4:
+        return test4(v, int(k))
+    fn = {2: test2, 5: test5, 6: test6, 7: test7, 8: test8}[t]
+    return fn(zz, int(k))
+
+
 def apply_tests(
     values: np.ndarray,
     center: np.ndarray,
@@ -140,7 +152,9 @@ def apply_tests(
     """Aplica las pruebas ``tests`` y devuelve ``{prueba: índices marcados}``.
 
     ``values``, ``center`` y ``sigma`` son arrays de la misma longitud (sigma es la
-    desviación estándar del estadístico graficado en cada punto). Los NaN se ignoran.
+    desviación estándar del estadístico graficado en cada punto). Los NaN se ignoran y **cortan** las rachas: las
+    pruebas se aplican por separado a cada tramo de puntos consecutivos válidos, de modo que una racha no une
+    observaciones separadas por un hueco.
     """
     params = params or {}
     values = np.asarray(values, dtype=float)
@@ -151,21 +165,12 @@ def apply_tests(
         z = (values - center) / sigma
     valid = np.isfinite(values) & np.isfinite(z)
     where = np.flatnonzero(valid)
-    v, zz = values[valid], z[valid]
+    # tramos de puntos válidos consecutivos (un hueco corta las rachas)
+    cortes = np.flatnonzero(np.diff(where) > 1) + 1
+    tramos = np.split(where, cortes) if where.size else []
 
-    fns = {
-        1: lambda k: test1(zz, k),
-        2: lambda k: test2(zz, int(k)),
-        3: lambda k: test3(v, int(k)),
-        4: lambda k: test4(v, int(k)),
-        5: lambda k: test5(zz, int(k)),
-        6: lambda k: test6(zz, int(k)),
-        7: lambda k: test7(zz, int(k)),
-        8: lambda k: test8(zz, int(k)),
-    }
-    out: dict[int, np.ndarray] = {}
-    for t in tests:
-        k = params.get(t, DEFAULT_K[t])
-        idx = fns[t](k)
-        out[t] = where[idx] if v.size else np.array([], dtype=int)
-    return out
+    out: dict[int, list[np.ndarray]] = {t: [] for t in tests}
+    for pos in tramos:
+        for t in tests:
+            out[t].append(pos[_aplicar_prueba(t, params.get(t, DEFAULT_K[t]), values[pos], z[pos])])
+    return {t: (np.concatenate(v).astype(int) if v else np.array([], dtype=int)) for t, v in out.items()}

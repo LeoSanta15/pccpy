@@ -9,7 +9,10 @@ el valor esperado.
 `pccpy` implementa dos métodos:
 
 - **Normal** — asume distribución normal; usa el factor k de Howe (1969) para
-  bilateral y la distribución t no central exacta para unilateral.
+  bilateral y la distribución t no central exacta para unilateral. Howe es una
+  aproximación: se desvía del k exacto menos de un 0,7 % con `n ≥ 10` y hasta un
+  3,8 % con `n = 3`, por lo que con muestras muy pequeñas la confianza real del
+  bilateral puede quedar unas décimas por debajo de la pedida.
 - **No paramétrico** — libre de distribución; se basa en estadísticos de orden;
   requiere muestras más grandes para la misma cobertura y confianza.
 

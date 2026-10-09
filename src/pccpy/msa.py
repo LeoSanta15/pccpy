@@ -108,9 +108,14 @@ class GageRRResult:
     pct_study_var : float
         % Variación de estudio del Gage vs total.
     ndc : int
-        Número de categorías distintas.
+        Número de categorías distintas: ``int(√2 · σ_parte / σ_gage)`` (truncado, mínimo 1). El manual de AIAG escribe
+        ``1,41`` en lugar de ``√2``; la diferencia solo cambia el entero en casos límite.
     anova_table : pd.DataFrame o None
         Tabla ANOVA (solo método 'anova').
+    anova_reduced : pd.DataFrame o None
+        Tabla ANOVA del modelo reducido (sin la interacción partes×operadores, agrupada con el error), solo si la
+        interacción no fue significativa (``p > alpha_interaction``); en ese caso los componentes de varianza salen de
+        este modelo. ``None`` si se mantuvo la interacción.
     """
 
     method: str
@@ -134,6 +139,7 @@ class GageRRResult:
     pct_study_var: float
     ndc: int
     anova_table: pd.DataFrame | None = None
+    anova_reduced: pd.DataFrame | None = None
     _data: np.ndarray = field(repr=False, default=None)  # type: ignore[assignment, arg-type]
 
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
@@ -184,6 +190,8 @@ class GageRRResult:
             "",
             tr("  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}").format(pct=self.pct_study_var, ndc=self.ndc),
         ]
+        if self.anova_reduced is not None:
+            lines.append(tr("  La interacción partes×operadores no es significativa: se agrupó con el error (modelo reducido)."))
         return "\n".join(lines)
 
     def to_excel(self, path) -> None:
@@ -209,6 +217,12 @@ class GageRRResult:
             return None
         return renombrar(self.anova_table, _COLUMNAS_ANOVA, stable, indice=(N_("Fuente"), "source"), filas=_FILAS_ANOVA)
 
+    def anova_reduced_frame(self, stable: bool = False) -> pd.DataFrame | None:
+        """Tabla ANOVA del modelo reducido con las cabeceras del idioma activo (``None`` si no se redujo el modelo)."""
+        if self.anova_reduced is None:
+            return None
+        return renombrar(self.anova_reduced, _COLUMNAS_ANOVA, stable, indice=(N_("Fuente"), "source"), filas=_FILAS_ANOVA)
+
     def __str__(self) -> str:  # pragma: no cover
         return self.summary()
 
@@ -225,10 +239,16 @@ class GageRRResult:
 
 
 def _gage_rr_anova(data: np.ndarray, study_variation: float,
-                   tolerance: float | None, crossed: bool) -> GageRRResult:
-    """ANOVA Gage R&R (crossed o nested)."""
+                   tolerance: float | None, crossed: bool, alpha_interaction: float = 0.25) -> GageRRResult:
+    """ANOVA Gage R&R (crossed o nested).
+
+    En el diseño cruzado, si la interacción partes×operadores no es significativa (``p > alpha_interaction``) se quita
+    del modelo: su suma de cuadrados pasa al error (``MS_err' = (SS_int + SS_err)/(gl_int + gl_err)``) y los componentes
+    de varianza, las F y los p-valores de partes y operadores se calculan con ese modelo reducido.
+    """
     p, o, r = data.shape
     grand_mean = data.mean()
+    anova_reduced = None
 
     # Sums of squares
     # SS_parts
@@ -273,21 +293,28 @@ def _gage_rr_anova(data: np.ndarray, study_variation: float,
             "p-valor": [round(pv_parts, 5), round(pv_ops, 5), round(pv_int, 5), ""],
         }).set_index("Fuente")
 
-        # Variance components
-        var_err = max(MS_err, 0.0)  # repeatability
-        var_int_raw = (MS_int - MS_err) / r
-        # If interaction not significant (p>0.25 common cutoff), pool into error
-        if pv_int > 0.25:
-            # recompute without interaction
-            SS_err2 = SS_int + SS_err
-            df_err2 = df_int + df_err
-            var_err = SS_err2 / df_err2
-            var_int = 0.0
+        # Componentes de varianza
+        reducir = (not math.isnan(pv_int)) and pv_int > alpha_interaction
+        if reducir:
+            ms_e = (SS_int + SS_err) / (df_int + df_err)
+            df_e = df_int + df_err
+            var_err, var_int = ms_e, 0.0
+            var_op = max((MS_ops - ms_e) / (p * r), 0.0)
+            var_parts = max((MS_parts - ms_e) / (o * r), 0.0)
+            F_p2, F_o2 = MS_parts / ms_e, MS_ops / ms_e
+            anova_reduced = pd.DataFrame({
+                "Fuente": ["Partes", "Operadores", "Error (Repetibilidad)"],
+                "GL": [df_parts, df_ops, df_e],
+                "SC": [round(SS_parts, 5), round(SS_ops, 5), round(SS_int + SS_err, 5)],
+                "CM": [round(MS_parts, 5), round(MS_ops, 5), round(ms_e, 5)],
+                "F": [round(F_p2, 4), round(F_o2, 4), ""],
+                "p-valor": [round(1 - stats.f.cdf(F_p2, df_parts, df_e), 5), round(1 - stats.f.cdf(F_o2, df_ops, df_e), 5), ""],
+            }).set_index("Fuente")
         else:
-            var_int = max(var_int_raw, 0.0)
-
-        var_op = max((MS_ops - MS_int) / (p * r), 0.0)
-        var_parts = max((MS_parts - MS_int) / (o * r), 0.0)
+            var_err = max(MS_err, 0.0)  # repetibilidad
+            var_int = max((MS_int - MS_err) / r, 0.0)
+            var_op = max((MS_ops - MS_int) / (p * r), 0.0)
+            var_parts = max((MS_parts - MS_int) / (o * r), 0.0)
 
     else:  # nested
         # In nested design, each operator measures a different set of parts.
@@ -353,39 +380,37 @@ def _gage_rr_anova(data: np.ndarray, study_variation: float,
         pct_study_var=pct_sv,
         ndc=ndc,
         anova_table=anova_df,
+        anova_reduced=anova_reduced,
         _data=data,
     )
 
 
 def _gage_rr_xbar_r(data: np.ndarray, study_variation: float) -> GageRRResult:
-    """Gage R&R por el método Xbar-R (AIAG MSA)."""
-    from ._constants import d2
+    """Gage R&R por el método Xbar-R (AIAG MSA, 4.ª ed.).
+
+    ``EV = R̄ / d2*(r, p·o)``; ``AV = sqrt((R_operadores / d2*(o, 1))² − EV²/(p·r))`` (K2 del manual) y
+    ``PV = R_partes / d2*(p, 1)`` (K3 del manual, sin restar nada). ``d2*`` en :func:`pccpy._constants.d2_star`.
+    """
+    from ._constants import d2_star
     p, o, r = data.shape
 
-    # Ranges within each cell (part × operator)
+    # Repetibilidad (EV): rango medio dentro de cada celda parte × operador
     ranges = data.max(axis=2) - data.min(axis=2)  # (p, o)
     Rbar = ranges.mean()
-    d2_r = d2(r)
-    # EV (repetibilidad)
-    sigma_ev = Rbar / d2_r
+    sigma_ev = Rbar / d2_star(r, p * o)
     var_err = sigma_ev ** 2
 
-    # Reproducibilidad — rango de medias de operadores
+    # Reproducibilidad (AV): rango de las medias de operadores, corregido por la repetibilidad
     op_means = data.mean(axis=(0, 2))  # (o,)
     R_op = op_means.max() - op_means.min()
-    d2_o = d2(o)
-    sigma_av_raw = R_op / d2_o
-    # Correct for sample size
-    var_op_raw = max(sigma_av_raw ** 2 - var_err / (p * r), 0.0)
-    var_op = var_op_raw
+    sigma_av_raw = R_op / d2_star(o, 1)
+    var_op = max(sigma_av_raw ** 2 - var_err / (p * r), 0.0)
     var_repro = var_op
 
-    # Part variation — rango de medias de partes
+    # Variación de partes (PV): rango de las medias de partes
     part_means = data.mean(axis=(1, 2))  # (p,)
     R_part = part_means.max() - part_means.min()
-    d2_p = d2(p)
-    sigma_pv = R_part / d2_p
-    var_parts = max(sigma_pv ** 2 - var_err / (o * r), 0.0)
+    var_parts = (R_part / d2_star(p, 1)) ** 2
 
     var_gage = var_err + var_repro
     var_total = var_gage + var_parts
@@ -430,6 +455,7 @@ def gage_rr(
     method: str = "anova",
     study_variation: float = 6.0,
     tolerance: float | None = None,
+    alpha_interaction: float = 0.25,
 ) -> GageRRResult:
     """Gage R&R cruzado (Crossed Gage R&R).
 
@@ -459,14 +485,28 @@ def gage_rr(
     tolerance : float, opcional
         Tolerancia del proceso (LES − LEI). Si se proporciona, se incluye
         el % sobre tolerancia en el resumen.
+    alpha_interaction : float
+        Solo ``method='anova'``. Nivel para decidir si la interacción partes×operadores se quita del modelo: si su
+        p-valor es mayor que este umbral (por defecto 0,25, como Minitab), la interacción se agrupa con el error y los
+        componentes se calculan con el modelo reducido (``result.anova_reduced``). Con ``1.0`` la interacción siempre
+        se conserva.
 
     Returns
     -------
     GageRRResult
+
+    Raises
+    ------
+    ValueError
+        Si ``replicates < 2``: sin réplicas no se puede estimar la repetibilidad.
     """
+    if replicates < 2:
+        raise ValueError(tr("Gage R&R necesita al menos 2 réplicas por parte y operador para estimar la repetibilidad."))
+    if not 0 <= alpha_interaction <= 1:
+        raise ValueError(tr("'alpha_interaction' debe estar entre 0 y 1."))
     arr = _to_matrix(data, parts, operators, replicates)
     if method == "anova":
-        return _gage_rr_anova(arr, study_variation, tolerance, crossed=True)
+        return _gage_rr_anova(arr, study_variation, tolerance, crossed=True, alpha_interaction=alpha_interaction)
     elif method == "xbar_r":
         return _gage_rr_xbar_r(arr, study_variation)
     else:
@@ -503,6 +543,8 @@ def gage_rr_nested(
     -------
     GageRRResult
     """
+    if replicates < 2:
+        raise ValueError(tr("Gage R&R necesita al menos 2 réplicas por parte y operador para estimar la repetibilidad."))
     arr = _to_matrix(data, parts, operators, replicates)
     return _gage_rr_anova(arr, study_variation, None, crossed=False)
 

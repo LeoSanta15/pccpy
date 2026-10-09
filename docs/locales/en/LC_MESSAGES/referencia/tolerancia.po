@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-09 19:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -55,11 +55,13 @@ msgstr "Confidence level 1−α. Default 0.95."
 msgid "``'two'`` (bilateral), ``'lower'`` (cota inferior) o ``'upper'`` (cota superior). Por defecto ``'two'``."
 msgstr "``'two'`` (two-sided), ``'lower'`` (lower bound) or ``'upper'`` (upper bound). Default ``'two'``."
 
-msgid "``'normal'`` — asume distribución normal; usa la aproximación de Howe (1969) para bilateral y la t no central exacta para unilateral.  ``'nonparametric'`` — libre de distribución; se basa en estadísticos de orden; requiere muestras más grandes para la misma cobertura y confianza."
-msgstr "``'normal'`` — assumes a normal distribution; uses Howe's approximation (1969) for two-sided and the exact noncentral t for one-sided.  ``'nonparametric'`` — distribution-free; based on order statistics; requires larger samples for the same coverage and confidence."
+#, python-format
+msgid "``'normal'`` — asume distribución normal; usa la aproximación de Howe (1969) para bilateral y la t no central exacta para unilateral. La aproximación de Howe se desvía del factor k exacto menos de un 0,7 % con ``n ≥ 10`` (y hasta un 3,8 % con ``n = 3``); en el bilateral con n pequeña la confianza real puede quedar unas décimas por debajo de la pedida.  ``'nonparametric'`` — libre de distribución; se basa en estadísticos de orden; requiere muestras más grandes para la misma cobertura y confianza."
+msgstr "``'normal'`` — assumes a normal distribution; uses Howe's (1969) approximation for two-sided and the exact noncentral t for one-sided. Howe's approximation deviates from the exact k factor by less than 0.7 % with ``n ≥ 10`` (and up to 3.8 % with ``n = 3``); in the two-sided case with small n the actual confidence can fall a few tenths below the requested one.  ``'nonparametric'`` — distribution-free; based on order statistics; requires larger samples for the same coverage and confidence."
 
-msgid "``'normal'`` — asume distribución normal; usa la aproximación de Howe (1969) para bilateral y la t no central exacta para unilateral."
-msgstr "``'normal'`` — assumes a normal distribution; uses Howe's approximation (1969) for two-sided and the exact noncentral t for one-sided."
+#, python-format
+msgid "``'normal'`` — asume distribución normal; usa la aproximación de Howe (1969) para bilateral y la t no central exacta para unilateral. La aproximación de Howe se desvía del factor k exacto menos de un 0,7 % con ``n ≥ 10`` (y hasta un 3,8 % con ``n = 3``); en el bilateral con n pequeña la confianza real puede quedar unas décimas por debajo de la pedida."
+msgstr "``'normal'`` — assumes a normal distribution; uses Howe's (1969) approximation for two-sided and the exact noncentral t for one-sided. Howe's approximation deviates from the exact k factor by less than 0.7 % with ``n ≥ 10`` (and up to 3.8 % with ``n = 3``); in the two-sided case with small n the actual confidence can fall a few tenths below the requested one."
 
 msgid "``'nonparametric'`` — libre de distribución; se basa en estadísticos de orden; requiere muestras más grandes para la misma cobertura y confianza."
 msgstr "``'nonparametric'`` — distribution-free; based on order statistics; requires larger samples for the same coverage and confidence."
@@ -180,4 +182,7 @@ msgstr "Requires ``openpyxl`` (``pip install openpyxl``)."
 
 msgid "Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."
 msgstr "Saves the plot to a file (PNG, SVG, PDF, …)."
+
+#~ msgid "``'normal'`` — asume distribución normal; usa la aproximación de Howe (1969) para bilateral y la t no central exacta para unilateral."
+#~ msgstr "``'normal'`` — assumes a normal distribution; uses Howe's approximation (1969) for two-sided and the exact noncentral t for one-sided."
 
