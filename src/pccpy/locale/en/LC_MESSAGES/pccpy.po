@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-09 18:13+0000\n"
+"POT-Creation-Date: 2026-10-09 18:23+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1308,6 +1308,10 @@ msgstr "'cov' must be {p} x {p}."
 msgid "'coverage' debe estar en (0, 1)."
 msgstr "'coverage' must be in (0, 1)."
 
+#, python-brace-format
+msgid "'dixon_ratio' debe ser 'auto' o uno de {opciones}."
+msgstr "'dixon_ratio' must be 'auto' or one of {opciones}."
+
 msgid "'h' debe ser > 0 y 'k' >= 0."
 msgstr "'h' must be > 0 and 'k' >= 0."
 
@@ -1980,6 +1984,10 @@ msgstr "Unsupported distribution: {distribution!r}. Options: {options}"
 msgid "Distribución normal"
 msgstr "Normal distribution"
 
+#, python-brace-format
+msgid "Dixon ({ratio})"
+msgstr "Dixon ({ratio})"
+
 msgid "Dodge-Romig AOQL — minimiza ATI con límite de calidad saliente promedio"
 msgstr "Dodge-Romig AOQL — minimizes ATI with an average outgoing quality limit"
 
@@ -2215,6 +2223,10 @@ msgstr "Some defective counts are greater than the sample size."
 msgid "Hay conteos mayores que el tamaño de muestra."
 msgstr "Some counts are greater than the sample size."
 
+#, python-brace-format
+msgid "Hay demasiados valores repetidos en los extremos: la razón de Dixon {razon} no está definida."
+msgstr "There are too many repeated values at the extremes: the Dixon ratio {razon} is not defined."
+
 msgid "Hay más defectuosas que unidades en alguna muestra."
 msgstr "Some samples have more defectives than units."
 
@@ -2441,6 +2453,16 @@ msgid ""
 msgstr ""
 "The non-normality is due to outliers (without them the data are normal): investigate their origin before transforming"
 " the data."
+
+#, python-brace-format
+msgid "La prueba de Dixon admite como máximo {n} observaciones; usa Grubbs o la ESD generalizada."
+msgstr "The Dixon test accepts at most {n} observations; use Grubbs or the generalized ESD."
+
+#, python-brace-format
+msgid ""
+"La prueba de Dixon está pensada para muestras pequeñas (n ≤ {n}); con más datos es preferible Grubbs o la ESD "
+"generalizada."
+msgstr "The Dixon test is meant for small samples (n ≤ {n}); with more data Grubbs or the generalized ESD is preferable."
 
 msgid "La suma de frecuencias debe ser positiva."
 msgstr "The sum of the frequencies must be positive."
@@ -3026,6 +3048,9 @@ msgstr "Proportion"
 
 msgid "Proporción EWMA"
 msgstr "EWMA proportion"
+
+msgid "Prueba de Dixon: valores críticos calculados frente a las tablas publicadas de r10 y estadístico a mano"
+msgstr "Dixon test: computed critical values against the published r10 tables and a hand-computed statistic"
 
 #, python-brace-format
 msgid "Prueba de atípicos: {metodo}, {lados}, α = {alpha:g}  (n = {n})"

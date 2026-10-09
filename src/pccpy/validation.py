@@ -465,6 +465,28 @@ def _ajuste_robusto():
     return esperado, obtenido
 
 
+@_comprobacion("dixon", N_("Prueba de Dixon: valores críticos calculados frente a las tablas publicadas de r10 y estadístico a mano"),
+               "Tablas de r10 de Dixon (1951) y Rorabacher (1991) para 90, 95 y 99 %; razón escrita aparte", 6e-3)
+def _dixon():
+    from .outliers import outlier_test
+
+    publicados = {
+        0.10: (0.941, 0.765, 0.642, 0.560, 0.507, 0.468, 0.437, 0.412),
+        0.05: (0.970, 0.829, 0.710, 0.625, 0.568, 0.526, 0.493, 0.466),
+        0.01: (0.994, 0.926, 0.821, 0.740, 0.680, 0.634, 0.598, 0.568),
+    }
+    esperado, obtenido = [], []
+    for alfa, fila in publicados.items():
+        for n, valor in zip(range(3, 11), fila):
+            esperado.append(valor)
+            x = np.r_[np.arange(n - 1, dtype=float), 3.0 * n]  # el crítico solo depende de n, de la razón y de α
+            obtenido.append(outlier_test(x, method="dixon", dixon_ratio="r10", alpha=alfa).steps.iloc[0]["critical"])
+    x = np.array([2.1, 2.3, 2.2, 2.4, 2.0, 2.2, 3.9])
+    esperado.append((3.9 - 2.4) / (3.9 - 2.0))  # r10 con el máximo como sospechoso
+    obtenido.append(outlier_test(x, method="dixon").steps.iloc[0]["statistic"])
+    return np.array(esperado), np.array(obtenido)
+
+
 @_comprobacion("fase1-guardar", N_("Fase II tras guardar y cargar una Fase I (JSON) frente a los mismos límites dados a mano"),
                "Límites históricos pasados directamente a imr_chart (mu, sigma, transform) y texto JSON de la biblioteca estándar", 1e-12)
 def _fase1_guardar():

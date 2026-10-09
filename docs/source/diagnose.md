@@ -116,6 +116,7 @@ tres atípicos lejanos; con asimetría muy leve puede confundirla con atípicos.
 ```python
 r = pp.outlier_test(x)                        # Grubbs: un atípico (el más extremo)
 r = pp.outlier_test(x, method="esd")          # ESD generalizada de Rosner: hasta max_outliers atípicos
+r = pp.outlier_test(x, method="dixon")        # Dixon: razón entre huecos, para muestras pequeñas (n ≤ 30)
 r.outlier_indices, r.outlier_values, r.to_frame(), r.summary()
 pp.outlier_test(x, sides="upper")             # solo valores demasiado altos (o "lower")
 ```
@@ -124,9 +125,13 @@ pp.outlier_test(x, sides="upper")             # solo valores demasiado altos (o 
 |---|---|---|
 | `"grubbs"` | un solo atípico | muestras pequeñas con a lo sumo un punto sospechoso |
 | `"esd"` | hasta `max_outliers` (por defecto `min(10, (n − 1) // 2)`) | varios sospechosos; evita que se enmascaren entre sí (conviene `n ≥ 25`) |
+| `"dixon"` | un solo atípico, con la razón `r10`, `r11`, `r21` o `r22` (`dixon_ratio="auto"` elige la de Dixon según `n`) | muestras muy pequeñas (3 ≤ n ≤ 30); `r21` y `r22` resisten un segundo atípico del mismo lado |
 
 Los valores críticos se verificaron contra la tabla publicada de Grubbs y contra el ejemplo de Rosner (1983) del manual
-del NIST. Con datos normales Grubbs marca ≈ 5 % de las muestras, el nivel nominal.
+del NIST. Con datos normales Grubbs marca ≈ 5 % de las muestras, el nivel nominal. Los de Dixon **se calculan** (no se
+tabulan): bajo normalidad la cola de la razón es una integral doble que se resuelve por cuadratura y se invierte; con
+`r10` reproduce las tablas publicadas de Dixon (1951) y Rorabacher (1991) a menos de 0,006, y las otras tres razones se
+comprobaron por simulación. En la prueba bilateral cada cola usa `α/2` (ligeramente conservador).
 
 ```{warning}
 Ambas pruebas **suponen que los datos sin los atípicos son normales** (el resultado incluye el valor p de Shapiro-Wilk
