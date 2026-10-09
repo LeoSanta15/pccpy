@@ -16,7 +16,7 @@ def _datos(seed=7, n=90, contaminados=(12, 47)):
 
 
 def test_reajusta_en_cada_pasada_y_congela_la_ultima():
-    r = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,))
+    r = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,), robust_fit=False)
     assert r.excluded.size >= 1 and len(r.history) >= 2
     ts = [h.transformation for h in r.history]
     assert all(isinstance(t, Transformation) for t in ts)
@@ -78,11 +78,11 @@ def _falla_en_la_segunda(monkeypatch):
     original = phase1.fit_transformation
     llamadas = []
 
-    def falso(datos, metodo):
+    def falso(datos, metodo, **kw):
         llamadas.append(1)
         if len(llamadas) > 1:
             raise ValueError("no se pudo ajustar")
-        return original(datos, metodo)
+        return original(datos, metodo, **kw)
 
     monkeypatch.setattr(phase1, "fit_transformation", falso)
 
@@ -90,7 +90,7 @@ def _falla_en_la_segunda(monkeypatch):
 def test_si_no_se_puede_reajustar_se_detiene_con_la_carta_actual(monkeypatch):
     _falla_en_la_segunda(monkeypatch)
     with pytest.warns(UserWarning, match="no convergió"):
-        r = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,))
+        r = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,), robust_fit=False)
     assert r.reason == "transform_failed" and not r.converged
     assert r.excluded.size == 0 and r.chart.transformation is r.transformation
 
@@ -99,7 +99,7 @@ def test_si_no_se_puede_reajustar_se_detiene_con_la_carta_actual(monkeypatch):
 def test_avisa_si_lambda_cambia_mucho(monkeypatch):
     lambdas = iter([0.0, 1.0, 1.0, 1.0, 1.0])
 
-    def falso(datos, metodo):
+    def falso(datos, metodo, **kw):
         return Transformation("boxcox", {"lambda": next(lambdas)})
 
     monkeypatch.setattr(phase1, "fit_transformation", falso)
@@ -108,7 +108,7 @@ def test_avisa_si_lambda_cambia_mucho(monkeypatch):
 
 
 def test_historial_con_la_transformacion_de_cada_pasada():
-    r = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,))
+    r = pp.phase_one(pp.imr_chart, _datos(), transform="boxcox", tests=(1,), robust_fit=False)
     f = r.to_frame(stable=True)
     assert list(f["transformation"]) == ["boxcox"] * len(r.history)
     np.testing.assert_allclose(f["lambda"], [h.transformation.params["lambda"] for h in r.history])

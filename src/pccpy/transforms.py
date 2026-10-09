@@ -174,7 +174,51 @@ def _ajustar_johnson(x: np.ndarray) -> Transformation:
     return Transformation("johnson", {**t.params, "p_value": pvalor})
 
 
-def fit_transformation(data, method: str) -> Transformation:
+MAX_PARES_MEDCOUPLE = 1500  # puntos por lado de la mediana a partir de los cuales se submuestrea (memoria O(n²))
+MAX_FRACCION_RECORTADA = 0.25  # si el recorte quitaría más, no se confía en él y se ajusta con todos los datos
+
+
+def medcouple(x) -> float:
+    """Medcouple (Brys, Hubert y Struyf, 2004): medida robusta de asimetría en [−1, 1] (0 si es simétrica).
+
+    Es la mediana de ``((x_j − m) − (m − x_i)) / (x_j − x_i)`` sobre los pares ``x_i ≤ m ≤ x_j`` (``m`` = mediana).
+    Los pares con ``x_i = x_j = m`` se ignoran. Con más de ``MAX_PARES_MEDCOUPLE`` puntos por lado se toma una
+    submuestra equiespaciada (determinista).
+    """
+    x = np.sort(np.asarray(x, dtype=float).ravel())
+    m = float(np.median(x))
+    abajo, arriba = x[x <= m], x[x >= m]
+    for lado in (0, 1):
+        v = (abajo, arriba)[lado]
+        if v.size > MAX_PARES_MEDCOUPLE:
+            v = v[np.linspace(0, v.size - 1, MAX_PARES_MEDCOUPLE).astype(int)]
+            abajo, arriba = (v, arriba) if lado == 0 else (abajo, v)
+    den = arriba[None, :] - abajo[:, None]
+    with np.errstate(divide="ignore", invalid="ignore"):
+        h = ((arriba[None, :] - m) - (m - abajo[:, None])) / den
+    h = h[den > 0]
+    return float(np.median(h)) if h.size else 0.0
+
+
+def adjusted_boxplot_mask(x, k: float = 1.5) -> np.ndarray:
+    """Máscara de los puntos dentro de los límites del diagrama de cajas ajustado por asimetría.
+
+    Hubert y Vandervieren (2008): los límites del diagrama de cajas se mueven según el medcouple ``MC`` para que una
+    cola larga natural no cuente como atípica. Con ``MC ≥ 0``: ``[Q1 − k·e^(−4·MC)·IQR, Q3 + k·e^(3·MC)·IQR]``; con
+    ``MC < 0``: ``[Q1 − k·e^(−3·MC)·IQR, Q3 + k·e^(4·MC)·IQR]``. Devuelve ``True`` donde el punto cae dentro.
+    """
+    x = np.asarray(x, dtype=float)
+    q1, q3 = np.percentile(x, [25, 75])
+    iqr = q3 - q1
+    mc = medcouple(x)
+    if mc >= 0:
+        inf, sup = q1 - k * np.exp(-4 * mc) * iqr, q3 + k * np.exp(3 * mc) * iqr
+    else:
+        inf, sup = q1 - k * np.exp(-3 * mc) * iqr, q3 + k * np.exp(4 * mc) * iqr
+    return (x >= inf) & (x <= sup)
+
+
+def fit_transformation(data, method: str, *, robust: bool = False) -> Transformation:
     """Ajusta una transformación de normalización a ``data`` (1-D, sin NaN).
 
     Parameters
@@ -183,6 +227,11 @@ def fit_transformation(data, method: str) -> Transformation:
         Observaciones (todas, no por subgrupos).
     method : {'boxcox', 'yeo-johnson', 'johnson'}
         Método; ver el módulo.
+    robust : bool
+        Con ``True`` el ajuste (por máxima verosimilitud) se hace sin los puntos fuera del diagrama de cajas ajustado
+        por asimetría (``adjusted_boxplot_mask``), de modo que unos pocos valores muy lejanos no deformen la
+        transformación y queden disimulados. La transformación se aplica después a todos los datos. Si el recorte
+        quitaría más del 25 % de los puntos o dejaría menos de 8, se ignora y se ajusta con todos.
 
     Returns
     -------
@@ -197,6 +246,10 @@ def fit_transformation(data, method: str) -> Transformation:
             n=MIN_OBSERVACIONES))
     if np.ptp(x) == 0:
         raise ValueError(tr("Los datos son constantes: no se puede ajustar una transformación."))
+    if robust:
+        dentro = adjusted_boxplot_mask(x)
+        if dentro.sum() >= MIN_OBSERVACIONES and dentro.mean() >= 1 - MAX_FRACCION_RECORTADA and np.ptp(x[dentro]) > 0:
+            x = x[dentro]
     if method == "boxcox":
         if x.min() <= 0:
             raise ValueError(tr("Box-Cox requiere datos estrictamente positivos."))
@@ -208,4 +261,4 @@ def fit_transformation(data, method: str) -> Transformation:
     return _ajustar_johnson(x)
 
 
-__all__ = ["METODOS", "Transformation", "fit_transformation"]
+__all__ = ["METODOS", "Transformation", "adjusted_boxplot_mask", "fit_transformation", "medcouple"]

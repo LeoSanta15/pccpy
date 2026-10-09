@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 23:16+0000\n"
+"POT-Creation-Date: 2026-10-09 18:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1912,6 +1912,11 @@ msgstr ""
 
 #, python-brace-format
 msgid "Falta la media histórica de la parte {lab!r} en 'mu'."
+msgstr ""
+
+msgid ""
+"Fase I con ajuste robusto de la transformación frente a un cálculo manual"
+" (medcouple en bucle)"
 msgstr ""
 
 msgid ""

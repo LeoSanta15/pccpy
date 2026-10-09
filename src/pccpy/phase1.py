@@ -403,6 +403,7 @@ def phase_one(
     max_iterations: int = 10,
     min_points: int = 20,
     max_excluded: float = 0.25,
+    robust_fit: bool = True,
     **kwargs: Any,
 ) -> PhaseOneResult:
     """Fase I iterativa: excluye los puntos con señal, recalcula los límites y repite hasta que no quede ninguna.
@@ -434,6 +435,11 @@ def phase_one(
     max_excluded : float
         Fracción máxima de puntos que se pueden excluir en total (por defecto 0.25). Si se superara, se detiene sin
         excluir y el resultado no converge: un proceso que necesita descartar tantos puntos no está estable.
+    robust_fit : bool
+        Con ``transform=`` por nombre, la transformación se ajusta en cada pasada sin los puntos fuera del diagrama de
+        cajas ajustado por asimetría (ver ``fit_transformation(..., robust=True)``), para que un atípico muy grande no
+        deforme la transformación y se disimule (por defecto ``True``). Con ``False`` se ajusta con todos los puntos.
+        No tiene efecto si ``transform`` es una ``Transformation`` ya ajustada o no se usa.
     **kwargs
         Argumentos de la función de la carta, como ``tests=(1, 2, 3)``, ``subgroup_size=5`` o ``n=…`` (en las cartas
         de atributos).
@@ -485,7 +491,7 @@ def phase_one(
         """Transformación para los puntos conservados: se reajusta en cada pasada salvo que el usuario dé una ya ajustada."""
         if transform is None or isinstance(transform, Transformation):
             return transform
-        return fit_transformation(arr[conservados].ravel(), transform)
+        return fit_transformation(arr[conservados].ravel(), transform, robust=robust_fit)
 
     def calcular(conservados: np.ndarray, t: Transformation | None) -> ControlChart:
         a = dict(argumentos)
