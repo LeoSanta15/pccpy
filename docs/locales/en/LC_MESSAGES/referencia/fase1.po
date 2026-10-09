@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 23:06+0000\n"
+"POT-Creation-Date: 2026-10-09 18:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -54,6 +54,9 @@ msgstr "No points are excluded if fewer than this many would remain (default 20;
 
 msgid "Fracción máxima de puntos que se pueden excluir en total (por defecto 0.25). Si se superara, se detiene sin excluir y el resultado no converge: un proceso que necesita descartar tantos puntos no está estable."
 msgstr "Maximum fraction of points that can be excluded in total (default 0.25). If it would be exceeded, it stops without excluding and the result does not converge: a process that needs to discard that many points is not stable."
+
+msgid "Con ``transform=`` por nombre, la transformación se ajusta en cada pasada sin los puntos fuera del diagrama de cajas ajustado por asimetría (ver ``fit_transformation(..., robust=True)``), para que un atípico muy grande no deforme la transformación y se disimule (por defecto ``True``). Con ``False`` se ajusta con todos los puntos. No tiene efecto si ``transform`` es una ``Transformation`` ya ajustada o no se usa."
+msgstr "With ``transform=`` by name, the transformation is fitted on each pass without the points outside the skewness-adjusted boxplot (see ``fit_transformation(..., robust=True)``), so that a very large outlier does not distort the transformation and get disguised (``True`` by default). With ``False`` it is fitted with all the points. It has no effect if ``transform`` is an already fitted ``Transformation`` or is not used."
 
 msgid "Argumentos de la función de la carta, como ``tests=(1, 2, 3)``, ``subgroup_size=5`` o ``n=…`` (en las cartas de atributos)."
 msgstr "Arguments of the chart function, such as ``tests=(1, 2, 3)``, ``subgroup_size=5`` or ``n=…`` (in attribute charts)."

@@ -416,6 +416,49 @@ def _fase1_transformacion():
         conservados = conservados[~fuera]
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")  # avisa de que lambda cambia entre pasadas
+        r = phase_one(imr_chart, x, transform="boxcox", tests=(1,), robust_fit=False)
+    esperado = np.array([lam, mu, sigma, x.size - conservados.size])
+    obtenido = np.array([r.transformation.params["lambda"], r.limits["mu"], r.limits["sigma"], r.excluded.size])
+    return esperado, obtenido
+
+
+@_comprobacion("ajuste-robusto", N_("Fase I con ajuste robusto de la transformación frente a un cálculo manual (medcouple en bucle)"),
+               "Medcouple y diagrama de cajas ajustado (Hubert y Vandervieren, 2008) escritos con bucles; scipy.stats.boxcox", 1e-9)
+def _ajuste_robusto():
+    from .charts import imr_chart
+    from .phase1 import phase_one
+
+    def medcouple_lento(v):  # definición con dos bucles, sin vectorizar
+        v = np.sort(v)
+        m = np.median(v)
+        h = [((b - m) - (m - a)) / (b - a) for a in v[v <= m] for b in v[v >= m] if b > a]
+        return float(np.median(h))
+
+    def dentro(v):
+        q1, q3 = np.percentile(v, [25, 75])
+        mc = medcouple_lento(v)
+        iqr = q3 - q1
+        if mc >= 0:
+            lo, hi = q1 - 1.5 * np.exp(-4 * mc) * iqr, q3 + 1.5 * np.exp(3 * mc) * iqr
+        else:
+            lo, hi = q1 - 1.5 * np.exp(-3 * mc) * iqr, q3 + 1.5 * np.exp(4 * mc) * iqr
+        return (v >= lo) & (v <= hi)
+
+    rng = np.random.default_rng(11)
+    x = rng.lognormal(1, 0.6, 100)
+    x[[20, 70]] *= 20.0
+    conservados = np.arange(x.size)
+    while True:  # cada pasada: ajustar sin los puntos fuera de la caja ajustada, transformar todos, I-MR y prueba 1
+        v = x[conservados]
+        _, lam = stats.boxcox(v[dentro(v)])
+        z = stats.boxcox(v, lmbda=lam)
+        mu, sigma = z.mean(), np.abs(np.diff(z)).mean() / (2 / np.sqrt(np.pi))
+        fuera = np.abs(z - mu) > 3 * sigma
+        if not fuera.any():
+            break
+        conservados = conservados[~fuera]
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
         r = phase_one(imr_chart, x, transform="boxcox", tests=(1,))
     esperado = np.array([lam, mu, sigma, x.size - conservados.size])
     obtenido = np.array([r.transformation.params["lambda"], r.limits["mu"], r.limits["sigma"], r.excluded.size])

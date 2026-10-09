@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-08 21:44+0000\n"
+"POT-Creation-Date: 2026-10-09 18:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -124,6 +124,10 @@ msgstr "Observations (all of them, not by subgroup)."
 msgid "Método; ver el módulo."
 msgstr "Method; see the module."
 
+#, python-format
+msgid "Con ``True`` el ajuste (por máxima verosimilitud) se hace sin los puntos fuera del diagrama de cajas ajustado por asimetría (``adjusted_boxplot_mask``), de modo que unos pocos valores muy lejanos no deformen la transformación y queden disimulados. La transformación se aplica después a todos los datos. Si el recorte quitaría más del 25 % de los puntos o dejaría menos de 8, se ignora y se ajusta con todos."
+msgstr "With ``True`` the fit (by maximum likelihood) is done without the points outside the skewness-adjusted boxplot (``adjusted_boxplot_mask``), so that a few very distant values do not distort the transformation and get disguised. The transformation is then applied to all the data. If the trimming would remove more than 25 % of the points or leave fewer than 8, it is ignored and all of them are used."
+
 msgid "*Transformation*"
 msgstr "*Transformation*"
 
@@ -219,4 +223,7 @@ msgstr "``sigma_level`` — process sigma level (= Z.Bench, without the 1.5σ sh
 
 msgid "**Uso sin límites de especificación** (desde v0.10.7): ``lsl`` y ``usl`` son opcionales en :func:`~pccpy.capability_analysis` y :func:`~pccpy.capability_analysis_summary`. Los índices que dependen de especificaciones (Cp, Cpk, Pp, Ppk, dpmo, sigma_level) se devuelven como ``NaN`` cuando no se pasan; ``sigma_within`` y ``sigma_overall`` siempre se calculan::"
 msgstr "**Use without specification limits** (since v0.10.7): ``lsl`` and ``usl`` are optional in :func:`~pccpy.capability_analysis` and :func:`~pccpy.capability_analysis_summary`. The indices that depend on specifications (Cp, Cpk, Pp, Ppk, dpmo, sigma_level) are returned as ``NaN`` when they are not passed; ``sigma_within`` and ``sigma_overall`` are always computed::"
+
+#~ msgid "Con ``True`` el ajuste (por máxima verosimilitud) se hace sin los puntos fuera del diagrama de cajas ajustado por asimetría (:func:`adjusted_boxplot_mask`), de modo que unos pocos valores muy lejanos no deformen la transformación y queden disimulados. La transformación se aplica después a todos los datos. Si el recorte quitaría más del 25 % de los puntos o dejaría menos de 8, se ignora y se ajusta con todos."
+#~ msgstr ""
 

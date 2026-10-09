@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-08 23:16+0000\n"
+"POT-Creation-Date: 2026-10-09 18:13+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -2110,6 +2110,9 @@ msgstr "The sample size 'n' is missing."
 #, python-brace-format
 msgid "Falta la media histórica de la parte {lab!r} en 'mu'."
 msgstr "The historical mean of part {lab!r} is missing from 'mu'."
+
+msgid "Fase I con ajuste robusto de la transformación frente a un cálculo manual (medcouple en bucle)"
+msgstr "Phase I with a robust fit of the transformation against a manual computation (medcouple in a loop)"
 
 msgid "Fase I con transformación Box-Cox frente a un cálculo manual (reajuste por pasada)"
 msgstr "Phase I with a Box-Cox transformation against a manual computation (refit on each pass)"

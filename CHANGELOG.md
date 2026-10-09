@@ -2,6 +2,9 @@
 
 ## [Sin publicar]
 
+### Añadido
+- **Primer ajuste robusto de la transformación en la Fase I:** `fit_transformation(datos, método, robust=True)` ajusta Box-Cox, Yeo-Johnson o Johnson sin los puntos fuera del diagrama de cajas ajustado por asimetría (medcouple; Hubert y Vandervieren, 2008) y aplica después la transformación a todos los datos; si el recorte quitaría más del 25 % o dejaría menos de 8 puntos, se ajusta con todos. `phase_one(..., transform='boxcox'|'yeo-johnson'|'johnson')` lo usa en cada pasada con el parámetro nuevo `robust_fit=True` (por defecto), de modo que un atípico muy grande ya no deforma lambda y se disimula: en simulación (100 datos, dos puntos ×20, Yeo-Johnson) la Fase I los encuentra en el 74 % de los casos con datos lognormales (antes 18 %) y en el 80 % con Weibull (antes 67 %), con falsas alarmas de la Fase II del 0,39 % y 0,22 % (nominal 0,27 %). **Cambio de comportamiento:** `phase_one` con `transform=` por nombre (nuevo en 0.13.0) ajusta ahora con recorte; `robust_fit=False` devuelve el ajuste anterior. Una comprobación más en la validación (frente a un medcouple escrito con bucles).
+
 ## [0.13.1] - correcciones de la documentación
 
 ### Corregido
