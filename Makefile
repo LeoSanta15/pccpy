@@ -1,4 +1,4 @@
-.PHONY: install test cov lint types build docs docs-en docs-update docs-check examples i18n-extract i18n-update i18n-compile i18n-check check-fast check release-check
+.PHONY: install test cov lint types build docs docs-en docs-update docs-check examples i18n-extract i18n-update i18n-compile i18n-check specs-check check-fast check release-check
 
 install:
 	python -m pip install -e ".[dev,docs,excel]"
@@ -47,7 +47,10 @@ i18n-compile:
 i18n-check:
 	python scripts/i18n_check.py
 
-check-fast: lint types test i18n-check
+specs-check:
+	python scripts/specs_check.py
+
+check-fast: lint types test i18n-check specs-check
 
 check: check-fast build docs docs-en docs-check examples
 

@@ -58,6 +58,8 @@ jobs:
         run: mypy src/pccpy
       - name: Catálogos de traducción
         run: python scripts/i18n_check.py
+      - name: Especificaciones (estructura y trazabilidad)
+        run: python scripts/specs_check.py
 
   documentacion:
     runs-on: ubuntu-latest

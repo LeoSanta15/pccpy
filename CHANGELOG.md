@@ -2,6 +2,9 @@
 
 ## [Sin publicar]
 
+### Añadido
+- **Desarrollo guiado por especificaciones:** `docs/specs/` con el flujo (especificar → aclarar → planificar → tareas → implementar → verificar → cerrar), `CONSTITUCION.md` (los principios que no se negocian, con la regla y la comprobación de cada uno), plantillas de `spec.md`, `plan.md` y `tasks.md`, y una primera especificación real (`001-tolerancia-unilateral-no-parametrica`, borrador). `scripts/specs_check.py` (`make specs-check`, también en `make check-fast` y en el CI) comprueba la estructura, los estados, que no queden dudas abiertas en una especificación aprobada y que una implementada tenga todas las tareas marcadas y cada requisito citado por un test. `CLAUDE.md`, `AGENTS.md` y la plantilla de PR recogen el flujo; `CLAUDE.md` actualiza además el estado (2 622 pruebas, 97 %) y los pendientes, que seguían diciendo que `stages` en EWMA/CUSUM y Johnson no existían.
+
 ## [0.14.0] - correcciones de la auditoría estadística, ajuste robusto y prueba de Dixon
 
 Esta versión **cambia resultados numéricos** (sube la versión menor). Las correcciones salen de una auditoría de 0.13.1; cada hallazgo está fijado con un test que antes fallaba (`tests/test_auditoria_regresion.py`) y cinco de ellos (tolerancia no paramétrica, Cpm, sigma con subgrupos desiguales, Gage R&R reducido y constantes K de AIAG) tienen además una comprobación nueva en `run_validation()` (48 en total).
