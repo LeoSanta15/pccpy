@@ -50,7 +50,8 @@ def _nonparam_indices(n: int, p: float, confidence: float, sides: str):
     Bilateral: el intervalo es ``[X_(r), X_(n+1-r)]`` y su cobertura sigue una Beta(n − 2r + 1, 2r), de modo que la
     confianza de cubrir al menos ``p`` es ``1 − I_p(n − 2r + 1, 2r)``. Disminuye al crecer ``r``; se devuelve el mayor
     ``r`` que todavía alcanza la confianza pedida, es decir, el intervalo más estrecho válido (``(None, nan)`` si ni
-    ``r = 1`` la alcanza). Unilateral: ``r`` es el índice de la cota (``X_(r)``).
+    ``r = 1`` la alcanza). Unilateral: la cota es ``X_(r)`` (inferior) o ``X_(n+1-r)`` (superior) con confianza
+    ``P(Bin(n, 1 − p) ≥ r)``; mismo criterio, el mayor ``r`` que la alcanza (especificación 001).
     """
     alpha = 1.0 - confidence
     if sides == "two":
@@ -61,16 +62,16 @@ def _nonparam_indices(n: int, p: float, confidence: float, sides: str):
                 break
             mejor = (r, achieved)
         return mejor
-    else:  # one-sided
-        for r in range(1, n + 1):
-            if sides == "lower":
-                # P(X_(r) < p-fraction lower bound) = P(Bin(n, 1-p) >= r)
-                achieved = float(stats.binom.sf(r - 1, n, 1.0 - p))
-            else:
-                achieved = float(stats.binom.sf(r - 1, n, 1.0 - p))
-            if achieved >= 1.0 - alpha:
-                return r, float(achieved)
-        return None, NAN
+    # Unilateral: la cota es X_(r) (inferior) o X_(n+1-r) (superior); la confianza de que deje al menos la cobertura p
+    # en el lado de la población es P(Bin(n, 1 − p) ≥ r), que disminuye al crecer r. Se devuelve el mayor r que todavía
+    # la alcanza (la cota menos conservadora válida); r = 1 solo si es el único.
+    mejor_uni: tuple[int | None, float] = (None, NAN)
+    for r in range(1, n + 1):
+        achieved = float(stats.binom.sf(r - 1, n, 1.0 - p))
+        if achieved < 1.0 - alpha:
+            break
+        mejor_uni = (r, achieved)
+    return mejor_uni
 
 
 # ─────────────────────────────────────────────────────────── result object ────

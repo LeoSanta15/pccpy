@@ -81,8 +81,14 @@ El intervalo bilateral es `[X₍ᵣ₎, X₍ₙ₊₁₋ᵣ₎]` y su cobertura 
 todavía alcanza la confianza pedida, es decir, el intervalo más estrecho válido (con `n = 300`, `r = 4` y confianza
 98,4 %; la confianza lograda suele superar la pedida porque `r` es un entero).
 
+En los intervalos **unilaterales** la cota es `X₍ᵣ₎` (inferior) o `X₍ₙ₊₁₋ᵣ₎` (superior) con confianza
+`P(Bin(n, 1 − p) ≥ r)`, que disminuye al crecer `r`; se elige también el **mayor `r`** que todavía alcanza la confianza
+pedida (con `n = 300`, cobertura 0,95 y confianza 0,95: `r = 9` y confianza 0,966, en lugar del mínimo o el máximo de
+la muestra). Hasta la versión 0.14 la cota unilateral era siempre el extremo de la muestra (`r = 1`): válida, pero la más
+conservadora.
+
 > El método no paramétrico puede no ser factible para muestras pequeñas: el bilateral con cobertura 0,95 y confianza
-> 0,95 necesita al menos `n = 93`. Si `n` es insuficiente, `tolerance_interval` lanza `ValueError`.
+> 0,95 necesita al menos `n = 93` (el unilateral, `n = 59`). Si `n` es insuficiente, `tolerance_interval` lanza `ValueError`.
 
 ### Desde estadísticos resumen
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 19:13+0000\n"
+"POT-Creation-Date: 2026-10-15 00:12+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -102,6 +102,12 @@ msgstr "Two-sided nonparametric tolerance"
 
 msgid "Cola binomial `P(Bin(n, p) ≤ n − 2r)` y tamaño mínimo 93 para 95 % / 95 %"
 msgstr "Binomial tail `P(Bin(n, p) ≤ n − 2r)` and minimum size 93 for 95 % / 95 %"
+
+msgid "Tolerancia no paramétrica unilateral"
+msgstr "One-sided nonparametric tolerance"
+
+msgid "Cola binomial `P(Bin(n, 1−p) ≥ r)`, mayor r que cumple y tamaño mínimo 59 para 95 % / 95 %"
+msgstr "Binomial tail `P(Bin(n, 1−p) ≥ r)`, largest r that meets it and minimum size 59 for 95 % / 95 %"
 
 msgid "Cpm con objetivo descentrado y centrado"
 msgstr "Cpm with an off-center and a centered target"
