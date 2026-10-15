@@ -12,12 +12,13 @@ capacidad, normalidad, Pareto, MSA/Gage R&R, muestreo de aceptación,
 intervalos de tolerancia, `diagnose()` y `wizard()`. Todo el código visible al
 usuario (docstrings, errores, salidas) está **en español**.
 
-## Estado actual (verificado el 2026-10-02)
+## Estado actual (verificado el 2026-10-14)
 
 - Versión **0.14.0** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
-- **344 pruebas** pasando, **90 %** de cobertura global, Python `>=3.9`.
+- **2 622 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 48 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
-- CI: `.github/workflows/tests.yml` (tests 3.9–3.13, calidad = ruff + mypy,
+- CI: `.github/workflows/tests.yml` (tests 3.9–3.13, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
+  pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
   documentación = `sphinx-build -W`) y `publish.yml` (se dispara con
   **release publicada**, no con un push de tag).
 - Detalle versión por versión: `CHANGELOG.md` (no lo dupliques aquí).
@@ -36,6 +37,21 @@ python -m build --wheel                        # build aislado, como CI
 sphinx-build -b html -W docs/source docs/build # si tocaste código público, docstrings o docs/
 for f in examples/*.py; do MPLBACKEND=Agg python "$f" >/dev/null || echo "FALLA $f"; done
 ```
+
+## Desarrollo guiado por especificaciones
+
+Todo trabajo que cambie el comportamiento de la biblioteca (una función, un resultado numérico, una opción) parte de
+una especificación revisada **antes** de programar: `docs/specs/NNN-nombre/` con `spec.md` (qué y cómo se comprobará),
+`plan.md` (cómo) y `tasks.md` (tareas con casillas). Flujo, estados y plantillas en `docs/specs/README.md`; principios
+que no se negocian en `docs/specs/CONSTITUCION.md`.
+
+- Una duda se escribe como `[NECESITA ACLARACIÓN: …]` en la especificación; no se adivina. No se pasa a `aprobada` con
+  dudas abiertas, y **aprobar una especificación es decisión de la persona responsable**, no del agente.
+- Los tests que fijan cada requisito (`SNNN-RF-nn` en el nombre, el docstring o un comentario) se escriben antes que el
+  código y deben fallar por el motivo esperado.
+- `implementada` exige tareas marcadas y cada requisito citado por un test. `make specs-check` (dentro de
+  `make check-fast` y del CI) lo comprueba; no juzga si la especificación es buena.
+- No necesitan especificación: erratas, docstrings, traducciones y correcciones triviales.
 
 ## Definición de "terminado"
 
@@ -169,12 +185,13 @@ docs/retrospectiva/  # LESSONS_LEARNED, BUG_CATALOG, PLAYBOOK, SCORECARD, ...
 `build_chart(kind, n_puntos, stages, stage_fn, tests, test_params)`. No
 reimplementes el bucle de etapas.
 
-## Pendientes conocidos (verificados contra el código el 2026-10-02)
+## Pendientes conocidos (verificados contra el código el 2026-10-14)
 
 1. Prueba de Benneyan en la carta G (`charts/advanced.py:317` dice que no la incluye).
-2. `stages` en `ewma_chart`/`cusum_chart` (`charts/timeweighted.py` no lo soporta).
-3. Transformación de Johnson (no hay código en `src/`).
-4. Box-Cox en cartas univariadas y duraciones = 0 en la carta T: NO VERIFICADO.
+2. Tolerancia no paramétrica unilateral: devuelve siempre `r = 1` (válida pero conservadora). Especificada en
+   `docs/specs/001-tolerancia-unilateral-no-parametrica/` (borrador, con una pregunta abierta).
+3. Duraciones = 0 en la carta T: NO VERIFICADO. (`stages` en EWMA/CUSUM, la familia de Johnson y Box-Cox/Yeo-Johnson/Johnson
+   en cartas univariadas ya están hechos desde 0.13/0.14.)
 
 ## Deuda técnica detectada en la revisión del 2026-10-02
 
