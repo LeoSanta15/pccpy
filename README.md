@@ -492,6 +492,7 @@ pp.g_chart(entre_eventos)
 tiempos = rng.weibull(1.5, 40) * 30
 pp.t_chart(tiempos)          # Weibull (defecto)
 pp.t_chart(tiempos, distribution="exponential")  # exponencial
+pp.t_chart(tiempos, zeros="drop")  # excluye con aviso las duraciones iguales a 0 (por defecto da error)
 ```
 
 Los límites de la carta G se basan en percentiles exactos de la distribución

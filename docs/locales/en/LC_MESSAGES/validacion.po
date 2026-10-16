@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-15 00:12+0000\n"
+"POT-Creation-Date: 2026-10-16 21:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -108,6 +108,12 @@ msgstr "One-sided nonparametric tolerance"
 
 msgid "Cola binomial `P(Bin(n, 1−p) ≥ r)`, mayor r que cumple y tamaño mínimo 59 para 95 % / 95 %"
 msgstr "Binomial tail `P(Bin(n, 1−p) ≥ r)`, largest r that meets it and minimum size 59 for 95 % / 95 %"
+
+msgid "Carta T sin duraciones iguales a 0"
+msgstr "T chart without durations equal to 0"
+
+msgid "Ajuste Weibull de máxima verosimilitud (`scipy.stats.weibull_min.fit`, `loc = 0`) y percentiles Φ(±3) escritos aparte"
+msgstr "Maximum-likelihood Weibull fit (`scipy.stats.weibull_min.fit`, `loc = 0`) and Φ(±3) percentiles written separately"
 
 msgid "Cpm con objetivo descentrado y centrado"
 msgstr "Cpm with an off-center and a centered target"

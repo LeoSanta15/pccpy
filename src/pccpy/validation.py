@@ -538,6 +538,27 @@ def _tolerancia_no_parametrica_unilateral():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("carta-t-sin-ceros", N_("Carta T con duraciones iguales a 0 excluidas frente al ajuste Weibull de la serie sin ceros"),
+               "Weibull de máxima verosimilitud (scipy.stats.weibull_min.fit, loc = 0) y percentiles Φ(±3) escritos aparte (especificación 002)", 1e-4,
+               relative=True)
+def _carta_t_sin_ceros():
+    import warnings
+
+    from .charts.advanced import t_chart
+
+    x = stats.weibull_min.rvs(1.5, scale=20, size=60, random_state=np.random.default_rng(5))
+    con_ceros = np.insert(x, [3, 40], 0.0)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        ch = t_chart(con_ceros, zeros="drop")
+    c, _, sc = stats.weibull_min.fit(x, floc=0)
+    ref = stats.weibull_min(c, scale=sc)
+    pan = ch["T"]
+    esperado = [c, sc, ref.ppf(stats.norm.cdf(-3)), ref.ppf(0.5), ref.ppf(stats.norm.cdf(3)), float(x.size)]
+    obtenido = [ch.params[0]["forma"], ch.params[0]["escala"], pan.lcl[0], pan.center[0], pan.ucl[0], float(len(pan.values))]
+    return np.array(esperado), np.array(obtenido)
+
+
 @_comprobacion("cpm-descentrado", N_("Cpm con objetivo descentrado y centrado frente a la fórmula de Minitab escrita aparte"),
                "Cpm = min(T − LEI, LES − T) / (3·s_T), con s_T² = Σ(xᵢ − T)²/(n − 1)", 1e-12)
 def _cpm_descentrado():

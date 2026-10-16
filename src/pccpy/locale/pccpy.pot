@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-15 00:12+0000\n"
+"POT-Creation-Date: 2026-10-16 21:56+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1507,6 +1507,11 @@ msgid ""
 "límites"
 msgstr ""
 
+msgid ""
+"Carta T con duraciones iguales a 0 excluidas frente al ajuste Weibull de "
+"la serie sin ceros"
+msgstr ""
+
 #, python-brace-format
 msgid "Carta de control {kind}"
 msgstr ""
@@ -2382,7 +2387,22 @@ msgstr ""
 msgid "Las contribuciones solo están disponibles para la carta T²."
 msgstr ""
 
-msgid "Las duraciones deben ser positivas (no se admiten duraciones iguales a 0)."
+#, python-brace-format
+msgid ""
+"Las duraciones deben ser positivas: hay {n} cero(s) en las posiciones "
+"{pos}. Use zeros='drop' para excluirlos o agregue/redondee los tiempos."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Las duraciones no pueden ser negativas; hay {n} valor(es) negativo(s) en "
+"las posiciones {pos}."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Las duraciones no pueden ser negativas; hay {n} valor(es) negativo(s) en "
+"las posiciones {pos}. Además hay {m} cero(s) en las posiciones {posc}."
 msgstr ""
 
 msgid "Las frecuencias no pueden ser negativas."
@@ -2682,6 +2702,9 @@ msgid "No normal (p ≤ 0.05)"
 msgstr ""
 
 msgid "No o no lo sé → P estándar"
+msgstr ""
+
+msgid "No quedan duraciones positivas tras excluir los ceros."
 msgstr ""
 
 msgid "No se pudo ajustar ninguna distribución de Johnson a los datos."
@@ -3051,6 +3074,10 @@ msgstr ""
 msgid ""
 "Se detectó tendencia {direction}. Verifica causas asignables antes de "
 "calcular capacidad."
+msgstr ""
+
+#, python-brace-format
+msgid "Se excluyen {n} duración(es) igual(es) a 0 de la carta T."
 msgstr ""
 
 #, python-brace-format

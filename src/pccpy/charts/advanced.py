@@ -4,6 +4,8 @@ Las fórmulas siguen la documentación de métodos de Minitab.
 """
 from __future__ import annotations
 
+import warnings
+
 import numpy as np
 from scipy import optimize, stats
 
@@ -376,6 +378,7 @@ def t_chart(
     stages=None,
     tests=(1,),
     test_params: dict[int, float] | None = None,
+    zeros: str = "error",
 ) -> ControlChart:
     """Carta T para eventos raros: tiempo entre eventos (Weibull o exponencial).
 
@@ -383,11 +386,37 @@ def t_chart(
     ``scale``). La línea central es la mediana y los límites son los percentiles
     Phi(-k) y Phi(k) de la distribución (0.00135 y 0.99865 con k=3). Las duraciones
     deben ser > 0. ``distribution``: ``'weibull'`` o ``'exponential'``.
+
+    ``zeros`` decide qué hacer con las duraciones iguales a 0 (dos eventos en la misma
+    unidad de tiempo): ``'error'`` (por defecto) las rechaza y ``'drop'`` las excluye con un
+    aviso que dice cuántas. Las duraciones negativas siempre se rechazan.
     """
+    check_method(zeros, ("error", "drop"), "zeros")
+    crudo = np.asarray(x, dtype=float).ravel()
+    negativos = np.flatnonzero(crudo < 0)
+    ceros = np.flatnonzero(crudo == 0)
+    if negativos.size and ceros.size:
+        raise ValueError(tr(
+            "Las duraciones no pueden ser negativas; hay {n} valor(es) negativo(s) en las posiciones {pos}. "
+            "Además hay {m} cero(s) en las posiciones {posc}."
+        ).format(n=negativos.size, pos=negativos.tolist(), m=ceros.size, posc=ceros.tolist()))
+    if negativos.size:
+        raise ValueError(tr(
+            "Las duraciones no pueden ser negativas; hay {n} valor(es) negativo(s) en las posiciones {pos}."
+        ).format(n=negativos.size, pos=negativos.tolist()))
+    if ceros.size and zeros == "error":
+        raise ValueError(tr(
+            "Las duraciones deben ser positivas: hay {n} cero(s) en las posiciones {pos}. "
+            "Use zeros='drop' para excluirlos o agregue/redondee los tiempos."
+        ).format(n=ceros.size, pos=ceros.tolist()))
     x = as_1d(x)
+    if ceros.size:
+        x = x[x > 0]
+        warnings.warn(
+            tr("Se excluyen {n} duración(es) igual(es) a 0 de la carta T.").format(n=ceros.size), UserWarning, stacklevel=3)
+        if x.size == 0:
+            raise ValueError(tr("No quedan duraciones positivas tras excluir los ceros."))
     check_method(distribution, ("weibull", "exponential"), "distribution")
-    if np.any(x <= 0):
-        raise ValueError(tr("Las duraciones deben ser positivas (no se admiten duraciones iguales a 0)."))
     if distribution == "weibull" and (shape is None) != (scale is None):
         raise ValueError(tr("Para parámetros históricos Weibull indique 'shape' y 'scale' juntos."))
     tests_n = rules.normalize_tests(tests)

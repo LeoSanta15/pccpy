@@ -8,7 +8,7 @@ versión instalada calcula bien (por ejemplo, en un sistema de calidad regulado)
 import pccpy as pp
 
 informe = pp.run_validation()
-print(informe.summary())      # «Validación de pccpy …: 49 de 49 comprobaciones correctas»
+print(informe.summary())      # «Validación de pccpy …: 50 de 50 comprobaciones correctas»
 informe.passed                # True si todo coincide
 informe.to_frame()            # una fila por comprobación (error y tolerancia)
 ```
@@ -35,6 +35,7 @@ python -m pccpy.validation --markdown validacion.md
 | Fase I con ajuste robusto de la transformación | Medcouple y diagrama de cajas ajustado escritos con bucles; `scipy.stats.boxcox` |
 | Tolerancia no paramétrica bilateral | Cola binomial `P(Bin(n, p) ≤ n − 2r)` y tamaño mínimo 93 para 95 % / 95 % |
 | Tolerancia no paramétrica unilateral | Cola binomial `P(Bin(n, 1−p) ≥ r)`, mayor r que cumple y tamaño mínimo 59 para 95 % / 95 % |
+| Carta T sin duraciones iguales a 0 | Ajuste Weibull de máxima verosimilitud (`scipy.stats.weibull_min.fit`, `loc = 0`) y percentiles Φ(±3) escritos aparte |
 | Cpm con objetivo descentrado y centrado | Fórmula de Minitab `min(T − LEI, LES − T) / (3·s_T)` escrita aparte |
 | Sigma Rbar y Sbar con subgrupos desiguales | Constantes de Montgomery y pesos de varianza inversa escritos aparte |
 | Gage R&R con la interacción agrupada | ANOVA sin interacción calculado aparte con NumPy |
