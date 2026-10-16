@@ -1,3 +1,9 @@
+# Trazabilidad a las especificaciones (docs/specs):
+#   S005-RF-01 — Guardar y restaurar una Fase I: test_la_fase2_tras_guardar_y_cargar_es_identica, test_con_transformacion_se_restaura_con_sus_parametros
+#   S005-RF-02 — Formato JSON sin pickle: test_el_diccionario_es_json_con_nan_como_null, test_to_json_y_from_json_con_texto_y_con_archivo, test_from_json_con_errores_claros
+#   S005-RF-03 — Validaciones al guardar y al cargar: test_argumentos_que_no_se_pueden_guardar_dan_un_error_que_dice_cual, test_from_dict_valida_esquema_carta_y_limites
+#   S005-RF-04 — El resultado cargado no tiene gráfico: test_el_resultado_cargado_no_tiene_carta_pero_resume_y_avisa_al_dibujar
+#   S005-RF-05 — Crear una Fase I desde límites conocidos: test_from_limits_equivale_a_phase_one_en_i_mr, test_from_limits_con_transformacion_fija_y_ida_y_vuelta_json, test_from_limits_en_cartas_de_atributos, test_from_limits_valida
 """``PhaseOneResult.to_dict`` / ``from_dict``: la Fase II tras guardar y cargar es idéntica a la original."""
 import json
 

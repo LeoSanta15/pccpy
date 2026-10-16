@@ -1,3 +1,9 @@
+# Trazabilidad a las especificaciones (docs/specs):
+#   S004-RF-01 — Reajuste por pasada y transformación congelada: test_reajusta_en_cada_pasada_y_congela_la_ultima, test_equivale_a_transformar_antes_con_una_transformacion_fija, test_fase2_aplica_la_transformacion_congelada_sin_reajustar, test_fase2_en_escala_transformada_y_en_original_son_coherentes
+#   S004-RF-02 — Sin `transform` nada cambia: test_sin_transform_el_resultado_no_cambia, test_transform_solo_en_cartas_de_variables
+#   S004-RF-03 — Fallos y avisos: test_boxcox_con_datos_no_positivos_falla_desde_la_primera_pasada, test_si_no_se_puede_reajustar_se_detiene_con_la_carta_actual, test_avisa_si_lambda_cambia_mucho
+#   S004-RF-04 — Historial con la transformación de cada pasada: test_historial_con_la_transformacion_de_cada_pasada, test_johnson_en_el_historial_tiene_lambda_nan, test_subgrupos_y_yeo_johnson_con_negativos
+#   S004-RF-06 — Falsas alarmas de la Fase II: test_simulacion_falsas_alarmas_de_fase2_con_datos_lognormales
 """Fase I con ``transform=``: la transformación se reajusta en cada pasada y se congela para la Fase II."""
 import numpy as np
 import pytest
