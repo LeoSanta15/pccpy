@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-16 21:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -110,4 +110,7 @@ msgstr "T chart for rare events: time between events (Weibull or exponential)."
 
 msgid "Los parámetros se estiman por máxima verosimilitud (o se dan con ``shape`` y ``scale``). La línea central es la mediana y los límites son los percentiles Phi(-k) y Phi(k) de la distribución (0.00135 y 0.99865 con k=3). Las duraciones deben ser > 0. ``distribution``: ``'weibull'`` o ``'exponential'``."
 msgstr "The parameters are estimated by maximum likelihood (or given with ``shape`` and ``scale``). The center line is the median and the limits are the Phi(-k) and Phi(k) percentiles of the distribution (0.00135 and 0.99865 with k=3). Durations must be > 0. ``distribution``: ``'weibull'`` or ``'exponential'``."
+
+msgid "``zeros`` decide qué hacer con las duraciones iguales a 0 (dos eventos en la misma unidad de tiempo): ``'error'`` (por defecto) las rechaza y ``'drop'`` las excluye con un aviso que dice cuántas. Las duraciones negativas siempre se rechazan."
+msgstr "``zeros`` decides what to do with durations equal to 0 (two events in the same time unit): ``'error'`` (default) rejects them and ``'drop'`` excludes them with a warning saying how many. Negative durations are always rejected."
 

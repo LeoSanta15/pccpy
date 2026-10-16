@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-15 00:12+0000\n"
+"POT-Creation-Date: 2026-10-16 21:56+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1669,6 +1669,9 @@ msgstr "Normal capability — Cp, Cpk, Pp, Ppk, PPM, Z.Bench"
 msgid "Carta I-MR con datos asimétricos — se normalizan antes de calcular los límites"
 msgstr "I-MR chart with skewed data — normalized before computing the limits"
 
+msgid "Carta T con duraciones iguales a 0 excluidas frente al ajuste Weibull de la serie sin ceros"
+msgstr "T chart with durations equal to 0 excluded against the Weibull fit of the series without zeros"
+
 #, python-brace-format
 msgid "Carta de control {kind}"
 msgstr "Control chart {kind}"
@@ -2470,8 +2473,17 @@ msgstr "Laney requires at least 2 points per stage."
 msgid "Las contribuciones solo están disponibles para la carta T²."
 msgstr "Contributions are only available for the T² chart."
 
-msgid "Las duraciones deben ser positivas (no se admiten duraciones iguales a 0)."
-msgstr "Durations must be positive (durations equal to 0 are not allowed)."
+#, python-brace-format
+msgid "Las duraciones deben ser positivas: hay {n} cero(s) en las posiciones {pos}. Use zeros='drop' para excluirlos o agregue/redondee los tiempos."
+msgstr "Durations must be positive: there are {n} zero(s) at positions {pos}. Use zeros='drop' to exclude them or aggregate/round the times."
+
+#, python-brace-format
+msgid "Las duraciones no pueden ser negativas; hay {n} valor(es) negativo(s) en las posiciones {pos}."
+msgstr "Durations cannot be negative; there are {n} negative value(s) at positions {pos}."
+
+#, python-brace-format
+msgid "Las duraciones no pueden ser negativas; hay {n} valor(es) negativo(s) en las posiciones {pos}. Además hay {m} cero(s) en las posiciones {posc}."
+msgstr "Durations cannot be negative; there are {n} negative value(s) at positions {pos}. There are also {m} zero(s) at positions {posc}."
 
 msgid "Las frecuencias no pueden ser negativas."
 msgstr "Frequencies cannot be negative."
@@ -2753,6 +2765,9 @@ msgstr "Not normal (p ≤ 0.05)"
 
 msgid "No o no lo sé → P estándar"
 msgstr "No or I don't know → standard P"
+
+msgid "No quedan duraciones positivas tras excluir los ceros."
+msgstr "No positive durations are left after excluding the zeros."
 
 msgid "No se pudo ajustar ninguna distribución de Johnson a los datos."
 msgstr "No Johnson distribution could be fitted to the data."
@@ -3112,6 +3127,10 @@ msgstr "SS"
 #, python-brace-format
 msgid "Se detectó tendencia {direction}. Verifica causas asignables antes de calcular capacidad."
 msgstr "Trend detected: {direction}. Check for assignable causes before calculating capability."
+
+#, python-brace-format
+msgid "Se excluyen {n} duración(es) igual(es) a 0 de la carta T."
+msgstr "{n} duration(s) equal to 0 are excluded from the T chart."
 
 #, python-brace-format
 msgid "Se ignoraron {n_dropped} columna(s) no numéricas del DataFrame: {dropped}. Si querías usar una como identificador de subgrupo, pasa subgroup='nombre_columna'."
@@ -4009,4 +4028,10 @@ msgstr "✔ Recommended analysis: <code style='font-size:13px'>{function}</code>
 
 #~ msgid "La Fase I todavía no admite 'transform': los límites congelados y la transformación tendrían que ajustarse juntos. Transforma los datos antes con fit_transformation()."
 #~ msgstr "Phase I does not support 'transform' yet: the frozen limits and the transformation would have to be fitted together. Transform the data first with fit_transformation()."
+
+#~ msgid "Las duraciones deben ser positivas (no se admiten duraciones iguales a 0)."
+#~ msgstr "Durations must be positive (durations equal to 0 are not allowed)."
+
+#~ msgid "Además hay {n} cero(s) en las posiciones {pos}."
+#~ msgstr "There are also {n} zero(s) at positions {pos}."
 

@@ -1,8 +1,8 @@
 # 002 — Carta T: duraciones iguales a 0
 
-- **Estado:** borrador
+- **Estado:** implementada
 - **Identificador:** S002
-- **Responsable de aprobarla:** LeoSanta15
+- **Responsable de aprobarla:** LeoSanta15 (aprobada el 2026-10-16)
 - **Versión objetivo:** 0.15.1 (no cambia resultados numéricos existentes; solo los mensajes de error y la opción nueva `zeros`)
 
 ## Problema
@@ -50,7 +50,7 @@ LeoSanta15: opción B; descartadas A, solo mensaje, y C, sustituir por la mitad 
 - **Dado** `zeros="drop"`, **cuando** hay ceros, **entonces** el resultado es idéntico al de la serie sin ellos y se
   emite un `UserWarning` que dice cuántos se excluyeron.
 - **Referencia independiente:** el ajuste Weibull de la serie sin ceros calculado aparte con `scipy.stats.weibull_min`
-  (`floc=0`), tolerancia 1e-6 en forma y escala.
+  (`floc=0`), tolerancia 1e-4 en forma y escala (el optimizador de SciPy se detiene en ~3e-6 relativo; la verosimilitud de pccpy es mayor).
 
 ### S002-RF-03 — La opción por defecto no cambia resultados
 

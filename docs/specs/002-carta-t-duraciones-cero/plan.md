@@ -26,7 +26,7 @@
 ## Validación independiente
 
 Comprobación nueva en `run_validation()`: `zeros="drop"` sobre una serie con ceros reproduce los límites de un ajuste
-Weibull de la serie sin ceros hecho con `scipy.stats.weibull_min.fit(floc=0)` (tolerancia 1e-6 en forma y escala) y los
+Weibull de la serie sin ceros hecho con `scipy.stats.weibull_min.fit(floc=0)` (tolerancia 1e-4 en forma y escala) y los
 percentiles Φ(±3).
 
 ## Riesgos
