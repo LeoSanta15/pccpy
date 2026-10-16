@@ -39,6 +39,36 @@ docstring, una traducción) no necesitan especificación.
 | `implementada` | Hecha y verificada | tareas marcadas y trazabilidad a tests |
 | `descartada` | No se hará | motivo en la propia especificación |
 
+## Lo que aprendimos aplicando el flujo
+
+- **Los identificadores deben aparecer literalmente.** `make specs-check` busca `S001-RF-02` tal cual en algún archivo de
+  `tests/`; un nombre como `test_s001_rf_02_…` no basta. Se cita en el docstring o en un comentario del test.
+- **Un test de requisito puede pasar antes del código.** Si protege algo que no cambia (una guarda), se dice en
+  `tasks.md`; solo los requisitos que cambian el comportamiento deben fallar antes por el motivo esperado.
+- **La duda abierta se cierra con la decisión de la persona responsable y se anota en la propia especificación**
+  (opción elegida y alternativas descartadas), no solo en el chat.
+- **Una especificación puede pasar de borrador a implementada en el mismo PR** cuando es pequeña (una por PR); si es
+  grande, el borrador se fusiona primero y la implementación va en fases.
+- **El tamaño de la referencia importa.** Si el resultado de `pccpy` y el de la referencia difieren, se mira cuál es el
+  más exacto (la verosimilitud) antes de «arreglar» el código o relajar la tolerancia sin explicación.
+
+## Especificaciones retroactivas
+
+Las especificaciones `003` a `006` se escribieron *después* de implementar lo que describen (0.13.0 y 0.14.0), a partir del
+CHANGELOG, del código y de los tests. Llevan una nota al inicio que lo dice, el plan original cuando existió
+(`docs/planes/`) y, en cada requisito, el test que lo respalda («Respaldado por»). Sirven para que cada comportamiento
+tenga un requisito con identificador; no sustituyen una referencia independiente que entonces no se escribió como
+requisito. Las nuevas especificaciones **no** son retroactivas: preceden al código.
+
+## Entrega de una versión
+
+1. El PR de la especificación (o el de su implementación) fusiona con *merge commit* cuando el CI está en verde
+   (8 comprobaciones: calidad, documentación, versiones mínimas y los tests de Python 3.9 a 3.13).
+2. Un PR aparte sube la versión (`pyproject.toml`, `src/pccpy/__init__.py`, `CLAUDE.md`) y fecha la sección del CHANGELOG;
+   cambia resultados → versión menor, no → parche.
+3. Las notas del release salen del CHANGELOG. **El tag y el release los crea la persona responsable** (principio 10), que
+   también borra las ramas remotas fusionadas.
+
 ## Estructura
 
 ```
