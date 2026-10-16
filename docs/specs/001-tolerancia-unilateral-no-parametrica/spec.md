@@ -1,8 +1,8 @@
 # 001 — Tolerancia no paramétrica unilateral: cota más ajustada
 
-- **Estado:** borrador
+- **Estado:** implementada
 - **Identificador:** S001
-- **Responsable de aprobarla:** LeoSanta15
+- **Responsable de aprobarla:** LeoSanta15 (aprobada el 2026-10-15)
 - **Versión objetivo:** 0.15.0 (cambia resultados existentes)
 
 ## Problema
@@ -76,5 +76,7 @@ bilateral: el intervalo más estrecho que cumple la confianza.
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: ¿se prefiere conservar la cota actual como opción (`tightest=False`) para quien necesite
-  reproducir resultados de 0.14.0, o basta con documentar el cambio en el CHANGELOG?]
+Ninguna.
+
+**Decisión (LeoSanta15, 2026-10-15):** sin parámetro para conservar el comportamiento anterior; basta con avisar el
+cambio en el CHANGELOG, en «Cambios que alteran resultados».

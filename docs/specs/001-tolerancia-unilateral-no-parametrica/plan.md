@@ -15,11 +15,11 @@ decrece con `r`), igual que la rama bilateral. Las ramas inferior y superior com
 |---|---|---|
 | Mismo criterio que la bilateral (intervalo más estrecho válido) | Dejar `r = 1` | Es válido pero muy conservador y no coincide con la bilateral |
 | Sin interpolación entre estadísticos de orden | Interpolar para clavar la confianza | Rompe la garantía de libre distribución y complica la explicación |
-| (Pendiente de aclarar) conservar el comportamiento anterior tras un parámetro | Cambio sin opción | Ver pregunta abierta |
+| Sin parámetro para conservar el comportamiento anterior; el cambio se avisa en el CHANGELOG (decisión de LeoSanta15, 2026-10-15) | Parámetro `tightest=False` | Evita una opción que solo sirve para reproducir una cota innecesariamente conservadora |
 
 ## Validación independiente
 
-- Comprobación `tolerancia-no-parametrica-unilateral` en `run_validation()`: cola binomial calculada aparte para
+- Comprobación `tolerancia-no-parametrica-unilateral` en `run_validation()` (hecha): cola binomial calculada aparte para
   `n = 300` (r = 9, 0,96593) y para el mínimo `n = 59`.
 - Test de simulación con semilla fija (S001-RF-02).
 

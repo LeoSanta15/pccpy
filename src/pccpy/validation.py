@@ -513,6 +513,31 @@ def _tolerancia_no_parametrica():
             np.array([r93.achieved_confidence, r300.achieved_confidence, primero]))
 
 
+@_comprobacion("tolerancia-no-parametrica-unilateral", N_("Intervalo de tolerancia no paramétrico unilateral: cota más ajustada frente a la cola binomial"),
+               "P(Bin(n, 1 − p) ≥ r) ≥ confianza con el mayor r; tamaño mínimo 59 para 95 % / 95 % (especificación 001)", 1e-12)
+def _tolerancia_no_parametrica_unilateral():
+    from .tolerance import tolerance_interval
+
+    rng = np.random.default_rng(1)
+    x = rng.normal(size=300)
+    xs = np.sort(x)
+    r_ref = max(r for r in range(1, 301) if stats.binom.sf(r - 1, 300, 0.05) >= 0.95)  # índice más ajustado
+    inf = tolerance_interval(x, coverage=0.95, confidence=0.95, method="nonparametric", sides="lower")
+    sup = tolerance_interval(x, coverage=0.95, confidence=0.95, method="nonparametric", sides="upper")
+    minimo = next(n for n in range(2, 200) if stats.binom.sf(0, n, 0.05) >= 0.95)
+    primero = 0
+    for n in range(2, 200):
+        try:
+            tolerance_interval(rng.normal(size=n), coverage=0.95, confidence=0.95, method="nonparametric", sides="lower")
+            primero = n
+            break
+        except ValueError:
+            continue
+    esperado = [float(r_ref), stats.binom.sf(r_ref - 1, 300, 0.05), xs[r_ref - 1], xs[300 - r_ref], float(minimo)]
+    obtenido = [float(np.searchsorted(xs, inf.lower) + 1), inf.achieved_confidence, inf.lower, sup.upper, float(primero)]
+    return np.array(esperado), np.array(obtenido)
+
+
 @_comprobacion("cpm-descentrado", N_("Cpm con objetivo descentrado y centrado frente a la fórmula de Minitab escrita aparte"),
                "Cpm = min(T − LEI, LES − T) / (3·s_T), con s_T² = Σ(xᵢ − T)²/(n − 1)", 1e-12)
 def _cpm_descentrado():

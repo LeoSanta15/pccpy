@@ -103,8 +103,8 @@ def test_no_parametrico_unilateral_contra_binomial(sides):
     r = pp.tolerance_interval(X, coverage=0.90, confidence=0.95, sides=sides, method="nonparametric")
     xs = np.sort(X)
     n = len(X)
-    # índice mínimo r con P(Bin(n, 1-p) >= r) >= confianza (definición de estadístico de orden)
-    k = next(i for i in range(1, n + 1) if stats.binom.sf(i - 1, n, 0.10) >= 0.95)
+    # mayor r con P(Bin(n, 1-p) >= r) >= confianza: la cota menos conservadora válida (especificación 001)
+    k = max(i for i in range(1, n + 1) if stats.binom.sf(i - 1, n, 0.10) >= 0.95)
     if sides == "lower":
         assert r.lower == xs[k - 1] and r.upper is None
     else:
