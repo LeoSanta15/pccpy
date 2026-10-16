@@ -53,6 +53,21 @@ que no se negocian en `docs/specs/CONSTITUCION.md`.
   `make check-fast` y del CI) lo comprueba; no juzga si la especificación es buena.
 - No necesitan especificación: erratas, docstrings, traducciones y correcciones triviales.
 
+## Preferencias de trabajo con la persona responsable (LeoSanta15)
+
+- **Idioma y tono:** se responde en español, conciso. Lo visible de la biblioteca sigue las reglas de i18n de más abajo.
+- **No se fusiona un PR sin que se pida.** Con «Fusiona #N cuando esté en verde» se espera a que los 8 checks del CI pasen y
+  se fusiona con *merge commit* y `expectedHeadSha`; si los PR están apilados, se fusionan en orden y cada base se
+  reorienta a `main`.
+- **El tag y el release los crea la persona responsable**; el agente prepara el PR de la versión (versión en
+  `pyproject.toml`, `src/pccpy/__init__.py` y esta guía, y fecha en el CHANGELOG) y entrega las notas del release. También
+  borra ella las ramas remotas ya fusionadas.
+- **Cambia resultados → versión menor; no → parche**, y se avisa en «Cambios que alteran resultados» del CHANGELOG.
+- **Las traducciones al inglés se escriben, pero siguen pendientes de revisión experta en SPC.**
+- **Tras abrir un PR se vigila** (CI y comentarios) hasta que se fusione.
+- **Lo que no se pudo verificar se dice** (p. ej. el comportamiento de Minitab, las tablas de Z1.9 y Z1.4, la tabla de Dixon
+  recordada de memoria); no se afirma equivalencia con Minitab sin haberla medido.
+
 ## Definición de "terminado"
 
 1. `pytest -q` → 0 fallos. 2. `ruff check src/` → `All checks passed!`.
