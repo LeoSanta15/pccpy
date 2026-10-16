@@ -1,12 +1,14 @@
 # Registro de cambios
 
-## [Sin publicar]
+## [0.15.0] - tolerancia unilateral no paramétrica y desarrollo guiado por especificaciones
+
+Esta versión **cambia resultados numéricos** (sube la versión menor): la cota unilateral de la tolerancia no paramétrica.
 
 ### Cambios que alteran resultados
 - **Tolerancia no paramétrica unilateral** (`tolerance_interval(method="nonparametric", sides="lower"|"upper")`): la cota ya no es siempre el extremo de la muestra (`r = 1`), sino `X_(r)` / `X_(n+1−r)` con el **mayor `r`** cuya confianza `P(Bin(n, 1 − p) ≥ r)` alcanza la pedida, igual que el bilateral desde 0.14.0. La cota anterior era válida pero la más conservadora (con n = 300, cobertura 0,95 y confianza 0,95: confianza 0,9999998 con `r = 1` frente a 0,966 con `r = 9`). El tamaño mínimo no cambia (59 para 0,95 / 0,95). No hay parámetro para recuperar el comportamiento anterior (especificación `docs/specs/001-tolerancia-unilateral-no-parametrica`, aprobada y cerrada). Una comprobación más en la validación (49 en total).
 
 ### Añadido
-- **Desarrollo guiado por especificaciones:** `docs/specs/` con el flujo (especificar → aclarar → planificar → tareas → implementar → verificar → cerrar), `CONSTITUCION.md` (los principios que no se negocian, con la regla y la comprobación de cada uno), plantillas de `spec.md`, `plan.md` y `tasks.md`, y una primera especificación real (`001-tolerancia-unilateral-no-parametrica`, borrador). `scripts/specs_check.py` (`make specs-check`, también en `make check-fast` y en el CI) comprueba la estructura, los estados, que no queden dudas abiertas en una especificación aprobada y que una implementada tenga todas las tareas marcadas y cada requisito citado por un test. `CLAUDE.md`, `AGENTS.md` y la plantilla de PR recogen el flujo; `CLAUDE.md` actualiza además el estado (2 622 pruebas, 97 %) y los pendientes, que seguían diciendo que `stages` en EWMA/CUSUM y Johnson no existían.
+- **Desarrollo guiado por especificaciones:** `docs/specs/` con el flujo (especificar → aclarar → planificar → tareas → implementar → verificar → cerrar), `CONSTITUCION.md` (los principios que no se negocian, con la regla y la comprobación de cada uno), plantillas de `spec.md`, `plan.md` y `tasks.md`, y una primera especificación real (`001-tolerancia-unilateral-no-parametrica`, ya aprobada e implementada). `scripts/specs_check.py` (`make specs-check`, también en `make check-fast` y en el CI) comprueba la estructura, los estados, que no queden dudas abiertas en una especificación aprobada y que una implementada tenga todas las tareas marcadas y cada requisito citado por un test. `CLAUDE.md`, `AGENTS.md` y la plantilla de PR recogen el flujo; `CLAUDE.md` actualiza además el estado (2 622 pruebas, 97 %) y los pendientes, que seguían diciendo que `stages` en EWMA/CUSUM y Johnson no existían.
 
 ## [0.14.0] - correcciones de la auditoría estadística, ajuste robusto y prueba de Dixon
 
