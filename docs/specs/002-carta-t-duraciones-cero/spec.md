@@ -3,7 +3,7 @@
 - **Estado:** borrador
 - **Identificador:** S002
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** 0.15.1 (no cambia resultados numéricos existentes; solo mensajes y, según la decisión, una opción nueva)
+- **Versión objetivo:** 0.15.1 (no cambia resultados numéricos existentes; solo los mensajes de error y la opción nueva `zeros`)
 
 ## Problema
 
@@ -41,12 +41,11 @@ son y en qué posiciones (como hace el aviso de valores no finitos).
 
 ### S002-RF-02 — Ceros: decisión explícita de la persona usuaria
 
-[NECESITA ACLARACIÓN: ¿qué debe poder hacer quien tiene ceros? Opciones: (A) nada: se mantiene el error y el mensaje
-explica que debe agregar o redondear sus tiempos; (B) un parámetro `zeros="error"` (por defecto) | `"drop"` que
-excluye los ceros con un aviso que dice cuántos; (C) además `"min_resolution"`: sustituir cada 0 por la mitad de la
-resolución de medida, que se indica con un parámetro `resolution=`.]
+`t_chart` debe aceptar un parámetro `zeros` con dos valores: `"error"` (por defecto, el comportamiento actual) y `"drop"`, que
+excluye las duraciones iguales a 0 y avisa de cuántas. No se sustituyen ceros por valores inventados (decisión de
+LeoSanta15: opción B; descartadas A, solo mensaje, y C, sustituir por la mitad de la resolución).
 
-**Aceptación:** (si se elige A, este requisito se reduce a que el mensaje de RF-01 explique cómo agregar o redondear los tiempos; lo siguiente aplica a B o C)
+**Aceptación:**
 - **Dado** `zeros="error"` (o sin indicarlo), **entonces** el comportamiento es el de RF-01.
 - **Dado** `zeros="drop"`, **cuando** hay ceros, **entonces** el resultado es idéntico al de la serie sin ellos y se
   emite un `UserWarning` que dice cuántos se excluyeron.
@@ -72,8 +71,7 @@ Con datos positivos el resultado de `t_chart` es idéntico al de 0.15.0 (límite
 
 ## Resultados existentes que cambian
 
-Ninguno. Solo cambian los mensajes de error y, si se elige B o C, se añade una opción con valor por defecto igual al
-comportamiento actual.
+Ninguno. Solo cambian los mensajes de error y se añade `zeros` con un valor por defecto igual al comportamiento actual.
 
 ## No verificable sin la fuente
 
@@ -82,4 +80,4 @@ con Minitab: documenta el comportamiento de `pccpy` y lo marca como diferencia p
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: opción A, B o C para RF-02 (ver arriba).]
+Ninguna. (La opción B para S002-RF-02 se decidió el 2026-10-16.)
