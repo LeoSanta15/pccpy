@@ -1,3 +1,8 @@
+# Trazabilidad a las especificaciones (docs/specs):
+#   S003-RF-01 — Grubbs: valor crítico y nivel: test_critico_de_grubbs_coincide_con_la_tabla_publicada, test_estadistico_de_grubbs_y_dato_marcado, test_grubbs_no_marca_datos_normales_y_su_nivel_es_el_nominal
+#   S003-RF-02 — ESD generalizada (Rosner): test_esd_reproduce_el_ejemplo_del_nist, test_esd_encuentra_dos_atipicos_que_se_enmascaran_para_grubbs, test_esd_falsos_positivos_acotados
+#   S003-RF-03 — Pruebas unilaterales: test_unilateral_usa_alpha_sobre_n_y_solo_mira_un_lado
+#   S003-RF-04 — Índices, aviso de normalidad y resumen: test_los_indices_son_los_de_la_entrada_original_con_valores_no_finitos, test_aviso_si_los_datos_restantes_no_son_normales, test_tabla_resumen_y_traduccion, test_errores
 """outlier_test: Grubbs y ESD generalizada contra valores publicados, fórmulas manuales y simulación."""
 from __future__ import annotations
 

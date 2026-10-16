@@ -1,3 +1,5 @@
+# Trazabilidad a las especificaciones (docs/specs):
+#   S004-RF-05 — Ajuste robusto de la transformación: test_medcouple_coincide_con_la_definicion, test_robust_no_cambia_el_ajuste_con_datos_limpios_y_si_con_atipicos, test_si_el_recorte_quitaria_demasiado_se_ajusta_con_todos, test_simulacion_el_ajuste_robusto_recupera_los_puntos_contaminados, test_la_tasa_de_falsas_alarmas_de_la_fase_ii_sigue_cerca_de_la_nominal, test_robust_fit_no_afecta_a_una_transformacion_ya_ajustada
 """Ajuste robusto de la transformación: medcouple, diagrama de cajas ajustado y ``robust=`` / ``robust_fit=``."""
 import numpy as np
 import pytest

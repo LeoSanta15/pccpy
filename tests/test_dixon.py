@@ -1,3 +1,5 @@
+# Trazabilidad a las especificaciones (docs/specs):
+#   S003-RF-05 — Prueba de Dixon con valores críticos calculados: test_r10_reproduce_las_tablas_publicadas, test_los_criticos_calculados_dejan_la_cola_esperada_en_simulacion, test_razon_automatica_segun_n, test_dos_atipicos_del_mismo_lado_enmascaran_r10_pero_no_r21, test_tasa_de_falsos_positivos_bilateral_no_supera_alfa
 """Prueba de Dixon con valores críticos calculados (integral exacta bajo normalidad)."""
 import warnings
 

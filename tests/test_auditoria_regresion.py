@@ -1,3 +1,12 @@
+# Trazabilidad a las especificaciones (docs/specs):
+#   S006-RF-01 — Tolerancia no paramétrica bilateral: test_tolerancia_no_parametrica_bilateral_exige_n_93_para_95_95, test_tolerancia_no_parametrica_bilateral_elige_el_intervalo_mas_estrecho_valido, test_tolerancia_no_parametrica_bilateral_la_confianza_declarada_se_cumple_en_simulacion
+#   S006-RF-02 — Cpm con objetivo descentrado: test_cpm_con_objetivo_descentrado, test_cpm_con_objetivo_centrado_usa_el_factor_n_menos_1, test_cpm_desde_estadisticos_resumen_coincide_con_el_de_los_datos
+#   S006-RF-03 — Gage R&R: modelo reducido y AIAG: test_gage_rr_con_interaccion_no_significativa_usa_el_modelo_reducido, test_gage_rr_umbral_de_interaccion_configurable, test_gage_rr_cruzado_exige_al_menos_2_replicas, test_constantes_k_de_aiag_con_d2_estrella, test_gage_rr_xbar_r_sigue_aiag
+#   S006-RF-04 — Sigma con subgrupos de distinto tamaño: test_sigma_rbar_con_subgrupos_desiguales_pondera_por_varianza_inversa, test_sigma_sbar_con_subgrupos_desiguales_pondera_por_varianza_inversa, test_sigma_con_tamano_constante_no_cambia
+#   S006-RF-05 — Pruebas del panel MR: test_el_panel_mr_solo_aplica_la_prueba_1, test_los_paneles_r_y_s_mantienen_las_pruebas_1_a_4
+#   S006-RF-06 — Huecos en I-MR: test_un_hueco_en_imr_no_une_observaciones_no_consecutivas, test_una_racha_no_cruza_un_hueco
+#   S006-RF-07 — EWMA y CUSUM: test_cusum_bilateral_arl0_con_sigma_conocida, test_ewma_arl0_con_sigma_conocida, test_cusum_con_arranque_rapido_senala_antes_un_desplazamiento_inicial, test_cusum_headstart_se_valida, test_ewma_y_cusum_con_etapas_calculan_limites_por_etapa, test_ewma_y_cusum_aceptan_sigma_method_con_subgrupos
+#   S006-RF-08 — Validaciones y avisos menores: test_capability_boxcox_acepta_matrices_2d_como_dice_su_docstring, test_imr_avisa_cuando_sigma_es_cero, test_cartas_p_np_y_laney_rechazan_tamanos_de_muestra_no_enteros, test_u_chart_si_admite_areas_de_oportunidad_no_enteras, test_ci_de_ppk_con_ppk_infinito_no_emite_runtimewarning
 """Hallazgos de la auditoría estadística de 0.13.1: cada uno queda fijado con una referencia escrita aparte."""
 import math
 
