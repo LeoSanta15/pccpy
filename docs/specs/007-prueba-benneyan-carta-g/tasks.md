@@ -12,7 +12,7 @@ deben fallar por el motivo esperado.
 ## Fase 1 — Implementación
 
 - [ ] S007-RF-01: `_benneyan_run`.
-- [ ] S007-RF-02: parámetro, violaciones y descripción.
+- [ ] S007-RF-02: parámetros `benneyan` y `benneyan_marks`, violaciones y descripción.
 - [ ] S007-RF-03: conteo por etapa.
 
 ## Fase 2 — Verificación y cierre
