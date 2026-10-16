@@ -5,9 +5,9 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan
 
-- [ ] Test de S007-RF-01 (falla hoy: no existe el cálculo de `c`).
-- [ ] Test de S007-RF-02 (falla hoy: `benneyan` no existe); incluye la guarda de `benneyan=False` idéntico a 0.15.1.
-- [ ] Test de S007-RF-03 (rachas que cruzan etapas).
+- [x] Test de S007-RF-01 (falla hoy: `benneyan` no existe).
+- [x] Test de S007-RF-02 (falla hoy: `benneyan` no existe); incluye la guarda de `benneyan=False` idéntico a 0.15.1.
+- [x] Test de S007-RF-03 (rachas que cruzan etapas).
 
 ## Fase 1 — Implementación
 
