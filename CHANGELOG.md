@@ -1,6 +1,8 @@
 # Registro de cambios
 
-## [Sin publicar]
+## [0.15.1] - carta T con duraciones iguales a 0
+
+No cambia resultados numéricos: con datos positivos todo sale igual que en 0.15.0.
 
 ### Añadido
 - **Carta T con duraciones iguales a 0** (`t_chart(..., zeros="error"|"drop")`): dos eventos en la misma unidad de tiempo dan una duración 0, que la Weibull y la exponencial no admiten. Por defecto (`zeros="error"`) se sigue rechazando, ahora con un mensaje que cita las posiciones y sugiere `zeros="drop"`; con `zeros="drop"` se excluyen con un aviso que dice cuántas (no se sustituyen por valores inventados). Las duraciones negativas siempre se rechazan, con su propio mensaje (antes decía «iguales a 0» también para ellas). Con datos positivos el resultado no cambia. Qué hace Minitab con los ceros no está verificado. Especificación `docs/specs/002-carta-t-duraciones-cero`. Una comprobación más en la validación (50 en total).
