@@ -12,6 +12,7 @@ import pytest
 from scipy import stats
 
 import pccpy as pp
+from pccpy.rules import describe
 
 
 def _c_manual(p, k=3.0):
@@ -97,12 +98,19 @@ def test_s007_rf_02_run_marca_toda_la_racha_que_alcanza_c():
 
 
 def test_s007_rf_02_violations_lista_la_clave_B_con_descripcion_propia():
-    """S007-RF-02: violations() lista la prueba "B" con una descripción propia."""
+    """S007-RF-02: violations() lista la prueba "B" con una descripción propia (no vacía, distinta de las pruebas 1-4)
+    y traducida: cambia con el idioma, como el resto de textos visibles (R-17)."""
     ch = pp.g_chart([9, 0, 0, 0, 8], p=0.05, benneyan=True)
     v = ch.violations(stable=True)
     fila = v[v["test"].astype(str) == "B"]
     assert fila["point"].tolist() == [4]
-    assert "cero" in fila["description"].iloc[0].lower()
+    desc_es = fila["description"].iloc[0]
+    assert desc_es.strip()
+    assert desc_es not in {describe(t) for t in (1, 2, 3, 4)}
+    with pp.language("en"):
+        v_en = ch.violations(stable=True)
+    desc_en = v_en[v_en["test"].astype(str) == "B"]["description"].iloc[0]
+    assert desc_en.strip() and desc_en != desc_es
 
 
 def test_s007_rf_02_benneyan_marks_invalido_lanza_value_error():
