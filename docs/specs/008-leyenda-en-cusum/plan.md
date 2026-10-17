@@ -11,7 +11,11 @@
 - `charts/timeweighted.py` y `charts/timeweighted_attr.py` no cambian: el dibujo ya recibe `secondary`. Hoy `secondary`
   solo lo usan esas dos cartas; si otra carta lo usara con otro significado, habría que añadir un campo al panel con el
   nombre de cada serie.
-- Textos con `tr()` y traducción en `pccpy.po` (R-17).
+- `plot_control_chart(..., legend=True)`: parámetro nuevo que se pasa a `_draw_panel`; con `legend=False` no se llama a
+  `ax.legend()` (las líneas conservan su etiqueta, de modo que quien lo desee puede llamar a `ax.legend()` después).
+  `ControlChart.plot()` y `save_plot()` ya reenvían `**kwargs`.
+- Textos con `tr()` y traducción en `pccpy.po` (R-17). El docstring de `plot_control_chart` cambia: hay que actualizar
+  el catálogo de la documentación (`docs/locales/en`).
 
 ## Decisiones
 

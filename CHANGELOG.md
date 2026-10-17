@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - leyenda de las dos sumas en el gráfico de la CUSUM
+
+No cambia resultados numéricos: solo el dibujo.
+
+### Añadido
+- **Leyenda en el gráfico de la CUSUM** (`cusum_chart` y la CUSUM de atributos): las dos series del panel se nombran «C+ (suma superior)» (azul) y «C- (suma inferior)» (naranja); hasta ahora no se podía saber cuál era cuál sin leer el código. Es la única carta con segunda serie; el resto de cartas no cambia. Se muestra por defecto y se quita con `plot(legend=False)` (parámetro nuevo de `plot_control_chart`, que `ControlChart.plot()` y `save_plot()` reenvían). Traducida al inglés («C+ (upper sum)», «C- (lower sum)», pendiente de revisión experta en SPC). Cambio visual deliberado: el golden `tests/golden/i18n_plots_es.json` incorpora esas dos entradas en `plot_cusum`. Que Minitab dibuje una leyenda así no está verificado. Especificación `docs/specs/008-leyenda-en-cusum`.
+
 ## [0.15.3] - Python 3.14
 
 No cambia código ni resultados.

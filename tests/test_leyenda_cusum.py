@@ -1,4 +1,4 @@
-# Trazabilidad: S008-RF-01, S008-RF-02, S008-RF-03 (spec 008).
+# Trazabilidad: S008-RF-01, S008-RF-02, S008-RF-03, S008-RF-04 (spec 008).
 """Especificación 008: leyenda de las dos sumas en el gráfico de la CUSUM.
 
 No hay resultado numérico que contrastar: los tests inspeccionan los objetos de matplotlib (leyenda y líneas).
@@ -109,3 +109,38 @@ def test_s008_rf_03_la_leyenda_se_traduce_al_ingles():
     assert es == [SUPERIOR, INFERIOR]
     assert en is not None and len(en) == 2 and all(t.strip() for t in en)
     assert en[0] != es[0] and en[1] != es[1]
+
+
+# -------------------------------------------------------------------------- RF-04
+@pytest.mark.parametrize("make", CUSUM)
+def test_s008_rf_04_con_legend_false_no_hay_leyenda_y_el_resto_del_dibujo_es_igual(make):
+    """S008-RF-04: legend=False quita la leyenda; las líneas y sus datos son los mismos que con legend=True."""
+    carta = make()
+    con = carta.plot(legend=True).axes[0]
+    sin = carta.plot(legend=False).axes[0]
+    assert con.get_legend() is not None
+    assert sin.get_legend() is None
+    assert len(sin.get_lines()) == len(con.get_lines())
+    for a, b in zip(sin.get_lines(), con.get_lines()):
+        np.testing.assert_array_equal(a.get_ydata(), b.get_ydata())
+        assert a.get_color() == b.get_color()
+    assert [t.get_text() for t in sin.texts] == [t.get_text() for t in con.texts]
+
+
+def test_s008_rf_04_por_defecto_la_leyenda_se_muestra():
+    """S008-RF-04: sin el parámetro, el resultado es el de legend=True."""
+    carta = pp.cusum_chart(X)
+    assert _textos(carta.plot().axes[0]) == _textos(carta.plot(legend=True).axes[0]) == [SUPERIOR, INFERIOR]
+
+
+def test_s008_rf_04_save_plot_reenvia_legend(tmp_path):
+    """S008-RF-04: save_plot acepta legend (reenvía sus argumentos) y escribe el archivo."""
+    destino = tmp_path / "cusum.png"
+    pp.cusum_chart(X).save_plot(str(destino), legend=False)
+    assert destino.exists() and destino.stat().st_size > 0
+
+
+@pytest.mark.parametrize("make", SIN_SEGUNDA_SERIE)
+def test_s008_rf_04_sin_segunda_serie_legend_true_no_agrega_leyenda(make):
+    """S008-RF-04 (caso borde): legend=True no inventa una leyenda en cartas con una sola serie."""
+    assert all(ax.get_legend() is None for ax in make().plot(legend=True).axes)
