@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - Python 3.14
+## [0.15.3] - Python 3.14
 
 No cambia código ni resultados.
 
