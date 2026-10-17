@@ -59,14 +59,13 @@ def test_s014_rf_02_summary_muestra_la_tendencia_traducida():
         assert es not in texto
 
 
-def test_s014_rf_02_to_frame_stable_da_el_valor_canonico_y_sin_stable_el_mostrado():
+def test_s014_rf_02_to_frame_da_el_valor_canonico_en_cualquier_idioma():
+    """Los valores de ``to_frame()`` no cambian con el idioma (solo las etiquetas): el valor canónico se ve igual."""
     d = pccpy.diagnose(_con_tendencia(+1))
-    estable = d.to_frame(stable=True)
-    assert "increasing" in estable.astype(str).to_numpy()
-    with pccpy.language("es"):
-        assert "creciente" in d.to_frame().astype(str).to_numpy()
-    with pccpy.language("en"):
-        assert "increasing" in d.to_frame().astype(str).to_numpy()
+    assert "increasing" in d.to_frame(stable=True).astype(str).to_numpy()
+    for idioma in ("es", "en"):
+        with pccpy.language(idioma):
+            assert "increasing" in d.to_frame().astype(str).to_numpy()
 
 
 def _lineas_con_literal(carpeta, sufijos, excluir=()):

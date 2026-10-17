@@ -39,11 +39,12 @@ Hay además una incoherencia que existe hoy: `test_params={1: 2.0}` hace que la 
 
 ### S014-RF-02 — Lo que se muestra sigue traducido
 
-`summary()`, `to_frame()` y el texto «Se detectó tendencia …» muestran «creciente»/«decreciente» en español y «increasing»/«decreasing» en inglés
-(`_tendencia()` traduce desde las claves inglesas).
+`summary()` y el texto «Se detectó tendencia …» muestran «creciente»/«decreciente» en español y «increasing»/«decreasing» en inglés
+(`_tendencia()` traduce desde las claves inglesas). `to_frame()` conserva su regla (los golden `i18n_es.json` e `i18n_stable.json` cambian solo en esas celdas, de forma deliberada): las etiquetas se traducen y los valores son iguales en cualquier idioma, así que muestra
+el valor canónico `increasing`/`decreasing`.
 
 **Aceptación:** el texto de `summary()` en español queda **idéntico** al de `tests/golden/i18n_es.json` (que no se regenera); en inglés se
-muestra la traducción. `to_frame(stable=True)` da el valor canónico en inglés.
+muestra la traducción. `to_frame()` (con y sin `stable`) da el valor canónico en inglés en cualquier idioma.
 
 ### S014-RF-03 — Código y documentación
 

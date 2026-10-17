@@ -86,7 +86,7 @@ class DiagnoseResult:
             ("normality_p", N_("p-valor normalidad"), o.normality_p),
             ("is_normal", N_("Distribución normal"), o.is_normal),
             ("has_trend", N_("Tiene tendencia"), o.has_trend),
-            ("trend_direction", N_("Dirección tendencia"), _tendencia(o.trend_direction) if not stable else o.trend_direction),
+            ("trend_direction", N_("Dirección tendencia"), o.trend_direction),
             ("outlier_count", N_("Valores atípicos (IQR)"), o.outlier_count),
             ("lsl", N_("LEI"), o.lsl), ("usl", N_("LES"), o.usl), ("target", N_("Objetivo"), o.target),
             ("cp_estimated", N_("Cp estimado"), o.cp), ("cpk_estimated", N_("Cpk estimado"), o.cpk),
