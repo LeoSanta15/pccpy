@@ -5,13 +5,13 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan
 
-- [ ] Test de S010-RF-01 (falla hoy: `probability` no existe).
-- [ ] Test de S010-RF-02 (fuera de un intervalo y límites heredados).
-- [ ] Test de S010-RF-03 (con Box-Cox, Yeo-Johnson y Johnson).
-- [ ] Test de S010-RF-04 (no normal).
-- [ ] Test de S010-RF-05 (todas las medidas y `ProbabilityResult`).
-- [ ] Test de S010-RF-06 (entrada y casos borde, con arreglos: elemento a elemento, difusión, vacíos y varias dimensiones).
-- [ ] Test de S010-RF-07 (coherencia con `ppm_overall`, `ppm_within` y `ppm_expected`).
+- [x] Test de S010-RF-01 (falla hoy: `probability` no existe).
+- [x] Test de S010-RF-02 (fuera de un intervalo y límites heredados).
+- [x] Test de S010-RF-03 (con Box-Cox, Yeo-Johnson y Johnson).
+- [x] Test de S010-RF-04 (no normal).
+- [x] Test de S010-RF-05 (todas las medidas y `ProbabilityResult`).
+- [x] Test de S010-RF-06 (entrada y casos borde, con arreglos: elemento a elemento, difusión, vacíos y varias dimensiones).
+- [x] Test de S010-RF-07 (coherencia con `ppm_overall`, `ppm_within` y `ppm_expected`).
 
 ## Fase 1 — Implementación
 
