@@ -63,7 +63,7 @@ requisito. Las nuevas especificaciones **no** son retroactivas: preceden al cód
 ## Entrega de una versión
 
 1. El PR de la especificación (o el de su implementación) fusiona con *merge commit* cuando el CI está en verde
-   (8 comprobaciones: calidad, documentación, versiones mínimas y los tests de Python 3.9 a 3.13).
+   (9 comprobaciones: calidad, documentación, versiones mínimas y los tests de Python 3.9 a 3.14).
 2. Un PR aparte sube la versión (`pyproject.toml`, `src/pccpy/__init__.py`, `CLAUDE.md`) y fecha la sección del CHANGELOG;
    cambia resultados → versión menor, no → parche.
 3. Las notas del release salen del CHANGELOG. **El tag y el release los crea la persona responsable** (principio 10), que

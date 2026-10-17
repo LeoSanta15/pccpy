@@ -17,7 +17,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 - Versión **0.15.2** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
 - **2 670 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 52 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
-- CI: `.github/workflows/tests.yml` (tests 3.9–3.13, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
+- CI: `.github/workflows/tests.yml` (tests 3.9–3.14, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
   pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
   documentación = `sphinx-build -W`) y `publish.yml` (se dispara con
   **release publicada**, no con un push de tag).
@@ -56,7 +56,7 @@ que no se negocian en `docs/specs/CONSTITUCION.md`.
 ## Preferencias de trabajo con la persona responsable (LeoSanta15)
 
 - **Idioma y tono:** se responde en español, conciso. Lo visible de la biblioteca sigue las reglas de i18n de más abajo.
-- **No se fusiona un PR sin que se pida.** Con «Fusiona #N cuando esté en verde» se espera a que los 8 checks del CI pasen y
+- **No se fusiona un PR sin que se pida.** Con «Fusiona #N cuando esté en verde» se espera a que los 9 checks del CI pasen y
   se fusiona con *merge commit* y `expectedHeadSha`; si los PR están apilados, se fusionan en orden y cada base se
   reorienta a `main`.
 - **El tag y el release los crea la persona responsable**; el agente prepara el PR de la versión (versión en

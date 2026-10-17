@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - Python 3.14
+
+No cambia código ni resultados.
+
+### Añadido
+- **Python 3.14 en la matriz de pruebas del CI y en los clasificadores del paquete.** La suite completa pasa en Python 3.14 (2 628 pruebas pasadas y 15 omitidas en la corrida local sin los extras `docs` y `excel`, y el trabajo `test (3.14)` del CI en verde). `requires-python` no cambia (`>=3.9`). Con Python 3.14 se probaron numpy 2.5, scipy 1.18, pandas 3.0 y matplotlib 3.11; `ruff`, `mypy`, `sphinx` y los ejemplos no se ejecutan en 3.14.
+
 ## [0.15.2] - prueba de Benneyan en la carta G
 
 No cambia resultados numéricos: la prueba es opcional y está desactivada por defecto.
