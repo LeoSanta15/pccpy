@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-17 04:26+0000\n"
+"POT-Creation-Date: 2026-10-17 05:13+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1057,6 +1057,9 @@ msgstr ""
 msgid "%Var. estudio Gage R&R"
 msgstr ""
 
+msgid "'L' debe ser un número finito > 0."
+msgstr ""
+
 msgid "'alpha' debe estar en (0, 1)."
 msgstr ""
 
@@ -1117,6 +1120,9 @@ msgstr ""
 msgid "'h' debe ser > 0."
 msgstr ""
 
+msgid "'h' debe ser un número finito > 0."
+msgstr ""
+
 msgid "'headstart' debe cumplir 0 <= headstart < h."
 msgstr ""
 
@@ -1124,6 +1130,12 @@ msgid "'inspection_level' debe ser 1, 2 o 3."
 msgstr ""
 
 msgid "'k' debe ser >= 0."
+msgstr ""
+
+msgid "'k' debe ser un número finito > 0."
+msgstr ""
+
+msgid "'k' debe ser un número finito >= 0."
 msgstr ""
 
 #, python-brace-format
@@ -1190,6 +1202,9 @@ msgstr ""
 msgid "'n_hist' solo aplica con parámetros históricos."
 msgstr ""
 
+msgid "'n_runs' debe ser un entero >= 1."
+msgstr ""
+
 msgid "'opportunities' debe ser positivo."
 msgstr ""
 
@@ -1208,6 +1223,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "'scale' debe ser 'original' o 'transformed' (recibido: {scale!r})."
+msgstr ""
+
+msgid "'shift' debe contener solo valores finitos."
 msgstr ""
 
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
@@ -3851,6 +3869,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "{nombre} con lambda = {lam:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"{n} de {total} corridas no dieron señal en {pasos} puntos: el ARL "
+"simulado queda sesgado a la baja."
 msgstr ""
 
 #, python-brace-format

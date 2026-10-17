@@ -13,11 +13,11 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación del núcleo
 
-- [ ] S009-RF-01: `arl_shewhart`.
-- [ ] S009-RF-04: simulación común y cadena de Markov.
-- [ ] S009-RF-03: `arl_ewma`.
-- [ ] S009-RF-02: `arl_cusum` (decidir la combinación de lados con los datos).
-- [ ] S009-RF-05: validación de entrada y casos borde.
+- [x] S009-RF-01: `arl_shewhart`.
+- [x] S009-RF-04: simulación común y cadena de Markov.
+- [x] S009-RF-03: `arl_ewma`.
+- [x] S009-RF-02: `arl_cusum` (decidir la combinación de lados con los datos).
+- [x] S009-RF-05: validación de entrada y casos borde.
 
 ## Fase 2 — Dispersión, atributos y eventos raros (RF-06 a RF-08)
 

@@ -1247,6 +1247,27 @@ msgstr "%Contribution reproducibility"
 msgid "%Var. estudio Gage R&R"
 msgstr "%Study var. Gage R&R"
 
+msgid "'L' debe ser un número finito > 0."
+msgstr "'L' must be a finite number > 0."
+
+msgid "'h' debe ser un número finito > 0."
+msgstr "'h' must be a finite number > 0."
+
+msgid "'k' debe ser un número finito > 0."
+msgstr "'k' must be a finite number > 0."
+
+msgid "'k' debe ser un número finito >= 0."
+msgstr "'k' must be a finite number >= 0."
+
+msgid "'n_runs' debe ser un entero >= 1."
+msgstr "'n_runs' must be an integer >= 1."
+
+msgid "'shift' debe contener solo valores finitos."
+msgstr "'shift' must contain only finite values."
+
+msgid "{n} de {total} corridas no dieron señal en {pasos} puntos: el ARL simulado queda sesgado a la baja."
+msgstr "{n} of {total} runs gave no signal in {pasos} points: the simulated ARL is biased downward."
+
 msgid "'alpha' debe estar en (0, 1)."
 msgstr "'alpha' must be in (0, 1)."
 

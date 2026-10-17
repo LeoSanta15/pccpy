@@ -17,7 +17,11 @@ paramétricas, exportadas en `__init__.py` y `__all__`, con docstring en españo
   que no se cuelgue con ARL enormes.
 - CUSUM bilateral: la cadena de dos sumas no es unidimensional; se combinan los dos lados con
   `1/ARL = 1/ARL⁺ + 1/ARL⁻` (aproximación estándar) y se mide su error frente a la simulación, o se resuelve la cadena
-  bidimensional si el error no es aceptable. Decisión a tomar con los datos de la Fase 1.
+  bidimensional si el error no es aceptable. **Decisión tomada con los datos de la Fase 1** (simulación de 200 000 corridas):
+  con `headstart = 0` la combinación difiere menos de 0,3 % de la simulación (167,68 frente a 167,27 ± 0,4 con h = 4 y
+  k = 0,5; el límite de la cadena 2D es ≈ 167,7); con `headstart > 0` falla (158,2 frente a 148,9 con `headstart = 2`,
+  un 6 %) porque `C⁺` y `C⁻` pueden ser positivas a la vez. Con `headstart > 0` se resuelve la cadena de Markov
+  bidimensional (error ≈ 0,1 %, ≈ 1 s por llamada), tanto con `method="numeric"` como con `"markov"`.
 - Se reutilizan los límites que ya calculan `g_chart`, `t_chart` y las constantes de `_constants.py` para que el ARL sea el de
   la carta que dibuja pccpy.
 
