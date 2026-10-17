@@ -4131,3 +4131,65 @@ msgstr "✔ Recommended analysis: <code style='font-size:13px'>{function}</code>
 #~ msgid "Además hay {n} cero(s) en las posiciones {pos}."
 #~ msgstr "There are also {n} zero(s) at positions {pos}."
 
+msgid "Indica 'below', 'above' o 'between': el resultado no tiene límites de especificación."
+msgstr "Specify 'below', 'above' or 'between': the result has no specification limits."
+
+msgid "Probabilidad de un valor (sigma {sigma}, oportunidades por unidad: {oportunidades})"
+msgstr "Probability of a value (sigma {sigma}, opportunities per unit: {oportunidades})"
+
+msgid "'between' debe ser un par (inferior, superior)."
+msgstr "'between' must be a (lower, upper) pair."
+
+msgid "'between' no se puede combinar con 'below' ni con 'above'."
+msgstr "'between' cannot be combined with 'below' or 'above'."
+
+msgid "'opportunities' debe ser un entero >= 1."
+msgstr "'opportunities' must be an integer >= 1."
+
+msgid "'sigma' debe ser 'overall' o 'within'."
+msgstr "'sigma' must be 'overall' or 'within'."
+
+msgid "'{nombre}' debe ser un número o un arreglo de una dimensión."
+msgstr "'{nombre}' must be a number or a one-dimensional array."
+
+msgid "'{nombre}' debe ser un número o un arreglo no vacío de una dimensión."
+msgstr "'{nombre}' must be a number or a non-empty one-dimensional array."
+
+msgid "'{nombre}' no puede contener NaN."
+msgstr "'{nombre}' cannot contain NaN."
+
+msgid "DPU"
+msgstr "DPU"
+
+msgid "En 'between' el valor inferior no puede ser mayor que el superior."
+msgstr "In 'between' the lower value cannot be greater than the upper value."
+
+msgid "Entre (inferior)"
+msgstr "Between (lower)"
+
+msgid "Entre (superior)"
+msgstr "Between (upper)"
+
+msgid "Evento"
+msgstr "Event"
+
+msgid "La distribución no normal no tiene sigma 'within': usa sigma='overall'."
+msgstr "The non-normal distribution has no 'within' sigma: use sigma='overall'."
+
+msgid "Los valores indicados tienen formas incompatibles."
+msgstr "The given values have incompatible shapes."
+
+msgid "PPM"
+msgstr "PPM"
+
+msgid "Por debajo de"
+msgstr "Below"
+
+msgid "Por encima de"
+msgstr "Above"
+
+msgid "Probabilidad"
+msgstr "Probability"
+
+msgid "Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"
+msgstr "Probability of a value (normal and Box-Cox capability) with the mean and standard deviation computed separately"

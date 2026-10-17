@@ -26,6 +26,7 @@ from scipy.special import boxcox as _boxcox
 from ._data import _excel_writer, as_1d, avisar_asimetria_subgrupos, to_subgroups
 from ._frames import tabla_estadisticos
 from ._i18n import N_, tr
+from ._probabilidad import SIGMAS, ProbabilityResult, _normal, calcular_probabilidad
 from ._sigma import sigma_individuals, sigma_subgroups
 from .bootstrap import bootstrap_ci
 from .transforms import Transformation, fit_transformation
@@ -172,6 +173,40 @@ class CapabilityResult:
             ("ppm_overall_total", N_("PPM esp. general total"), self.ppm_overall[2]),
         ]
         return tabla_estadisticos(rows, stable)
+
+    def probability(self, *, below=None, above=None, between=None, sigma: str = "overall",
+                    opportunities: int = 1) -> ProbabilityResult:
+        """Probabilidad de que una observación del proceso caiga por debajo, por encima o entre valores.
+
+        Supone que el proceso es normal con ``mean`` y la sigma indicada (en la escala transformada si hubo
+        ``transform``) y trata esos parámetros estimados como conocidos. Los valores van en las **unidades
+        originales** de los datos.
+
+        Parameters
+        ----------
+        below, above : float | array-like, optional
+            ``P(X < below)`` y ``P(X > above)``; con ambos, la probabilidad de quedar fuera (suma de las dos partes).
+        between : (float, float) | (array-like, array-like), optional
+            ``P(a ≤ X ≤ b)``; no se combina con ``below`` ni ``above``.
+        sigma : {'overall', 'within'}
+            Sigma general (por defecto) o dentro de los subgrupos.
+        opportunities : int
+            Oportunidades de defecto por unidad, para ``dpu = opportunities · p``.
+
+        Sin ``below``, ``above`` ni ``between`` usa ``lsl`` y ``usl`` del resultado. Los arreglos de una dimensión
+        se combinan elemento a elemento (un número se repite).
+
+        Returns
+        -------
+        ProbabilityResult
+            Con ``probability``, ``ppm``, ``dpmo`` y ``dpu`` (``None`` con ``between``).
+        """
+        if sigma not in SIGMAS:
+            raise ValueError(tr("'sigma' debe ser 'overall' o 'within'."))
+        cdf, sf = _normal(self.mean, self.sigma_overall if sigma == "overall" else self.sigma_within)
+        escala = None if self.transform is None else Transformation.from_info(self.transform).forward
+        return calcular_probabilidad(cdf, sf, lsl=self.lsl, usl=self.usl, below=below, above=above, between=between,
+                                     sigma=sigma, opportunities=opportunities, escala=escala)
 
     def summary(self) -> str:
         o = self
@@ -590,6 +625,22 @@ class NonNormalCapabilityResult:
     @property
     def frozen(self):
         return _DISTS[self.distribution][0](*self.params)
+
+    def probability(self, *, below=None, above=None, between=None, sigma: str = "overall",
+                    opportunities: int = 1) -> ProbabilityResult:
+        """Probabilidad de que una observación caiga por debajo, por encima o entre valores (distribución ajustada).
+
+        Usa ``cdf``/``sf`` de la distribución ajustada (:attr:`frozen`) y trata sus parámetros estimados como
+        conocidos. Mismos parámetros que :meth:`CapabilityResult.probability`, salvo que ``sigma='within'`` no existe
+        aquí (la distribución no tiene sigma «dentro») y lanza ``ValueError``.
+        """
+        if sigma not in SIGMAS:
+            raise ValueError(tr("'sigma' debe ser 'overall' o 'within'."))
+        if sigma == "within":
+            raise ValueError(tr("La distribución no normal no tiene sigma 'within': usa sigma='overall'."))
+        f = self.frozen
+        return calcular_probabilidad(f.cdf, f.sf, lsl=self.lsl, usl=self.usl, below=below, above=above,
+                                     between=between, sigma=sigma, opportunities=opportunities)
 
     def summary(self) -> str:
         o = self

@@ -811,6 +811,22 @@ res_bc.transform     # {'lambda': 0.42}
 
 ---
 
+### Probabilidad de un valor
+
+```python
+res = pp.capability_analysis(x, lsl=44, usl=56, subgroup_size=1)
+p = res.probability(below=47)         # P(X < 47): probability, ppm, dpmo y dpu
+res.probability(between=(48, 52))     # entre dos valores (dpmo y dpu: None)
+res.probability().ppm                 # sin argumentos: fuera de LEI/LES (= PPM esperado)
+res.probability(below=[45, 46, 47]).to_frame()   # arreglos: una fila por valor
+```
+
+Los valores van en las unidades originales (también con Box-Cox o Johnson); `sigma="within"` usa la sigma dentro de los
+subgrupos y `opportunities=` fija las oportunidades por unidad del DPU. Con `capability_nonnormal` usa la distribución
+ajustada. Supone la media y la sigma estimadas como conocidas y no se ha comparado con Minitab.
+
+---
+
 ### Pruebas de atípicos (Grubbs y ESD generalizada)
 
 ```python

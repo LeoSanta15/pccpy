@@ -215,6 +215,32 @@ pp.capability_nonnormal(datos, 6, 22, distribution="weibull", ci_method="bootstr
 - `capability_nonnormal` no daba ningún intervalo: con el bootstrap da el de Pp y Ppk, que incluye la incertidumbre del
   ajuste de la distribución.
 
+## Probabilidad de un valor
+
+`probability()` responde «¿qué probabilidad hay de que una pieza quede por debajo, por encima o entre valores que yo elija?»
+con la distribución que ya ajustó el análisis (normal, normal tras una transformación o la distribución no normal ajustada):
+
+```python
+import numpy as np
+import pccpy as pp
+
+x = np.random.default_rng(0).normal(50, 2, 120)
+res = pp.capability_analysis(x, lsl=44, usl=56, subgroup_size=1)
+
+p = res.probability(below=47)                 # P(X < 47)
+p.probability, p.ppm, p.dpmo, p.dpu           # todas las medidas a la vez
+res.probability(between=(48, 52)).probability # P(48 ≤ X ≤ 52); dpmo y dpu no aplican (None)
+res.probability().ppm                         # sin argumentos: fuera de LEI y LES, igual que el PPM esperado
+res.probability(below=[45, 46, 47], opportunities=3).to_frame()   # arreglos: una fila por valor
+```
+
+- Los valores van en las **unidades originales**, también con `transform=` o `capability_boxcox`.
+- `sigma="overall"` (por defecto) usa la desviación general; `sigma="within"`, la de dentro de los subgrupos. En un
+  resultado no normal solo existe `"overall"`.
+- `dpu = opportunities · p` (con `opportunities=1` por defecto) y `dpmo = 1e6 · p`.
+- Trata la media y la sigma estimadas como conocidas: no incluye la incertidumbre de haberlas estimado. No se ha
+  comparado con Minitab.
+
 ## Capacidad para atributos
 
 Con datos de atributos (unidades defectuosas o conteo de defectos) no existen Cp ni Cpk: la capacidad es la **tasa de

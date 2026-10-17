@@ -433,3 +433,20 @@ msgstr "Garwood (exact)"
 msgid "Ambas calculan la **prueba chi-cuadrado de que la tasa es constante** entre muestras. Si el valor p es pequeño (`homogeneous` es `False`), el proceso no es estable y la capacidad calculada no es fiable: revise primero la carta P o U (y use `phase_one()` para depurar la Fase I). `r.plot()` muestra la tasa por muestra y la estimación acumulada con su intervalo, para ver si ya se estabilizó."
 msgstr "Both compute the **chi-square test that the rate is constant** across samples. If the p-value is small (`homogeneous` is `False`), the process is not stable and the computed capability is not reliable: check the P or U chart first (and use `phase_one()` to clean up Phase I). `r.plot()` shows the rate by sample and the cumulative estimate with its interval, to see whether it has settled."
 
+msgid "`dpu = opportunities · p` (con `opportunities=1` por defecto) y `dpmo = 1e6 · p`."
+msgstr "`dpu = opportunities · p` (with `opportunities=1` by default) and `dpmo = 1e6 · p`."
+
+msgid "Los valores van en las **unidades originales**, también con `transform=` o `capability_boxcox`."
+msgstr "Values are in the **original units**, also with `transform=` or `capability_boxcox`."
+
+msgid "`probability()` responde «¿qué probabilidad hay de que una pieza quede por debajo, por encima o entre valores que yo elija?» con la distribución que ya ajustó el análisis (normal, normal tras una transformación o la distribución no normal ajustada):"
+msgstr "`probability()` answers \"what is the probability that a part falls below, above or between values I choose?\" using the distribution the analysis already fitted (normal, normal after a transformation, or the fitted non-normal distribution):"
+
+msgid "Probabilidad de un valor"
+msgstr "Probability of a value"
+
+msgid "`sigma=\"overall\"` (por defecto) usa la desviación general; `sigma=\"within\"`, la de dentro de los subgrupos. En un resultado no normal solo existe `\"overall\"`."
+msgstr "`sigma=\"overall\"` (default) uses the overall standard deviation; `sigma=\"within\"`, the within-subgroup one. In a non-normal result only `\"overall\"` exists."
+
+msgid "Trata la media y la sigma estimadas como conocidas: no incluye la incertidumbre de haberlas estimado. No se ha comparado con Minitab."
+msgstr "It treats the estimated mean and sigma as known: it does not include the uncertainty of having estimated them. It has not been compared with Minitab."

@@ -2,6 +2,7 @@
 from ._constants import c4, c5, control_chart_constants, d2, d3
 from ._diagnose import DiagnoseResult, diagnose
 from ._i18n import available_languages, get_language, language, set_language, tr
+from ._probabilidad import ProbabilityResult
 from ._wizard import WidgetSession, WizardResult, wizard
 from .acceptance import (
     DodgeRomigPlan,
@@ -120,6 +121,7 @@ __all__ = [
     "PhaseOneResult",
     "PoissonCapabilityResult",
     "PreControlResult",
+    "ProbabilityResult",
     "RunChartResult",
     "SamplingPlanAttributes",
     "SamplingPlanVariables",

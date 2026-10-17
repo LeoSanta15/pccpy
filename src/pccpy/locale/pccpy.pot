@@ -4074,3 +4074,65 @@ msgstr ""
 msgid "✔ Análisis recomendado: <code style='font-size:13px'>{function}</code>"
 msgstr ""
 
+msgid "Indica 'below', 'above' o 'between': el resultado no tiene límites de especificación."
+msgstr ""
+
+msgid "Probabilidad de un valor (sigma {sigma}, oportunidades por unidad: {oportunidades})"
+msgstr ""
+
+msgid "'between' debe ser un par (inferior, superior)."
+msgstr ""
+
+msgid "'between' no se puede combinar con 'below' ni con 'above'."
+msgstr ""
+
+msgid "'opportunities' debe ser un entero >= 1."
+msgstr ""
+
+msgid "'sigma' debe ser 'overall' o 'within'."
+msgstr ""
+
+msgid "'{nombre}' debe ser un número o un arreglo de una dimensión."
+msgstr ""
+
+msgid "'{nombre}' debe ser un número o un arreglo no vacío de una dimensión."
+msgstr ""
+
+msgid "'{nombre}' no puede contener NaN."
+msgstr ""
+
+msgid "DPU"
+msgstr ""
+
+msgid "En 'between' el valor inferior no puede ser mayor que el superior."
+msgstr ""
+
+msgid "Entre (inferior)"
+msgstr ""
+
+msgid "Entre (superior)"
+msgstr ""
+
+msgid "Evento"
+msgstr ""
+
+msgid "La distribución no normal no tiene sigma 'within': usa sigma='overall'."
+msgstr ""
+
+msgid "Los valores indicados tienen formas incompatibles."
+msgstr ""
+
+msgid "PPM"
+msgstr ""
+
+msgid "Por debajo de"
+msgstr ""
+
+msgid "Por encima de"
+msgstr ""
+
+msgid "Probabilidad"
+msgstr ""
+
+msgid "Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"
+msgstr ""

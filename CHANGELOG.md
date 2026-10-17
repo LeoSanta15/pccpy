@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - probabilidad de un valor en la capacidad
+
+No cambia ningún resultado existente: método y clase de resultado nuevos.
+
+### Añadido
+- **`probability()` en los resultados de capacidad** (`CapabilityResult` y `NonNormalCapabilityResult`, especificación `docs/specs/010-probabilidad-capacidad`): `res.probability(below=a)`, `above=b`, `between=(a, b)` o los dos primeros juntos (fuera de un intervalo) dan la probabilidad de un valor que elija el usuario, con la distribución ya ajustada (normal, normal tras Box-Cox, Yeo-Johnson o Johnson, o la no normal ajustada). Devuelve un `ProbabilityResult` con todas las medidas a la vez: `probability`, `ppm`, `dpmo` y `dpu` (`opportunities · p`); con `between` (la zona buena) `dpmo` y `dpu` valen `None`. Los valores van en unidades originales y pueden ser números o arreglos de una dimensión (elemento a elemento, con difusión); sin argumentos usa `lsl` y `usl` del resultado y reproduce `ppm_overall`, `ppm_within` o `ppm_expected`. `sigma="overall"` (por defecto) o `"within"` (no existe en la no normal). Una comprobación más en la validación (62 en total), sección nueva en la guía de capacidad y en el README. Supone la media y la sigma estimadas como conocidas; que Minitab ofrezca un cálculo equivalente no está verificado. Un valor ≤ 0 con Box-Cox da probabilidad 0 por debajo (no un error): decisión de la implementación.
+
 ## [Sin publicar] - ARL de las cartas de control
 
 No cambia resultados numéricos existentes: son funciones nuevas.
