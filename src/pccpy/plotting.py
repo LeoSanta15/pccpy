@@ -21,7 +21,7 @@ BLUE, RED, GREEN, GRAY, ORANGE = "#1f4e9c", "#d62728", "#2e8b57", "#8c8c8c", "#e
 
 
 # ------------------------------------------------------------------ cartas de control
-def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
+def _draw_panel(ax, panel: Panel, zones: bool = True, legend: bool = True) -> None:
     x = np.arange(1, len(panel.values) + 1)
     labels = list(dict.fromkeys(panel.stage.tolist()))
     for lab in labels:
@@ -40,9 +40,13 @@ def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
                 for sgn in (1, -1):
                     ax.plot(xs, panel.center[m] + sgn * k * panel.sigma[m],
                             color=GRAY, lw=0.7, ls="--", **kw)
-    ax.plot(x, panel.values, marker="o", ms=4, lw=1, color=BLUE, zorder=3)
+    # con 2ª serie (CUSUM) las dos sumas se nombran en una leyenda
+    ax.plot(x, panel.values, marker="o", ms=4, lw=1, color=BLUE, zorder=3,
+            label=tr("C+ (suma superior)") if panel.secondary is not None else None)
     if panel.secondary is not None:
-        ax.plot(x, panel.secondary, marker="o", ms=4, lw=1, color=ORANGE, zorder=3)
+        ax.plot(x, panel.secondary, marker="o", ms=4, lw=1, color=ORANGE, zorder=3, label=tr("C- (suma inferior)"))
+        if legend:
+            ax.legend(loc="best", fontsize=8)
 
     tests_at: dict[int, list] = {}
     for t, idx in panel.violations.items():
@@ -71,19 +75,21 @@ def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
     ax.grid(alpha=0.25)
 
 
-def plot_control_chart(chart: ControlChart, *, zones: bool = True, figsize=None,
+def plot_control_chart(chart: ControlChart, *, zones: bool = True, legend: bool = True, figsize=None,
                        title: str | None = None):
     """Dibuja todos los paneles de la carta, apilados. Devuelve la figura.
 
     ``zones=True`` (por defecto) agrega las líneas de 1 y 2 sigma en todos los
     paneles, igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI.
     Los puntos que fallan una prueba se marcan en rojo con el número de la prueba.
+    ``legend=True`` (por defecto) agrega una leyenda a los paneles con dos series (la CUSUM: «C+ (suma
+    superior)» y «C- (suma inferior)»); pasa ``legend=False`` para quitarla.
     """
     with plt.rc_context({}):
         k = len(chart.panels)
         fig, axes = plt.subplots(k, 1, sharex=True, figsize=figsize or (11, 3.6 * k), squeeze=False)
         for ax, panel in zip(axes[:, 0], chart.panels):
-            _draw_panel(ax, panel, zones)
+            _draw_panel(ax, panel, zones, legend)
         eje = axes[-1, 0]
         xlabel = tr("Observación") if chart.kind in _POINT_KINDS else tr("Muestra")
         if chart.labels is not None:

@@ -111,6 +111,8 @@
   "Valor"
  ],
  "plot_cusum": [
+  "C+ (suma superior)",
+  "C- (suma inferior)",
   "Carta de control CUSUM",
   "LC=#",
   "LCI=#",

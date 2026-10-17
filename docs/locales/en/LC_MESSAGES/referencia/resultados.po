@@ -28,8 +28,8 @@ msgstr "Every control chart returns a :class:`~pccpy.ControlChart` (multivariate
 msgid "Dibuja todos los paneles de la carta, apilados. Devuelve la figura."
 msgstr "Draws all the panels of the chart, stacked. Returns the figure."
 
-msgid "``zones=True`` (por defecto) agrega las líneas de 1 y 2 sigma en todos los paneles, igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI. Los puntos que fallan una prueba se marcan en rojo con el número de la prueba."
-msgstr "``zones=True`` (default) adds the 1 and 2 sigma lines to all the panels, just like Minitab. Pass ``zones=False`` to show only UCL, CL and LCL. Points that fail a test are marked in red with the test number."
+msgid "``zones=True`` (por defecto) agrega las líneas de 1 y 2 sigma en todos los paneles, igual que Minitab. Pasa ``zones=False`` para mostrar solo LCS, LC y LCI. Los puntos que fallan una prueba se marcan en rojo con el número de la prueba. ``legend=True`` (por defecto) agrega una leyenda a los paneles con dos series (la CUSUM: «C+ (suma superior)» y «C- (suma inferior)»); pasa ``legend=False`` para quitarla."
+msgstr "``zones=True`` (default) adds the 1 and 2 sigma lines to all the panels, just like Minitab. Pass ``zones=False`` to show only UCL, CL and LCL. Points that fail a test are marked in red with the test number. ``legend=True`` (default) adds a legend to the panels with two series (the CUSUM: "C+ (upper sum)" and "C- (lower sum)"); pass ``legend=False`` to remove it."
 
 msgid "Parámetros"
 msgstr "Parameters"

@@ -1606,6 +1606,12 @@ msgstr "Box-Cox requires strictly positive data."
 msgid "Box-Cox requiere que {name} sea positivo."
 msgstr "Box-Cox requires {name} to be positive."
 
+msgid "C+ (suma superior)"
+msgstr "C+ (upper sum)"
+
+msgid "C- (suma inferior)"
+msgstr "C- (lower sum)"
+
 msgid "CM"
 msgstr "MS"
 

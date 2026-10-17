@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-17 00:10+0000\n"
+"POT-Creation-Date: 2026-10-17 04:26+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1432,6 +1432,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "Box-Cox requiere que {name} sea positivo."
+msgstr ""
+
+msgid "C+ (suma superior)"
+msgstr ""
+
+msgid "C- (suma inferior)"
 msgstr ""
 
 msgid "CM"
