@@ -21,7 +21,7 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Dispersión, atributos y eventos raros (RF-06 a RF-08)
 
-- [ ] Tests de S009-RF-06, S009-RF-07 y S009-RF-08 (fallan hoy: las funciones no existen).
+- [x] Tests de S009-RF-06, S009-RF-07 y S009-RF-08 (fallan hoy: las funciones no existen).
 - [ ] S009-RF-06: `arl_sd` y `arl_range`.
 - [ ] S009-RF-07: `arl_binomial` y `arl_poisson`.
 - [ ] S009-RF-08: `arl_g` y `arl_t`.
