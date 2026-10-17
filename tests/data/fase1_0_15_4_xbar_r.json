@@ -1,0 +1,68 @@
+{
+  "schema": 1,
+  "pccpy_version": "0.15.4",
+  "chart": "xbar_r_chart",
+  "arguments": {},
+  "limits": {
+    "mu": 49.91106295179155,
+    "sigma": 0.8363128236785533
+  },
+  "transformation": null,
+  "converged": true,
+  "reason": "in_control",
+  "n_original": 30,
+  "excluded": [
+    24
+  ],
+  "kept": [
+    0,
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8,
+    9,
+    10,
+    11,
+    12,
+    13,
+    14,
+    15,
+    16,
+    17,
+    18,
+    19,
+    20,
+    21,
+    22,
+    23,
+    25,
+    26,
+    27,
+    28,
+    29
+  ],
+  "history": [
+    {
+      "iteration": 0,
+      "n_points": 30,
+      "flagged": [
+        24
+      ],
+      "center": 49.918679512159684,
+      "sigma": 0.8802941448455314,
+      "transformation": null
+    },
+    {
+      "iteration": 1,
+      "n_points": 29,
+      "flagged": [],
+      "center": 49.91106295179155,
+      "sigma": 0.8363128236785533,
+      "transformation": null
+    }
+  ]
+}
