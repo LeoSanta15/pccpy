@@ -40,9 +40,12 @@ def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
                 for sgn in (1, -1):
                     ax.plot(xs, panel.center[m] + sgn * k * panel.sigma[m],
                             color=GRAY, lw=0.7, ls="--", **kw)
-    ax.plot(x, panel.values, marker="o", ms=4, lw=1, color=BLUE, zorder=3)
+    # con 2ª serie (CUSUM) las dos sumas se nombran en una leyenda
+    ax.plot(x, panel.values, marker="o", ms=4, lw=1, color=BLUE, zorder=3,
+            label=tr("C+ (suma superior)") if panel.secondary is not None else None)
     if panel.secondary is not None:
-        ax.plot(x, panel.secondary, marker="o", ms=4, lw=1, color=ORANGE, zorder=3)
+        ax.plot(x, panel.secondary, marker="o", ms=4, lw=1, color=ORANGE, zorder=3, label=tr("C- (suma inferior)"))
+        ax.legend(loc="best", fontsize=8)
 
     tests_at: dict[int, list] = {}
     for t, idx in panel.violations.items():

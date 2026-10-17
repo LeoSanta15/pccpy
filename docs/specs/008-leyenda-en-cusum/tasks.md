@@ -11,8 +11,8 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S008-RF-01: etiquetas y `ax.legend()` en `_draw_panel`.
-- [ ] S008-RF-03: textos con `tr()` y traducción al inglés.
+- [x] S008-RF-01: etiquetas y `ax.legend()` en `_draw_panel`.
+- [x] S008-RF-03: textos con `tr()` y traducción al inglés.
 
 ## Fase 2 — Verificación y cierre
 
