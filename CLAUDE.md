@@ -12,10 +12,10 @@ capacidad, normalidad, Pareto, MSA/Gage R&R, muestreo de aceptación,
 intervalos de tolerancia, `diagnose()` y `wizard()`. Todo el código visible al
 usuario (docstrings, errores, salidas) está **en español**.
 
-## Estado actual (verificado el 2026-10-17)
+## Estado actual (verificado el 2026-10-17; ver el CHANGELOG para lo no publicado)
 
 - Versión **0.15.3** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
-- **2 670 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 52 comprobaciones.
+- **2 920 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 61 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.14, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
   pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
@@ -177,6 +177,7 @@ src/pccpy/
     run_chart.py     # carta de corridas
     advanced.py      # MA, Z-MR, I-MR-R/S, Zona, G, T
   multivariate.py    # T², |S|, MEWMA, MCUSUM
+  arl.py             # ARL (arl_shewhart/cusum/ewma/sd/range/binomial/poisson/g/t; method numeric|markov|simulation)
   capability.py      # capacidad normal/no normal/Box-Cox, sixpack (transform=, ci_method='bootstrap')
   bootstrap.py       # bootstrap_ci (percentil y BCa), bootstrap_summary
   transforms.py      # Transformation, fit_transformation: Box-Cox, Yeo-Johnson, Johnson SU/SB/SL
