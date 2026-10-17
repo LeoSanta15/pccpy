@@ -5,8 +5,8 @@
 
 ## Diseño
 
-- `charts/variables.py`, `attributes.py`, `advanced.py` (Z-MR, I-MR-R/S): parámetro `k=3.0` y las constantes `3 *` de los límites pasan a `k *`; en dispersión,
-  `c ± k·sd`. Un auxiliar `check_k(k)` en `charts/_engine.py` valida (finito, > 0, no `bool`) con `tr()`.
+- `charts/variables.py`, `attributes.py`, `advanced.py` (Z-MR, I-MR-R/S): parámetros `k=3.0`, `alpha=None` y `rescale_zones=False` (en las cartas con zonas) y las constantes `3 *` de los límites pasan a `k *`; en dispersión,
+  `c ± k·sd`. Un auxiliar `resolve_k(k, alpha)` en `charts/_engine.py` valida (finito, > 0, no `bool`; `alpha` en (0,1); no ambos) con `tr()` y devuelve `k`; `k_from_confidence` se exporta desde `__init__.py` y vive en `_constants.py`. Con `rescale_zones`, el `sigma` que recibe `rules.apply_tests` se multiplica por `k/3` para las pruebas 2 a 8.
 - `build_chart`: el umbral de la prueba 1 es `test_params.get(1, k)`; si `k` se dio explícito y `test_params[1]` difiere, `UserWarning`. `k` viaja en `params`.
 - `results.py`: `_PARAMETROS["k"]`; `_labels`/`@con_etiquetas` sin cambios.
 - `transform`: se calcula en la escala transformada con `k` y `aplicar_escala` devuelve los límites como hoy.
@@ -18,6 +18,8 @@
 |---|---|---|
 | `k` en sigmas | `alpha`/`confidence` | Igual que EWMA, MA, G, T; en R, S y atributos la confianza no es única |
 | Zonas y pruebas 2–8 en σ | Reescalarlas con `k/3` | Las zonas A/B/C se definen sobre σ; reescalar cambiaría el significado de las pruebas |
+| `k` y `alpha` excluyentes | Solo `k` | Decisión de la persona responsable; `alpha` se convierte a `k` |
+| Zonas en σ por defecto, `rescale_zones` opcional | Reescalar siempre | Decisión de la persona responsable |
 | La prueba 1 sigue a `k` | Umbral fijo 3 | Lo marcado debe coincidir con lo dibujado |
 | `test_params[1]` explícito gana | Error | Compatibilidad con código existente |
 

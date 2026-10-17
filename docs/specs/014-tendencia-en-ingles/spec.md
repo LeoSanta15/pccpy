@@ -64,4 +64,5 @@ Nada: la regla de la tendencia (`pct_inc > 0.80` / `< 0.20`) no cambia.
 
 ## Preguntas abiertas
 
+- La spec 015 (parámetro `k`/`alpha`) se publica en la misma versión que esta; la versión de las dos se decide con la respuesta siguiente.
 - [NECESITA ACLARACIÓN: versión objetivo (0.15.6 o 0.16.0).]

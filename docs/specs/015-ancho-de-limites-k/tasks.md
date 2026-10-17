@@ -12,13 +12,16 @@ deben fallar por el motivo esperado.
 - [ ] Test de S015-RF-05 (`k` inválido).
 - [ ] Test de S015-RF-06 (`transform`, `stages`, `mu`/`sigma`).
 - [ ] Test de S015-RF-07 (`params["k"]`, `probability()` y ARL).
+- [ ] Test de S015-RF-09 (`alpha`, `k_from_confidence`).
+- [ ] Test de S015-RF-10 (`rescale_zones`).
 - [ ] Test de S015-RF-08 (fragmento del README).
 
 ## Fase 1 — Implementación
 
-- [ ] S015-RF-05: `check_k`.
+- [ ] S015-RF-05 y RF-09: `resolve_k`, `alpha` y `k_from_confidence`.
 - [ ] S015-RF-01 a RF-03: `k` en las cartas.
 - [ ] S015-RF-04: umbral de la prueba 1 y aviso.
+- [ ] S015-RF-10: `rescale_zones`.
 - [ ] S015-RF-06 y RF-07: transformación, etapas y `params`.
 
 ## Fase 2 — Verificación y cierre
