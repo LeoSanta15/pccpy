@@ -279,11 +279,11 @@ pasa una `Transformation` ya ajustada (`pp.Transformation.from_info(...)`). Un a
 (una función, un arreglo) da un error que dice cuál es; pásalo de nuevo a `phase2()`.
 
 Si prefieres hacerlo a mano, fija la media y la sigma estimadas (las claves de `params` son
-`'media'` y `'sigma'`):
+`'mean'` y `'sigma'`):
 
 ```python
 carta_i = pp.imr_chart(x_historico, tests="all")
-mu_i    = carta_i.params[0]["media"]
+mu_i    = carta_i.params[0]["mean"]
 sigma_i = carta_i.params[0]["sigma"]
 carta_ii = pp.imr_chart(x_nuevo, mu=mu_i, sigma=sigma_i, tests=(1, 2))
 

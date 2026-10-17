@@ -62,7 +62,7 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
             y, sig = d / ni, np.sqrt(ctr / ni)
             lo, hi = 0.0, np.inf
 
-        params = {"centro": float(ctr), "n_puntos": k}
+        params = {"center": float(ctr), "n_points": k}
         if laney:
             if k < 2:
                 raise ValueError(tr("Laney requiere al menos 2 puntos por etapa."))

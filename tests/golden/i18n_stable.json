@@ -11918,16 +11918,16 @@
   "columns": [
    "point",
    "stage",
-   "Zona_value",
-   "Zona_cl",
-   "Zona_ucl",
-   "Zona_lcl",
-   "Zona_failed_tests",
-   "Puntaje_value",
-   "Puntaje_cl",
-   "Puntaje_ucl",
-   "Puntaje_lcl",
-   "Puntaje_failed_tests"
+   "Zone_value",
+   "Zone_cl",
+   "Zone_ucl",
+   "Zone_lcl",
+   "Zone_failed_tests",
+   "Score_value",
+   "Score_cl",
+   "Score_ucl",
+   "Score_lcl",
+   "Score_failed_tests"
   ],
   "data": [
    [

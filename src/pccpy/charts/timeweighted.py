@@ -100,7 +100,7 @@ def ewma_chart(
         flagged = np.flatnonzero((z > ucl) | (z < lcl))
         panel = StagePanel("EWMA", z, full(t0, N), ucl, lcl, sig_t, "EWMA", "only1",
                            violations={1: flagged})
-        return [panel], {"objetivo": t0, "sigma": s, "peso": weight, "k": k, "n_subgrupo": n}
+        return [panel], {"target": t0, "sigma": s, "weight": weight, "k": k, "subgroup_size": n}
 
     return build_chart("EWMA", len(means), stages, stage_fn, (1,), {1: k})
 
@@ -159,6 +159,6 @@ def cusum_chart(
             "CUSUM", up, full(0.0, N), full(ucl, N), full(lcl, N), full(s_x, N),
             N_("Suma acumulada"), "only1", secondary=lo, violations={1: flagged},
         )
-        return [panel], {"objetivo": t0, "sigma": s, "h": h, "k": k, "headstart": headstart, "n_subgrupo": n}
+        return [panel], {"target": t0, "sigma": s, "h": h, "k": k, "headstart": headstart, "subgroup_size": n}
 
     return build_chart("CUSUM", len(means), stages, stage_fn, (1,), None)

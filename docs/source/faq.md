@@ -85,7 +85,7 @@ fase1 = pp.phase_one(pp.imr_chart, x_historico, tests=(1, 2, 3))
 carta_ii = fase1.phase2(x_nuevo, tests=(1,))
 ```
 
-También se puede hacer a mano: `pp.imr_chart(x_nuevo, mu=carta_i.params[0]["media"], sigma=carta_i.params[0]["sigma"])`.
+También se puede hacer a mano: `pp.imr_chart(x_nuevo, mu=carta_i.params[0]["mean"], sigma=carta_i.params[0]["sigma"])`.
 Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma=...)`.
 
 ---

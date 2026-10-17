@@ -1,6 +1,6 @@
 # 012 — Claves en inglés en los resultados de las cartas (`params` y nombres de panel)
 
-- **Estado:** borrador
+- **Estado:** implementada
 - **Identificador:** S012
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.5 (decisión de la persona responsable; aunque rompe `chart.params` y los nombres de la carta de zona,
@@ -15,7 +15,8 @@ pero los resultados de las cartas guardan parte de sus datos con claves en espa�
 - `ControlChart.params` (una lista de diccionarios, uno por etapa) usa claves como `media`, `sigma_dentro`, `tamaño`, `centro`,
   `subgrupos`, `forma`, `escala`, `fase`, `método`… y valores como `"histórica"`. Un usuario que escribe
   `carta.params[0]["media"]` tiene que saber español, sea cual sea el idioma de pccpy.
-- Los nombres de la carta de zona (`chart.kind == "Zona"`, `chart["Zona"]`, el panel `"Puntaje"`) también son palabras en español.
+- Los nombres de la carta de zona (`chart.kind == "Zona"`, `chart["Zona"]`, el panel `"Puntaje"`) y el `kind` de la carta de varianza
+  generalizada (`"Varianza generalizada"`) también son palabras en español.
 
 La 0.15.5 traduce lo que se **muestra** (`summary()`, títulos de gráfico), pero las claves siguen siendo español. Esta especificación
 las pasa al inglés **de golpe, sin alias** (decisión de la persona responsable): `carta.params[0]["mean"]`.
@@ -59,11 +60,12 @@ No hay alias ni aviso de transición: `params[0]["media"]` lanza `KeyError`, igu
 
 ### S012-RF-03 — Nombres de carta y de panel
 
-`chart.kind` y los nombres de panel de la carta de zona pasan a `"Zone"` y `"Score"`; `chart["Zona"]` y `chart["Puntaje"]`
-lanzan `KeyError`.
+`chart.kind` y los nombres de panel de la carta de zona pasan a `"Zone"` y `"Score"`, y el `kind` de la carta de varianza
+generalizada a `"Generalized variance"`; `chart["Zona"]` y `chart["Puntaje"]` lanzan `KeyError`.
 
 **Aceptación:**
 - **Dado** una carta de zona **entonces** `chart.kind == "Zone"`, `chart["Zone"]` existe y `chart["Zona"]` lanza `KeyError`.
+- **Dado** una carta de varianza generalizada **entonces** `chart.kind == "Generalized variance"`.
 - `summary()` y los gráficos siguen mostrando «Zona» en español y «Zone» en inglés.
 
 ### S012-RF-04 — Lo que muestra `summary()` no cambia
@@ -86,15 +88,16 @@ canónicas.
 
 ### S012-RF-06 — Los archivos de Fase I guardados con 0.15.x se siguen leyendo
 
-Un resultado de Fase I guardado con 0.15.x (límites congelados derivados de las claves en español) se lee con la versión nueva y da
-los mismos límites. No es un alias del código: es compatibilidad con archivos que el usuario ya guardó y no puede regenerar sin los
-datos. Los archivos nuevos se escriben con las claves en inglés y un `schema_version` mayor.
+Un resultado de Fase I guardado con 0.15.x se lee con la versión nueva y da los mismos límites. Al preparar la Fase 0 se comprobó
+que **el formato guardado no usa las claves en español** (los límites congelados ya se guardan como `mu`, `sigma`, `p`, `c`, `u`, y
+el historial como `center` y `sigma`), así que el formato no cambia y no hace falta subir el `schema`: este requisito es una
+garantía de que el cambio de `params` (que `phase_one` lee por dentro) no rompe los archivos ya guardados.
 
 **Aceptación:**
-- **Dado** un archivo de Fase I escrito con 0.15.5 (fixture en `tests/`, tal como lo escribía esa versión) **cuando** se lee
-  **entonces** da los mismos límites que antes.
-- Un archivo escrito con la versión nueva se lee con la nueva. Con una versión anterior no se garantiza.
-- **Referencia independiente:** los límites del archivo antiguo, escritos en el test.
+- **Dado** un archivo de Fase I escrito con 0.15.4 (fixtures en `tests/data/`, tal como lo escribía esa versión) **cuando** se lee
+  **entonces** da los mismos límites que antes y `phase2()` funciona.
+- **Dado** `phase_one(...).to_dict()` con la versión nueva **entonces** el `schema` y las claves de `limits` son los de antes.
+- **Referencia independiente:** los límites del archivo antiguo, leídos del propio archivo guardado.
 
 ### S012-RF-07 — Documentación, CHANGELOG y traducciones
 
@@ -123,7 +126,7 @@ Los nombres de la derecha son código: no cambian con el idioma. `summary()` los
 | `tamaño` | `size` | `sigma_entre_dentro` | `sigma_between_within` |
 | `n_subgrupo` | `subgroup_size` | `sigma_mín` / `sigma_máx` | `sigma_min` / `sigma_max` |
 | `MR_prom` | `mr_mean` | `alfa` | `alpha` |
-| `LCS` (MCUSUM) | `limit` | valor `"histórica"` | valor `"historical"` |
+| `LCS` (MEWMA y MCUSUM) | `ucl` | valor `"histórica"` | valor `"historical"` |
 
 ## Casos borde
 
@@ -133,7 +136,7 @@ Los nombres de la derecha son código: no cambian con el idioma. `summary()` los
 | Etapas (varios diccionarios) | Todas con claves canónicas; `stage` ya es inglés |
 | Cartas multivariadas | Mismas claves canónicas (`phase`, `variables`, `points`, `size`, `alpha`…) |
 | `summary()` con el idioma español | Idéntico al de 0.15.5 |
-| Resultado de Fase I guardado con 0.15.x | Se lee y da los mismos límites (RF-06) |
+| Resultado de Fase I guardado con 0.15.x | Se lee y da los mismos límites; el formato no cambia (RF-06) |
 
 ## Resultados existentes que cambian
 
@@ -155,6 +158,9 @@ actualizar. Que Minitab use estos nombres no es relevante (son datos internos de
    concretos de la tabla se revisan al aprobar la especificación.)
 5. Los archivos de Fase I guardados con 0.15.x **se siguen leyendo** (RF-06).
 6. **Versión 0.15.5**, no 0.16.0.
+7. Aprobada por la persona responsable. Al preparar la Fase 0 se hicieron tres ajustes de implementación, que se avisan al aprobar:
+   `LCS` de la MEWMA y la MCUSUM (el límite superior de control) pasa a `ucl` y no a `limit`; el `kind` de la carta de varianza
+   generalizada también pasa a inglés; y el formato de los archivos de Fase I no cambia (ya usaba claves en inglés).
 
 ## Preguntas abiertas
 

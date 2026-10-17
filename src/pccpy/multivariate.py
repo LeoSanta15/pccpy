@@ -246,8 +246,8 @@ def t2_chart(
         stage_means.append(mean_i)
         stage_covs.append(S_i)
         stage_scales.append(float(n))
-        prm = {"fase": {"phase1": "I", "phase2": "II", "known": "parámetros conocidos"}[phase],
-              "variables": p, "puntos": npts, "tamaño": n, "alfa": alpha}
+        prm = {"phase": {"phase1": "I", "phase2": "II", "known": "known"}[phase],
+              "variables": p, "points": npts, "size": n, "alpha": alpha}
         prm.update(_lambda_param(names, lambdas))
         return [panel], prm
 
@@ -332,11 +332,11 @@ def generalized_variance_chart(
         panel = StagePanel("|S|", sub_dets, full(center, npts), full(ucl, npts), full(lcl, npts),
                            full(np.nan, npts), "Varianza generalizada", "only1",
                            symmetric=False, violations={1: flagged})
-        prm = {"|S|": det_s, "variables": p, "subgrupos": npts, "tamaño": n, "sigma_conocida": known}
+        prm = {"|S|": det_s, "variables": p, "subgroups": npts, "size": n, "sigma_known": known}
         prm.update(_lambda_param(names, lambdas))
         return [panel], prm
 
-    base = build_chart("Varianza generalizada", m, stages, stage_fn, (1,), None)
+    base = build_chart("Generalized variance", m, stages, stage_fn, (1,), None)
     return MultivariateChart(kind=base.kind, panels=base.panels, params=base.params,
                              tests=base.tests, test_params=base.test_params,
                              test1_text=_OUT_OF_LIMIT, variables=names, points=None, mean=None,
@@ -437,8 +437,8 @@ def mewma_chart(
         panel = StagePanel("MEWMA", t2, full(np.nan, npts), full(h, npts), full(np.nan, npts),
                            full(np.nan, npts), "MEWMA (T²)", "only1", symmetric=False,
                            violations={1: flagged})
-        prm = {"peso": weight, "LCS": h, "ARL": None if ucl is not None else arl,
-              "variables": p, "puntos": npts, "tamaño": n}
+        prm = {"weight": weight, "ucl": h, "ARL": None if ucl is not None else arl,
+              "variables": p, "points": npts, "size": n}
         prm.update(_lambda_param(names, lambdas))
         return [panel], prm
 
@@ -543,8 +543,8 @@ def mcusum_chart(
         panel = StagePanel("MCUSUM", y, full(0.0, npts), full(lim, npts), full(np.nan, npts),
                            full(np.nan, npts), "MCUSUM (Y)", "only1", symmetric=False,
                            violations={1: flagged})
-        prm = {"k": k, "LCS": lim, "ARL": None if h is not None else arl,
-              "variables": p, "puntos": npts, "tamaño": n}
+        prm = {"k": k, "ucl": lim, "ARL": None if h is not None else arl,
+              "variables": p, "points": npts, "size": n}
         prm.update(_lambda_param(names, lambdas))
         return [panel], prm
 

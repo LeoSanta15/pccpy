@@ -113,7 +113,7 @@ def test_xbar_r_matches_a2_d4():
     assert r.center[0] == pytest.approx(rbar)
     assert r.ucl[0] == pytest.approx(c["D4"] * rbar)
     assert r.lcl[0] == pytest.approx(c["D3"] * rbar)
-    assert ch.params[0]["tamaño"] == 5
+    assert ch.params[0]["size"] == 5
 
 
 def test_xbar_s_matches_a3_b3_b4():
@@ -149,7 +149,7 @@ def test_unequal_subgroup_sizes_scale_limits_by_sqrt_n(rng):
     half = xb.ucl - xb.center
     sizes = np.array([2, 6, 4, 4, 4, 4])
     assert np.allclose(half * np.sqrt(sizes), half[0] * np.sqrt(2))
-    assert ch.params[0]["tamaño"] == "variable"
+    assert ch.params[0]["size"] == "variable"
 
 
 def test_subgroup_of_one_gives_nan_dispersion_but_valid_xbar(rng):

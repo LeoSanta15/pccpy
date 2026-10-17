@@ -80,8 +80,8 @@ msgstr "**Incomplete subgroups** — if the last subgroup has fewer observations
 msgid "¿Cómo aplico los límites de Fase I a nuevos datos (Fase II)?"
 msgstr "How do I apply Phase I limits to new data (Phase II)?"
 
-msgid "También se puede hacer a mano: `pp.imr_chart(x_nuevo, mu=carta_i.params[0][\"media\"], sigma=carta_i.params[0][\"sigma\"])`. Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma=...)`."
-msgstr "It can also be done by hand: `pp.imr_chart(x_new, mu=chart_i.params[0][\"media\"], sigma=chart_i.params[0][\"sigma\"])`. For subgroup charts use `xbar_r_chart(g, mu=..., sigma=...)`."
+msgid "También se puede hacer a mano: `pp.imr_chart(x_nuevo, mu=carta_i.params[0][\"mean\"], sigma=carta_i.params[0][\"sigma\"])`. Para cartas de subgrupos usa `xbar_r_chart(g, mu=..., sigma=...)`."
+msgstr "It can also be done by hand: `pp.imr_chart(x_new, mu=chart_i.params[0][\"mean\"], sigma=chart_i.params[0][\"sigma\"])`. For subgroup charts use `xbar_r_chart(g, mu=..., sigma=...)`."
 
 msgid "¿Excluir puntos en la Fase I es siempre correcto?"
 msgstr "Is excluding points in Phase I always correct?"
@@ -301,4 +301,3 @@ msgstr "{doc}`minitab` — equivalences with Minitab"
 
 #~ msgid "pccpy **no cancela el análisis**: filtra automáticamente los valores no finitos y emite un `UserWarning` indicando cuántos y en qué posiciones. El análisis continúa con los valores válidos restantes."
 #~ msgstr "pccpy **does not abort the analysis**: it automatically filters out non-finite values and emits a `UserWarning` stating how many and at which positions. The analysis continues with the remaining valid values."
-
