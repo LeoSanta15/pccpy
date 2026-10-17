@@ -1,6 +1,6 @@
 # 010 — Probabilidad de un valor en el análisis de capacidad
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S010
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.4 (método nuevo; no cambia ningún resultado existente; decisión de la persona responsable, junto con

@@ -299,3 +299,37 @@ def test_s010_rf_07_coherencia_transformacion(datos):
     p = r.probability()
     assert p.ppm == pytest.approx(r.ppm_overall[2], rel=1e-9)
     assert p.p_below * 1e6 == pytest.approx(r.ppm_overall[0], rel=1e-9)
+
+
+# ---------------------------------------------------------------- RF-08
+def test_s010_rf_08_exportacion_y_validacion():
+    """S010-RF-08: ProbabilityResult exportado y la comprobación de validación pasa (62 en total)."""
+    from pccpy.validation import run_validation
+
+    assert "ProbabilityResult" in pccpy.__all__
+    assert pccpy.ProbabilityResult.__doc__
+    informe = run_validation()
+    assert len(informe.checks) == 62
+    assert all(c.passed for c in informe.checks if c.id == "probabilidad-capacidad")
+    assert any(c.id == "probabilidad-capacidad" for c in informe.checks)
+
+
+def test_s010_rf_08_ejemplo_de_la_guia():
+    """S010-RF-08: el ejemplo de la guía de capacidad se ejecuta tal como está escrito."""
+    import re
+    from pathlib import Path
+
+    texto = (Path(__file__).resolve().parents[1] / "docs" / "source" / "capacidad_indices.md").read_text(encoding="utf-8")
+    bloques = [b for b in re.findall(r"```python\n(.*?)```", texto, re.S) if "res.probability(" in b]
+    assert bloques
+    for b in bloques:
+        exec(b, {})
+
+
+def test_s010_rf_08_textos_en_ingles():
+    """S010-RF-08: los mensajes y las cabeceras se traducen."""
+    with pccpy.language("en"):
+        r = pccpy.capability_analysis(np.random.default_rng(1).normal(50, 2, 60), lsl=44, usl=56, subgroup_size=1)
+        with pytest.raises(ValueError, match="sigma"):
+            r.probability(below=1, sigma="x")
+        assert "Probability" in r.probability(below=47).to_frame().columns

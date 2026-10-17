@@ -4190,3 +4190,6 @@ msgstr "Above"
 
 msgid "Probabilidad"
 msgstr "Probability"
+
+msgid "Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"
+msgstr "Probability of a value (normal and Box-Cox capability) with the mean and standard deviation computed separately"

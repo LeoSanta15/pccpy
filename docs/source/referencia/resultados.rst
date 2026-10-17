@@ -26,6 +26,9 @@ Capacidad y normalidad devuelven, respectivamente:
 .. autoclass:: pccpy.NonNormalCapabilityResult
    :members:
 
+.. autoclass:: pccpy.ProbabilityResult
+   :members: to_frame, summary
+
 .. autoclass:: pccpy.NormalityResult
    :members:
 

@@ -56,28 +56,21 @@ class ProbabilityResult:
 
     Con un número en la entrada, las medidas son números; con arreglos, arreglos de la forma resultante.
 
-    Attributes
-    ----------
-    event : {'below', 'above', 'outside', 'between'}
-        Evento: por debajo de un valor, por encima, fuera de un intervalo (ambos) o entre dos valores.
-    probability : float | ndarray
-        Probabilidad del evento, entre 0 y 1.
-    ppm : float | ndarray
-        ``1e6 · probability`` (partes por millón).
-    dpmo : float | ndarray | None
-        Defectos por millón de oportunidades (``1e6 · probability``); ``None`` con ``between`` (no es un defecto).
-    dpu : float | ndarray | None
-        Defectos por unidad: ``opportunities · probability``; ``None`` con ``between``.
-    p_below, p_above : float | ndarray | None
-        Las dos partes del evento (``None`` si no hay esa parte).
-    below, above : float | ndarray | None
-        Valores usados, en unidades originales (los límites de especificación si se heredaron).
-    between : tuple | None
-        Par ``(inferior, superior)`` usado con ``between``.
-    sigma : str
-        ``'overall'`` o ``'within'``.
-    opportunities : int
-        Oportunidades de defecto por unidad (para ``dpu``).
+    Notes
+    -----
+    Campos:
+
+    - ``event`` ({'below', 'above', 'outside', 'between'}): Evento: por debajo de un valor, por encima, fuera de un intervalo (ambos) o entre dos valores.
+    - ``probability`` (float | ndarray): Probabilidad del evento, entre 0 y 1.
+    - ``ppm`` (float | ndarray): ``1e6 · probability`` (partes por millón).
+    - ``dpmo`` (float | ndarray | None): Defectos por millón de oportunidades (``1e6 · probability``); ``None`` con ``between`` (no es un defecto).
+    - ``dpu`` (float | ndarray | None): Defectos por unidad: ``opportunities · probability``; ``None`` con ``between``.
+    - ``p_below, p_above`` (float | ndarray | None): Las dos partes del evento (``None`` si no hay esa parte).
+    - ``below, above`` (float | ndarray | None): Valores usados, en unidades originales (los límites de especificación si se heredaron).
+    - ``between`` (tuple | None): Par ``(inferior, superior)`` usado con ``between``.
+    - ``sigma`` (str): ``'overall'`` o ``'within'``.
+    - ``opportunities`` (int): Oportunidades de defecto por unidad (para ``dpu``).
+
     """
 
     event: str

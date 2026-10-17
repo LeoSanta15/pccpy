@@ -1042,6 +1042,28 @@ def _entorno() -> dict:
             "scipy": scipy.__version__, "pandas": pd.__version__}
 
 
+@_comprobacion("probabilidad-capacidad", N_("Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"),
+               "scipy.stats.norm con media y desviación de los datos y Box-Cox escrito aparte; especificación 010", 1e-10,
+               relative=True)
+def _probabilidad_capacidad():
+    from .capability import capability_analysis, capability_boxcox
+
+    x = np.random.default_rng(10).normal(50, 2, 120)
+    r = capability_analysis(x, lsl=44, usl=56, subgroup_size=1)
+    d = stats.norm(float(np.mean(x)), float(np.std(x, ddof=1)))
+    esperado = [d.cdf(47.0), d.sf(53.0), d.cdf(52.0) - d.cdf(48.0), d.cdf(44.0) + d.sf(56.0)]
+    obtenido = [r.probability(below=47.0).probability, r.probability(above=53.0).probability,
+                r.probability(between=(48.0, 52.0)).probability, r.probability().probability]
+    y = np.random.default_rng(11).lognormal(1.0, 0.3, 100)
+    b = capability_boxcox(y, lsl=1.0, usl=6.0)
+    lam = b.transform["lambda"]
+    z = (y ** lam - 1) / lam
+    db = stats.norm(float(np.mean(z)), float(np.std(z, ddof=1)))
+    esperado.append(db.cdf((2.5 ** lam - 1) / lam))
+    obtenido.append(b.probability(below=2.5).probability)
+    return np.array(esperado), np.array(obtenido)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 

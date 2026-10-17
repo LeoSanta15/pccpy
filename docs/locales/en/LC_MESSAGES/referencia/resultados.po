@@ -192,3 +192,51 @@ msgstr "Uses ``cdf``/``sf`` of the fitted distribution (:attr:`frozen`) and trea
 
 msgid "Devuelve"
 msgstr "Returns"
+
+msgid "``opportunities`` (int): Oportunidades de defecto por unidad (para ``dpu``)."
+msgstr "``opportunities`` (int): Defect opportunities per unit (for ``dpu``)."
+
+msgid "``probability`` (float | ndarray): Probabilidad del evento, entre 0 y 1."
+msgstr "``probability`` (float | ndarray): Probability of the event, between 0 and 1."
+
+msgid "Con un número en la entrada, las medidas son números; con arreglos, arreglos de la forma resultante."
+msgstr "With a number as input the measures are numbers; with arrays, arrays of the resulting shape."
+
+msgid "Tabla con una fila por elemento."
+msgstr "Table with one row per element."
+
+msgid "``event`` ({'below', 'above', 'outside', 'between'}): Evento: por debajo de un valor, por encima, fuera de un intervalo (ambos) o entre dos valores."
+msgstr "``event`` ({'below', 'above', 'outside', 'between'}): Event: below a value, above it, outside an interval (both) or between two values."
+
+msgid "``dpu`` (float | ndarray | None): Defectos por unidad: ``opportunities · probability``; ``None`` con ``between``."
+msgstr "``dpu`` (float | ndarray | None): Defects per unit: ``opportunities · probability``; ``None`` with ``between``."
+
+msgid "``between`` (tuple | None): Par ``(inferior, superior)`` usado con ``between``."
+msgstr "``between`` (tuple | None): Pair ``(lower, upper)`` used with ``between``."
+
+msgid "Probabilidad de un evento sobre el proceso y sus medidas derivadas."
+msgstr "Probability of an event about the process and its derived measures."
+
+msgid "``below, above`` (float | ndarray | None): Valores usados, en unidades originales (los límites de especificación si se heredaron)."
+msgstr "``below, above`` (float | ndarray | None): Values used, in original units (the specification limits if they were inherited)."
+
+msgid "Notas"
+msgstr "Notes"
+
+msgid "``sigma`` (str): ``'overall'`` o ``'within'``."
+msgstr "``sigma`` (str): ``'overall'`` or ``'within'``."
+
+msgid "``ppm`` (float | ndarray): ``1e6 · probability`` (partes por millón)."
+msgstr "``ppm`` (float | ndarray): ``1e6 · probability`` (parts per million)."
+
+msgid "``p_below, p_above`` (float | ndarray | None): Las dos partes del evento (``None`` si no hay esa parte)."
+msgstr "``p_below, p_above`` (float | ndarray | None): The two parts of the event (``None`` if there is no such part)."
+
+msgid "``dpmo`` (float | ndarray | None): Defectos por millón de oportunidades (``1e6 · probability``); ``None`` con ``between`` (no es un defecto)."
+msgstr "``dpmo`` (float | ndarray | None): Defects per million opportunities (``1e6 · probability``); ``None`` with ``between`` (it is not a defect)."
+
+msgid "Texto con el evento y la tabla de medidas."
+msgstr "Text with the event and the table of measures."
+
+msgid "Campos:"
+msgstr "Fields:"

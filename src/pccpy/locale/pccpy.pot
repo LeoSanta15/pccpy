@@ -4133,3 +4133,6 @@ msgstr ""
 
 msgid "Probabilidad"
 msgstr ""
+
+msgid "Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"
+msgstr ""
