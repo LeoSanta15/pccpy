@@ -1064,6 +1064,51 @@ def _probabilidad_capacidad():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("probabilidad-cartas", N_("Probabilidad de un valor en las cartas de control (normal, rango, S, binomial, Poisson, geométrica y Weibull)"),
+               "Fórmulas escritas aparte: normal, integral del rango, gamma incompleta, sumas de la binomial y la Poisson, geométrica y "
+               "Weibull cerradas; especificación 011", 1e-8, relative=True)
+def _probabilidad_cartas():
+    from scipy import integrate, special
+
+    from .charts.advanced import g_chart, t_chart
+    from .charts.attributes import c_chart, np_chart
+    from .charts.variables import xbar_r_chart, xbar_s_chart
+
+    rng = np.random.default_rng(12)
+    g = rng.normal(50, 2, (25, 5))
+    esperado, obtenido = [], []
+    xr = xbar_r_chart(g, mu=50.0, sigma=2.0)
+    esperado.append(float(stats.norm.cdf((49.0 - 50.0) / (2.0 / math.sqrt(5)))))
+    obtenido.append(xr.probability(below=49.0).probability)
+    # rango de 5 normales: P(R <= r) = n ∫ φ(x) [Φ(x + r) − Φ(x)]^(n−1) dx
+    r_ = 6.0 / 2.0
+    cdf_rango = 5 * integrate.quad(lambda x: stats.norm.pdf(x) * (stats.norm.cdf(x + r_) - stats.norm.cdf(x)) ** 4, -12, 12,
+                                   epsabs=1e-13, epsrel=1e-13)[0]
+    esperado.append(1.0 - cdf_rango)
+    obtenido.append(xr.probability(panel="R", above=6.0).probability)
+    # desviación estándar de 5 observaciones: P(S > b) = Q((n−1)/2, (n−1) b² / (2σ²)) (gamma incompleta regularizada)
+    xs = xbar_s_chart(g, mu=50.0, sigma=2.0)
+    esperado.append(float(special.gammaincc(2.0, 4 * 3.0 ** 2 / (2 * 2.0 ** 2))))
+    obtenido.append(xs.probability(panel="S", above=3.0).probability)
+    # binomial y Poisson: sumas de la función de masa escritas a mano
+    d = rng.binomial(100, 0.05, 30)
+    ucl = np_chart(d, np.full(30, 100), p=0.05)["NP"].ucl[0]
+    corte = math.floor(ucl)
+    esperado.append(1.0 - sum(math.comb(100, k) * 0.05 ** k * 0.95 ** (100 - k) for k in range(corte + 1)))
+    obtenido.append(np_chart(d, np.full(30, 100), p=0.05).probability(above=ucl).probability)
+    c = rng.poisson(25, 30)
+    esperado.append(sum(math.exp(-25.0) * 25.0 ** k / math.factorial(k) for k in range(10)))   # P(C < 10) = P(C <= 9)
+    obtenido.append(c_chart(c, c=25.0).probability(below=10.0).probability)
+    # geométrica: P(X > b) = (1 − p)^(⌊b⌋ + 1); Weibull: P(T > b) = exp(−(b/escala)^forma)
+    gc = g_chart(rng.geometric(0.02, 30) - 1, p=0.02)
+    esperado.append(0.98 ** (math.floor(gc["G"].ucl[0]) + 1))
+    obtenido.append(gc.probability(above=gc["G"].ucl[0]).probability)
+    tc = t_chart(rng.weibull(1.5, 30) * 10, shape=1.5, scale=10.0)
+    esperado.append(math.exp(-((25.0 / 10.0) ** 1.5)))
+    obtenido.append(tc.probability(above=25.0).probability)
+    return np.array(esperado), np.array(obtenido)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 

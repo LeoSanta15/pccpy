@@ -121,6 +121,41 @@ muy cerca de 0. Con la escala del tiempo al doble el ARL baja de 370 a ≈ 10, p
 # [122.1, 262.2, 431.7, 370.4, 35.5, 10.3]
 ```
 
+## Probabilidad de un valor desde una carta
+
+El ARL parte de parámetros sueltos. Con una carta ya construida, `chart.probability()` da la probabilidad de un valor del
+estadístico que grafica (la media del subgrupo, el rango, el conteo…) con el proceso en control y los parámetros de la carta tratados
+como conocidos. Sin argumentos es la probabilidad de que **un punto** salga de los límites, cuya inversa es el ARL₀ de arriba:
+
+```python
+import numpy as np
+import pccpy as pp
+
+rng = np.random.default_rng(1)
+g = rng.normal(50, 2, (25, 5))
+chart = pp.xbar_r_chart(g, mu=50, sigma=2)
+
+p = chart.probability()                         # un punto fuera de los límites de la carta Xbar
+p.probability, 1 / p.probability                # 0.0027 y 370.4 (= pp.arl_shewhart(k=3))
+chart.probability(above=51).probability        # P(media de 5 piezas > 51) = 0.132
+chart.probability(panel="R", above=6).probability   # P(rango > 6) = 0.211
+1 / chart.probability(panel="R").probability   # ARL₀ de la carta R con n = 5: 217.2 (= pp.arl_range(5))
+```
+
+Con tamaños de muestra variables, etapas o una EWMA la distribución cambia de un punto a otro: indica `point=` (base 1) o recibes un
+error que lo pide.
+
+```python
+n = np.array([100, 150, 200] * 10)
+chart_p = pp.p_chart(rng.binomial(n, 0.05), n, p=0.05)
+chart_p.probability(above=0.08, point=[1, 3]).probability   # una probabilidad por punto, con su n: [0.063, 0.024]
+```
+
+Los valores son del estadístico (en proporción o defectos por unidad en las cartas P y U; en unidades originales con `transform=`).
+Admiten la consulta las cartas I-MR, Xbar-R, Xbar-S, P, NP, C, U, EWMA, G y T; no la CUSUM, la media móvil, la carta de zona, las de
+Laney ni las multivariadas. El resultado es el mismo `ProbabilityResult` de la capacidad, con `dpmo`, `dpu` y `sigma` en `None` y los
+campos `panel` y `point`. No se ha comparado con Minitab.
+
 ## Qué no se ha comprobado
 
 - Las cifras de la literatura que se mencionan (ARL₀ = 168 de la CUSUM con h = 4 y k = 0,5, ≈ 500 de la EWMA con λ = 0,2 y

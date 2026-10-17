@@ -78,12 +78,14 @@ def imr_chart(
         i_panel = StagePanel(
             "I", xs, full(m, xs.size), full(m + 3 * s, xs.size), full(m - 3 * s, xs.size), full(s, xs.size),
             N_("Valor individual"), "full",
+            dist={"family": "normal", "loc": full(m, xs.size), "scale": full(s, xs.size)},
         )
         c = dd2 * s
         mr_panel = StagePanel(
             "MR", moving_range(xs, span), full(c, xs.size), full(c + 3 * dd3 * s, xs.size),
             full(max(0.0, c - 3 * dd3 * s), xs.size), full(dd3 * s, xs.size),
             N_("Rango móvil"), "only1", symmetric=False,
+            dist={"family": "range", "n": full(span, xs.size), "scale": full(s, xs.size)},
         )
         return [i_panel, mr_panel], {"mean": m, "sigma": s, "mr_mean": c, "n": n}
 
@@ -118,18 +120,21 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
         x_panel = StagePanel(
             "Xbar", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
             N_("Media de la muestra"), "full",
+            dist={"family": "normal", "loc": full(m, k), "scale": sig_x},
         )
         if disp == "r":
             c, sd = sg * vec(d2, n_i), sg * vec(d3, n_i)
             d_panel = StagePanel(
                 "R", rng, c, c + 3 * sd, np.maximum(0.0, c - 3 * sd), sd,
                 N_("Rango de la muestra"), "basic", symmetric=False,
+                dist={"family": "range", "n": n_i, "scale": full(sg, k)},
             )
         else:
             c, sd = sg * vec(c4, n_i), sg * vec(c5, n_i)
             d_panel = StagePanel(
                 "S", s_i, c, c + 3 * sd, np.maximum(0.0, c - 3 * sd), sd,
                 N_("Desv. est. de la muestra"), "basic", symmetric=False,
+                dist={"family": "sd", "n": n_i, "scale": full(sg, k)},
             )
         size = int(n_i[0]) if n_i.min() == n_i.max() else "variable"
         return [x_panel, d_panel], {"mean": m, "sigma": sg, "subgroups": k, "size": size}

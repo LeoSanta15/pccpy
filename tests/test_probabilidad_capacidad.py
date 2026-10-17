@@ -309,7 +309,7 @@ def test_s010_rf_08_exportacion_y_validacion():
     assert "ProbabilityResult" in pccpy.__all__
     assert pccpy.ProbabilityResult.__doc__
     informe = run_validation()
-    assert len(informe.checks) == 62
+    assert len(informe.checks) >= 62  # la 011 suma otra comprobación
     assert all(c.passed for c in informe.checks if c.id == "probabilidad-capacidad")
     assert any(c.id == "probabilidad-capacidad" for c in informe.checks)
 

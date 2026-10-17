@@ -48,19 +48,23 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
             ctr = historical if historical is not None else d.sum() / ni.sum()
             y, sig = d / ni, np.sqrt(ctr * (1 - ctr) / ni)
             lo, hi = 0.0, 1.0
+            dist = {"family": "binomial", "n": ni, "p": full(ctr, k), "divisor": ni}
         elif code == "np":
             p = historical if historical is not None else d.sum() / ni.sum()
             ctr = ni[0] * p
             y, sig = d, np.full(k, np.sqrt(ni[0] * p * (1 - p)))
             lo, hi = 0.0, float(ni[0])
+            dist = {"family": "binomial", "n": full(ni[0], k), "p": full(p, k), "divisor": full(1.0, k)}
         elif code == "c":
             ctr = historical if historical is not None else d.mean()
             y, sig = d, np.full(k, np.sqrt(ctr))
             lo, hi = 0.0, np.inf
+            dist = {"family": "poisson", "mu": full(ctr, k), "divisor": full(1.0, k)}
         else:  # "u"
             ctr = historical if historical is not None else d.sum() / ni.sum()
             y, sig = d / ni, np.sqrt(ctr / ni)
             lo, hi = 0.0, np.inf
+            dist = {"family": "poisson", "mu": ctr * ni, "divisor": ni}
 
         params = {"center": float(ctr), "n_points": k}
         if laney:
@@ -71,11 +75,12 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
             sigma_z = float(np.mean(np.abs(np.diff(z))) / d2(2))
             sig = sig * sigma_z
             params["sigma_z"] = sigma_z
+            dist = None  # la sobredispersión de Laney no sigue una binomial ni una Poisson
 
         panel = StagePanel(
             code.upper(), y, full(ctr, k),
             np.minimum(hi, ctr + 3 * sig), np.maximum(lo, ctr - 3 * sig), sig,
-            ylabel, "basic", symmetric=False,
+            ylabel, "basic", symmetric=False, dist=dist,
         )
         return [panel], params
 

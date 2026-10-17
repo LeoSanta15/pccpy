@@ -1,5 +1,25 @@
 # Registro de cambios
 
+## [Sin publicar] - probabilidad de un valor en las cartas de control
+
+No cambia ningún resultado existente: método nuevo y campos nuevos. Especificación `docs/specs/011-probabilidad-cartas`.
+
+### Añadido
+- **`ControlChart.probability(panel=…, below=…, above=…, between=…, point=…)`**: la probabilidad de un valor del estadístico que grafica una
+  carta, con el proceso en control y los parámetros de la carta tratados como conocidos. Cada panel guarda ahora la distribución de su
+  estadístico por punto (`Panel.dist`): normal en I, Xbar y EWMA; rango de normales en MR y R (`scipy.stats.studentized_range`);
+  σ·√(χ²ₙ₋₁/(n−1)) en S; binomial en P y NP; Poisson en C y U; geométrica en G y Weibull en T. En las cartas de atributos la desigualdad es
+  estricta sobre el conteo (en P y U el valor es la proporción o los defectos por unidad). Sin argumentos da la probabilidad de que un punto
+  salga de los límites (la falsa alarma de la prueba 1): su inversa coincide con el ARL en control de `arl_shewhart`, `arl_range`, `arl_sd`,
+  `arl_binomial`, `arl_poisson`, `arl_g` y `arl_t`. Cuando la distribución cambia de un punto a otro (tamaño de muestra variable, etapas, EWMA)
+  hay que indicar `point=` (base 1; un entero o un arreglo) o lanza `ValueError`. Con `transform=` los valores de los paneles I y Xbar van en
+  unidades originales. No lo admiten la CUSUM, la media móvil, la carta de zona, las de Laney ni las multivariadas (`ValueError`).
+- **`ProbabilityResult` de las cartas:** es el mismo de la capacidad (010) con dos campos opcionales nuevos, `panel` y `point`; en una carta
+  `dpmo`, `dpu` y `sigma` valen `None` y `to_frame()` muestra las columnas `panel` y `point`. En capacidad nada cambia.
+- Una comprobación más en la validación (63 en total) con fórmulas escritas aparte (integral del rango, gamma incompleta, sumas de la
+  binomial y de la Poisson, geométrica y Weibull cerradas), sección en la guía del ARL y en el README (es/en). Que Minitab ofrezca un cálculo
+  equivalente no está verificado.
+
 ## [Sin publicar] - claves en inglés en los resultados de las cartas
 
 Cambio **incompatible** (sin alias; se publica en 0.15.5 por decisión de la persona responsable): los datos con clave de los
