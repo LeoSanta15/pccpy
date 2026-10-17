@@ -23,42 +23,43 @@ examples in this README assume English is active.
 1. [Installation](#installation)
    - [Message language](#message-language)
 2. [Quick start](#quick-start)
-3. [Variables charts](#variables-charts)
+3. [Worked examples with results](#worked-examples-with-results)
+4. [Variables charts](#variables-charts)
    - [I-MR](#i-mr-chart)
    - [Xbar-R and Xbar-S](#xbar-r-and-xbar-s-charts)
    - [Data input formats](#data-input-formats)
    - [Historical parameters and stages](#historical-parameters-and-stages)
    - [Iterative Phase I](#iterative-phase-i)
    - [Dates on the x axis](#dates-on-the-x-axis)
-4. [Attribute charts](#attribute-charts)
-5. [Time-weighted charts](#time-weighted-charts)
+5. [Attribute charts](#attribute-charts)
+6. [Time-weighted charts](#time-weighted-charts)
    - [EWMA](#ewma)
    - [CUSUM](#cusum)
    - [Moving average](#moving-average)
-6. [Advanced charts](#advanced-charts)
+7. [Advanced charts](#advanced-charts)
    - [Z-MR (short runs)](#z-mr-short-runs)
    - [I-MR-R/S (between/within variation)](#i-mr-rs-betweenwithin-variation)
    - [Rare events (G and T)](#rare-events-g-and-t)
    - [ARL (average run length)](#arl-average-run-length)
-7. [Multivariate charts](#multivariate-charts)
+8. [Multivariate charts](#multivariate-charts)
    - [Hotelling's T²](#hotellings-t²)
    - [Generalized variance](#generalized-variance)
    - [MEWMA](#mewma)
    - [MCUSUM](#mcusum)
    - [Stages and Box-Cox in multivariate charts](#stages-and-box-cox-in-multivariate-charts)
-8. [Special-cause tests](#special-cause-tests)
-9. [Chart plotting](#chart-plotting)
-10. [Process capability](#process-capability)
-11. [Normality, Pareto and SPC constants](#normality-pareto-and-spc-constants)
-12. [Run chart and pre-control](#run-chart-and-pre-control)
-13. [EWMA and CUSUM for attributes](#ewma-and-cusum-for-attributes)
-14. [Tolerance intervals](#tolerance-intervals)
-15. [Acceptance sampling](#acceptance-sampling)
-16. [MSA / Gage R&R](#msa--gage-rr)
-17. [Accessing the result data](#accessing-the-result-data)
-18. [Validation](#validation)
-19. [Development](#development)
-20. [License](#license)
+9. [Special-cause tests](#special-cause-tests)
+10. [Chart plotting](#chart-plotting)
+11. [Process capability](#process-capability)
+12. [Normality, Pareto and SPC constants](#normality-pareto-and-spc-constants)
+13. [Run chart and pre-control](#run-chart-and-pre-control)
+14. [EWMA and CUSUM for attributes](#ewma-and-cusum-for-attributes)
+15. [Tolerance intervals](#tolerance-intervals)
+16. [Acceptance sampling](#acceptance-sampling)
+17. [MSA / Gage R&R](#msa--gage-rr)
+18. [Accessing the result data](#accessing-the-result-data)
+19. [Validation](#validation)
+20. [Development](#development)
+21. [License](#license)
 
 ---
 
@@ -107,6 +108,297 @@ chart.violations()            # DataFrame: panel, point, test, description
 chart.to_frame()              # all the values, limits and failed tests
 chart.plot()                  # matplotlib figure (shown with plt.show())
 ```
+
+---
+
+## Worked examples with results
+
+Real figures and outputs of the examples [`examples/basic_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/basic_example.py) and
+[`examples/advanced_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/advanced_example.py), with seed `default_rng(2026)`. The code is the same in every
+language; the outputs, labels and plots follow the pccpy language (here, English, `PCCPY_LANG=en`). The snippets are excerpts that
+run in sequence (the data come from the same `rng`); the outputs are shortened with "…" and the complete ones are in
+[`output_basic_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/en/output_basic_example.txt) and
+[`output_advanced_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/en/output_advanced_example.txt). They are regenerated with
+`python scripts/generar_figuras_readme.py`. With `import numpy as np` and `import pccpy as pp`.
+
+### Individual values (I-MR)
+
+A process that shifts from 100 to 103 at observation 41, with tests 1 to 6.
+
+```python
+rng = np.random.default_rng(2026)
+x = np.r_[rng.normal(100, 1.5, 40), rng.normal(103, 1.5, 20)]   # the process shifts from 100 to 103
+chart = pp.imr_chart(x, tests=[1, 2, 3, 4, 5, 6])
+print(chart.summary())
+chart.plot()
+```
+
+```text
+Control chart I-MR
+  Parameters: mean=101.347, sigma=1.45895, MR_avg=1.64624, n=60
+  Tests requested: 1, 2, 3, 4, 5, 6
+  Flagged points: 44
+    [I] point 10: test 6 (value 99.6611) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 13: test 2 (value 99.9038) - 9 consecutive points on the same side of the center line
+```
+
+![I-MR chart with the shift and the failed tests marked](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/imr.png)
+
+### Subgroups (Xbar-R)
+
+25 subgroups of 5 parts, no signals.
+
+```python
+subgroups = rng.normal(50, 0.8, (25, 5))
+xr = pp.xbar_r_chart(subgroups, tests="all")
+print(xr.summary())
+xr.plot(zones=True)
+```
+
+```text
+Control chart Xbar-R
+  Parameters: mean=50.0238, sigma=0.876888, subgroups=25, size=5
+  Tests requested: 1, 2, 3, 4, 5, 6, 7, 8
+  Result: no out-of-control points
+```
+
+![Xbar-R chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/xbar_r.png)
+
+### Attributes (P chart with variable n)
+
+30 samples of 150 to 250 parts, with 4 % defective.
+
+```python
+n = rng.integers(150, 250, 30)
+defectives = rng.binomial(n, 0.04)
+pp.p_chart(defectives, n, tests=[1, 2, 3, 4]).plot()
+```
+
+![P chart with variable limits](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/p.png)
+
+### Process capability and Sixpack
+
+Normal capability with limits 95 and 105, and the six views of the Capability Sixpack.
+
+```python
+data = rng.normal(100.4, 1.5, 150)
+cap = pp.capability_analysis(data, lsl=95, usl=105, target=100)
+print(cap.summary())
+print(round(cap.cpk, 3), round(cap.ppk, 3))
+fig, _, _ = pp.capability_sixpack(subgroups, lsl=48, usl=52, target=50)
+```
+
+```text
+Process capability analysis (normal distribution)
+  LSL=95.0000  Target=100.0000  USL=105.0000
+  N=150  Mean=100.44554  Std.Dev.(within)=1.37977 [mr]  Std.Dev.(overall)=1.52887
+  Potential (within) capability:
+    Cp=1.21  CPL=1.32  CPU=1.10  Cpk=1.10
+    Z.Bench=3.28
+  Overall performance:
+    Pp=1.09  PPL=1.19  PPU=0.99  Ppk=0.99  Cpm=1.05
+    95% CI Pp: (0.97, 1.21)   95% CI Ppk: (0.87, 1.12)
+    Z.Bench=2.94  Z.LSL=3.56  Z.USL=2.98  Sigma Level=2.94  DPMO=1,630
+  Performance (PPM):          < LSL       > USL      Total
+    Observed                0.00        0.00       0.00
+    Expected within        39.62      481.91     521.53
+    Expected overall      184.16     1446.09    1630.25
+  …
+1.1 0.993
+```
+
+![Capability Sixpack](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/sixpack.png)
+
+### Non-normal data (Weibull and Box-Cox)
+
+Normality test and capability with the fitted distribution and with Box-Cox.
+
+```python
+w = rng.weibull(1.8, 200) * 3 + 0.5
+print(pp.normality_test(w))
+print(pp.capability_nonnormal(w, lsl=0.1, usl=12, distribution="weibull").summary())
+print(pp.capability_boxcox(w, lsl=0.1, usl=12).summary())
+```
+
+```text
+Anderson-Darling: statistic = 3.3147, p-value < 0.005 (n = 200)
+Capability analysis (nonnormal) - weibull distribution
+  LSL=0.1000  USL=12.0000  N=200  logL=-363.872  AIC=731.745
+  Percentiles: 0.135% = 0.17925   50% = 3.13714   99.865% = 8.82399
+  Pp=1.38  PPL=1.03  PPU=1.56  Ppk=1.03
+  Performance (PPM):          < LSL       > USL      Total
+    Observed                0.00        0.00       0.00
+    Expected              378.35        2.46     380.81
+  …
+Process capability analysis (normal distribution)
+  LSL=0.1000  Target=*  USL=12.0000
+  N=200  Mean=1.18909  Std.Dev.(within)=0.58063 [mr]  Std.Dev.(overall)=0.58889
+  Box-Cox transformation with lambda = 0.1615 (Mean, Std.Dev. and Z.* are on the transformed scale; LSL/USL/target and observed PPM, in original units)
+  Potential (within) capability:
+    Cp=1.43  CPL=1.79  CPU=1.07  Cpk=1.07
+    Z.Bench=3.22
+  Overall performance:
+    Pp=1.41  PPL=1.76  PPU=1.06  Ppk=1.06  Cpm=*
+    95% CI Pp: (1.27, 1.55)   95% CI Ppk: (0.94, 1.17)
+    Z.Bench=3.17  Z.LSL=5.28  Z.USL=3.17  Sigma Level=3.17  DPMO=754
+```
+
+### Pareto
+
+Cumulative frequency table and its chart.
+
+```python
+counts = pp.pareto(["Scratch", "Dent", "Scratch", "Stain", "Scratch", "Dent", "Other"])
+print(counts)
+pp.plot_pareto(counts)
+```
+
+```text
+  category  count    percent  cumulative
+0  Scratch      3  42.857143   42.857143
+1     Dent      2  28.571429   71.428571
+2    Stain      1  14.285714   85.714286
+3    Other      1  14.285714  100.000000
+```
+
+![Pareto diagram](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/pareto.png)
+
+### Short runs (Z-MR)
+
+Three parts with different means and variations on one chart.
+
+```python
+parts = ["A"] * 12 + ["B"] * 10 + ["A"] * 12 + ["C"] * 8
+means = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
+x = np.array([rng.normal(*means[p]) for p in parts])
+x[15] += 10                                    # one B part out of the ordinary
+zmr = pp.zmr_chart(x, parts, mu={p: m for p, (m, _) in means.items()},
+                   sigma={p: s for p, (_, s) in means.items()}, tests=(1, 2, 3, 4, 5, 6))
+print(zmr.summary())
+```
+
+```text
+Control chart Z-MR
+  Parameters: method=historical, parts=3, runs=4, n=42, sigma_min=0.5, sigma_max=2
+  Tests requested: 1, 2, 3, 4, 5, 6
+  Flagged points: 4
+    [MR] point 16: test 1 (value 4.22507) - 1 point more than 3 standard deviations from the center line
+    [MR] point 17: test 1 (value 4.78973) - 1 point more than 3 standard deviations from the center line
+    [Z] point 16: test 1 (value 4.38598) - 1 point more than 3 standard deviations from the center line
+    [Z] point 38: test 4 (value -0.457385) - 14 consecutive points alternating up and down
+```
+
+![Z-MR chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/zmr.png)
+
+### Variation between and within subgroups (I-MR-R)
+
+With variation between lots, Xbar-R over-alarms and I-MR-R does not.
+
+```python
+lots = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
+print(len(pp.xbar_r_chart(lots).violations()))   # points flagged by Xbar-R
+ch = pp.imr_rs_chart(lots)
+print(len(ch.violations()))                      # points flagged by I-MR-R
+```
+
+```text
+12
+1
+```
+
+![I-MR-R chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/imr_r.png)
+
+### Rare events (G and T)
+
+G chart with the counts between events and T chart with the times between events.
+
+```python
+between = rng.geometric(0.01, 40) - 1
+between[25] = 600
+pp.g_chart(between).plot()
+times = rng.weibull(1.4, 40) * 30
+times[12] = 250
+print(pp.t_chart(times).summary())
+```
+
+```text
+Control chart T
+  Parameters: distribution=weibull, shape=1.16087, scale=36.2814, n=40
+  Tests requested: 1
+  Flagged points: 1
+    [T] point 13: test 1 (value 250) - 1 point outside the percentiles of the weibull distribution
+```
+
+![G chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/g.png)
+
+### Zone chart
+
+Cumulative score for a sustained shift.
+
+```python
+drift = rng.normal(0, 1, 50)
+drift[30:] += 1.2                              # sustained 1.2-sigma shift
+zone = pp.zone_chart(drift, mu=0.0, sigma=1.0, reset=True)
+print(zone.summary())
+```
+
+```text
+Control chart Zone
+  Parameters: mean=0, sigma=1, weights=(0.0, 2.0, 4.0, 8.0), reset=True, n=50
+  Tests requested: 1
+  Flagged points: 2
+    [Zone] point 43: test 1 (value 2.03228) - cumulative zone score >= 8
+    [Zone] point 48: test 1 (value 2.57529) - cumulative zone score >= 8
+```
+
+![Zone chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/zona.png)
+
+### Multivariate: T², MEWMA and MCUSUM
+
+Phase I with 100 observations and Phase II with 50 new ones; variable 3 shifts from point 31.
+
+```python
+Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
+hist = rng.multivariate_normal([0, 0, 0], Sigma, 100)
+new = rng.multivariate_normal([0, 0, 0], Sigma, 50)
+new[30:, 2] += 4                               # variable 3 shifts
+mu, cov = hist.mean(axis=0), np.cov(hist, rowvar=False)
+t2 = pp.t2_chart(new, mu=mu, cov=cov, n_hist=100)
+first = int(t2["T2"].flagged[0]) + 1
+print(t2.contributions(first).round(2))        # contribution of each variable to the signal
+me = pp.mewma_chart(new, mu=mu, cov=cov)
+print(int(me["MEWMA"].flagged[0]) + 1)         # first MEWMA signal
+mc = pp.mcusum_chart(new, mu=mu, cov=cov)
+print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["LCS"], 2))   # first MCUSUM signal and its limit
+```
+
+```text
+X1     6.81
+X2     1.32
+X3    16.09
+Name: contribution (point 31), dtype: float64
+  …
+33
+33 6.88
+```
+
+![Hotelling T² chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/t2.png)
+
+![MEWMA chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/mewma.png)
+
+![MCUSUM chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/mcusum.png)
+
+### Generalized variance
+
+Subgroups of 6 trivariate observations whose dispersion grows 2.5 times in the second half.
+
+```python
+subs = rng.multivariate_normal([0, 0, 0], Sigma, 120)
+subs[60:] *= 2.5                               # dispersion grows
+pp.generalized_variance_chart(subs, subgroup_size=6).plot()
+```
+
+![Generalized variance |S| chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/gv.png)
 
 ---
 

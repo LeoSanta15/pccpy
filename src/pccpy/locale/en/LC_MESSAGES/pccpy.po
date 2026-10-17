@@ -4193,3 +4193,21 @@ msgstr "Probability"
 
 msgid "Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"
 msgstr "Probability of a value (normal and Box-Cox capability) with the mean and standard deviation computed separately"
+
+msgid "sigma_mín"
+msgstr "sigma_min"
+
+msgid "sigma_máx"
+msgstr "sigma_max"
+
+msgid "histórica"
+msgstr "historical"
+
+msgid "contribución (punto {point})"
+msgstr "contribution (point {point})"
+
+msgid "Zona"
+msgstr "Zone"
+
+msgid "Puntaje"
+msgstr "Score"

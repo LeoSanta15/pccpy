@@ -7,8 +7,10 @@ dist/
 .venv/
 venv/
 salida/
+output/
 *.png
 !docs/*.png
+!docs/imagenes/**/*.png
 .DS_Store
 
 .mypy_cache/

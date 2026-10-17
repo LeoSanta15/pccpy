@@ -4136,3 +4136,21 @@ msgstr ""
 
 msgid "Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"
 msgstr ""
+
+msgid "sigma_mín"
+msgstr ""
+
+msgid "sigma_máx"
+msgstr ""
+
+msgid "histórica"
+msgstr ""
+
+msgid "contribución (punto {point})"
+msgstr ""
+
+msgid "Zona"
+msgstr ""
+
+msgid "Puntaje"
+msgstr ""
