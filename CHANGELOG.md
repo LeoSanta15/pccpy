@@ -1,5 +1,15 @@
 # Registro de cambios
 
+## [Sin publicar] - ARL de las cartas de control
+
+No cambia resultados numéricos existentes: son funciones nuevas.
+
+### Añadido
+- **ARL (longitud media de racha) de las cartas de control** (`pccpy.arl_*`, especificación `docs/specs/009-arl-general`): `arl_shewhart`, `arl_cusum` y `arl_ewma` (núcleo), `arl_sd` y `arl_range` (cartas S y R), `arl_binomial` y `arl_poisson` (cartas NP/P y C/U con tamaño constante) y `arl_g` y `arl_t` (eventos raros). Dan el ARL en control (`shift = 0`) o con la media desplazada (`shift`, en σ del estadístico graficado) o la dispersión, la proporción, etc. cambiada, con `method="numeric"` (por defecto: fórmula cerrada o ecuación integral con cuadratura de Gauss-Legendre), `"markov"` (cadena de Markov con celdas; CUSUM y EWMA) o `"simulation"` (Monte Carlo con `n_runs` y `seed`). Aceptan arreglos. Se suponen parámetros conocidos, observaciones independientes y solo la regla «un punto fuera de los límites» (sin las pruebas 2 a 8). Guía nueva `docs/source/arl.md`. Tres hallazgos de la implementación: (1) la CUSUM bilateral con `headstart = 0` combina los dos lados con `1/ARL = 1/ARL⁺ + 1/ARL⁻` (difiere menos de 0,3 % de la simulación con h = 4 y k = 0,5), pero con `headstart > 0` esa combinación falla (≈ 6 % con `headstart = h/2`) y se resuelve la cadena de Markov bidimensional; (2) la carta G solo detecta una disminución de los eventos y la T detecta mucho mejor tiempos más largos que más cortos, porque su límite inferior está muy cerca de 0; (3) el ARL en control de las cartas de atributos no es 370,4 (distribución discreta). Nueve comprobaciones más en la validación (61 en total). Qué ARL da Minitab no está verificado; las cifras de la literatura (168, 8,38, 500, 370,4) se citan de memoria y solo se usan como contraste de las simulaciones propias.
+
+### Corregido
+- **README: cifras del ARL de la EWMA.** Decía «ARL en control con límites exactos: ≈ 570 con λ = 0,2 y L = 3 (Lucas y Saccucci dan ≈ 550 con límites asintóticos)». Una simulación de 200 000 corridas da ≈ 561 con límites asintóticos y ≈ 552 con exactos, y `arl_ewma` da 559,9 y 554,5: las cifras no se sostenían (y parecían tener los dos tipos de límite invertidos). Solo cambia la documentación.
+
 ## [Sin publicar] - leyenda de las dos sumas en el gráfico de la CUSUM
 
 No cambia resultados numéricos: solo el dibujo.

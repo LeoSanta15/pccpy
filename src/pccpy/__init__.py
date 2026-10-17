@@ -11,6 +11,7 @@ from .acceptance import (
     acceptance_sampling_variables,
     dodge_romig,
 )
+from .arl import arl_binomial, arl_cusum, arl_ewma, arl_g, arl_poisson, arl_range, arl_sd, arl_shewhart, arl_t
 from .bootstrap import BootstrapResult, BootstrapSummary, bootstrap_ci, bootstrap_summary
 from .capability import (
     CapabilityResult,
@@ -130,6 +131,15 @@ __all__ = [
     "WizardResult",
     "acceptance_sampling_attributes",
     "acceptance_sampling_variables",
+    "arl_binomial",
+    "arl_cusum",
+    "arl_ewma",
+    "arl_g",
+    "arl_poisson",
+    "arl_range",
+    "arl_sd",
+    "arl_shewhart",
+    "arl_t",
     "attribute_agreement",
     "available_languages",
     "bootstrap_ci",

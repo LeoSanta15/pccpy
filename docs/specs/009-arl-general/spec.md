@@ -1,6 +1,6 @@
 # 009 — ARL de las cartas de control
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S009
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.4 (función pública nueva; no cambia ningún resultado existente; decisión de la persona responsable)
@@ -60,7 +60,9 @@ asintóticos (`L·σ·√(λ/(2−λ))`) o exactos (varianza `λ/(2−λ)·(1−
 
 **Aceptación:**
 - **Dado** `λ = 0,2`, `L = 2,962`, `shift = 0` **entonces** ARL ≈ 500 (valor de diseño de Lucas y Saccucci, 1990).
-- **Dado** `λ = 0,2`, `L = 3`, `shift = 0`, límites asintóticos **entonces** ARL ≈ 570 (cifra que cita el README).
+- **Dado** `λ = 0,2`, `L = 3`, `shift = 0`, límites asintóticos **entonces** ARL ≈ 561 (Monte Carlo propio: 561,4 ± 1,2 con
+  200 000 corridas); con límites exactos ≈ 552. El README cita «≈ 570 con límites exactos» y «≈ 550 con asintóticos»: no
+  coincide con la simulación y se revisa al implementar (queda anotado en el CHANGELOG).
 - **Dado** `λ = 1` **entonces** el ARL es el de la Shewhart de RF-01 con el mismo `L`.
 - **Referencia independiente:** literatura (recordada de memoria) y Monte Carlo con ≥ 20 semillas; la identidad `λ = 1`.
 
@@ -118,6 +120,10 @@ hay ARL único (fuera de alcance).
 
 ### S009-RF-08 — ARL de las cartas G y T
 
+*Notas de la implementación:* (1) la carta G solo tiene límite superior, así que `arl_g` solo detecta una **disminución** de los
+eventos (`p1 < p0`); con `p1 > p0` el ARL es enorme (para eso es la prueba de Benneyan, que `arl_g` no incluye). (2) `arl_t` tiene
+`shape=1.0` por defecto (la exponencial es la Weibull de forma 1) y solo depende del cociente de escalas.
+
 `arl_g(p0, p1=None, k=3.0)` y `arl_t(shape, scale_ratio=1.0, k=3.0, distribution="weibull")`: ARL de las cartas G y T con
 los límites que calcula pccpy (percentiles de la geométrica, de la Weibull o de la exponencial) cuando el parámetro real
 cambia. G: `P(señal) = P(X > UCL)` con la geométrica; T: `P(T < LCL) + P(T > UCL)` con la Weibull/exponencial desplazada.
@@ -158,7 +164,7 @@ Ninguno. Funciones públicas nuevas.
 
 ## No verificable sin la fuente
 
-Las cifras de la literatura (168, 8,38, 500, 570, 370,4, 43,9) las recuerdo y las cito de memoria: no pude consultar
+Las cifras de la literatura (168, 8,38, 500, 370,4, 43,9) las recuerdo y las cito de memoria: no pude consultar
 Hawkins y Olwell (1998), Lucas y Saccucci (1990), Lucas y Crosier (1982), Brook y Evans (1972) ni Montgomery desde este
 entorno. Cada una se respalda con un cálculo independiente (fórmula cerrada o Monte Carlo) y consta como «recordada de
 memoria» (principio 12). Los ARL de la S, la R, la binomial, la Poisson y las G y T no tienen cifra de literatura citada:

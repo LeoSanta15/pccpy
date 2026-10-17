@@ -37,6 +37,7 @@ documenta Minitab.
    - [Z-MR (corridas cortas)](#z-mr-corridas-cortas)
    - [I-MR-R/S (variación entre/dentro)](#i-mr-rs-variación-entrodentro)
    - [Eventos raros (G y T)](#eventos-raros-g-y-t)
+   - [ARL (longitud media de racha)](#arl-longitud-media-de-racha)
 7. [Cartas multivariadas](#cartas-multivariadas)
    - [T² de Hotelling](#t²-de-hotelling)
    - [Varianza generalizada](#varianza-generalizada)
@@ -369,7 +370,7 @@ carta = pp.ewma_chart(
 
 Con subgrupos, `sigma_method` elige el estimador (`'rbar'` por defecto, `'sbar'` o `'pooled'`; con individuales
 `'mr'`, `'median_mr'` o `'mssd'`). `stages=` calcula el objetivo y sigma por etapa y **reinicia** la EWMA al empezar
-cada una. ARL en control con σ conocida y límites exactos: ≈ 570 con λ = 0,2 y L = 3 (simulación; Lucas y Saccucci, 1990, dan ≈ 550 con límites asintóticos).
+cada una. ARL en control con σ conocida y λ = 0,2, L = 3: ≈ 560 con límites asintóticos y ≈ 555 con exactos (`pp.arl_ewma`, contrastado con una simulación de 200 000 corridas).
 
 **Guía de selección de λ:**
 
@@ -506,6 +507,24 @@ que los eventos se vuelven más frecuentes, algo que el límite inferior 0 de la
 G no puede mostrar. Diferencias posibles con Minitab: Minitab la activa por defecto
 y pccpy no; la fórmula de `c` es una definición propia de pccpy, no contrastada con
 Minitab (no se pudo consultar su fórmula).
+
+### ARL (longitud media de racha)
+
+Para comparar o diseñar cartas, `pccpy` calcula el ARL (número esperado de puntos hasta la primera señal) de las cartas Shewhart,
+CUSUM y EWMA, de las cartas S y R, de las de atributos (NP/P y C/U con tamaño constante) y de las de eventos raros (G y T):
+
+```python
+pp.arl_shewhart(k=3)                       # 370.4 en control
+pp.arl_shewhart(k=3, shift=1.0)            # 43.9 con la media desplazada 1σ del estadístico
+pp.arl_cusum(h=4, k=0.5, shift=1.0)        # 8.4
+pp.arl_ewma(weight=0.2, L=3, shift=1.0)    # 10.8
+pp.arl_cusum(h=4, k=0.5, shift=1.0, method="simulation", n_runs=20_000, seed=1)  # Monte Carlo, reproducible
+```
+
+`method` elige `"numeric"` (por defecto), `"markov"` o `"simulation"`. Se suponen parámetros conocidos, observaciones
+independientes y solo la regla «un punto fuera de los límites» (sin las pruebas 2 a 8). Con atributos y eventos raros el ARL en
+control no es 370,4, y las cartas G y T detectan mucho mejor que los eventos se espacien que que se acorten. Véase la
+[guía del ARL](https://github.com/LeoSanta15/pccpy/blob/main/docs/source/arl.md). No se ha comparado con el ARL de Minitab.
 
 ---
 

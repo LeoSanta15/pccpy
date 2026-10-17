@@ -8,7 +8,7 @@ versión instalada calcula bien (por ejemplo, en un sistema de calidad regulado)
 import pccpy as pp
 
 informe = pp.run_validation()
-print(informe.summary())      # «Validación de pccpy …: 52 de 52 comprobaciones correctas»
+print(informe.summary())      # «Validación de pccpy …: 61 de 61 comprobaciones correctas»
 informe.passed                # True si todo coincide
 informe.to_frame()            # una fila por comprobación (error y tolerancia)
 ```
@@ -38,6 +38,9 @@ python -m pccpy.validation --markdown validacion.md
 | Carta T sin duraciones iguales a 0 | Ajuste Weibull de máxima verosimilitud (`scipy.stats.weibull_min.fit`, `loc = 0`) y percentiles Φ(±3) escritos aparte |
 | Cpm con objetivo descentrado y centrado | Fórmula de Minitab `min(T − LEI, LES − T) / (3·s_T)` escrita aparte |
 | Sigma Rbar y Sbar con subgrupos desiguales | Constantes de Montgomery y pesos de varianza inversa escritos aparte |
+| Prueba de Benneyan de la carta G | Menor c con `p^c ≤ 1 − Φ(k)` buscado por potencias exactas; tasa de falsas alarmas por simulación (20 semillas) |
+| ARL de las cartas Shewhart, S, R, NP, C, G y T | Fórmulas cerradas con SciPy (ji cuadrada, geométrica, Weibull), enumeración exacta (binomial y Poisson) e integral del rango escrita aparte |
+| ARL de la CUSUM y de la EWMA | Simulación propia con 20 semillas fijas; la literatura (de memoria) solo se cita como contraste |
 | Gage R&R con la interacción agrupada | ANOVA sin interacción calculado aparte con NumPy |
 | Constantes K2 y K3 de AIAG (`d2*`) | Valores del manual MSA de AIAG (4.ª ed.) |
 | Pruebas de atípicos (Grubbs y ESD generalizada) | Tabla publicada de Grubbs y ejemplo de Rosner (1983) del manual del NIST |

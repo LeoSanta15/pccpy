@@ -238,3 +238,21 @@ msgstr "Text summary: passed checks and, if any, the failed ones."
 msgid "Informe completo en Markdown: entorno, resultado de cada comprobación y referencias."
 msgstr "Full report in Markdown: environment, result of each check and references."
 
+
+msgid "Prueba de Benneyan de la carta G"
+msgstr "Benneyan test of the G chart"
+
+msgid "Menor c con `p^c ≤ 1 − Φ(k)` buscado por potencias exactas; tasa de falsas alarmas por simulación (20 semillas)"
+msgstr "Smallest c with `p^c ≤ 1 − Φ(k)` found by exact powers; false alarm rate by simulation (20 seeds)"
+
+msgid "ARL de las cartas Shewhart, S, R, NP, C, G y T"
+msgstr "ARL of the Shewhart, S, R, NP, C, G and T charts"
+
+msgid "Fórmulas cerradas con SciPy (ji cuadrada, geométrica, Weibull), enumeración exacta (binomial y Poisson) e integral del rango escrita aparte"
+msgstr "Closed formulas with SciPy (chi-square, geometric, Weibull), exact enumeration (binomial and Poisson) and the range integral written separately"
+
+msgid "ARL de la CUSUM y de la EWMA"
+msgstr "ARL of the CUSUM and the EWMA"
+
+msgid "Simulación propia con 20 semillas fijas; la literatura (de memoria) solo se cita como contraste"
+msgstr "Own simulation with 20 fixed seeds; the literature (from memory) is only cited as a contrast"

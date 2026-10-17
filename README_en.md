@@ -39,6 +39,7 @@ examples in this README assume English is active.
    - [Z-MR (short runs)](#z-mr-short-runs)
    - [I-MR-R/S (between/within variation)](#i-mr-rs-betweenwithin-variation)
    - [Rare events (G and T)](#rare-events-g-and-t)
+   - [ARL (average run length)](#arl-average-run-length)
 7. [Multivariate charts](#multivariate-charts)
    - [Hotelling's T²](#hotellings-t²)
    - [Generalized variance](#generalized-variance)
@@ -372,7 +373,7 @@ chart = pp.ewma_chart(
 
 With subgroups, `sigma_method` picks the estimator (`'rbar'` by default, `'sbar'` or `'pooled'`; with individuals
 `'mr'`, `'median_mr'` or `'mssd'`). `stages=` computes the target and sigma per stage and **restarts** the EWMA at the
-start of each one. In-control ARL with known σ and exact limits: ≈ 570 with λ = 0.2 and L = 3 (simulation; Lucas and Saccucci, 1990, give ≈ 550 with asymptotic limits).
+start of each one. In-control ARL with known σ, λ = 0.2 and L = 3: ≈ 560 with asymptotic limits and ≈ 555 with exact ones (`pp.arl_ewma`, checked against a 200,000-run simulation).
 
 **Guide for choosing λ:**
 
@@ -507,6 +508,25 @@ with `c` the smallest integer such that `p^c ≤ 1 − Φ(k)`; it detects events
 more frequent, which the lower limit of 0 of the G chart cannot show. Possible differences
 from Minitab: Minitab enables it by default and pccpy does not; the formula for `c` is
 pccpy's own definition, not checked against Minitab (its formula could not be consulted).
+
+### ARL (average run length)
+
+To compare or design charts, `pccpy` computes the ARL (expected number of points until the first signal) of the Shewhart, CUSUM
+and EWMA charts, of the S and R charts, of the attribute charts (NP/P and C/U with constant size) and of the rare-event charts
+(G and T):
+
+```python
+pp.arl_shewhart(k=3)                       # 370.4 in control
+pp.arl_shewhart(k=3, shift=1.0)            # 43.9 with the mean shifted 1σ of the statistic
+pp.arl_cusum(h=4, k=0.5, shift=1.0)        # 8.4
+pp.arl_ewma(weight=0.2, L=3, shift=1.0)    # 10.8
+pp.arl_cusum(h=4, k=0.5, shift=1.0, method="simulation", n_runs=20_000, seed=1)  # Monte Carlo, reproducible
+```
+
+`method` chooses `"numeric"` (default), `"markov"` or `"simulation"`. Known parameters, independent observations and only the
+"one point outside the limits" rule are assumed (no tests 2 to 8). With attributes and rare events the in-control ARL is not
+370.4, and the G and T charts detect events spreading out much better than events getting closer together. See the
+[ARL guide](https://github.com/LeoSanta15/pccpy/blob/main/docs/source/arl.md). It has not been compared with Minitab's ARL.
 
 ---
 

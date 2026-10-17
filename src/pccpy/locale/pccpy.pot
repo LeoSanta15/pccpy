@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-17 04:26+0000\n"
+"POT-Creation-Date: 2026-10-17 15:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1057,6 +1057,9 @@ msgstr ""
 msgid "%Var. estudio Gage R&R"
 msgstr ""
 
+msgid "'L' debe ser un número finito > 0."
+msgstr ""
+
 msgid "'alpha' debe estar en (0, 1)."
 msgstr ""
 
@@ -1076,6 +1079,12 @@ msgid "'boxcox' no se puede combinar con parámetros históricos ('mu'/'cov')."
 msgstr ""
 
 msgid "'boxcox' requiere datos positivos en todas las variables."
+msgstr ""
+
+msgid "'c0' debe ser un número finito > 0."
+msgstr ""
+
+msgid "'c1' debe contener solo valores finitos >= 0."
 msgstr ""
 
 msgid "'categories' y 'counts' deben tener la misma longitud."
@@ -1117,6 +1126,9 @@ msgstr ""
 msgid "'h' debe ser > 0."
 msgstr ""
 
+msgid "'h' debe ser un número finito > 0."
+msgstr ""
+
 msgid "'headstart' debe cumplir 0 <= headstart < h."
 msgstr ""
 
@@ -1124,6 +1136,15 @@ msgid "'inspection_level' debe ser 1, 2 o 3."
 msgstr ""
 
 msgid "'k' debe ser >= 0."
+msgstr ""
+
+msgid "'k' debe ser un número finito > 0."
+msgstr ""
+
+msgid "'k' debe ser un número finito >= 0."
+msgstr ""
+
+msgid "'k' es demasiado grande: Φ(k) debe ser menor que 1."
 msgstr ""
 
 #, python-brace-format
@@ -1171,6 +1192,12 @@ msgstr ""
 msgid "'n' debe contener enteros positivos."
 msgstr ""
 
+msgid "'n' debe ser un entero >= 1."
+msgstr ""
+
+msgid "'n' debe ser un entero >= 2."
+msgstr ""
+
 msgid "'n' debe ser un escalar o tener la misma longitud que los conteos."
 msgstr ""
 
@@ -1190,10 +1217,22 @@ msgstr ""
 msgid "'n_hist' solo aplica con parámetros históricos."
 msgstr ""
 
+msgid "'n_runs' debe ser un entero >= 1."
+msgstr ""
+
 msgid "'opportunities' debe ser positivo."
 msgstr ""
 
 msgid "'p' debe estar en (0, 1)."
+msgstr ""
+
+msgid "'p0' debe ser un número en (0, 1)."
+msgstr ""
+
+msgid "'p1' debe contener solo valores en (0, 1)."
+msgstr ""
+
+msgid "'p1' debe contener solo valores en [0, 1]."
 msgstr ""
 
 msgid "'parts' debe tener una etiqueta por observación."
@@ -1206,8 +1245,20 @@ msgstr ""
 msgid "'process_avg' debe estar en (0, 1)."
 msgstr ""
 
+msgid "'ratio' debe contener solo valores finitos > 0."
+msgstr ""
+
 #, python-brace-format
 msgid "'scale' debe ser 'original' o 'transformed' (recibido: {scale!r})."
+msgstr ""
+
+msgid "'scale_ratio' debe contener solo valores finitos > 0."
+msgstr ""
+
+msgid "'shape' debe ser un número finito > 0."
+msgstr ""
+
+msgid "'shift' debe contener solo valores finitos."
 msgstr ""
 
 msgid "'sides' debe ser 'two', 'lower' o 'upper'."
@@ -1370,6 +1421,45 @@ msgstr ""
 
 #, python-brace-format
 msgid "AQL={v:.3g}%"
+msgstr ""
+
+msgid ""
+"ARL de la CUSUM bilateral (h = 4, k = 0,5) con y sin arranque rápido "
+"frente a la simulación"
+msgstr ""
+
+msgid ""
+"ARL de la EWMA bilateral (λ = 0,2, L = 3) con límites asintóticos y "
+"exactos frente a la simulación"
+msgstr ""
+
+msgid "ARL de la carta C (c0 = 9) en control y con c = 12 y 15"
+msgstr ""
+
+msgid "ARL de la carta G (p0 = 0,02) en control y con p = 0,01 y 0,005"
+msgstr ""
+
+msgid "ARL de la carta NP (n = 100, p0 = 0,05) en control y con p = 0,07 y 0,10"
+msgstr ""
+
+msgid ""
+"ARL de la carta R (n = 5) en control y con la desviación 1,5 y 2 veces "
+"mayor"
+msgstr ""
+
+msgid ""
+"ARL de la carta S (n = 5) en control y con la desviación 1,5 y 2 veces "
+"mayor"
+msgstr ""
+
+msgid ""
+"ARL de la carta T (Weibull de forma 1,5) con la escala sin cambio y 0,7 y"
+" 1,3 veces la de diseño"
+msgstr ""
+
+msgid ""
+"ARL de una carta Shewhart (k = 3 y k = 2) en control y con "
+"desplazamientos de 1σ y 2σ"
 msgstr ""
 
 msgid "Agrupamiento"
@@ -3851,6 +3941,12 @@ msgstr ""
 
 #, python-brace-format
 msgid "{nombre} con lambda = {lam:.4f}"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"{n} de {total} corridas no dieron señal en {pasos} puntos: el ARL "
+"simulado queda sesgado a la baja."
 msgstr ""
 
 #, python-brace-format
