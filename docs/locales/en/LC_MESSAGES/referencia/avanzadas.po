@@ -96,8 +96,8 @@ msgstr "Replaces the special-cause tests with a cumulative score (Davis, Homer a
 msgid "``data``: observaciones individuales (vector) o subgrupos (matriz 2-D, o vector con ``subgroup_size`` / ``subgroup``). ``sigma_method``: ``'mr'`` (por defecto), ``'median_mr'`` o ``'mssd'`` para individuales; ``'rbar'`` (por defecto) o ``'pooled'`` para subgrupos. ``reset=True`` reinicia el puntaje tras cada señal."
 msgstr "``data``: individual observations (vector) or subgroups (2-D matrix, or vector with ``subgroup_size`` / ``subgroup``). ``sigma_method``: ``'mr'`` (default), ``'median_mr'`` or ``'mssd'`` for individuals; ``'rbar'`` (default) or ``'pooled'`` for subgroups. ``reset=True`` resets the score after each signal."
 
-msgid "El resultado tiene el panel ``\"Zona\"`` (medias y límites) y el panel ``\"Puntaje\"`` (puntaje acumulado y su umbral). Las señales se marcan en ``\"Zona\"``."
-msgstr "The result has the ``\"Zona\"`` panel (means and limits) and the ``\"Puntaje\"`` panel (cumulative score and its threshold). Signals are marked on ``\"Zona\"``."
+msgid "El resultado tiene el panel ``\"Zone\"`` (medias y límites) y el panel ``\"Score\"`` (puntaje acumulado y su umbral). Las señales se marcan en ``\"Zone\"``."
+msgstr "The result has the ``\"Zone\"`` panel (means and limits) and the ``\"Score\"`` panel (cumulative score and its threshold). Signals are marked on ``\"Zone\"``."
 
 msgid "Carta G para eventos raros: número de casos (u oportunidades) entre eventos."
 msgstr "G chart for rare events: number of cases (or opportunities) between events."

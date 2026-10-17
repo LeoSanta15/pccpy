@@ -368,7 +368,7 @@ print(t2.contributions(primero).round(2))        # contribución de cada variabl
 me = pp.mewma_chart(nuevos, mu=mu, cov=cov)
 print(int(me["MEWMA"].flagged[0]) + 1)         # primera señal de la MEWMA
 mc = pp.mcusum_chart(nuevos, mu=mu, cov=cov)
-print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["LCS"], 2))   # primera señal de la MCUSUM y su límite
+print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["ucl"], 2))   # primera señal de la MCUSUM y su límite
 ```
 
 ```text
@@ -560,8 +560,8 @@ pp.imr_chart(x, mu=100.0, sigma=2.0)
 etapas = ["Antes"] * 30 + ["Después"] * 30
 carta = pp.imr_chart(x, stages=etapas)
 carta.params        # lista de dicts, uno por etapa
-carta.params[0]     # {'stage': 'Antes', 'media': ..., 'sigma': ..., ...}
-carta.params[1]     # {'stage': 'Después', 'media': ..., 'sigma': ..., ...}
+carta.params[0]     # {'stage': 'Antes', 'mean': ..., 'sigma': ..., ...}
+carta.params[1]     # {'stage': 'Después', 'mean': ..., 'sigma': ..., ...}
 
 # Combinación: parámetros históricos + etapas (los mismos parámetros para todas)
 pp.imr_chart(x, mu=100, sigma=2, stages=etapas)
@@ -788,7 +788,7 @@ carta = pp.imr_rs_chart(
     within="r",   # 'r' (rango, defecto) o 's' (desviación estándar)
 )
 carta.params[0]
-# {'sigma_dentro': 0.97, 'sigma_entre': 1.48, 'sigma_entre_dentro': 1.79, ...}
+# {'sigma_within': 0.97, 'sigma_between': 1.48, 'sigma_between_within': 1.79, ...}
 ```
 
 ---
@@ -1647,7 +1647,7 @@ carta.violations()
 
 # --- Parámetros estimados ---
 carta.params        # lista de dicts, uno por etapa
-carta.params[0]     # {'stage': 1, 'media': 10.2, 'sigma': 0.31, 'MR_prom': 0.35, 'n': 30}
+carta.params[0]     # {'stage': 1, 'mean': 10.2, 'sigma': 0.31, 'mr_mean': 0.35, 'n': 30}
 
 # --- Estado del proceso ---
 carta.in_control    # True si no hay ningún punto fuera de control

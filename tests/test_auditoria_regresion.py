@@ -279,7 +279,7 @@ def test_ewma_y_cusum_con_etapas_calculan_limites_por_etapa(funcion):
     etapas = np.r_[np.ones(40), np.full(40, 2)]
     c = funcion(x, stages=etapas)
     assert [p["stage"] for p in c.params] == [1, 2]
-    assert c.params[0]["objetivo"] == pytest.approx(10, abs=1) and c.params[1]["objetivo"] == pytest.approx(20, abs=2)
+    assert c.params[0]["target"] == pytest.approx(10, abs=1) and c.params[1]["target"] == pytest.approx(20, abs=2)
     assert c.params[1]["sigma"] > 2 * c.params[0]["sigma"]
 
 

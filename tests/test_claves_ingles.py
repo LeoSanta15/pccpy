@@ -200,7 +200,7 @@ def test_s012_rf_05_el_codigo_no_usa_claves_espanolas():
         if ruta.name == "results.py":
             continue
         for i, linea in enumerate(ruta.read_text(encoding="utf-8").splitlines(), 1):
-            if patron.search(linea) and "N_(" not in linea:
+            if patron.search(linea) and "N_(" not in linea and "tr(" not in linea:  # tr()/N_(): textos que se muestran
                 hallazgos[f"{ruta.name}:{i}"] = linea.strip()[:90]
     assert hallazgos == {}
 
@@ -235,9 +235,10 @@ def test_s012_rf_07_la_documentacion_y_los_ejemplos_usan_las_claves_nuevas():
     patron = re.compile(rf"""params(?:\[\d+\])?\[\s*["'](?:{alternativas})["']\s*\]""")
     archivos = [RAIZ / "README.md", RAIZ / "README_en.md", *(RAIZ / "docs" / "source").rglob("*.md"),
                 *(RAIZ / "docs" / "source").rglob("*.rst"), *(RAIZ / "examples").glob("*.py")]
+    como_texto = re.compile(rf"""['"](?:{alternativas})['"]\s*(?::|y\b|and\b|\))""")  # {'media': …} o «'media' y 'sigma'»
     hallazgos = {}
     for ruta in archivos:
         for i, linea in enumerate(ruta.read_text(encoding="utf-8").splitlines(), 1):
-            if patron.search(linea):
+            if patron.search(linea) or como_texto.search(linea):
                 hallazgos[f"{ruta.relative_to(RAIZ)}:{i}"] = linea.strip()[:80]
     assert hallazgos == {}

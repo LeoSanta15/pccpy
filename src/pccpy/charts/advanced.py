@@ -60,7 +60,7 @@ def ma_chart(
         flagged = np.flatnonzero((ma > ucl) | (ma < lcl))
         panel = StagePanel("MA", ma, full(t0, N), ucl, lcl, sig_t, N_("Media móvil"), "only1",
                            violations={1: flagged})
-        return [panel], {"media": t0, "sigma": s, "longitud": length, "k": k, "n_subgrupo": n}
+        return [panel], {"mean": t0, "sigma": s, "length": length, "k": k, "subgroup_size": n}
 
     return build_chart("MA", len(means), None, stage_fn, (1,), {1: k})
 
@@ -186,11 +186,11 @@ def zmr_chart(
             full(max(0.0, dd2 - 3 * dd3), n), full(dd3, n),
             N_("Rango móvil de Z"), "only1", symmetric=False,
         )
-        params = {"método": "histórica" if sigma is not None else sigma_method, "partes": len(labels), "corridas": len(runs), "n": n}
+        params = {"method": "historical" if sigma is not None else sigma_method, "parts": len(labels), "runs": len(runs), "n": n}
         if len(set(run_sigma)) == 1:
             params["sigma"] = float(run_sigma[0])
         else:
-            params["sigma_mín"], params["sigma_máx"] = float(min(run_sigma)), float(max(run_sigma))
+            params["sigma_min"], params["sigma_max"] = float(min(run_sigma)), float(max(run_sigma))
         return [z_panel, mr_panel], params
 
     return build_chart("Z-MR", z.size, None, stage_fn, tests, test_params)
@@ -280,8 +280,8 @@ def imr_rs_chart(
             cc, sd = sw * vec(c4, n_i), sw * vec(c5, n_i)
             w_panel = StagePanel("S", s_i, cc, cc + 3 * sd, np.maximum(0.0, cc - 3 * sd), sd,
                                  N_("Desv. est. dentro del subgrupo"), "basic", symmetric=False)
-        params = {"media": m, "sigma_dentro": sw, "sigma_entre": sb, "sigma_entre_dentro": sbw,
-                  "subgrupos": k}
+        params = {"mean": m, "sigma_within": sw, "sigma_between": sb, "sigma_between_within": sbw,
+                  "subgroups": k}
         return [i_panel, mr_panel, w_panel], params
 
     return build_chart(f"I-MR-{within.upper()}", g.shape[0], stages, stage_fn, tests, test_params)
@@ -392,7 +392,7 @@ def g_chart(
         center, ucl = _geom_quantile(pe, 0.5) - 1, _geom_quantile(pe, q_hi) - 1
         c, u, l = full(center, n), full(ucl, n), full(0.0, n)
         viol = _rare_violations(xs, c, l, u, tests_n, test_params)
-        params = {"p": pe, "media": mean, "n": n}
+        params = {"p": pe, "mean": mean, "n": n}
         if benneyan:
             c_run = _benneyan_run(pe, k)
             params["benneyan_c"] = c_run
@@ -495,7 +495,7 @@ def t_chart(
         viol = _rare_violations(xs, cc, l, u, tests_n, test_params)
         panel = StagePanel("T", xs, cc, u, l, full(np.nan, n), N_("Tiempo entre eventos"), "basic",
                            symmetric=False, violations=viol)
-        return [panel], {"distribución": distribution, "forma": c, "escala": sc, "n": n}
+        return [panel], {"distribution": distribution, "shape": c, "scale": sc, "n": n}
 
     chart = build_chart("T", x.size, stages, stage_fn, tests_n, test_params)
     chart.test1_text = N_("1 punto fuera de los percentiles de la distribución {distribution}")
@@ -560,8 +560,8 @@ def zone_chart(
     ``'median_mr'`` o ``'mssd'`` para individuales; ``'rbar'`` (por defecto) o
     ``'pooled'`` para subgrupos. ``reset=True`` reinicia el puntaje tras cada señal.
 
-    El resultado tiene el panel ``"Zona"`` (medias y límites) y el panel ``"Puntaje"``
-    (puntaje acumulado y su umbral). Las señales se marcan en ``"Zona"``.
+    El resultado tiene el panel ``"Zone"`` (medias y límites) y el panel ``"Score"``
+    (puntaje acumulado y su umbral). Las señales se marcan en ``"Zone"``.
     """
     w = tuple(float(v) for v in weights)
     if len(w) != 4 or min(w) < 0 or any(b < a for a, b in zip(w, w[1:])) or w[3] <= 0:
@@ -595,15 +595,15 @@ def zone_chart(
             sg = sigma_subgroups(gs_lim, sigma_method or "rbar")
         sig_x = sg / np.sqrt(n_i)
         score, flagged = _zone_scores((means - m) / sig_x, w, reset)
-        z_panel = StagePanel("Zona", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
+        z_panel = StagePanel("Zone", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
                              N_("Media de la muestra") if not individuals else N_("Valor individual"),
                              "only1", violations={1: flagged})
-        s_panel = StagePanel("Puntaje", score, full(0.0, k), full(w[3], k), full(np.nan, k),
+        s_panel = StagePanel("Score", score, full(0.0, k), full(w[3], k), full(np.nan, k),
                              full(np.nan, k), N_("Puntaje acumulado"), "only1", symmetric=False,
                              violations={})
-        return [z_panel, s_panel], {"media": m, "sigma": sg, "pesos": w, "reinicio": reset, "n": k}
+        return [z_panel, s_panel], {"mean": m, "sigma": sg, "weights": w, "reset": reset, "n": k}
 
-    chart = build_chart("Zona", g.shape[0], stages, stage_fn, (1,), None)
+    chart = build_chart("Zone", g.shape[0], stages, stage_fn, (1,), None)
     chart.test1_text = N_("puntaje acumulado de zona >= {score:g}")
     chart.test1_params = {"score": w[3]}
     return chart

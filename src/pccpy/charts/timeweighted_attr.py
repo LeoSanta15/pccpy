@@ -67,7 +67,7 @@ def _ewma_attr(code: str, kind: str, ylabel: str,
             f"EWMA-{code.upper()}", z, full(ctr, N), ucl, lcl, sig_t,
             ylabel, "only1", symmetric=False, violations={1: flagged},
         )
-        return [panel], {"centro": ctr, "peso": weight, "k": k}
+        return [panel], {"center": ctr, "weight": weight, "k": k}
 
     return build_chart(kind, N, None, stage_fn, (1,), {1: k})
 
@@ -180,7 +180,7 @@ def _cusum_attr(code: str, kind: str, ylabel: str,
             full(1.0, N), ylabel, "only1",
             secondary=lo, symmetric=True, violations={1: flagged},
         )
-        return [panel], {"centro": ctr, "h": h, "k": k}
+        return [panel], {"center": ctr, "h": h, "k": k}
 
     return build_chart(kind, N, None, stage_fn, (1,), None)
 

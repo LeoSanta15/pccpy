@@ -4211,3 +4211,9 @@ msgstr "Zone"
 
 msgid "Puntaje"
 msgstr "Score"
+
+msgid "parámetros conocidos"
+msgstr "known parameters"
+
+msgid "Varianza generalizada"
+msgstr "Generalized variance"

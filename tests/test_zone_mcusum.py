@@ -80,7 +80,7 @@ def test_zona_carta_extremo_a_extremo_tiene_el_arl_exacto(rng):
     exacto = _arl_exacto_zona()
     largos = []
     for _ in range(400):
-        f = pccpy.zone_chart(rng.standard_normal(800), mu=0.0, sigma=1.0)["Zona"].flagged
+        f = pccpy.zone_chart(rng.standard_normal(800), mu=0.0, sigma=1.0)["Zone"].flagged
         largos.append(f[0] + 1 if f.size else 800)
     assert np.mean(largos) == pytest.approx(exacto, rel=0.2)
 
@@ -90,31 +90,31 @@ def test_zona_individuales_limites_y_puntaje(rng):
     x = rng.normal(10, 2, 50)
     ch = pccpy.zone_chart(x)
     sigma = np.mean(np.abs(np.diff(x))) / 1.1283791671
-    pan = ch["Zona"]
+    pan = ch["Zone"]
     assert pan.center[0] == pytest.approx(x.mean())
     assert pan.ucl[0] == pytest.approx(x.mean() + 3 * sigma)
     assert pan.lcl[0] == pytest.approx(x.mean() - 3 * sigma)
     sc, fl = _zone_scores((x - x.mean()) / sigma, W, False)
-    assert ch["Puntaje"].values == pytest.approx(sc)
+    assert ch["Score"].values == pytest.approx(sc)
     assert pan.flagged.tolist() == fl.tolist()
-    assert ch["Puntaje"].ucl[0] == 8
+    assert ch["Score"].ucl[0] == 8
 
 
 def test_zona_puntos_fuera_de_3_sigmas_siempre_senalan(rng):
     x = rng.normal(0, 1, 60)
     x[30] = 12
     ch = pccpy.zone_chart(x, mu=0.0, sigma=1.0)
-    assert 30 in ch["Zona"].flagged
+    assert 30 in ch["Zone"].flagged
     assert "puntaje" in ch.violations()["descripcion"].iloc[0]
 
 
 def test_zona_subgrupos_usan_sigma_sobre_raiz_n(rng):
     d = rng.normal(50, 1, (25, 4))
     ch = pccpy.zone_chart(d, sigma=1.0, mu=50.0)
-    assert ch["Zona"].ucl[0] == pytest.approx(50 + 3 / 2)
-    assert ch["Zona"].sigma[0] == pytest.approx(0.5)
+    assert ch["Zone"].ucl[0] == pytest.approx(50 + 3 / 2)
+    assert ch["Zone"].sigma[0] == pytest.approx(0.5)
     # sigma estimada = Rbar/d2 igual que la Xbar-R
-    a = pccpy.zone_chart(d)["Zona"].ucl[0]
+    a = pccpy.zone_chart(d)["Zone"].ucl[0]
     b = pccpy.xbar_r_chart(d)["Xbar"].ucl[0]
     assert a == pytest.approx(b)
 
@@ -122,16 +122,16 @@ def test_zona_subgrupos_usan_sigma_sobre_raiz_n(rng):
 def test_zona_etapas_reinician_el_puntaje(rng):
     x = np.r_[np.full(3, 0.6), np.full(3, 0.6)]  # con sigma=0.3 -> 2σ: zona 3 (peso 4)
     ch = pccpy.zone_chart(x, mu=0.0, sigma=0.3, stages=[1, 1, 1, 2, 2, 2])
-    assert ch["Puntaje"].values.tolist() == [4, 8, 12, 4, 8, 12]
+    assert ch["Score"].values.tolist() == [4, 8, 12, 4, 8, 12]
     ch2 = pccpy.zone_chart(x, mu=0.0, sigma=0.3)
-    assert ch2["Puntaje"].values.tolist() == [4, 8, 12, 16, 20, 24]
+    assert ch2["Score"].values.tolist() == [4, 8, 12, 16, 20, 24]
 
 
 def test_zona_pesos_personalizados_y_errores(rng):
     x = np.full(4, 1.5)
     ch = pccpy.zone_chart(x, mu=0.0, sigma=1.0, weights=(0, 1, 2, 4))
-    assert ch["Puntaje"].values.tolist() == [1, 2, 3, 4]
-    assert list(ch["Zona"].flagged) == [3]
+    assert ch["Score"].values.tolist() == [1, 2, 3, 4]
+    assert list(ch["Zone"].flagged) == [3]
     with pytest.raises(ValueError, match="pesos"):
         pccpy.zone_chart(x, weights=(0, 2, 4))
     with pytest.raises(ValueError, match="pesos"):
@@ -204,7 +204,7 @@ def test_mcusum_detecta_desplazamiento_pequeno_y_sostenido(rng):
 def test_mcusum_subgrupos_errores_y_limite_monotono(rng):
     X = rng.multivariate_normal([0, 0], np.eye(2), 60)
     ch = pccpy.mcusum_chart(X, subgroup_size=3)
-    assert ch.params[0]["puntos"] == 20 and ch.params[0]["tamaño"] == 3
+    assert ch.params[0]["points"] == 20 and ch.params[0]["size"] == 3
     with pytest.raises(ValueError):
         pccpy.mcusum_chart(X, k=-1)
     with pytest.raises(ValueError):

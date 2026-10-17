@@ -47,7 +47,7 @@ def test_los_limites_congelados_son_los_de_la_carta_final():
     x = _x()
     r = pp.phase_one(pp.imr_chart, x, tests=(1,))
     p = r.chart.params[0]
-    assert r.limits == {"mu": p["media"], "sigma": p["sigma"]}
+    assert r.limits == {"mu": p["mean"], "sigma": p["sigma"]}
     fase2 = r.phase2(x[r.kept], tests=(1,))                       # los mismos datos con límites congelados
     np.testing.assert_allclose(fase2.panels[0].ucl[0], r.chart.panels[0].ucl[0])
     np.testing.assert_allclose(fase2.panels[0].lcl[0], r.chart.panels[0].lcl[0])
@@ -158,7 +158,7 @@ def test_cartas_de_atributos_con_n_variable():
     assert r.converged and 7 in r.excluded
     directa = pp.p_chart(d[r.kept], n[r.kept])
     np.testing.assert_allclose(r.chart.panels[0].ucl, directa.panels[0].ucl)
-    assert r.limits["p"] == pytest.approx(r.chart.params[0]["centro"])
+    assert r.limits["p"] == pytest.approx(r.chart.params[0]["center"])
 
 
 @pytest.mark.parametrize(("funcion", "kw", "clave"), [

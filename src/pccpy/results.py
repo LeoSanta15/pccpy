@@ -24,19 +24,19 @@ _COLUMNAS_VIOLACIONES = {
 }
 # Algunas cartas guardan parámetros con clave en español: son datos y no se traducen; solo se muestran traducidos.
 _PARAMETROS = {
-    "centro": N_("centro"), "distribución": N_("distribución"), "escala": N_("escala"), "forma": N_("forma"),
-    "longitud": N_("longitud"), "media": N_("media"), "objetivo": N_("objetivo"), "peso": N_("peso"),
-    "pesos": N_("pesos"), "reinicio": N_("reinicio"), "subgrupos": N_("subgrupos"), "tamaño": N_("tamaño"),
-    "n_subgrupo": N_("n_subgrupo"), "MR_prom": N_("MR_prom"), "alfa": N_("alfa"), "corridas": N_("corridas"),
-    "fase": N_("fase"), "método": N_("método"), "n_puntos": N_("n_puntos"), "partes": N_("partes"),
-    "puntos": N_("puntos"), "sigma_conocida": N_("sigma_conocida"), "sigma_dentro": N_("sigma_dentro"),
-    "sigma_entre": N_("sigma_entre"), "sigma_entre_dentro": N_("sigma_entre_dentro"), "variables": N_("variables"),
-    "LCS": N_("LCS"), "sigma_mín": N_("sigma_mín"), "sigma_máx": N_("sigma_máx"),
+    "center": N_("centro"), "distribution": N_("distribución"), "scale": N_("escala"), "shape": N_("forma"),
+    "length": N_("longitud"), "mean": N_("media"), "target": N_("objetivo"), "weight": N_("peso"),
+    "weights": N_("pesos"), "reset": N_("reinicio"), "subgroups": N_("subgrupos"), "size": N_("tamaño"),
+    "subgroup_size": N_("n_subgrupo"), "mr_mean": N_("MR_prom"), "alpha": N_("alfa"), "runs": N_("corridas"),
+    "phase": N_("fase"), "method": N_("método"), "n_points": N_("n_puntos"), "parts": N_("partes"),
+    "points": N_("puntos"), "sigma_known": N_("sigma_conocida"), "sigma_within": N_("sigma_dentro"),
+    "sigma_between": N_("sigma_entre"), "sigma_between_within": N_("sigma_entre_dentro"), "variables": N_("variables"),
+    "ucl": N_("LCS"), "sigma_min": N_("sigma_mín"), "sigma_max": N_("sigma_máx"),
 }
 # Valores de parámetros que son texto del idioma fuente (no identificadores técnicos como 'mr' o 'weibull').
-_VALORES_PARAMETRO = {"histórica": N_("histórica")}
-# Nombres de carta o de panel que son palabras del idioma fuente: la clave (``chart["Zona"]``) no cambia; solo se muestran traducidos.
-_NOMBRES_VISIBLES = {"Zona": N_("Zona"), "Puntaje": N_("Puntaje")}
+_VALORES_PARAMETRO = {"historical": N_("histórica"), "known": N_("parámetros conocidos")}
+# Nombres de carta o de panel que son palabras en inglés del código: solo se muestran traducidos.
+_NOMBRES_VISIBLES = {"Zone": N_("Zona"), "Score": N_("Puntaje"), "Generalized variance": N_("Varianza generalizada")}
 
 
 def _texto_etiqueta(valor) -> str:
@@ -161,7 +161,7 @@ class ControlChart:
         col = etiquetas(_COLUMNAS_PANEL, stable)
         frames = []
         for p in self.panels:
-            f = p.to_frame(stable=stable).drop(columns=[col["point"], col["stage"]]).add_prefix(f"{p.name}_")
+            f = p.to_frame(stable=stable).drop(columns=[col["point"], col["stage"]]).add_prefix(f"{p.name if stable else _nombre_visible(p.name)}_")
             frames.append(f)
         base = pd.DataFrame(
             {col["point"]: np.arange(1, len(self.panels[0].values) + 1), col["stage"]: self.panels[0].stage}

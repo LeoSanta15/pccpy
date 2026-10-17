@@ -49,8 +49,8 @@ def test_s002_rf_02_los_limites_coinciden_con_un_ajuste_aparte():
     with pytest.warns(UserWarning):
         ch = pp.t_chart([0.0] + SERIE, zeros="drop")
     c, _, sc = stats.weibull_min.fit(SERIE, floc=0)
-    assert ch.params[0]["forma"] == pytest.approx(c, rel=1e-4)
-    assert ch.params[0]["escala"] == pytest.approx(sc, rel=1e-4)
+    assert ch.params[0]["shape"] == pytest.approx(c, rel=1e-4)
+    assert ch.params[0]["scale"] == pytest.approx(sc, rel=1e-4)
 
 
 def test_s002_rf_02_por_defecto_sigue_siendo_error():

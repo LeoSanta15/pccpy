@@ -84,7 +84,7 @@ def test_reutilizar_la_transformacion_con_datos_nuevos():
     c = pp.imr_chart(X, transform="boxcox")
     nuevos = stats.lognorm.rvs(0.6, size=40, random_state=9) * 5
     prm = c.params[0]
-    c2 = pp.imr_chart(nuevos, transform=c.transformation, mu=prm["media"], sigma=prm["sigma"])
+    c2 = pp.imr_chart(nuevos, transform=c.transformation, mu=prm["mean"], sigma=prm["sigma"])
     assert c2["I"].ucl == pytest.approx(c["I"].ucl[0])  # mismos límites congelados, en unidades originales
     assert c2["I"].values == pytest.approx(nuevos)
 

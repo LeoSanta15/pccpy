@@ -555,7 +555,7 @@ def _carta_t_sin_ceros():
     ref = stats.weibull_min(c, scale=sc)
     pan = ch["T"]
     esperado = [c, sc, ref.ppf(stats.norm.cdf(-3)), ref.ppf(0.5), ref.ppf(stats.norm.cdf(3)), float(x.size)]
-    obtenido = [ch.params[0]["forma"], ch.params[0]["escala"], pan.lcl[0], pan.center[0], pan.ucl[0], float(len(pan.values))]
+    obtenido = [ch.params[0]["shape"], ch.params[0]["scale"], pan.lcl[0], pan.center[0], pan.ucl[0], float(len(pan.values))]
     return np.array(esperado), np.array(obtenido)
 
 

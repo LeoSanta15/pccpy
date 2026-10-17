@@ -21,8 +21,8 @@ def _dos_etapas(rng, mu1=(0, 0, 0), mu2=(2, 2, 2)):
 def test_t2_fase1_con_etapas_reestima_media_y_cov_por_etapa(rng):
     X, st = _dos_etapas(rng)
     ch = pccpy.t2_chart(X, stages=st)
-    assert [p["fase"] for p in ch.params] == ["I", "I"]
-    assert [p["puntos"] for p in ch.params] == [40, 40]
+    assert [p["phase"] for p in ch.params] == ["I", "I"]
+    assert [p["points"] for p in ch.params] == [40, 40]
     assert ch.stage_mean[1] == pytest.approx(X[:40].mean(axis=0))
     assert ch.stage_mean[2] == pytest.approx(X[40:].mean(axis=0))
     assert ch.stage_cov[1] == pytest.approx(np.cov(X[:40], rowvar=False))
@@ -42,7 +42,7 @@ def test_t2_historicos_con_etapas_usa_los_mismos_limites(rng):
     assert ch.stage_mean[1] is ch.stage_mean[2]  # el mismo array, sin reestimar
     # sin n_hist: parámetros conocidos (chi-cuadrado), también constante entre etapas
     ch2 = pccpy.t2_chart(X, mu=mu, cov=cov, stages=st)
-    assert [p["fase"] for p in ch2.params] == ["parámetros conocidos"] * 2
+    assert [p["phase"] for p in ch2.params] == ["known"] * 2
     assert ch2["T2"].ucl[0] == pytest.approx(stats.chi2.ppf(1 - pccpy.multivariate.ALPHA, 3))
 
 
@@ -85,7 +85,7 @@ def test_gv_con_cov_conocida_y_etapas_usa_la_misma_en_todas(rng):
     G = np.vstack([G1, G2])
     ch = pccpy.generalized_variance_chart(G, cov=SIG1, stages=[1] * 25 + [2] * 25)
     assert ch["|S|"].center[0] == pytest.approx(ch["|S|"].center[-1])
-    assert ch.params[0]["sigma_conocida"] and ch.params[1]["sigma_conocida"]
+    assert ch.params[0]["sigma_known"] and ch.params[1]["sigma_known"]
 
 
 # --------------------------------------------------------------------------- MEWMA
@@ -93,7 +93,7 @@ def test_mewma_reinicia_el_acumulador_en_cada_etapa(rng):
     X, st = _dos_etapas(rng, mu1=(0, 0, 0), mu2=(5, 5, 5))
     ch = pccpy.mewma_chart(X, stages=st, mu=np.zeros(3), cov=SIG1)
     # el primer punto de la etapa 2 se calcula como si Z volviera a 0
-    solo2 = pccpy.mewma_chart(X[40:], mu=np.zeros(3), cov=SIG1, ucl=ch.params[0]["LCS"])
+    solo2 = pccpy.mewma_chart(X[40:], mu=np.zeros(3), cov=SIG1, ucl=ch.params[0]["ucl"])
     assert ch["MEWMA"].values[40] == pytest.approx(solo2["MEWMA"].values[0])
     assert ch["MEWMA"].ucl[0] == ch["MEWMA"].ucl[-1]  # el límite no depende de la etapa
 
@@ -101,7 +101,7 @@ def test_mewma_reinicia_el_acumulador_en_cada_etapa(rng):
 def test_mewma_fase1_con_etapas_reestima_media_y_cov(rng):
     X, st = _dos_etapas(rng)
     ch = pccpy.mewma_chart(X, stages=st)
-    solo1 = pccpy.mewma_chart(X[:40], ucl=ch.params[0]["LCS"])
+    solo1 = pccpy.mewma_chart(X[:40], ucl=ch.params[0]["ucl"])
     assert ch["MEWMA"].values[:40] == pytest.approx(solo1["MEWMA"].values)
 
 
@@ -109,7 +109,7 @@ def test_mewma_fase1_con_etapas_reestima_media_y_cov(rng):
 def test_mcusum_reinicia_el_acumulador_en_cada_etapa(rng):
     X, st = _dos_etapas(rng, mu1=(0, 0, 0), mu2=(5, 5, 5))
     ch = pccpy.mcusum_chart(X, stages=st, mu=np.zeros(3), cov=SIG1)
-    solo2 = pccpy.mcusum_chart(X[40:], mu=np.zeros(3), cov=SIG1, h=ch.params[0]["LCS"])
+    solo2 = pccpy.mcusum_chart(X[40:], mu=np.zeros(3), cov=SIG1, h=ch.params[0]["ucl"])
     assert ch["MCUSUM"].values[40] == pytest.approx(solo2["MCUSUM"].values[0])
     assert ch["MCUSUM"].values[40] == pytest.approx(0.0, abs=1e-9) or ch["MCUSUM"].values[40] >= 0
 
@@ -117,7 +117,7 @@ def test_mcusum_reinicia_el_acumulador_en_cada_etapa(rng):
 def test_mcusum_fase1_con_etapas_reestima_media_y_cov(rng):
     X, st = _dos_etapas(rng)
     ch = pccpy.mcusum_chart(X, stages=st)
-    solo1 = pccpy.mcusum_chart(X[:40], h=ch.params[0]["LCS"])
+    solo1 = pccpy.mcusum_chart(X[:40], h=ch.params[0]["ucl"])
     assert ch["MCUSUM"].values[:40] == pytest.approx(solo1["MCUSUM"].values)
 
 

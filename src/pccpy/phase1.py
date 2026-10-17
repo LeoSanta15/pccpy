@@ -88,20 +88,20 @@ def _de_json(valor):
 class _Tipo:
     """Cómo se prepara una carta para la Fase I y qué parámetros se congelan para la Fase II."""
 
-    entrada: str  # 'individuos' | 'subgrupos' | 'conteos'
+    entrada: str  # 'individuals' | 'subgroups' | 'counts'
     congelar: Callable[[dict, float], dict]  # (parámetros de la carta, n constante) -> argumentos de la función
     paneles: tuple[str, ...] | None = None  # paneles cuyas señales excluyen puntos (None: todos)
 
 
 _TIPOS: dict[Callable, _Tipo] = {
     # en I-MR el rango móvil de un valor atípico y el de su vecino siguiente avisan los dos: se excluye según el panel I
-    imr_chart: _Tipo("individuos", lambda p, n: {"mu": p["media"], "sigma": p["sigma"]}, paneles=("I",)),
-    xbar_r_chart: _Tipo("subgrupos", lambda p, n: {"mu": p["media"], "sigma": p["sigma"]}),
-    xbar_s_chart: _Tipo("subgrupos", lambda p, n: {"mu": p["media"], "sigma": p["sigma"]}),
-    p_chart: _Tipo("conteos", lambda p, n: {"p": p["centro"]}),
-    np_chart: _Tipo("conteos", lambda p, n: {"p": p["centro"] / n}),
-    c_chart: _Tipo("conteos", lambda p, n: {"c": p["centro"]}),
-    u_chart: _Tipo("conteos", lambda p, n: {"u": p["centro"]}),
+    imr_chart: _Tipo("individuals", lambda p, n: {"mu": p["mean"], "sigma": p["sigma"]}, paneles=("I",)),
+    xbar_r_chart: _Tipo("subgroups", lambda p, n: {"mu": p["mean"], "sigma": p["sigma"]}),
+    xbar_s_chart: _Tipo("subgroups", lambda p, n: {"mu": p["mean"], "sigma": p["sigma"]}),
+    p_chart: _Tipo("counts", lambda p, n: {"p": p["center"]}),
+    np_chart: _Tipo("counts", lambda p, n: {"p": p["center"] / n}),
+    c_chart: _Tipo("counts", lambda p, n: {"c": p["center"]}),
+    u_chart: _Tipo("counts", lambda p, n: {"u": p["center"]}),
 }
 
 
@@ -378,7 +378,7 @@ def _describir_motivo(motivo: str) -> str:
 def _preparar(tipo: _Tipo, data, kwargs: dict) -> tuple[np.ndarray, np.ndarray | None, dict]:
     """(datos como array, etiquetas por punto, argumentos de la carta sin los que describen los datos)."""
     argumentos = {k: v for k, v in kwargs.items() if k not in _ARGUMENTOS_DE_DATOS}
-    if tipo.entrada == "subgrupos":
+    if tipo.entrada == "subgroups":
         mat, n_completos = to_subgroups(
             data, kwargs.get("subgroup_size"), kwargs.get("subgroup"), value=kwargs.get("value"))
         etiquetas_x = detectar(data, kwargs.get("subgroup_size"), kwargs.get("subgroup"), kwargs.get("value"))
@@ -390,7 +390,7 @@ def _preparar(tipo: _Tipo, data, kwargs: dict) -> tuple[np.ndarray, np.ndarray |
     if not np.all(np.isfinite(arr)):
         raise ValueError(tr("La Fase I no admite valores faltantes ni infinitos: elimínalos antes."))
     etiquetas_x = detectar(data)
-    if tipo.entrada == "conteos" and kwargs.get("n") is not None:
+    if tipo.entrada == "counts" and kwargs.get("n") is not None:
         argumentos["n"] = kwargs["n"]
     return arr, etiquetas_x, argumentos
 
@@ -486,7 +486,7 @@ def phase_one(
             min_points=min_points, n=n))
     cuantos = None if exclude_tests is None else set(np.atleast_1d(exclude_tests).astype(int).tolist())
     paneles = tipo.paneles if exclude_panels is None else tuple(np.atleast_1d(exclude_panels).astype(str))
-    n_const = float(np.atleast_1d(kwargs.get("n", 1.0))[0]) if tipo.entrada == "conteos" else 1.0
+    n_const = float(np.atleast_1d(kwargs.get("n", 1.0))[0]) if tipo.entrada == "counts" else 1.0
 
     def ajustar(conservados: np.ndarray) -> Transformation | None:
         """Transformación para los puntos conservados: se reajusta en cada pasada salvo que el usuario dé una ya ajustada."""
@@ -533,7 +533,7 @@ def phase_one(
         prm = carta.params[0]
         historial.append(PhaseOneIteration(
             iteration=len(historial), n_points=int(conservados.size), flagged=conservados[marcados],
-            center=float(prm.get("media", prm.get("centro", np.nan))), sigma=float(prm.get("sigma", np.nan)),
+            center=float(prm.get("mean", prm.get("center", np.nan))), sigma=float(prm.get("sigma", np.nan)),
             transformation=t_actual))
         if marcados.size == 0:
             break

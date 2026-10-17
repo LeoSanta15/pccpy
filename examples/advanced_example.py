@@ -64,7 +64,7 @@ me = pccpy.mewma_chart(new, mu=mu, cov=cov)
 print(int(me["MEWMA"].flagged[0]) + 1)         # first MEWMA signal
 me.plot().savefig(output / "mewma.png")
 mc = pccpy.mcusum_chart(new, mu=mu, cov=cov)
-print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["LCS"], 2), "\n")   # first MCUSUM signal and its limit
+print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["ucl"], 2), "\n")   # first MCUSUM signal and its limit
 mc.plot().savefig(output / "mcusum.png")
 
 # 4b) Stages: two periods with different means, each one re-estimates its own limits

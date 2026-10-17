@@ -138,11 +138,11 @@ def test_imr_rs_variacion_entre_no_da_falsas_alarmas(rng):
 def test_imr_rs_recupera_sigmas_entre_y_dentro(rng):
     d = rng.normal(0, 1.0, (4000, 5)) + rng.normal(0, 2.0, (4000, 1))
     prm = pccpy.imr_rs_chart(d).params[0]
-    assert prm["sigma_dentro"] == pytest.approx(1.0, rel=0.03)
-    assert prm["sigma_entre"] == pytest.approx(2.0, rel=0.05)
-    assert prm["sigma_entre_dentro"] == pytest.approx(np.hypot(1.0, 2.0), rel=0.04)
-    assert prm["sigma_entre_dentro"] == pytest.approx(
-        np.hypot(prm["sigma_entre"], prm["sigma_dentro"])
+    assert prm["sigma_within"] == pytest.approx(1.0, rel=0.03)
+    assert prm["sigma_between"] == pytest.approx(2.0, rel=0.05)
+    assert prm["sigma_between_within"] == pytest.approx(np.hypot(1.0, 2.0), rel=0.04)
+    assert prm["sigma_between_within"] == pytest.approx(
+        np.hypot(prm["sigma_between"], prm["sigma_within"])
     )
 
 
@@ -150,9 +150,9 @@ def test_imr_rs_sigma_entre_es_cero_si_las_medias_son_iguales(rng):
     base = rng.normal(0, 1, 5)
     d = np.array([rng.permutation(base) for _ in range(12)])  # misma media en todos
     prm = pccpy.imr_rs_chart(d).params[0]
-    assert prm["sigma_dentro"] > 0
-    assert prm["sigma_entre"] == 0.0
-    assert prm["sigma_entre_dentro"] == pytest.approx(prm["sigma_dentro"])
+    assert prm["sigma_within"] > 0
+    assert prm["sigma_between"] == 0.0
+    assert prm["sigma_between_within"] == pytest.approx(prm["sigma_within"])
 
 
 def test_imr_rs_variante_s_y_moda(rng):
@@ -164,7 +164,7 @@ def test_imr_rs_variante_s_y_moda(rng):
     v = rng.normal(10, 1, 3 + 4 + 5 + 6)
     ids = np.repeat([1, 2, 3, 4], [3, 4, 5, 6])
     prm = pccpy.imr_rs_chart(v, subgroup=ids).params[0]
-    assert np.isnan(prm["sigma_entre"]) and np.isnan(prm["sigma_entre_dentro"])
+    assert np.isnan(prm["sigma_between"]) and np.isnan(prm["sigma_between_within"])
 
 
 def test_imr_rs_historicos_y_errores(rng):
@@ -239,7 +239,7 @@ def test_t_mle_weibull_coincide_con_scipy_y_ecuacion_de_score(rng):
 def test_t_limites_son_percentiles_weibull(rng):
     x = stats.weibull_min.rvs(1.5, scale=30, size=80, random_state=rng.integers(1e9))
     ch = pccpy.t_chart(x)
-    c, sc = ch.params[0]["forma"], ch.params[0]["escala"]
+    c, sc = ch.params[0]["shape"], ch.params[0]["scale"]
     d = stats.weibull_min(c, scale=sc)
     pan = ch["T"]
     assert pan.center[0] == pytest.approx(d.ppf(0.5))
@@ -250,7 +250,7 @@ def test_t_limites_son_percentiles_weibull(rng):
 def test_t_exponencial_historicos_y_errores(rng):
     x = rng.exponential(10, 50)
     ch = pccpy.t_chart(x, distribution="exponential")
-    assert ch.params[0]["escala"] == pytest.approx(x.mean())
+    assert ch.params[0]["scale"] == pytest.approx(x.mean())
     assert ch["T"].center[0] == pytest.approx(x.mean() * np.log(2))
     ch2 = pccpy.t_chart(x, shape=2.0, scale=15.0)
     assert ch2["T"].center[0] == pytest.approx(15 * np.log(2) ** 0.5)

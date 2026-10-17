@@ -84,7 +84,7 @@ _TREE: dict[str, tuple[str, list[tuple[str, str]]]] = {
             (N_("Muestreo de aceptación"),                       "muestreo"),
             (N_("Análisis exploratorio (normalidad, Pareto)"),   "exploratorio"),
             (N_("Intervalos de tolerancia"),                     "tolerancia"),
-            (N_("Carta de corridas o pre-control"),              "corridas"),
+            (N_("Carta de corridas o pre-control"),              "runs"),
         ],
     ),
 
@@ -281,7 +281,7 @@ _TREE: dict[str, tuple[str, list[tuple[str, str]]]] = {
     ),
 
     # ── corridas / pre-control ─────────────────────────────────────────────────
-    "corridas": (
+    "runs": (
         N_("¿Qué análisis necesitas?"),
         [
             (N_("Carta de corridas — detectar patrones no aleatorios (p-valores)"), "r:run"),

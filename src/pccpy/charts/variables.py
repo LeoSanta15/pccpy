@@ -85,7 +85,7 @@ def imr_chart(
             full(max(0.0, c - 3 * dd3 * s), xs.size), full(dd3 * s, xs.size),
             N_("Rango móvil"), "only1", symmetric=False,
         )
-        return [i_panel, mr_panel], {"media": m, "sigma": s, "MR_prom": c, "n": n}
+        return [i_panel, mr_panel], {"mean": m, "sigma": s, "mr_mean": c, "n": n}
 
     chart = build_chart("I-MR", x.size, stages, stage_fn, tests, test_params)
     return chart if t is None else aplicar_escala(chart, t, scale, originales=x_original)
@@ -132,7 +132,7 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
                 N_("Desv. est. de la muestra"), "basic", symmetric=False,
             )
         size = int(n_i[0]) if n_i.min() == n_i.max() else "variable"
-        return [x_panel, d_panel], {"media": m, "sigma": sg, "subgrupos": k, "tamaño": size}
+        return [x_panel, d_panel], {"mean": m, "sigma": sg, "subgroups": k, "size": size}
 
     chart = build_chart(kind, total, stages, stage_fn, tests, test_params)
     return chart if t is None else aplicar_escala(chart, t, scale)

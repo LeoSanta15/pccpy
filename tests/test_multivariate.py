@@ -94,7 +94,7 @@ def test_t2_fase2_con_historicos_detecta_y_diagnostica(rng):
     X = rng.multivariate_normal(np.zeros(3), SIGMA, 40)
     X[25:, 2] += 6.0
     ch = pccpy.t2_chart(X, mu=hist.mean(axis=0), cov=np.cov(hist, rowvar=False), n_hist=200)
-    assert ch.params[0]["fase"] == "II"
+    assert ch.params[0]["phase"] == "II"
     post = [i for i in ch["T2"].flagged if i >= 25]  # puntos con la variable 3 desplazada
     assert len(post) >= 10  # de 15 puntos desplazados
     assert ch.contributions(post[0] + 1).idxmax() == "X3"
@@ -237,7 +237,7 @@ def test_mewma_detecta_cambio_pequeno_sostenido(rng):
 def test_mewma_subgrupos_y_errores(rng):
     X = rng.multivariate_normal([0, 0], np.eye(2), 60)
     ch = pccpy.mewma_chart(X, subgroup_size=3)
-    assert ch.params[0]["puntos"] == 20 and ch.params[0]["tamaño"] == 3
+    assert ch.params[0]["points"] == 20 and ch.params[0]["size"] == 3
     with pytest.raises(ValueError):
         pccpy.mewma_chart(X, weight=0)
     with pytest.raises(ValueError):

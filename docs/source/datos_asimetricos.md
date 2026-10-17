@@ -41,7 +41,7 @@ pp.capability_analysis(x, lsl=44, usl=56, transform="yeo-johnson")
 carta = pp.imr_chart(x, transform="yeo-johnson")                      # scale="transformed" lo deja todo transformado
 pp.xbar_r_chart(g, transform="boxcox")
 nueva = pp.imr_chart(x_nuevos, transform=carta.transformation,        # la misma transformación para datos nuevos
-                     mu=carta.params[0]["media"], sigma=carta.params[0]["sigma"])
+                     mu=carta.params[0]["mean"], sigma=carta.params[0]["sigma"])
 ```
 
 En una carta con transformación los límites quedan **asimétricos** en unidades originales, y los paneles de dispersión

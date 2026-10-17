@@ -1,6 +1,6 @@
 """Regresión: ningún texto de las salidas queda en español al cambiar de idioma.
 
-Las claves de ``params`` y los nombres de paneles (``chart["Zona"]``) son código y no cambian con el idioma; lo que se muestra
+Las claves de ``params`` y los nombres de paneles (``chart["Zone"]``) son código en inglés y no cambian con el idioma; lo que se muestra
 (``summary()``, título del gráfico, etiqueta de ``contributions()``) sí se traduce.
 """
 import numpy as np
@@ -23,14 +23,16 @@ def test_el_resumen_de_zmr_traduce_los_parametros_y_el_valor_historica():
 def test_el_resumen_de_zmr_traduce_sigma_min_y_max():
     x = np.random.default_rng(1).normal(50, 1, 40)
     carta = pccpy.zmr_chart(x, ["A"] * 20 + ["B"] * 20, mu={"A": 50.0, "B": 50.0}, sigma={"A": 1.0, "B": 2.0})
-    assert "sigma_mín" in carta.params[0]            # la clave del código no cambia
+    assert "sigma_min" in carta.params[0]            # la clave del código está en inglés
     with pccpy.language("en"):
         assert "sigma_min=" in carta.summary() and "sigma_max=" in carta.summary()
 
 
-def test_la_carta_de_zona_se_muestra_como_zone_en_ingles_y_su_panel_no_cambia():
+def test_la_carta_de_zona_se_muestra_como_zona_en_español_y_zone_en_ingles():
     carta = pccpy.zone_chart(np.random.default_rng(2).normal(0, 1, 50), mu=0.0, sigma=1.0)
-    assert carta["Zona"] is not None and carta.kind == "Zona"   # identificadores estables
+    assert carta["Zone"] is not None and carta.kind == "Zone"   # identificadores en inglés, iguales en todos los idiomas
+    with pccpy.language("es"):
+        assert carta.summary().splitlines()[0] == "Carta de control Zona"
     with pccpy.language("en"):
         assert carta.summary().splitlines()[0] == "Control chart Zone"
         titulo = carta.plot().axes[0].figure._suptitle.get_text()

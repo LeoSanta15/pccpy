@@ -15,12 +15,12 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S012-RF-01: tabla de equivalencias y claves en inglés en cada carta (variables, atributos, tiempo ponderado, avanzadas,
+- [x] S012-RF-01: tabla de equivalencias y claves en inglés en cada carta (variables, atributos, tiempo ponderado, avanzadas,
   multivariadas).
-- [ ] S012-RF-04: `summary()` traduce desde las claves canónicas.
-- [ ] S012-RF-03: carta de zona.
-- [ ] S012-RF-05: lecturas internas de `params`.
-- [ ] S012-RF-06: Fase I (`phase_one` lee las claves nuevas; el formato guardado no cambia).
+- [x] S012-RF-04: `summary()` traduce desde las claves canónicas.
+- [x] S012-RF-03: carta de zona.
+- [x] S012-RF-05: lecturas internas de `params`.
+- [x] S012-RF-06: Fase I (`phase_one` lee las claves nuevas; el formato guardado no cambia).
 
 ## Fase 2 — Verificación y cierre
 

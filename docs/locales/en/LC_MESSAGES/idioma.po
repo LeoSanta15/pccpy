@@ -50,8 +50,8 @@ msgstr "The headers of `to_frame()` and `violations()` are **presentation**: the
 msgid "Las tablas de estadísticos tienen el índice `statistic` y la columna `value`; las de puntos (`ControlChart.to_frame`, `violations`) usan `point`, `stage`, `value`, `cl`, `ucl`, `lcl`, `test`, `description`…"
 msgstr "The statistics tables have the index `statistic` and the column `value`; the point tables (`ControlChart.to_frame`, `violations`) use `point`, `stage`, `value`, `cl`, `ucl`, `lcl`, `test`, `description`…"
 
-msgid "Los valores de datos (p. ej. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`, o los nombres de parámetros como `chart.params[0][\"media\"]`) **no se traducen**: solo se muestran traducidos en `summary()`. Los textos que un resultado guarda al crearse (p. ej. `DiagnoseResult.issues`) quedan en el idioma activo en ese momento."
-msgstr "Data values (e.g. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`, or parameter names such as `chart.params[0][\"media\"]`) are **not translated**: they are only displayed translated in `summary()`. Texts that a result stores when it is created (e.g. `DiagnoseResult.issues`) stay in the language that was active at that moment."
+msgid "Los valores de datos (p. ej. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`) **no se traducen**. Las claves de `chart.params` (p. ej. `chart.params[0][\"mean\"]`) y los nombres de las cartas y de sus paneles (`chart.kind`, `chart[\"Zone\"]`) están en inglés y son iguales en cualquier idioma: `summary()` solo los muestra traducidos. Los textos que un resultado guarda al crearse (p. ej. `DiagnoseResult.issues`) quedan en el idioma activo en ese momento."
+msgstr "Data values (e.g. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`) are **not translated**. The keys of `chart.params` (e.g. `chart.params[0][\"mean\"]`) and the names of the charts and their panels (`chart.kind`, `chart[\"Zone\"]`) are in English and the same in every language: `summary()` only displays them translated. Texts that a result stores when it is created (e.g. `DiagnoseResult.issues`) stay in the language that was active at that moment."
 
 msgid "Variable de entorno"
 msgstr "Environment variable"
@@ -65,4 +65,3 @@ msgstr "For translation contributors"
 #, python-brace-format
 msgid "El código marca los textos con `tr(\"…\")` (se traducen al mostrarse) o `N_(\"…\")` (constantes de módulo, que se traducen al usarlas con `tr()`). Los f-strings **no** se pueden traducir: usa `tr(\"'{name}' está vacío.\").format(name=name)`. Comandos:"
 msgstr "The code marks texts with `tr(\"…\")` (translated when displayed) or `N_(\"…\")` (module-level constants, translated with `tr()` when used). f-strings **cannot** be translated: use `tr(\"'{name}' está vacío.\").format(name=name)`. Commands:"
-
