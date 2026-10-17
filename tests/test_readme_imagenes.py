@@ -56,7 +56,7 @@ def test_el_indice_de_los_readme_incluye_la_seccion_de_ejemplos():
         assert numeros == list(range(1, len(numeros) + 1)), f"{nombre}: numeración del índice rota"
 
 
-# ── el código es el mismo en todos los idiomas; las salidas dependen del idioma ──────────────────────────────
+# ── los ejemplos: código de ``examples/`` en inglés; en los README los nombres de variable siguen el idioma del README ── ──────────────────────────────
 
 
 def _codigo_de_ejemplos(nombre: str, inicio: str, fin: str) -> list[str]:
@@ -66,10 +66,58 @@ def _codigo_de_ejemplos(nombre: str, inicio: str, fin: str) -> list[str]:
     return [re.sub(r"[ \t]*#.*", "", b) for b in bloques]  # sin comentarios: esos sí van en el idioma del README
 
 
-def test_el_codigo_de_los_ejemplos_es_igual_en_los_dos_readme():
-    es = _codigo_de_ejemplos("README.md", "## Ejemplos con resultados", "## Cartas de variables")
-    en = _codigo_de_ejemplos("README_en.md", "## Worked examples with results", "## Variables charts")
-    assert es and es == en
+def _seccion(nombre: str, inicio: str, fin: str) -> str:
+    texto = (RAIZ / nombre).read_text(encoding="utf-8")
+    return texto[texto.index(inicio):texto.index(fin)]
+
+
+def _versiones_minimas() -> bool:
+    import numpy as np
+
+    return tuple(int(p) for p in np.__version__.split(".")[:2]) < (1, 26)
+
+
+@pytest.mark.skipif(_versiones_minimas(), reason=(
+    "Las salidas del README salen de numpy >= 1.26 y scipy >= 1.11: con las versiones mínimas declaradas (numpy 1.22, scipy 1.9) "
+    "`multivariate_normal` y los ajustes de máxima verosimilitud difieren en las últimas cifras y las salidas no coinciden "
+    "línea a línea; la reproducibilidad se comprueba en el resto de la matriz de Python."))
+@pytest.mark.parametrize(("nombre", "inicio", "fin", "idioma"), [
+    ("README.md", "## Ejemplos con resultados", "## Cartas de variables", "es"),
+    ("README_en.md", "## Worked examples with results", "## Variables charts", "en"),
+])
+def test_los_fragmentos_del_readme_reproducen_las_salidas_que_muestran(nombre, inicio, fin, idioma):
+    """Ejecutados en orden, los fragmentos imprimen cada línea de salida que el README enseña (salvo las abreviadas con «…»)."""
+    import contextlib
+    import io
+
+    import matplotlib
+    import matplotlib.pyplot as plt
+    import numpy as np
+
+    import pccpy
+
+    matplotlib.use("Agg")
+    seccion = _seccion(nombre, inicio, fin)
+    bloques = re.findall(r"```python\n([\s\S]*?)\n```", seccion)
+    salidas = re.findall(r"```text\n([\s\S]*?)\n```", seccion)
+    assert bloques and salidas
+    espacio = {"np": np, "pp": pccpy}
+    impreso = io.StringIO()
+    with pccpy.language(idioma), contextlib.redirect_stdout(impreso):
+        for bloque in bloques:
+            exec(bloque, espacio)  # noqa: S102
+    plt.close("all")
+    ausentes = [ln for o in salidas for ln in o.split("\n") if ln.strip() not in ("", "…") and ln.rstrip() not in impreso.getvalue()]
+    assert ausentes == []
+
+
+def test_el_readme_en_español_usa_nombres_de_variable_en_español_y_el_ingles_no():
+    es = "\n".join(re.sub(r"[ \t]*#.*", "", b) for b in re.findall(
+        r"```python\n([\s\S]*?)\n```", _seccion("README.md", "## Ejemplos con resultados", "## Cartas de variables")))
+    en = "\n".join(re.sub(r"[ \t]*#.*", "", b) for b in re.findall(
+        r"```python\n([\s\S]*?)\n```", _seccion("README_en.md", "## Worked examples with results", "## Variables charts")))
+    assert re.search(r"\b(carta|subgrupos|defectuosos|datos|tiempos)\b", es)
+    assert not re.search(r"\b(carta|subgrupos|defectuosos|datos|tiempos|tabla|etapas)\b", en)
 
 
 def test_los_ejemplos_estan_en_ingles_y_sin_texto_propio():
