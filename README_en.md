@@ -401,6 +401,8 @@ chart = pp.cusum_chart(
 )
 ```
 
+The plot names its two series in a legend: "C+ (upper sum)" and "C- (lower sum)". It is shown by default and removed with `chart.plot(legend=False)`.
+
 > **Rule of thumb:** `H = 4σ` and `K = 0.5σ` balance the detection of a 1σ shift
 > (out-of-control ARL ≈ 8) with an in-control ARL ≈ 168 (two-sided). For a larger in-control ARL
 > raise `H` (with `H = 5`, ≈ 470). `sigma_method=` and `stages=` work as in the EWMA (the sums

@@ -398,6 +398,8 @@ carta = pp.cusum_chart(
 )
 ```
 
+El gráfico nombra sus dos series con una leyenda: «C+ (suma superior)» y «C- (suma inferior)». Se muestra por defecto y se quita con `carta.plot(legend=False)`.
+
 > **Regla práctica:** `H = 4σ` y `K = 0.5σ` equilibran la detección de un desplazamiento
 > de 1σ (ARL fuera de control ≈ 8) con un ARL en control ≈ 168 (bilateral). Para un ARL en
 > control mayor sube `H` (con `H = 5`, ≈ 470). `sigma_method=` y `stages=` funcionan como en la EWMA
