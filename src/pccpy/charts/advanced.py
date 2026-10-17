@@ -224,11 +224,11 @@ def imr_rs_chart(
     ``within``: ``'r'`` o ``'s'``. ``sigma_method`` (sigma dentro): ``'rbar'`` o
     ``'pooled'`` para R; ``'sbar'`` o ``'pooled'`` para S (por defecto rbar / sbar).
 
-    Los parámetros ``params`` incluyen las desviaciones estándar *dentro*, *entre* y
-    *entre/dentro* (sigma_entre = sqrt(max(0, sigma_med² - sigma_dentro²/n)), con n el
-    tamaño de subgrupo más frecuente, que debe darse en más de la mitad de los
-    subgrupos; si no, se reportan como NaN). Con ``sigma_between`` histórica, la sigma
-    de las medias es sqrt(sigma_entre² + sigma_dentro²/n).
+    Los parámetros ``params`` incluyen las desviaciones estándar *dentro* (``sigma_within``),
+    *entre* (``sigma_between``) y *entre/dentro* (``sigma_between_within``); ``sigma_between`` =
+    sqrt(max(0, sigma_med² - sigma_within²/n)), con n el tamaño de subgrupo más frecuente, que
+    debe darse en más de la mitad de los subgrupos; si no, se reportan como NaN. Con
+    ``sigma_between`` histórica, la sigma de las medias es sqrt(sigma_between² + sigma_within²/n).
 
     Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
     """

@@ -1,6 +1,6 @@
 # 012 — Claves en inglés en los resultados de las cartas (`params` y nombres de panel)
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S012
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.5 (decisión de la persona responsable; aunque rompe `chart.params` y los nombres de la carta de zona,

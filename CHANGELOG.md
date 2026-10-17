@@ -1,5 +1,32 @@
 # Registro de cambios
 
+## [Sin publicar] - claves en inglés en los resultados de las cartas
+
+Cambio **incompatible** (sin alias; se publica en 0.15.5 por decisión de la persona responsable): los datos con clave de los
+resultados de las cartas pasan al inglés. Principio: el código está en inglés en cualquier idioma y solo las salidas dependen del
+idioma. Con el idioma español, lo que muestra `summary()` es idéntico al de 0.15.4. Especificación `docs/specs/012-claves-en-ingles`.
+
+### Cambios que alteran resultados
+- **Claves de `chart.params`** (una por etapa): leer `carta.params[0]["media"]` ahora lanza `KeyError`; usa `carta.params[0]["mean"]`.
+  Equivalencias: `media` → `mean`, `centro` → `center`, `objetivo` → `target`, `distribución` → `distribution`, `forma` → `shape`,
+  `escala` → `scale`, `longitud` → `length`, `peso` → `weight`, `pesos` → `weights`, `reinicio` → `reset`, `subgrupos` → `subgroups`,
+  `tamaño` → `size`, `n_subgrupo` → `subgroup_size`, `MR_prom` → `mr_mean`, `alfa` → `alpha`, `corridas` → `runs`, `fase` → `phase`,
+  `método` → `method`, `n_puntos` → `n_points`, `puntos` → `points`, `partes` → `parts`, `sigma_conocida` → `sigma_known`,
+  `sigma_dentro` → `sigma_within`, `sigma_entre` → `sigma_between`, `sigma_entre_dentro` → `sigma_between_within`,
+  `sigma_mín` → `sigma_min`, `sigma_máx` → `sigma_max` y `LCS` (MEWMA y MCUSUM, el límite superior de control) → `ucl`. Las claves que ya
+  eran inglesas (`stage`, `sigma`, `n`, `p`, `k`, `h`, `headstart`, `ARL`, `variables`, `lambda_boxcox`, `sigma_z`, `benneyan_c`, `|S|`) no cambian.
+- **Valores de parámetros en texto:** `"histórica"` (Z-MR) es `"historical"` y `"parámetros conocidos"` (fase de la T²) es `"known"`.
+- **Nombres de carta y de panel:** la carta de zona es `chart.kind == "Zone"` con los paneles `"Zone"` y `"Score"` (antes `"Zona"` y
+  `"Puntaje"`: `chart["Zona"]` lanza `KeyError`) y la de varianza generalizada es `"Generalized variance"` (antes `"Varianza generalizada"`).
+  Lo mismo se ve en la columna `panel` de `violations()` y, en `to_frame(stable=True)`, en las columnas `Zone_*` y `Score_*`.
+- **Sin cambios:** los valores numéricos, el formato de los archivos de Fase I (`phase_one(...).to_dict()` y `to_json()`; los guardados con
+  0.15.x se siguen leyendo, hay un test con dos archivos de 0.15.4) y lo que muestra `summary()` en español.
+
+### Corregido
+- `summary()`, `to_frame()` y el título del gráfico traducen ahora el nombre de la carta («Zone», «Generalized variance») y de sus paneles:
+  antes el título de la carta de varianza generalizada quedaba en español con el idioma inglés.
+- Identificadores internos en español que pasan a inglés (no son API): los tipos de entrada de la Fase I y un nodo del asistente.
+
 ## [Sin publicar] - figuras y salidas de los ejemplos en el README
 
 No cambia ningún resultado numérico ni las claves del código. Con el idioma inglés cambian algunos textos que se muestran (ver «Corregido»); en español todo queda igual.

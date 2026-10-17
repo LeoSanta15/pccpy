@@ -15,7 +15,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 ## Estado actual (verificado el 2026-10-17; ver el CHANGELOG para lo no publicado)
 
 - Versión **0.15.4** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
-- **2 975 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 62 comprobaciones.
+- **3 069 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 62 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.14, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
   pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
@@ -153,6 +153,7 @@ que no se negocian en `docs/specs/CONSTITUCION.md`.
 - `to_frame(stable=True)` da claves canónicas en inglés (no cambian con el idioma); sin `stable`, cabeceras en el idioma activo. Lo mismo vale para `pareto`, `oc_curve`, `aoq_curve`, `anova_frame` y `kappa_*_frame` (golden `tests/golden/i18n_tablas_es.json`). Al añadir filas o columnas, define su clave estable (los tests comparan con `tests/golden/i18n_stable.json`).
 - Los textos de `summary()` se comprueban contra `tests/golden/i18n_es.json` (generado con el código previo a la migración; **no se regenera** salvo cambio deliberado del español) y con invariantes es/en (`tests/test_i18n_resumenes.py`).
 - No pongas `tr()` dentro de un f-string: Babel solo lo extrae en Python >= 3.12 (el catálogo cambiaría según la versión).
+- **Datos con clave en inglés (spec 012):** `chart.params` (`mean`, `size`, `subgroups`, `ucl`…), `chart.kind` y los nombres de panel (`"Zone"`, `"Score"`, `"Generalized variance"`) son código en inglés e iguales en cualquier idioma; `summary()` y `to_frame()` los muestran traducidos (`results._PARAMETROS`, `_VALORES_PARAMETRO`, `_NOMBRES_VISIBLES`). Una carta nueva con `params` usa claves en inglés y las añade a `_PARAMETROS` (`tests/test_claves_ingles.py` lo vigila).
 - El marcador se llama `tr`, no `_`: 8 funciones usan `_` como variable y lanzan errores (un `_("…")` ahí fallaría solo en la ruta de error).
 
 ## Mapa del código

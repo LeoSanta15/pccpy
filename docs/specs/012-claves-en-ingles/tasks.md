@@ -24,6 +24,6 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Verificación y cierre
 
-- [ ] Documentación, README, guías, ejemplos, traducciones y CHANGELOG (S012-RF-07).
-- [ ] `make check` en verde.
-- [ ] Estado de la especificación → `implementada`.
+- [x] Documentación, README, guías, ejemplos, traducciones y CHANGELOG (S012-RF-07).
+- [x] `make check` en verde.
+- [x] Estado de la especificación → `implementada`.
