@@ -111,11 +111,12 @@ carta.plot()                  # figura de matplotlib (se muestra con plt.show())
 
 ## Ejemplos con resultados
 
-Figuras y salidas reales de los ejemplos [`examples/ejemplo_basico.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/ejemplo_basico.py) y
-[`examples/ejemplo_avanzado.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/ejemplo_avanzado.py), con la semilla `default_rng(2026)`. Los fragmentos son
-extractos que se ejecutan en secuencia (los datos se generan con el mismo `rng`); las salidas se acortan con «…» y completas están
-en [`salida_ejemplo_basico.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/salida_ejemplo_basico.txt) y
-[`salida_ejemplo_avanzado.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/salida_ejemplo_avanzado.txt). Se regeneran con
+Figuras y salidas reales de los ejemplos [`examples/basic_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/basic_example.py) y
+[`examples/advanced_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/advanced_example.py), con la semilla `default_rng(2026)`. El código es el mismo en
+todos los idiomas; las salidas, las etiquetas y los gráficos siguen el idioma de pccpy (aquí, español). Los fragmentos son extractos
+que se ejecutan en secuencia (los datos se generan con el mismo `rng`); las salidas se acortan con «…» y completas están en
+[`output_basic_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/output_basic_example.txt) y
+[`output_advanced_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/output_advanced_example.txt). Se regeneran con
 `python scripts/generar_figuras_readme.py`. Con `import numpy as np` y `import pccpy as pp`.
 
 ### Valores individuales (I-MR)
@@ -124,7 +125,7 @@ Un proceso que se desplaza de 100 a 103 en la observación 41, con las pruebas 1
 
 ```python
 rng = np.random.default_rng(2026)
-x = np.r_[rng.normal(100, 1.5, 40), rng.normal(103, 1.5, 20)]
+x = np.r_[rng.normal(100, 1.5, 40), rng.normal(103, 1.5, 20)]   # el proceso pasa de 100 a 103
 chart = pp.imr_chart(x, tests=[1, 2, 3, 4, 5, 6])
 print(chart.summary())
 chart.plot()
@@ -146,8 +147,8 @@ Carta de control I-MR
 25 subgrupos de 5 piezas, sin señales.
 
 ```python
-subgrupos = rng.normal(50, 0.8, (25, 5))
-xr = pp.xbar_r_chart(subgrupos, tests="all")
+subgroups = rng.normal(50, 0.8, (25, 5))
+xr = pp.xbar_r_chart(subgroups, tests="all")
 print(xr.summary())
 xr.plot(zones=True)
 ```
@@ -167,8 +168,8 @@ Carta de control Xbar-R
 
 ```python
 n = rng.integers(150, 250, 30)
-defectuosos = rng.binomial(n, 0.04)
-pp.p_chart(defectuosos, n, tests=[1, 2, 3, 4]).plot()
+defectives = rng.binomial(n, 0.04)
+pp.p_chart(defectives, n, tests=[1, 2, 3, 4]).plot()
 ```
 
 ![Carta P con límites variables](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/p.png)
@@ -178,11 +179,11 @@ pp.p_chart(defectuosos, n, tests=[1, 2, 3, 4]).plot()
 Capacidad normal con límites 95 y 105, y las seis vistas del Capability Sixpack.
 
 ```python
-datos = rng.normal(100.4, 1.5, 150)
-cap = pp.capability_analysis(datos, lsl=95, usl=105, target=100)
+data = rng.normal(100.4, 1.5, 150)
+cap = pp.capability_analysis(data, lsl=95, usl=105, target=100)
 print(cap.summary())
-print("Cpk =", round(cap.cpk, 3), "| Ppk =", round(cap.ppk, 3))
-fig, _, _ = pp.capability_sixpack(subgrupos, lsl=48, usl=52, target=50)
+print(round(cap.cpk, 3), round(cap.ppk, 3))
+fig, _, _ = pp.capability_sixpack(subgroups, lsl=48, usl=52, target=50)
 ```
 
 ```text
@@ -201,7 +202,7 @@ Análisis de capacidad del proceso (distribución normal)
     Esperado dentro        39.62      481.91     521.53
     Esperado general      184.16     1446.09    1630.25
   …
-Cpk = 1.1 | Ppk = 0.993
+1.1 0.993
 ```
 
 ![Capability Sixpack](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/sixpack.png)
@@ -245,35 +246,38 @@ Análisis de capacidad del proceso (distribución normal)
 Tabla de frecuencias acumuladas y su gráfico.
 
 ```python
-tabla = pp.pareto(["Rayón", "Abolladura", "Rayón", "Mancha", "Rayón", "Abolladura", "Otro"])
-print(tabla)
-pp.plot_pareto(tabla)
+counts = pp.pareto(["Scratch", "Dent", "Scratch", "Stain", "Scratch", "Dent", "Other"])
+print(counts)
+pp.plot_pareto(counts)
 ```
 
 ```text
-    categoría  conteo  porcentaje   acumulado
-0       Rayón       3   42.857143   42.857143
-1  Abolladura       2   28.571429   71.428571
-2      Mancha       1   14.285714   85.714286
-3        Otro       1   14.285714  100.000000
+  categoría  conteo  porcentaje   acumulado
+0   Scratch       3   42.857143   42.857143
+1      Dent       2   28.571429   71.428571
+2     Stain       1   14.285714   85.714286
+3     Other       1   14.285714  100.000000
 ```
 
 ![Diagrama de Pareto](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/pareto.png)
 
 ### Corridas cortas (Z-MR)
 
-Tres partes con medias y variaciones distintas en una sola carta; una pieza B está fuera de lo normal.
+Tres partes con medias y variaciones distintas en una sola carta.
 
 ```python
-medias = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
-zmr = pp.zmr_chart(x, partes, mu={p: m for p, (m, _) in medias.items()},
-                   sigma={p: s for p, (_, s) in medias.items()}, tests=(1, 2, 3, 4, 5, 6))
+parts = ["A"] * 12 + ["B"] * 10 + ["A"] * 12 + ["C"] * 8
+means = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
+x = np.array([rng.normal(*means[p]) for p in parts])
+x[15] += 10                                    # una pieza B fuera de lo normal
+zmr = pp.zmr_chart(x, parts, mu={p: m for p, (m, _) in means.items()},
+                   sigma={p: s for p, (_, s) in means.items()}, tests=(1, 2, 3, 4, 5, 6))
 print(zmr.summary())
 ```
 
 ```text
 Carta de control Z-MR
-  …
+  Parámetros: método=histórica, partes=3, corridas=4, n=42, sigma_mín=0.5, sigma_máx=2
   Pruebas solicitadas: 1, 2, 3, 4, 5, 6
   Puntos marcados: 4
     [MR] punto 16: prueba 1 (valor 4.22507) - 1 punto a más de 3 desviaciones estándar de la línea central
@@ -289,15 +293,15 @@ Carta de control Z-MR
 Con variación entre lotes, Xbar-R alarma de más y I-MR-R no.
 
 ```python
-lotes = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
-print("Xbar-R  puntos marcados:", len(pp.xbar_r_chart(lotes).violations()))
-ch = pp.imr_rs_chart(lotes)
-print("I-MR-R  puntos marcados:", len(ch.violations()))
+lots = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
+print(len(pp.xbar_r_chart(lots).violations()))   # puntos marcados por Xbar-R
+ch = pp.imr_rs_chart(lots)
+print(len(ch.violations()))                      # puntos marcados por I-MR-R
 ```
 
 ```text
-Xbar-R  puntos marcados: 12
-I-MR-R  puntos marcados: 1
+12
+1
 ```
 
 ![Carta I-MR-R](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/imr_r.png)
@@ -307,17 +311,17 @@ I-MR-R  puntos marcados: 1
 Carta G con los conteos entre eventos y carta T con los tiempos entre eventos.
 
 ```python
-entre = rng.geometric(0.01, 40) - 1
-entre[25] = 600
-pp.g_chart(entre).plot()
-tiempos = rng.weibull(1.4, 40) * 30
-tiempos[12] = 250
-print(pp.t_chart(tiempos).summary())
+between = rng.geometric(0.01, 40) - 1
+between[25] = 600
+pp.g_chart(between).plot()
+times = rng.weibull(1.4, 40) * 30
+times[12] = 250
+print(pp.t_chart(times).summary())
 ```
 
 ```text
 Carta de control T
-  …
+  Parámetros: distribución=weibull, forma=1.16087, escala=36.2814, n=40
   Pruebas solicitadas: 1
   Puntos marcados: 1
     [T] punto 13: prueba 1 (valor 250) - 1 punto fuera de los percentiles de la distribución weibull
@@ -327,13 +331,13 @@ Carta de control T
 
 ### Carta de zona
 
-Puntaje acumulado ante un desplazamiento sostenido de 1,2 sigmas.
+Puntaje acumulado ante un desplazamiento sostenido.
 
 ```python
-deriva = rng.normal(0, 1, 50)
-deriva[30:] += 1.2
-zona = pp.zone_chart(deriva, mu=0.0, sigma=1.0, reset=True)
-print(zona.summary())
+drift = rng.normal(0, 1, 50)
+drift[30:] += 1.2                              # desplazamiento sostenido de 1,2 sigmas
+zone = pp.zone_chart(drift, mu=0.0, sigma=1.0, reset=True)
+print(zone.summary())
 ```
 
 ```text
@@ -354,25 +358,26 @@ Fase I con 100 observaciones y Fase II con 50 nuevas; la variable 3 se desplaza 
 ```python
 Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
 hist = rng.multivariate_normal([0, 0, 0], Sigma, 100)
-nuevos = rng.multivariate_normal([0, 0, 0], Sigma, 50)
-nuevos[30:, 2] += 4
+new = rng.multivariate_normal([0, 0, 0], Sigma, 50)
+new[30:, 2] += 4                               # la variable 3 se desplaza
 mu, cov = hist.mean(axis=0), np.cov(hist, rowvar=False)
-t2 = pp.t2_chart(nuevos, mu=mu, cov=cov, n_hist=100)
-primero = int(t2["T2"].flagged[0]) + 1
-print(t2.contributions(primero).round(2))
-me = pp.mewma_chart(nuevos, mu=mu, cov=cov)
-mc = pp.mcusum_chart(nuevos, mu=mu, cov=cov)
-print("MEWMA primera señal en el punto", int(me["MEWMA"].flagged[0]) + 1)
-print("MCUSUM primera señal en el punto", int(mc["MCUSUM"].flagged[0]) + 1)
+t2 = pp.t2_chart(new, mu=mu, cov=cov, n_hist=100)
+first = int(t2["T2"].flagged[0]) + 1
+print(t2.contributions(first).round(2))        # contribución de cada variable a la señal
+me = pp.mewma_chart(new, mu=mu, cov=cov)
+print(int(me["MEWMA"].flagged[0]) + 1)         # primera señal de la MEWMA
+mc = pp.mcusum_chart(new, mu=mu, cov=cov)
+print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["LCS"], 2))   # primera señal de la MCUSUM y su límite
 ```
 
 ```text
 X1     6.81
 X2     1.32
 X3    16.09
-
-MEWMA primera señal en el punto 33
-MCUSUM primera señal en el punto 33
+Name: contribución (punto 31), dtype: float64
+  …
+33
+33 6.88
 ```
 
 ![Carta T² de Hotelling](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/t2.png)
@@ -387,7 +392,7 @@ Subgrupos de 6 observaciones trivariadas cuya dispersión aumenta 2,5 veces en l
 
 ```python
 subs = rng.multivariate_normal([0, 0, 0], Sigma, 120)
-subs[60:] *= 2.5
+subs[60:] *= 2.5                               # la dispersión aumenta
 pp.generalized_variance_chart(subs, subgroup_size=6).plot()
 ```
 

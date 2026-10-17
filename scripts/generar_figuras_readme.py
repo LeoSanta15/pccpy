@@ -1,8 +1,8 @@
 """Genera las figuras y las salidas de los ejemplos que muestran los README (``docs/imagenes/<idioma>/``).
 
-Ejecuta ``examples/ejemplo_basico.py`` y ``examples/ejemplo_avanzado.py`` en una carpeta temporal, una vez en español y otra
+Ejecuta ``examples/basic_example.py`` y ``examples/advanced_example.py`` en una carpeta temporal, una vez en español y otra
 en inglés (``PCCPY_LANG``), copia las figuras (PNG con paleta de 256 colores, para que pesen poco) y guarda lo que imprimen
-(``salida_<ejemplo>.txt``). Los README embeben esos textos y enlazan las figuras con URL absolutas, porque en la página de PyPI
+(``output_<ejemplo>.txt``). Los README embeben esos textos y enlazan las figuras con URL absolutas, porque en la página de PyPI
 los enlaces relativos dan 404.
 
 Uso:  python scripts/generar_figuras_readme.py
@@ -22,7 +22,7 @@ from PIL import Image
 
 RAIZ = Path(__file__).resolve().parent.parent
 DESTINO = RAIZ / "docs" / "imagenes"
-EJEMPLOS = ("ejemplo_basico", "ejemplo_avanzado")
+EJEMPLOS = ("basic_example", "advanced_example")
 
 
 def _optimizar(origen: Path, destino: Path) -> None:
@@ -40,9 +40,9 @@ def generar(idioma: str) -> None:
         for nombre in EJEMPLOS:
             res = subprocess.run([sys.executable, str(RAIZ / "examples" / f"{nombre}.py")], cwd=tmp, env=env,
                                  capture_output=True, text=True, check=True)
-            texto = res.stdout.replace(str(Path(tmp).resolve() / "salida"), "salida").replace(f"{tmp}/salida", "salida")
-            (carpeta / f"salida_{nombre}.txt").write_text(texto, encoding="utf-8")
-        for png in sorted((Path(tmp) / "salida").glob("*.png")):
+            texto = res.stdout.replace(str(Path(tmp).resolve() / "output"), "output").replace(f"{tmp}/output", "output")
+            (carpeta / f"output_{nombre}.txt").write_text(texto, encoding="utf-8")
+        for png in sorted((Path(tmp) / "output").glob("*.png")):
             _optimizar(png, carpeta / png.name)
 
 

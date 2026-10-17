@@ -31,8 +31,12 @@ _PARAMETROS = {
     "fase": N_("fase"), "método": N_("método"), "n_puntos": N_("n_puntos"), "partes": N_("partes"),
     "puntos": N_("puntos"), "sigma_conocida": N_("sigma_conocida"), "sigma_dentro": N_("sigma_dentro"),
     "sigma_entre": N_("sigma_entre"), "sigma_entre_dentro": N_("sigma_entre_dentro"), "variables": N_("variables"),
-    "LCS": N_("LCS"),
+    "LCS": N_("LCS"), "sigma_mín": N_("sigma_mín"), "sigma_máx": N_("sigma_máx"),
 }
+# Valores de parámetros que son texto del idioma fuente (no identificadores técnicos como 'mr' o 'weibull').
+_VALORES_PARAMETRO = {"histórica": N_("histórica")}
+# Nombres de carta o de panel que son palabras del idioma fuente: la clave (``chart["Zona"]``) no cambia; solo se muestran traducidos.
+_NOMBRES_VISIBLES = {"Zona": N_("Zona"), "Puntaje": N_("Puntaje")}
 
 
 def _texto_etiqueta(valor) -> str:
@@ -45,6 +49,14 @@ def _texto_etiqueta(valor) -> str:
 
 def _nombre_parametro(clave) -> str:
     return tr(_PARAMETROS[clave]) if clave in _PARAMETROS else str(clave)
+
+
+def _nombre_visible(nombre):
+    return tr(_NOMBRES_VISIBLES[nombre]) if nombre in _NOMBRES_VISIBLES else nombre
+
+
+def _valor_parametro(valor):
+    return tr(_VALORES_PARAMETRO[valor]) if isinstance(valor, str) and valor in _VALORES_PARAMETRO else valor
 
 
 @dataclass
@@ -197,7 +209,7 @@ class ControlChart:
         return all(p.flagged.size == 0 for p in self.panels)
 
     def summary(self) -> str:
-        lines = [tr("Carta de control {kind}").format(kind=self.kind)]
+        lines = [tr("Carta de control {kind}").format(kind=_nombre_visible(self.kind))]
         if self.transformation is not None:
             lines.append(tr("  Transformación {detalle}; paneles de posición en la escala {escala}").format(
                 detalle=self.transformation.describe(),
@@ -205,7 +217,8 @@ class ControlChart:
         for prm in self.params:
             head = tr("  Etapa {stage}").format(stage=prm["stage"]) if len(self.params) > 1 else tr("  Parámetros")
             body = ", ".join(
-                f"{_nombre_parametro(k)}={v:.6g}" if isinstance(v, (float, np.floating)) else f"{_nombre_parametro(k)}={v}"
+                f"{_nombre_parametro(k)}={v:.6g}" if isinstance(v, (float, np.floating))
+                else f"{_nombre_parametro(k)}={_valor_parametro(v)}"
                 for k, v in prm.items() if k != "stage"
             )
             lines.append(f"{head}: {body}")
@@ -222,13 +235,13 @@ class ControlChart:
                     if self.labels is not None:
                         lines.append(
                             tr("    [{panel}] punto {point} ({label}): prueba {test} (valor {value:.6g}) - {description}").format(
-                                panel=r["panel"], point=r["point"], label=_texto_etiqueta(r["label"]), test=r["test"],
+                                panel=_nombre_visible(r["panel"]), point=r["point"], label=_texto_etiqueta(r["label"]), test=r["test"],
                                 value=r["value"], description=r["description"])
                         )
                     else:
                         lines.append(
                             tr("    [{panel}] punto {point}: prueba {test} (valor {value:.6g}) - {description}").format(
-                                panel=r["panel"], point=r["point"], test=r["test"], value=r["value"],
+                                panel=_nombre_visible(r["panel"]), point=r["point"], test=r["test"], value=r["value"],
                                 description=r["description"])
                         )
         return "\n".join(lines)
@@ -316,4 +329,4 @@ class MultivariateChart(ControlChart):
             keep = [i for i in range(p) if i != j]
             dj = d[keep]
             out[j] = t2 - scale * dj @ np.linalg.solve(cov[np.ix_(keep, keep)], dj)
-        return pd.Series(out, index=self.variables, name=f"contribución (punto {point})")
+        return pd.Series(out, index=self.variables, name=tr("contribución (punto {point})").format(point=point))

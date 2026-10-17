@@ -54,3 +54,31 @@ def test_el_indice_de_los_readme_incluye_la_seccion_de_ejemplos():
         assert f"]({ancla})" in texto
         numeros = [int(n) for n in re.findall(r"^(\d+)\. \[", texto, re.MULTILINE)]
         assert numeros == list(range(1, len(numeros) + 1)), f"{nombre}: numeración del índice rota"
+
+
+# ── el código es el mismo en todos los idiomas; las salidas dependen del idioma ──────────────────────────────
+
+
+def _codigo_de_ejemplos(nombre: str, inicio: str, fin: str) -> list[str]:
+    texto = (RAIZ / nombre).read_text(encoding="utf-8")
+    seccion = texto[texto.index(inicio):texto.index(fin)]
+    bloques = re.findall(r"```python\n([\s\S]*?)\n```", seccion)
+    return [re.sub(r"[ \t]*#.*", "", b) for b in bloques]  # sin comentarios: esos sí van en el idioma del README
+
+
+def test_el_codigo_de_los_ejemplos_es_igual_en_los_dos_readme():
+    es = _codigo_de_ejemplos("README.md", "## Ejemplos con resultados", "## Cartas de variables")
+    en = _codigo_de_ejemplos("README_en.md", "## Worked examples with results", "## Variables charts")
+    assert es and es == en
+
+
+def test_los_ejemplos_estan_en_ingles_y_sin_texto_propio():
+    """Los scripts de ``examples/`` solo usan ASCII: ni identificadores ni mensajes propios en español (S/ C)."""
+    for ejemplo in (RAIZ / "examples").glob("*.py"):
+        assert ejemplo.read_text(encoding="utf-8").isascii(), ejemplo.name
+
+
+def test_las_salidas_en_ingles_no_tienen_texto_en_espanol():
+    for salida in (RAIZ / "docs" / "imagenes" / "en").glob("output_*.txt"):
+        texto = salida.read_text(encoding="utf-8")
+        assert not re.search(r"[áéíóúñÁÉÍÓÚ¿¡]", texto), salida.name

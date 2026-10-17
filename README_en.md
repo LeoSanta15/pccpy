@@ -113,13 +113,13 @@ chart.plot()                  # matplotlib figure (shown with plt.show())
 
 ## Worked examples with results
 
-Real figures and outputs of the examples [`examples/ejemplo_basico.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/ejemplo_basico.py) and
-[`examples/ejemplo_avanzado.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/ejemplo_avanzado.py), with seed `default_rng(2026)` and the English language
-(`PCCPY_LANG=en`). The snippets are excerpts that run in sequence (the data come from the same `rng`); the outputs are shortened with
-"…" and the complete ones are in [`salida_ejemplo_basico.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/en/salida_ejemplo_basico.txt) and
-[`salida_ejemplo_avanzado.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/en/salida_ejemplo_avanzado.txt). They are regenerated with
-`python scripts/generar_figuras_readme.py`. With `import numpy as np` and `import pccpy as pp`. The scripts use Spanish variable names; the snippets
-here use English ones.
+Real figures and outputs of the examples [`examples/basic_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/basic_example.py) and
+[`examples/advanced_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/advanced_example.py), with seed `default_rng(2026)`. The code is the same in every
+language; the outputs, labels and plots follow the pccpy language (here, English, `PCCPY_LANG=en`). The snippets are excerpts that
+run in sequence (the data come from the same `rng`); the outputs are shortened with "…" and the complete ones are in
+[`output_basic_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/en/output_basic_example.txt) and
+[`output_advanced_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/en/output_advanced_example.txt). They are regenerated with
+`python scripts/generar_figuras_readme.py`. With `import numpy as np` and `import pccpy as pp`.
 
 ### Individual values (I-MR)
 
@@ -127,7 +127,7 @@ A process that shifts from 100 to 103 at observation 41, with tests 1 to 6.
 
 ```python
 rng = np.random.default_rng(2026)
-x = np.r_[rng.normal(100, 1.5, 40), rng.normal(103, 1.5, 20)]
+x = np.r_[rng.normal(100, 1.5, 40), rng.normal(103, 1.5, 20)]   # the process shifts from 100 to 103
 chart = pp.imr_chart(x, tests=[1, 2, 3, 4, 5, 6])
 print(chart.summary())
 chart.plot()
@@ -170,8 +170,8 @@ Control chart Xbar-R
 
 ```python
 n = rng.integers(150, 250, 30)
-defective = rng.binomial(n, 0.04)
-pp.p_chart(defective, n, tests=[1, 2, 3, 4]).plot()
+defectives = rng.binomial(n, 0.04)
+pp.p_chart(defectives, n, tests=[1, 2, 3, 4]).plot()
 ```
 
 ![P chart with variable limits](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/p.png)
@@ -184,7 +184,7 @@ Normal capability with limits 95 and 105, and the six views of the Capability Si
 data = rng.normal(100.4, 1.5, 150)
 cap = pp.capability_analysis(data, lsl=95, usl=105, target=100)
 print(cap.summary())
-print("Cpk =", round(cap.cpk, 3), "| Ppk =", round(cap.ppk, 3))
+print(round(cap.cpk, 3), round(cap.ppk, 3))
 fig, _, _ = pp.capability_sixpack(subgroups, lsl=48, usl=52, target=50)
 ```
 
@@ -204,7 +204,7 @@ Process capability analysis (normal distribution)
     Expected within        39.62      481.91     521.53
     Expected overall      184.16     1446.09    1630.25
   …
-Cpk = 1.1 | Ppk = 0.993
+1.1 0.993
 ```
 
 ![Capability Sixpack](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/sixpack.png)
@@ -265,10 +265,13 @@ pp.plot_pareto(counts)
 
 ### Short runs (Z-MR)
 
-Three parts with different means and variations on one chart; one B part is out of the ordinary.
+Three parts with different means and variations on one chart.
 
 ```python
+parts = ["A"] * 12 + ["B"] * 10 + ["A"] * 12 + ["C"] * 8
 means = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
+x = np.array([rng.normal(*means[p]) for p in parts])
+x[15] += 10                                    # one B part out of the ordinary
 zmr = pp.zmr_chart(x, parts, mu={p: m for p, (m, _) in means.items()},
                    sigma={p: s for p, (_, s) in means.items()}, tests=(1, 2, 3, 4, 5, 6))
 print(zmr.summary())
@@ -276,7 +279,7 @@ print(zmr.summary())
 
 ```text
 Control chart Z-MR
-  …
+  Parameters: method=historical, parts=3, runs=4, n=42, sigma_min=0.5, sigma_max=2
   Tests requested: 1, 2, 3, 4, 5, 6
   Flagged points: 4
     [MR] point 16: test 1 (value 4.22507) - 1 point more than 3 standard deviations from the center line
@@ -293,9 +296,14 @@ With variation between lots, Xbar-R over-alarms and I-MR-R does not.
 
 ```python
 lots = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
-len(pp.xbar_r_chart(lots).violations())    # 12 flagged points
+print(len(pp.xbar_r_chart(lots).violations()))   # points flagged by Xbar-R
 ch = pp.imr_rs_chart(lots)
-len(ch.violations())                       # 1 flagged point
+print(len(ch.violations()))                      # points flagged by I-MR-R
+```
+
+```text
+12
+1
 ```
 
 ![I-MR-R chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/imr_r.png)
@@ -315,7 +323,7 @@ print(pp.t_chart(times).summary())
 
 ```text
 Control chart T
-  …
+  Parameters: distribution=weibull, shape=1.16087, scale=36.2814, n=40
   Tests requested: 1
   Flagged points: 1
     [T] point 13: test 1 (value 250) - 1 point outside the percentiles of the weibull distribution
@@ -325,22 +333,22 @@ Control chart T
 
 ### Zone chart
 
-Cumulative score for a sustained 1.2-sigma shift.
+Cumulative score for a sustained shift.
 
 ```python
 drift = rng.normal(0, 1, 50)
-drift[30:] += 1.2
+drift[30:] += 1.2                              # sustained 1.2-sigma shift
 zone = pp.zone_chart(drift, mu=0.0, sigma=1.0, reset=True)
 print(zone.summary())
 ```
 
 ```text
-Control chart Zona
+Control chart Zone
   Parameters: mean=0, sigma=1, weights=(0.0, 2.0, 4.0, 8.0), reset=True, n=50
   Tests requested: 1
   Flagged points: 2
-    [Zona] point 43: test 1 (value 2.03228) - cumulative zone score >= 8
-    [Zona] point 48: test 1 (value 2.57529) - cumulative zone score >= 8
+    [Zone] point 43: test 1 (value 2.03228) - cumulative zone score >= 8
+    [Zone] point 48: test 1 (value 2.57529) - cumulative zone score >= 8
 ```
 
 ![Zone chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/zona.png)
@@ -353,15 +361,25 @@ Phase I with 100 observations and Phase II with 50 new ones; variable 3 shifts f
 Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
 hist = rng.multivariate_normal([0, 0, 0], Sigma, 100)
 new = rng.multivariate_normal([0, 0, 0], Sigma, 50)
-new[30:, 2] += 4
+new[30:, 2] += 4                               # variable 3 shifts
 mu, cov = hist.mean(axis=0), np.cov(hist, rowvar=False)
 t2 = pp.t2_chart(new, mu=mu, cov=cov, n_hist=100)
-first = int(t2["T2"].flagged[0]) + 1       # 31
-t2.contributions(first).round(2)           # X1 6.81, X2 1.32, X3 16.09
+first = int(t2["T2"].flagged[0]) + 1
+print(t2.contributions(first).round(2))        # contribution of each variable to the signal
 me = pp.mewma_chart(new, mu=mu, cov=cov)
-int(me["MEWMA"].flagged[0]) + 1            # first signal at point 33
+print(int(me["MEWMA"].flagged[0]) + 1)         # first MEWMA signal
 mc = pp.mcusum_chart(new, mu=mu, cov=cov)
-int(mc["MCUSUM"].flagged[0]) + 1           # first signal at point 33
+print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["LCS"], 2))   # first MCUSUM signal and its limit
+```
+
+```text
+X1     6.81
+X2     1.32
+X3    16.09
+Name: contribution (point 31), dtype: float64
+  …
+33
+33 6.88
 ```
 
 ![Hotelling T² chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/t2.png)
@@ -376,7 +394,7 @@ Subgroups of 6 trivariate observations whose dispersion grows 2.5 times in the s
 
 ```python
 subs = rng.multivariate_normal([0, 0, 0], Sigma, 120)
-subs[60:] *= 2.5
+subs[60:] *= 2.5                               # dispersion grows
 pp.generalized_variance_chart(subs, subgroup_size=6).plot()
 ```
 

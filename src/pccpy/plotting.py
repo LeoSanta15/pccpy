@@ -13,7 +13,7 @@ from ._data import as_1d, to_subgroups
 from ._i18n import tr
 from ._labels import es_temporal, formatear
 from .normality import anderson_darling_pvalue, anderson_darling_statistic
-from .results import ControlChart, Panel
+from .results import ControlChart, Panel, _nombre_visible
 
 #: Cartas cuyo eje x son observaciones individuales (no subgrupos).
 _POINT_KINDS = ("I-MR", "EWMA", "CUSUM", "MA", "Z-MR", "G", "T")
@@ -102,7 +102,7 @@ def plot_control_chart(chart: ControlChart, *, zones: bool = True, legend: bool 
         else:
             eje.xaxis.set_major_locator(MaxNLocator(integer=True))
         eje.set_xlabel(xlabel)
-        titulo = title or tr("Carta de control {kind}").format(kind=chart.kind)
+        titulo = title or tr("Carta de control {kind}").format(kind=_nombre_visible(chart.kind))
         if chart.transformation is not None and title is None:
             titulo += "\n" + tr("{detalle}; paneles de posición en la escala {escala}").format(
                 detalle=chart.transformation.describe(),
