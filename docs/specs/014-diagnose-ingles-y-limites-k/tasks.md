@@ -5,19 +5,19 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan
 
-- [ ] Test de S014-RF-01 (falla hoy: `trend_direction` devuelve `'creciente'`).
-- [ ] Test de S014-RF-02 (`summary()` en español igual al golden; en inglés, «increasing»).
-- [ ] Test de S014-RF-03 (el `grep` de `src/`, tests y documentación).
-- [ ] Test de S014-RF-04 (falla hoy: `imr_chart` no acepta `k`; valor y pareja).
-- [ ] Test de S014-RF-05 (atributos).
-- [ ] Test de S014-RF-06 (Z-MR e I-MR-R/S).
-- [ ] Test de S014-RF-07 (la prueba 1 coincide con los límites; aviso con `test_params`).
-- [ ] Test de S014-RF-08 (`k` y `alpha` inválidos, parejas de longitud incorrecta).
-- [ ] Test de S014-RF-09 (`transform`, `stages`, `mu`/`sigma`).
-- [ ] Test de S014-RF-10 (`k_upper`/`k_lower` en `params`, `probability()` y ARL).
-- [ ] Test de S014-RF-11 (`alpha` valor y pareja, `k_from_confidence`).
-- [ ] Test de S014-RF-12 (`rescale_zones`).
-- [ ] Test de S014-RF-13 (fragmento del README).
+- [x] Test de S014-RF-01 (falla hoy: `trend_direction` devuelve `'creciente'`).
+- [x] Test de S014-RF-02 (`summary()` en español igual al golden; en inglés, «increasing»).
+- [x] Test de S014-RF-03 (el `grep` de `src/`, tests y documentación).
+- [x] Test de S014-RF-04 (falla hoy: `imr_chart` no acepta `k`; valor y pareja).
+- [x] Test de S014-RF-05 (atributos).
+- [x] Test de S014-RF-06 (Z-MR e I-MR-R/S).
+- [x] Test de S014-RF-07 (la prueba 1 coincide con los límites; aviso con `test_params`).
+- [x] Test de S014-RF-08 (`k` y `alpha` inválidos, parejas de longitud incorrecta).
+- [x] Test de S014-RF-09 (`transform`, `stages`, `mu`/`sigma`).
+- [x] Test de S014-RF-10 (`k_upper`/`k_lower` en `params`, `probability()` y ARL).
+- [x] Test de S014-RF-11 (`alpha` valor y pareja, `k_from_confidence`).
+- [x] Test de S014-RF-12 (`rescale_zones`).
+- [x] Test de S014-RF-13 (fragmento del README).
 
 ## Fase 1 — Implementación
 

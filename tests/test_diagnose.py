@@ -59,14 +59,14 @@ def test_diagnose_trend_detected():
     x = np.linspace(1, 100, 60)
     d = pccpy.diagnose(x)
     assert d.has_trend is True
-    assert d.trend_direction == "creciente"
+    assert d.trend_direction == "increasing"
 
 
 def test_diagnose_downtrend_detected():
     x = np.linspace(100, 1, 60)
     d = pccpy.diagnose(x)
     assert d.has_trend is True
-    assert d.trend_direction == "decreciente"
+    assert d.trend_direction == "decreasing"
 
 
 def test_diagnose_no_trend():
