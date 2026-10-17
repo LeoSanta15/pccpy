@@ -25,6 +25,7 @@ tutorial_real
 inicio_rapido
 diagnose
 capacidad_indices
+arl
 datos_asimetricos
 tolerance
 acceptance

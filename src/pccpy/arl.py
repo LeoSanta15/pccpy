@@ -652,7 +652,7 @@ def arl_t(shape: float = 1.0, scale_ratio=1.0, k: float = 3.0, distribution: str
 
     Los límites son los percentiles ``Φ(−k)`` y ``Φ(k)`` de la Weibull (forma ``shape``) o de la exponencial (forma 1). Si la
     escala real es ``scale_ratio`` veces la del diseño, ``P(señal) = P(T < LCL) + P(T > UCL)`` con esa Weibull y el ARL es su
-    inverso. Con ``scale_ratio = 1`` el ARL es ``1 / (2·Φ(−k))`` = 370.4 con ``k = 3``, sea cual sea la forma. La escala del
+    inverso. Como el LCL está muy cerca de 0, la carta detecta mucho mejor tiempos más largos (``scale_ratio > 1``) que más cortos. Con ``scale_ratio = 1`` el ARL es ``1 / (2·Φ(−k))`` = 370.4 con ``k = 3``, sea cual sea la forma. La escala del
     diseño no influye: solo importa el cociente.
 
     Parameters

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-17 05:47+0000\n"
+"POT-Creation-Date: 2026-10-17 15:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1421,6 +1421,45 @@ msgstr ""
 
 #, python-brace-format
 msgid "AQL={v:.3g}%"
+msgstr ""
+
+msgid ""
+"ARL de la CUSUM bilateral (h = 4, k = 0,5) con y sin arranque rápido "
+"frente a la simulación"
+msgstr ""
+
+msgid ""
+"ARL de la EWMA bilateral (λ = 0,2, L = 3) con límites asintóticos y "
+"exactos frente a la simulación"
+msgstr ""
+
+msgid "ARL de la carta C (c0 = 9) en control y con c = 12 y 15"
+msgstr ""
+
+msgid "ARL de la carta G (p0 = 0,02) en control y con p = 0,01 y 0,005"
+msgstr ""
+
+msgid "ARL de la carta NP (n = 100, p0 = 0,05) en control y con p = 0,07 y 0,10"
+msgstr ""
+
+msgid ""
+"ARL de la carta R (n = 5) en control y con la desviación 1,5 y 2 veces "
+"mayor"
+msgstr ""
+
+msgid ""
+"ARL de la carta S (n = 5) en control y con la desviación 1,5 y 2 veces "
+"mayor"
+msgstr ""
+
+msgid ""
+"ARL de la carta T (Weibull de forma 1,5) con la escala sin cambio y 0,7 y"
+" 1,3 veces la de diseño"
+msgstr ""
+
+msgid ""
+"ARL de una carta Shewhart (k = 3 y k = 2) en control y con "
+"desplazamientos de 1σ y 2σ"
 msgstr ""
 
 msgid "Agrupamiento"

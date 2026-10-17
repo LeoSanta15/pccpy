@@ -808,6 +808,171 @@ def _mewma():
     return 8.64, mewma_limit(2, 0.1, 200.0)
 
 
+# ── ARL de las cartas (especificación 009) ────────────────────────────────────
+# Las referencias no usan ``pccpy.arl``: fórmulas cerradas con SciPy, enumeración exacta de la distribución o una simulación
+# propia (vectorizada, 20 semillas fijas). Los valores de la literatura se citan de memoria y no son la referencia.
+def _arl_mc(kind: str, shift: float, *, h=4.0, k=0.5, headstart=0.0, lam=0.2, L=3.0, exact=False, corridas=1500) -> float:
+    """ARL por Monte Carlo (20 semillas x ``corridas``) de una Shewhart (``L``), una CUSUM o una EWMA con estadístico ~ N(shift, 1)."""
+    largos = []
+    for semilla in range(20):
+        rng = np.random.default_rng(1000 + semilla)
+        largo = np.zeros(corridas)
+        vivo = np.arange(corridas)
+        c_mas = np.full(corridas, float(headstart))
+        c_menos = np.full(corridas, float(headstart))
+        z = np.zeros(corridas)
+        t = 0
+        while vivo.size:
+            t += 1
+            x = rng.normal(shift, 1.0, vivo.size)
+            if kind == "cusum":
+                c_mas, c_menos = np.maximum(0.0, x - k + c_mas), np.maximum(0.0, -x - k + c_menos)
+                senal = (c_mas > h) | (c_menos > h)
+            else:
+                z = (1.0 - lam) * z + lam * x
+                var = lam / (2.0 - lam) * ((1.0 - (1.0 - lam) ** (2 * t)) if exact else 1.0)
+                senal = np.abs(z) > L * np.sqrt(var)
+            largo[vivo[senal]] = t
+            vivo, c_mas, c_menos, z = vivo[~senal], c_mas[~senal], c_menos[~senal], z[~senal]
+        largos.append(largo)
+    return float(np.concatenate(largos).mean())
+
+
+@_comprobacion("arl-shewhart", N_("ARL de una carta Shewhart (k = 3 y k = 2) en control y con desplazamientos de 1σ y 2σ"),
+               "ARL = 1 / P(|Z| > k) con scipy.stats.norm (370,4 y 43,9 en la literatura, de memoria; especificación 009)", 1e-12,
+               relative=True)
+def _arl_shewhart():
+    from .arl import arl_shewhart
+
+    casos = [(3.0, 0.0), (3.0, 1.0), (3.0, 2.0), (2.0, 0.0), (2.0, 1.0)]
+    esperado = [1.0 / (stats.norm.cdf(-k - s) + stats.norm.sf(k - s)) for k, s in casos]
+    return np.array(esperado), np.array([arl_shewhart(k=k, shift=s) for k, s in casos])
+
+
+@_comprobacion("arl-cusum", N_("ARL de la CUSUM bilateral (h = 4, k = 0,5) con y sin arranque rápido frente a la simulación"),
+               "Monte Carlo propio con 20 semillas fijas (30 000 corridas; error ≈ 1 %); literatura de memoria: 168 y 8,38 "
+               "(Hawkins y Olwell); especificación 009", 3e-2, relative=True)
+def _arl_cusum():
+    from .arl import arl_cusum
+
+    casos = [(0.0, 0.0), (0.5, 0.0), (1.0, 0.0), (0.0, 2.0)]
+    esperado = [_arl_mc("cusum", s, headstart=hs) for s, hs in casos]
+    return np.array(esperado), np.array([arl_cusum(h=4, k=0.5, shift=s, headstart=hs) for s, hs in casos])
+
+
+@_comprobacion("arl-ewma", N_("ARL de la EWMA bilateral (λ = 0,2, L = 3) con límites asintóticos y exactos frente a la simulación"),
+               "Monte Carlo propio con 20 semillas fijas (30 000 corridas; error ≈ 1 %); L = 2,962 da ≈ 500 en la literatura "
+               "(Lucas y Saccucci, de memoria); especificación 009", 3e-2, relative=True)
+def _arl_ewma():
+    from .arl import arl_ewma
+
+    casos = [(0.0, False), (1.0, False), (0.0, True), (1.0, True)]
+    esperado = [_arl_mc("ewma", s, lam=0.2, L=3.0, exact=ex) for s, ex in casos]
+    return np.array(esperado), np.array([arl_ewma(weight=0.2, L=3.0, shift=s, exact_limits=ex) for s, ex in casos])
+
+
+@_comprobacion("arl-sd", N_("ARL de la carta S (n = 5) en control y con la desviación 1,5 y 2 veces mayor"),
+               "ARL = 1 / P(señal) con la ji cuadrada de scipy y c4 por la función gamma; especificación 009", 1e-8,
+               relative=True)
+def _arl_sd():
+    from .arl import arl_sd
+
+    n = 5
+    c4 = math.sqrt(2.0 / (n - 1)) * math.exp(math.lgamma(n / 2) - math.lgamma((n - 1) / 2))
+    c5 = math.sqrt(1.0 - c4**2)
+    ucl, lcl = c4 + 3 * c5, max(0.0, c4 - 3 * c5)
+    razones = [1.0, 1.5, 2.0]
+    esperado = [1.0 / (stats.chi2.sf((n - 1) * (ucl / r) ** 2, n - 1) + stats.chi2.cdf((n - 1) * (lcl / r) ** 2, n - 1))
+                for r in razones]
+    return np.array(esperado), np.array([arl_sd(n, ratio=r) for r in razones])
+
+
+@_comprobacion("arl-range", N_("ARL de la carta R (n = 5) en control y con la desviación 1,5 y 2 veces mayor"),
+               "Distribución del rango de n normales integrada con Gauss-Legendre (d2 y d3 incluidos); especificación 009", 1e-5,
+               relative=True)
+def _arl_range():
+    from .arl import arl_range
+
+    n = 5
+    xs, ps = np.polynomial.legendre.leggauss(400)
+    xs, ps = 10.0 * xs, 10.0 * ps
+    ws, pw = np.polynomial.legendre.leggauss(400)
+    ws, pw = 7.0 * (ws + 1.0), 7.0 * pw
+
+    def fda(w):
+        w = np.atleast_1d(np.asarray(w, dtype=float))
+        base = stats.norm.cdf(xs[None, :] + w[:, None]) - stats.norm.cdf(xs)[None, :]
+        return np.where(w > 0, n * np.sum(ps * stats.norm.pdf(xs) * base ** (n - 1), axis=1), 0.0)
+
+    sup = 1.0 - fda(ws)
+    d2 = float(np.sum(pw * sup))
+    d3 = math.sqrt(float(np.sum(pw * 2.0 * ws * sup)) - d2**2)
+    ucl, lcl = d2 + 3 * d3, max(0.0, d2 - 3 * d3)
+    razones = [1.0, 1.5, 2.0]
+    esperado = [1.0 / (1.0 - float(fda(ucl / r)[0]) + float(fda(lcl / r)[0])) for r in razones]
+    return np.array(esperado), np.array([arl_range(n, ratio=r) for r in razones])
+
+
+@_comprobacion("arl-binomial", N_("ARL de la carta NP (n = 100, p0 = 0,05) en control y con p = 0,07 y 0,10"),
+               "Enumeración exacta de la distribución binomial con math.comb; especificación 009", 1e-9, relative=True)
+def _arl_binomial():
+    from .arl import arl_binomial
+
+    n, p0 = 100, 0.05
+    centro, sigma = n * p0, math.sqrt(n * p0 * (1 - p0))
+    ucl, lcl = min(float(n), centro + 3 * sigma), max(0.0, centro - 3 * sigma)
+    ps = [0.05, 0.07, 0.10]
+    esperado = [1.0 / sum(math.comb(n, x) * p**x * (1 - p) ** (n - x) for x in range(n + 1) if x > ucl or x < lcl) for p in ps]
+    return np.array(esperado), np.array([arl_binomial(n, p0, p) for p in ps])
+
+
+@_comprobacion("arl-poisson", N_("ARL de la carta C (c0 = 9) en control y con c = 12 y 15"),
+               "Enumeración exacta de la distribución de Poisson con su recursión; especificación 009", 1e-9, relative=True)
+def _arl_poisson():
+    from .arl import arl_poisson
+
+    c0 = 9.0
+    ucl, lcl = c0 + 3 * math.sqrt(c0), max(0.0, c0 - 3 * math.sqrt(c0))
+    esperado = []
+    for c in (9.0, 12.0, 15.0):
+        pmf, dentro = math.exp(-c), 0.0
+        for x in range(int(ucl) + 1):
+            if x >= lcl:
+                dentro += pmf
+            pmf *= c / (x + 1)
+        esperado.append(1.0 / (1.0 - dentro))
+    return np.array(esperado), np.array([arl_poisson(c0, c) for c in (9.0, 12.0, 15.0)])
+
+
+@_comprobacion("arl-g", N_("ARL de la carta G (p0 = 0,02) en control y con p = 0,01 y 0,005"),
+               "Percentil Φ(3) de la geométrica con la interpolación de Minitab escrita aparte y scipy.stats.geom; "
+               "especificación 009", 1e-9, relative=True)
+def _arl_g():
+    from .arl import arl_g
+
+    p0, q = 0.02, float(stats.norm.cdf(3.0))
+    kb = max(1, math.ceil(math.log1p(-q) / math.log1p(-p0)))
+    pa, pb = 1 - (1 - p0) ** (kb - 1), 1 - (1 - p0) ** kb
+    ucl = (kb - 1) + (q - pa) / (pb - pa) - 1.0
+    ps = [0.02, 0.01, 0.005]
+    esperado = [1.0 / stats.geom.sf(math.floor(ucl) + 1, p) for p in ps]
+    return np.array(esperado), np.array([arl_g(p0, p) for p in ps])
+
+
+@_comprobacion("arl-t", N_("ARL de la carta T (Weibull de forma 1,5) con la escala sin cambio y 0,7 y 1,3 veces la de diseño"),
+               "Percentiles Φ(±3) de la Weibull y scipy.stats.weibull_min; 370,4 en control; especificación 009", 1e-9,
+               relative=True)
+def _arl_t():
+    from .arl import arl_t
+
+    forma = 1.5
+    lcl = (-math.log1p(-float(stats.norm.sf(3.0)))) ** (1 / forma)
+    ucl = (-math.log(float(stats.norm.sf(3.0)))) ** (1 / forma)
+    razones = [1.0, 0.7, 1.3]
+    esperado = [1.0 / (stats.weibull_min.cdf(lcl, forma, scale=r) + stats.weibull_min.sf(ucl, forma, scale=r)) for r in razones]
+    return np.array(esperado), np.array([arl_t(shape=forma, scale_ratio=r) for r in razones])
+
+
 # ── informe ──────────────────────────────────────────────────────────────────
 @dataclass
 class ValidationReport:

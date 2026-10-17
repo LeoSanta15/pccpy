@@ -9,6 +9,7 @@ fase1
 tiempo_ponderado
 avanzadas
 multivariadas
+arl
 run_chart_y_precontrol
 capacidad
 bootstrap

@@ -1,0 +1,267 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, LeoSanta15
+# This file is distributed under the same license as the pccpy package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: pccpy 0.15.3\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-17 15:53+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language: en\n"
+"Language-Team: en <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+msgid "ARL: comparar y diseñar cartas"
+msgstr "ARL: comparing and designing charts"
+
+msgid ""
+"El **ARL** (longitud media de racha, *average run length*) es el número "
+"esperado de puntos que se grafican hasta la primera señal; la señal "
+"cuenta como un punto, así que el mínimo es 1. Con el proceso en control "
+"es el **ARL₀** (cuántos puntos pasan en promedio antes de una falsa "
+"alarma: cuanto mayor, mejor); con la media desplazada es el **ARL₁** "
+"(cuántos puntos tarda en detectarse el cambio: cuanto menor, mejor). "
+"Sirve para comparar cartas (Shewhart frente a EWMA frente a CUSUM) y para"
+" elegir sus parámetros."
+msgstr ""
+"The **ARL** (average run length) is the expected number of points plotted"
+" until the first signal; the signal counts as one point, so the minimum "
+"is 1. With the process in control it is the **ARL₀** (how many points "
+"pass on average before a false alarm: the larger, the better); with the "
+"mean shifted it is the **ARL₁** (how many points it takes to detect the "
+"change: the smaller, the better). It is used to compare charts (Shewhart "
+"versus EWMA versus CUSUM) and to choose their parameters."
+
+msgid "Carta"
+msgstr "Chart"
+
+msgid "Función"
+msgstr "Function"
+
+msgid "Shewhart de la media (un punto fuera de los límites)"
+msgstr "Shewhart chart of the mean (one point outside the limits)"
+
+#, python-brace-format
+msgid "{func}`pccpy.arl_shewhart`"
+msgstr "{func}`pccpy.arl_shewhart`"
+
+msgid "CUSUM tabular bilateral"
+msgstr "Two-sided tabular CUSUM"
+
+#, python-brace-format
+msgid "{func}`pccpy.arl_cusum`"
+msgstr "{func}`pccpy.arl_cusum`"
+
+msgid "EWMA bilateral"
+msgstr "Two-sided EWMA"
+
+#, python-brace-format
+msgid "{func}`pccpy.arl_ewma`"
+msgstr "{func}`pccpy.arl_ewma`"
+
+msgid "S y R (dispersión)"
+msgstr "S and R (dispersion)"
+
+#, python-brace-format
+msgid "{func}`pccpy.arl_sd`, {func}`pccpy.arl_range`"
+msgstr "{func}`pccpy.arl_sd`, {func}`pccpy.arl_range`"
+
+msgid "NP/P y C/U (atributos, tamaño constante)"
+msgstr "NP/P and C/U (attributes, constant size)"
+
+#, python-brace-format
+msgid "{func}`pccpy.arl_binomial`, {func}`pccpy.arl_poisson`"
+msgstr "{func}`pccpy.arl_binomial`, {func}`pccpy.arl_poisson`"
+
+msgid "G y T (eventos raros)"
+msgstr "G and T (rare events)"
+
+#, python-brace-format
+msgid "{func}`pccpy.arl_g`, {func}`pccpy.arl_t`"
+msgstr "{func}`pccpy.arl_g`, {func}`pccpy.arl_t`"
+
+msgid "Supuestos"
+msgstr "Assumptions"
+
+msgid ""
+"Las observaciones son independientes en el tiempo y los parámetros del "
+"proceso (μ y σ) se **suponen conocidos**: el ARL no incluye el efecto de "
+"haberlos estimado en una Fase I."
+msgstr ""
+"Observations are independent over time and the process parameters (μ and "
+"σ) are **assumed known**: the ARL does not include the effect of having "
+"estimated them in a Phase I."
+
+msgid ""
+"Solo cuenta la regla «un punto fuera de los límites»: **no** se aplican "
+"las pruebas suplementarias de rachas (pruebas 2 a 8)."
+msgstr ""
+"Only the \"one point outside the limits\" rule counts: the supplementary "
+"run tests (tests 2 to 8) are **not** applied."
+
+msgid ""
+"Las cartas de variables suponen un estadístico normal. `shift` es el "
+"desplazamiento de la media **en unidades de σ del estadístico "
+"graficado**: con subgrupos de tamaño `n` esa σ es σ/√n, así que un cambio"
+" de 1σ en la variable individual es `shift = √n`."
+msgstr ""
+"The variables charts assume a normal statistic. `shift` is the shift of "
+"the mean **in units of σ of the plotted statistic**: with subgroups of "
+"size `n` that σ is σ/√n, so a 1σ change in the individual variable is "
+"`shift = √n`."
+
+msgid ""
+"Las de atributos y eventos raros usan su distribución exacta (binomial, "
+"Poisson, geométrica, Weibull)."
+msgstr ""
+"The attribute and rare-event charts use their exact distribution "
+"(binomial, Poisson, geometric, Weibull)."
+
+msgid "Comparar cartas frente a un desplazamiento de la media"
+msgstr "Comparing charts against a shift of the mean"
+
+msgid ""
+"Las tres cartas tienen ARL₀ distintos (370, 417 y 168), así que la "
+"comparación justa exige igualarlos: ajusta `L`, `h` o `k` hasta que "
+"coincidan. La EWMA y la CUSUM detectan los desplazamientos pequeños (0,5σ"
+" a 1σ) mucho antes que la Shewhart; con desplazamientos grandes (3σ o "
+"más) la Shewhart es igual de rápida."
+msgstr ""
+"The three charts have different ARL₀ (370, 417 and 168), so a fair "
+"comparison requires matching them: adjust `L`, `h` or `k` until they "
+"coincide. The EWMA and the CUSUM detect small shifts (0.5σ to 1σ) much "
+"sooner than the Shewhart chart; with large shifts (3σ or more) the "
+"Shewhart chart is just as fast."
+
+msgid "Elegir el método"
+msgstr "Choosing the method"
+
+msgid "Todas las funciones aceptan `method`:"
+msgstr "All the functions accept `method`:"
+
+msgid ""
+"`\"numeric\"` (por defecto): fórmula cerrada o, en la CUSUM y la EWMA, "
+"ecuación integral con cuadratura de Gauss-Legendre."
+msgstr ""
+"`\"numeric\"` (default): closed formula or, for the CUSUM and the EWMA, "
+"an integral equation with Gauss-Legendre quadrature."
+
+msgid "`\"markov\"`: cadena de Markov con celdas (solo CUSUM y EWMA)."
+msgstr "`\"markov\"`: Markov chain with cells (CUSUM and EWMA only)."
+
+msgid ""
+"`\"simulation\"`: Monte Carlo, con `n_runs` (10 000 por defecto) y `seed`"
+" para reproducir el resultado. Su error es del orden de ARL/√`n_runs`."
+msgstr ""
+"`\"simulation\"`: Monte Carlo, with `n_runs` (10,000 by default) and "
+"`seed` to reproduce the result. Its error is of the order of "
+"ARL/√`n_runs`."
+
+msgid ""
+"La EWMA usa límites asintóticos por defecto; con `exact_limits=True` los "
+"límites son más estrechos al principio y el ARL₀ baja: con λ = 0,2 y L = "
+"3, de ≈ 560 a ≈ 555."
+msgstr ""
+"The EWMA uses asymptotic limits by default; with `exact_limits=True` the "
+"limits are narrower at the start and the ARL₀ drops: with λ = 0.2 and L ="
+" 3, from ≈ 560 to ≈ 555."
+
+#, python-format
+msgid ""
+"La CUSUM bilateral con `headstart = 0` combina los dos lados con `1/ARL ="
+" 1/ARL⁺ + 1/ARL⁻`, una aproximación que difiere menos de 0,3 % de la "
+"simulación con h = 4 y k = 0,5. Con `headstart > 0` esa combinación falla"
+" (≈ 6 % con `headstart = h/2`), porque las dos sumas pueden ser positivas"
+" a la vez; entonces se resuelve la cadena de Markov bidimensional, más "
+"lenta (del orden de un segundo por llamada) y con un error de ≈ 0,1 %:"
+msgstr ""
+"The two-sided CUSUM with `headstart = 0` combines the two sides with "
+"`1/ARL = 1/ARL⁺ + 1/ARL⁻`, an approximation that differs by less than 0.3"
+" % from the simulation with h = 4 and k = 0.5. With `headstart > 0` that "
+"combination fails (≈ 6 % with `headstart = h/2`), because the two sums "
+"can be positive at the same time; then the two-dimensional Markov chain "
+"is solved, which is slower (of the order of a second per call) and has an"
+" error of ≈ 0.1 %:"
+
+msgid "Cartas de dispersión, atributos y eventos raros"
+msgstr "Dispersion, attribute and rare-event charts"
+
+msgid ""
+"En las cartas de atributos el ARL₀ **no** es 370,4: la distribución es "
+"discreta y asimétrica, y los límites a ±3σ no dejan una probabilidad de "
+"señal de 0,0027. La carta P con tamaño de muestra constante es la NP, y "
+"la U con área constante es la C (con `c0 = n·u0`); con tamaños variables "
+"no hay un ARL único."
+msgstr ""
+"In the attribute charts the ARL₀ is **not** 370.4: the distribution is "
+"discrete and asymmetric, and the ±3σ limits do not leave a signal "
+"probability of 0.0027. The P chart with constant sample size is the NP "
+"chart, and the U chart with constant area is the C chart (with `c0 = "
+"n·u0`); with variable sizes there is no single ARL."
+
+msgid ""
+"Las cartas G y T detectan mucho mejor que los eventos se espacien que que"
+" se acorten"
+msgstr ""
+"The G and T charts detect events spreading out much better than events "
+"getting closer together"
+
+msgid ""
+"La carta G tiene límite superior pero su límite inferior es 0, así que "
+"`arl_g` solo detecta que los eventos se vuelven menos frecuentes (`p1 < "
+"p0`). Con eventos más frecuentes (`p1 > p0`) el ARL se dispara:"
+msgstr ""
+"The G chart has an upper limit but its lower limit is 0, so `arl_g` only "
+"detects events becoming less frequent (`p1 < p0`). With more frequent "
+"events (`p1 > p0`) the ARL skyrockets:"
+
+msgid ""
+"Para ese caso `g_chart(..., benneyan=True)` añade la prueba de Benneyan "
+"(rachas de ceros), que este ARL no incluye."
+msgstr ""
+"For that case `g_chart(..., benneyan=True)` adds the Benneyan test (runs "
+"of zeros), which this ARL does not include."
+
+msgid ""
+"La carta T tiene el mismo problema en el extremo opuesto del tiempo: su "
+"límite inferior (el percentil Φ(−3) de la Weibull) está muy cerca de 0. "
+"Con la escala del tiempo al doble el ARL baja de 370 a ≈ 10, pero con "
+"tiempos más cortos casi no mejora (con `scale_ratio = 0.5`, ≈ 262; con "
+"0,7, ≈ 432, incluso más que en control):"
+msgstr ""
+"The T chart has the same problem at the opposite end of time: its lower "
+"limit (the Φ(−3) percentile of the Weibull) is very close to 0. With the "
+"time scale doubled the ARL drops from 370 to ≈ 10, but with shorter times"
+" it hardly improves (with `scale_ratio = 0.5`, ≈ 262; with 0.7, ≈ 432, "
+"even more than in control):"
+
+msgid "Qué no se ha comprobado"
+msgstr "What has not been checked"
+
+#, python-brace-format
+msgid ""
+"Las cifras de la literatura que se mencionan (ARL₀ = 168 de la CUSUM con "
+"h = 4 y k = 0,5, ≈ 500 de la EWMA con λ = 0,2 y L = 2,962, 370,4 de la "
+"Shewhart) las recordamos de memoria y se contrastan con simulaciones "
+"propias; no pudimos consultar los artículos originales. La validación "
+"({doc}`validacion`) usa las simulaciones y las fórmulas cerradas, no esas"
+" cifras."
+msgstr ""
+"The literature figures that are mentioned (ARL₀ = 168 for the CUSUM with "
+"h = 4 and k = 0.5, ≈ 500 for the EWMA with λ = 0.2 and L = 2.962, 370.4 "
+"for the Shewhart chart) are recalled from memory and are checked against "
+"our own simulations; we could not consult the original papers. The "
+"validation ({doc}`validacion`) uses the simulations and the closed "
+"formulas, not those figures."
+
+msgid "No se ha comparado con el ARL de Minitab."
+msgstr "It has not been compared with Minitab's ARL."
+
