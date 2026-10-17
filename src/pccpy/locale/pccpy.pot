@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-17 05:13+0000\n"
+"POT-Creation-Date: 2026-10-17 05:47+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1081,6 +1081,12 @@ msgstr ""
 msgid "'boxcox' requiere datos positivos en todas las variables."
 msgstr ""
 
+msgid "'c0' debe ser un número finito > 0."
+msgstr ""
+
+msgid "'c1' debe contener solo valores finitos >= 0."
+msgstr ""
+
 msgid "'categories' y 'counts' deben tener la misma longitud."
 msgstr ""
 
@@ -1138,6 +1144,9 @@ msgstr ""
 msgid "'k' debe ser un número finito >= 0."
 msgstr ""
 
+msgid "'k' es demasiado grande: Φ(k) debe ser menor que 1."
+msgstr ""
+
 #, python-brace-format
 msgid "'labels' debe tener una etiqueta por cada punto graficado ({n})."
 msgstr ""
@@ -1183,6 +1192,12 @@ msgstr ""
 msgid "'n' debe contener enteros positivos."
 msgstr ""
 
+msgid "'n' debe ser un entero >= 1."
+msgstr ""
+
+msgid "'n' debe ser un entero >= 2."
+msgstr ""
+
 msgid "'n' debe ser un escalar o tener la misma longitud que los conteos."
 msgstr ""
 
@@ -1211,6 +1226,15 @@ msgstr ""
 msgid "'p' debe estar en (0, 1)."
 msgstr ""
 
+msgid "'p0' debe ser un número en (0, 1)."
+msgstr ""
+
+msgid "'p1' debe contener solo valores en (0, 1)."
+msgstr ""
+
+msgid "'p1' debe contener solo valores en [0, 1]."
+msgstr ""
+
 msgid "'parts' debe tener una etiqueta por observación."
 msgstr ""
 
@@ -1221,8 +1245,17 @@ msgstr ""
 msgid "'process_avg' debe estar en (0, 1)."
 msgstr ""
 
+msgid "'ratio' debe contener solo valores finitos > 0."
+msgstr ""
+
 #, python-brace-format
 msgid "'scale' debe ser 'original' o 'transformed' (recibido: {scale!r})."
+msgstr ""
+
+msgid "'scale_ratio' debe contener solo valores finitos > 0."
+msgstr ""
+
+msgid "'shape' debe ser un número finito > 0."
 msgstr ""
 
 msgid "'shift' debe contener solo valores finitos."

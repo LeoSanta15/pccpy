@@ -120,6 +120,10 @@ hay ARL único (fuera de alcance).
 
 ### S009-RF-08 — ARL de las cartas G y T
 
+*Notas de la implementación:* (1) la carta G solo tiene límite superior, así que `arl_g` solo detecta una **disminución** de los
+eventos (`p1 < p0`); con `p1 > p0` el ARL es enorme (para eso es la prueba de Benneyan, que `arl_g` no incluye). (2) `arl_t` tiene
+`shape=1.0` por defecto (la exponencial es la Weibull de forma 1) y solo depende del cociente de escalas.
+
 `arl_g(p0, p1=None, k=3.0)` y `arl_t(shape, scale_ratio=1.0, k=3.0, distribution="weibull")`: ARL de las cartas G y T con
 los límites que calcula pccpy (percentiles de la geométrica, de la Weibull o de la exponencial) cuando el parámetro real
 cambia. G: `P(señal) = P(X > UCL)` con la geométrica; T: `P(T < LCL) + P(T > UCL)` con la Weibull/exponencial desplazada.

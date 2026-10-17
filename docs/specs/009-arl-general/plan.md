@@ -47,7 +47,8 @@ paramétricas, exportadas en `__init__.py` y `__all__`, con docstring en españo
 - La combinación de los dos lados de la CUSUM como `1/ARL⁺ + 1/ARL⁻` es una aproximación (buena para ARL grandes).
 - Las cifras de la literatura están recordadas de memoria: pueden estar mal; por eso cada una lleva un cálculo independiente.
 - Precisión numérica con `h` grande o `weight` pequeño: elegir el número de nodos y de celdas y comprobarlo con el contraste.
-- `studentized_range` de SciPy puede ser lenta o imprecisa para algunos `n`: medirlo en la Fase 2.
+- `studentized_range` de SciPy puede ser lenta o imprecisa para algunos `n`: **medido en la Fase 2**: coincide con la integral
+  independiente a 1e-5 relativo para n = 2, 3, 5 y 8 y tarda ≈ 25 ms por llamada (n = 2 a 25).
 - El alcance es amplio: si una carta no se puede validar con rigor, se saca de la especificación en vez de entregarla sin
   contraste.
 

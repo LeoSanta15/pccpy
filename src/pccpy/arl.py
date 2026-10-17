@@ -1,19 +1,21 @@
-"""ARL (longitud media de racha) de las cartas Shewhart, CUSUM y EWMA.
+"""ARL (longitud media de racha) de las cartas de control: Shewhart, CUSUM, EWMA, S, R, de atributos y de eventos raros.
 
 El ARL es el número esperado de puntos graficados hasta la primera señal; la señal cuenta como un punto, así que el mínimo es 1.
 Con ``shift = 0`` es el ARL en control (ARL₀); con ``shift != 0``, el ARL fuera de control.
 
 Supuestos comunes a todas las funciones:
 
-* el estadístico graficado es normal, independiente en el tiempo y de varianza 1 una vez estandarizado;
+* las observaciones son independientes en el tiempo; el estadístico graficado es normal y de varianza 1 una vez estandarizado
+  (salvo en las cartas de atributos y de eventos raros, que usan su distribución: binomial, Poisson, geométrica, Weibull);
 * ``shift`` es el desplazamiento de su media **en unidades de σ del estadístico graficado** (con subgrupos de tamaño ``n`` la
   σ del estadístico es σ/√n: multiplica por √n el desplazamiento expresado en σ de la variable individual);
 * los parámetros del proceso (μ y σ) son conocidos, no estimados;
 * solo cuenta la regla «un punto fuera de los límites»: no se aplican las pruebas suplementarias de rachas;
 * la carta es bilateral y simétrica.
 
-Cada función admite tres métodos (``method``): ``"numeric"`` (por defecto; fórmula cerrada o ecuación integral con cuadratura de
-Gauss-Legendre), ``"markov"`` (cadena de Markov con celdas) y ``"simulation"`` (Monte Carlo).
+Cada función admite ``method``: ``"numeric"`` (por defecto; fórmula cerrada o ecuación integral con cuadratura de Gauss-Legendre),
+``"markov"`` (cadena de Markov con celdas; solo CUSUM y EWMA) y ``"simulation"`` (Monte Carlo). Las cartas de dispersión,
+de atributos y de eventos raros son de tipo Shewhart (cada punto señala con una probabilidad fija) y su fórmula es exacta.
 """
 from __future__ import annotations
 
@@ -21,11 +23,14 @@ import warnings
 
 import numpy as np
 import scipy.sparse as sp
+from scipy import stats
 from scipy.sparse.linalg import spsolve
 from scipy.special import ndtr
 
+from ._constants import c4, c5, d2, d3
 from ._i18n import tr
 from .charts._engine import check_method
+from .charts.advanced import _geom_quantile
 
 _METODOS = ("numeric", "markov", "simulation")
 _MAX_PASOS = 200_000  # tope de la simulación: evita bucles sin fin con ARL astronómicos
@@ -61,13 +66,33 @@ def _n_runs(n_runs) -> int:
     return int(n_runs)
 
 
-def _aplicar(shift, una_vez):
-    """Aplica ``una_vez(shift_escalar)``: devuelve un float con un escalar y un arreglo con un arreglo."""
-    arr = _shift(shift)
+def _aplicar(shift, una_vez, validar=None):
+    """Aplica ``una_vez(valor_escalar)``: devuelve un float con un escalar y un arreglo con un arreglo.
+
+    ``validar(arr)`` (por defecto, la de ``shift``) recibe el arreglo ya convertido y lanza ``ValueError`` si no es válido.
+    """
+    arr = _shift(shift) if validar is None else validar(_como_arreglo(shift))
     if arr.ndim == 0:
         return float(max(1.0, una_vez(float(arr))))
     salida = np.array([max(1.0, una_vez(float(v))) for v in arr.ravel()], dtype=float)
     return salida.reshape(arr.shape)
+
+
+def _como_arreglo(valor) -> np.ndarray:
+    try:
+        return np.asarray(valor, dtype=float)
+    except (TypeError, ValueError):
+        return np.array(np.nan)
+
+
+def _entero(valor, minimo: int):
+    """``int(valor)`` si es un entero >= ``minimo``; si no, ``None`` (el llamador lanza su propio mensaje)."""
+    try:
+        if float(valor) == int(valor) and int(valor) >= minimo:
+            return int(valor)
+    except (TypeError, ValueError, OverflowError):
+        pass
+    return None
 
 
 # ---------------------------------------------------------------------------------------- simulación
@@ -354,3 +379,306 @@ def arl_ewma(weight: float = 0.2, L: float = 3.0, shift=0.0, exact_limits: bool 
         rng = np.random.default_rng(seed)
         return _aplicar(shift, lambda s: _simular("ewma", s, n_runs, rng, lam=lam, L=L, exact=bool(exact_limits)))
     return _aplicar(shift, lambda s: _arl_ewma(method, lam, L, s, bool(exact_limits)))
+
+
+# ------------------------------------------------------------------------------ cartas de tipo Shewhart
+def _simular_iid(muestra, senal, n_runs: int, rng) -> float:
+    """ARL por Monte Carlo de una carta de observaciones independientes: ``muestra(rng, m)`` y ``senal(x)`` (booleano por carta)."""
+    largo = np.zeros(n_runs)
+    vivo = np.arange(n_runs)
+    t = 0
+    while vivo.size and t < _MAX_PASOS:
+        t += 1
+        sen = senal(muestra(rng, vivo.size))
+        largo[vivo[sen]] = t
+        vivo = vivo[~sen]
+    if vivo.size:
+        warnings.warn(tr(
+            "{n} de {total} corridas no dieron señal en {pasos} puntos: el ARL simulado queda sesgado a la baja."
+        ).format(n=vivo.size, total=n_runs, pasos=t), UserWarning, stacklevel=4)
+        largo[vivo] = t
+    return float(largo.mean())
+
+
+def _inverso(p: float) -> float:
+    """``1/p``, con ``inf`` si la carta no puede señalar."""
+    return float("inf") if p <= 0.0 else 1.0 / p
+
+
+def _validar_k(k) -> float:
+    k = _numero(k)
+    if not (np.isfinite(k) and k > 0):
+        raise ValueError(tr("'k' debe ser un número finito > 0."))
+    return k
+
+
+def _validar_metodo(method, n_runs) -> int:
+    check_method(method, ("numeric", "simulation"), "'method'")
+    return _n_runs(n_runs)
+
+
+def _val_ratio(arr: np.ndarray) -> np.ndarray:
+    if not (np.all(np.isfinite(arr)) and np.all(arr > 0)):
+        raise ValueError(tr("'ratio' debe contener solo valores finitos > 0."))
+    return arr
+
+
+def arl_sd(n: int, ratio=1.0, k: float = 3.0, method: str = "numeric", n_runs: int = 10_000, seed=None):
+    """ARL de la carta S (desviación estándar de subgrupos de tamaño ``n``) con los límites de pccpy.
+
+    Los límites son ``c4 + k·c5`` y ``max(0, c4 − k·c5)`` (en unidades de σ₀) y una señal es una ``s`` fuera de ellos. Si la σ
+    real es ``ratio·σ₀``, ``(n − 1)·s²/σ² ~ χ²(n − 1)``: ARL = ``1 / P(señal)`` (fórmula cerrada). ``ratio = 1`` es el ARL en
+    control; ``ratio > 1`` es un aumento de la dispersión.
+
+    Parameters
+    ----------
+    n : int
+        Tamaño del subgrupo (>= 2).
+    ratio : float o array-like
+        Cociente σ_real/σ₀ (> 0). Un arreglo devuelve un arreglo.
+    k : float
+        Ancho de los límites en sigmas (> 0).
+    method : {"numeric", "simulation"}
+    n_runs, seed
+        Corridas y semilla de la simulación.
+    """
+    n_i = _entero(n, 2)
+    if n_i is None:
+        raise ValueError(tr("'n' debe ser un entero >= 2."))
+    k = _validar_k(k)
+    n_runs = _validar_metodo(method, n_runs)
+    c4n, c5n = c4(n_i), c5(n_i)
+    ucl, lcl = c4n + k * c5n, max(0.0, c4n - k * c5n)
+    if method == "numeric":
+        return _aplicar(ratio, lambda r: _inverso(
+            stats.chi2.sf((n_i - 1) * (ucl / r) ** 2, n_i - 1) + stats.chi2.cdf((n_i - 1) * (lcl / r) ** 2, n_i - 1)), _val_ratio)
+    rng = np.random.default_rng(seed)
+
+    def una_vez(r):
+        def senal(x):
+            s = x.std(axis=1, ddof=1)
+            return (s > ucl) | (s < lcl)
+        return _simular_iid(lambda g, m: g.normal(0.0, r, (m, n_i)), senal, n_runs, rng)
+
+    return _aplicar(ratio, una_vez, _val_ratio)
+
+
+def arl_range(n: int, ratio=1.0, k: float = 3.0, method: str = "numeric", n_runs: int = 10_000, seed=None):
+    """ARL de la carta R (rango de subgrupos de tamaño ``n``) con los límites de pccpy.
+
+    Los límites son ``d2 + k·d3`` y ``max(0, d2 − k·d3)`` (en unidades de σ₀). Si la σ real es ``ratio·σ₀``, el rango de la
+    muestra sigue ``ratio`` veces la distribución del rango de ``n`` normales estándar (``scipy.stats.studentized_range`` con
+    infinitos grados de libertad): ARL = ``1 / P(señal)`` (fórmula cerrada). ``ratio = 1`` es el ARL en control.
+
+    Parameters
+    ----------
+    n : int
+        Tamaño del subgrupo (>= 2).
+    ratio : float o array-like
+        Cociente σ_real/σ₀ (> 0). Un arreglo devuelve un arreglo.
+    k : float
+        Ancho de los límites en sigmas (> 0).
+    method : {"numeric", "simulation"}
+    n_runs, seed
+        Corridas y semilla de la simulación.
+    """
+    n_i = _entero(n, 2)
+    if n_i is None:
+        raise ValueError(tr("'n' debe ser un entero >= 2."))
+    k = _validar_k(k)
+    n_runs = _validar_metodo(method, n_runs)
+    d2n, d3n = d2(n_i), d3(n_i)
+    ucl, lcl = d2n + k * d3n, max(0.0, d2n - k * d3n)
+    if method == "numeric":
+        rango = stats.studentized_range(n_i, np.inf)
+        return _aplicar(ratio, lambda r: _inverso(float(rango.sf(ucl / r) + rango.cdf(lcl / r))), _val_ratio)
+    rng = np.random.default_rng(seed)
+
+    def una_vez(r):
+        def senal(x):
+            rg = np.ptp(x, axis=1)
+            return (rg > ucl) | (rg < lcl)
+        return _simular_iid(lambda g, m: g.normal(0.0, r, (m, n_i)), senal, n_runs, rng)
+
+    return _aplicar(ratio, una_vez, _val_ratio)
+
+
+def _val_p1_binomial(arr: np.ndarray) -> np.ndarray:
+    if not (np.all(np.isfinite(arr)) and np.all(arr >= 0) and np.all(arr <= 1)):
+        raise ValueError(tr("'p1' debe contener solo valores en [0, 1]."))
+    return arr
+
+
+def arl_binomial(n: int, p0: float, p1=None, k: float = 3.0, method: str = "numeric", n_runs: int = 10_000, seed=None):
+    """ARL de la carta NP (y de la P con tamaño de muestra constante) con los límites de pccpy.
+
+    Los límites son ``n·p0 ± k·√(n·p0·(1 − p0))`` (con el superior recortado en ``n`` y el inferior en 0) y una señal es un
+    número de defectuosos ``X ~ Binomial(n, p1)`` fuera de ellos: ARL = ``1 / P(señal)`` por la distribución binomial exacta.
+    Como la distribución es discreta y asimétrica, el ARL en control **no** es 370.4. Si la carta no puede señalar, el ARL es
+    infinito. La carta P con tamaño constante ``n`` es la NP; con tamaños variables no hay un ARL único.
+
+    Parameters
+    ----------
+    n : int
+        Tamaño de la muestra, constante (>= 1).
+    p0 : float
+        Proporción de defectuosos del diseño, en ``(0, 1)``.
+    p1 : float, array-like o None
+        Proporción real en ``[0, 1]``; ``None`` (por defecto) es ``p0`` (ARL en control). Un arreglo devuelve un arreglo.
+    k : float
+        Ancho de los límites en sigmas (> 0).
+    method : {"numeric", "simulation"}
+    n_runs, seed
+        Corridas y semilla de la simulación.
+    """
+    n_i = _entero(n, 1)
+    if n_i is None:
+        raise ValueError(tr("'n' debe ser un entero >= 1."))
+    p0 = _numero(p0)
+    if not (np.isfinite(p0) and 0 < p0 < 1):
+        raise ValueError(tr("'p0' debe ser un número en (0, 1)."))
+    k = _validar_k(k)
+    n_runs = _validar_metodo(method, n_runs)
+    centro, sigma = n_i * p0, np.sqrt(n_i * p0 * (1.0 - p0))
+    ucl, lcl = min(float(n_i), centro + k * sigma), max(0.0, centro - k * sigma)
+    valor = p0 if p1 is None else p1
+    if method == "numeric":
+        return _aplicar(valor, lambda p: _inverso(
+            float(stats.binom.sf(np.floor(ucl), n_i, p) + stats.binom.cdf(np.ceil(lcl) - 1, n_i, p))), _val_p1_binomial)
+    rng = np.random.default_rng(seed)
+    return _aplicar(valor, lambda p: _simular_iid(
+        lambda g, m: g.binomial(n_i, p, m), lambda x: (x > ucl) | (x < lcl), n_runs, rng), _val_p1_binomial)
+
+
+def _val_c1(arr: np.ndarray) -> np.ndarray:
+    if not (np.all(np.isfinite(arr)) and np.all(arr >= 0)):
+        raise ValueError(tr("'c1' debe contener solo valores finitos >= 0."))
+    return arr
+
+
+def arl_poisson(c0: float, c1=None, k: float = 3.0, method: str = "numeric", n_runs: int = 10_000, seed=None):
+    """ARL de la carta C (y de la U con área de oportunidad constante) con los límites de pccpy.
+
+    Los límites son ``c0 ± k·√c0`` (el inferior recortado en 0) y una señal es un número de defectos ``X ~ Poisson(c1)`` fuera
+    de ellos: ARL = ``1 / P(señal)`` por la distribución de Poisson exacta. Como la distribución es discreta y asimétrica, el
+    ARL en control **no** es 370.4. Si la carta no puede señalar, el ARL es infinito. La carta U con área constante ``n`` es la
+    C con ``c0 = n·u0``; con áreas variables no hay un ARL único.
+
+    Parameters
+    ----------
+    c0 : float
+        Número medio de defectos del diseño (> 0).
+    c1 : float, array-like o None
+        Número medio real (>= 0); ``None`` (por defecto) es ``c0`` (ARL en control). Un arreglo devuelve un arreglo.
+    k : float
+        Ancho de los límites en sigmas (> 0).
+    method : {"numeric", "simulation"}
+    n_runs, seed
+        Corridas y semilla de la simulación.
+    """
+    c0 = _numero(c0)
+    if not (np.isfinite(c0) and c0 > 0):
+        raise ValueError(tr("'c0' debe ser un número finito > 0."))
+    k = _validar_k(k)
+    n_runs = _validar_metodo(method, n_runs)
+    ucl, lcl = c0 + k * np.sqrt(c0), max(0.0, c0 - k * np.sqrt(c0))
+    valor = c0 if c1 is None else c1
+
+    def p_senal(c):
+        if c == 0.0:  # sin defectos: X = 0 siempre; señala solo si el LCI es positivo
+            return 1.0 if lcl > 0 else 0.0
+        return float(stats.poisson.sf(np.floor(ucl), c) + stats.poisson.cdf(np.ceil(lcl) - 1, c))
+
+    if method == "numeric":
+        return _aplicar(valor, lambda c: _inverso(p_senal(c)), _val_c1)
+    rng = np.random.default_rng(seed)
+    return _aplicar(valor, lambda c: _simular_iid(
+        lambda g, m: g.poisson(c, m), lambda x: (x > ucl) | (x < lcl), n_runs, rng), _val_c1)
+
+
+def _val_p1_geometrica(arr: np.ndarray) -> np.ndarray:
+    if not (np.all(np.isfinite(arr)) and np.all(arr > 0) and np.all(arr < 1)):
+        raise ValueError(tr("'p1' debe contener solo valores en (0, 1)."))
+    return arr
+
+
+def arl_g(p0: float, p1=None, k: float = 3.0, method: str = "numeric", n_runs: int = 10_000, seed=None):
+    """ARL de la carta G (conteos entre eventos) con los límites de :func:`pccpy.g_chart`.
+
+    El límite superior es el percentil ``Φ(k)`` de la geométrica con probabilidad de evento ``p0`` (con la interpolación de
+    pccpy) y el inferior es 0, así que **solo señala una disminución de los eventos** (``p1 < p0``). Con ``X`` el número de
+    casos antes del evento, ``P(X > UCL) = (1 − p1)^(⌊UCL⌋ + 1)`` y el ARL es su inverso. Con ``p1 > p0`` (más eventos) el ARL
+    crece muchísimo: para eso sirve la prueba de Benneyan (``benneyan=True`` en :func:`pccpy.g_chart`), que este ARL no incluye.
+
+    Parameters
+    ----------
+    p0 : float
+        Probabilidad de evento del diseño, en ``(0, 1)``.
+    p1 : float, array-like o None
+        Probabilidad de evento real, en ``(0, 1)``; ``None`` (por defecto) es ``p0`` (ARL en control).
+    k : float
+        Ancho de los límites en sigmas (> 0): el límite es el percentil ``Φ(k)``.
+    method : {"numeric", "simulation"}
+    n_runs, seed
+        Corridas y semilla de la simulación.
+    """
+    p0 = _numero(p0)
+    if not (np.isfinite(p0) and 0 < p0 < 1):
+        raise ValueError(tr("'p0' debe ser un número en (0, 1)."))
+    k = _validar_k(k)
+    q = float(stats.norm.cdf(k))
+    if q >= 1.0:
+        raise ValueError(tr("'k' es demasiado grande: Φ(k) debe ser menor que 1."))
+    n_runs = _validar_metodo(method, n_runs)
+    ucl = _geom_quantile(p0, q) - 1.0
+    tope = np.floor(ucl) + 1.0
+    valor = p0 if p1 is None else p1
+    if method == "numeric":
+        return _aplicar(valor, lambda p: _inverso(float(np.exp(tope * np.log1p(-p)))), _val_p1_geometrica)
+    rng = np.random.default_rng(seed)
+    return _aplicar(valor, lambda p: _simular_iid(
+        lambda g, m: g.geometric(p, m) - 1, lambda x: x > ucl, n_runs, rng), _val_p1_geometrica)
+
+
+def _val_escala(arr: np.ndarray) -> np.ndarray:
+    if not (np.all(np.isfinite(arr)) and np.all(arr > 0)):
+        raise ValueError(tr("'scale_ratio' debe contener solo valores finitos > 0."))
+    return arr
+
+
+def arl_t(shape: float = 1.0, scale_ratio=1.0, k: float = 3.0, distribution: str = "weibull", method: str = "numeric",
+          n_runs: int = 10_000, seed=None):
+    """ARL de la carta T (tiempo entre eventos) con los límites de :func:`pccpy.t_chart`.
+
+    Los límites son los percentiles ``Φ(−k)`` y ``Φ(k)`` de la Weibull (forma ``shape``) o de la exponencial (forma 1). Si la
+    escala real es ``scale_ratio`` veces la del diseño, ``P(señal) = P(T < LCL) + P(T > UCL)`` con esa Weibull y el ARL es su
+    inverso. Con ``scale_ratio = 1`` el ARL es ``1 / (2·Φ(−k))`` = 370.4 con ``k = 3``, sea cual sea la forma. La escala del
+    diseño no influye: solo importa el cociente.
+
+    Parameters
+    ----------
+    shape : float
+        Forma de la Weibull (> 0); se ignora con ``distribution="exponential"`` (forma 1).
+    scale_ratio : float o array-like
+        Cociente escala_real/escala_del_diseño (> 0); ``< 1`` son tiempos más cortos (eventos más frecuentes).
+    k : float
+        Ancho de los límites en sigmas (> 0).
+    distribution : {"weibull", "exponential"}
+    method : {"numeric", "simulation"}
+    n_runs, seed
+        Corridas y semilla de la simulación.
+    """
+    check_method(distribution, ("weibull", "exponential"), "'distribution'")
+    forma = 1.0 if distribution == "exponential" else _numero(shape)
+    if not (np.isfinite(forma) and forma > 0):
+        raise ValueError(tr("'shape' debe ser un número finito > 0."))
+    k = _validar_k(k)
+    n_runs = _validar_metodo(method, n_runs)
+    cola = float(stats.norm.sf(k))  # Φ(−k): precisa aunque k sea grande
+    lcl, ucl = (-np.log1p(-cola)) ** (1.0 / forma), (-np.log(cola)) ** (1.0 / forma)  # percentiles de la Weibull de escala 1
+    if method == "numeric":
+        return _aplicar(scale_ratio, lambda r: _inverso(float(-np.expm1(-((lcl / r) ** forma)) + np.exp(-((ucl / r) ** forma)))),
+                        _val_escala)
+    rng = np.random.default_rng(seed)
+    return _aplicar(scale_ratio, lambda r: _simular_iid(
+        lambda g, m: r * g.weibull(forma, m), lambda t: (t < lcl) | (t > ucl), n_runs, rng), _val_escala)

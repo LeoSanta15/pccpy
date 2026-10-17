@@ -213,8 +213,8 @@ def test_s009_rf_07_la_p_y_la_u_con_tamano_constante_son_la_np_y_la_c():
 def test_s009_rf_07_sin_senal_posible_el_arl_es_infinito():
     """S009-RF-07 (caso borde): con p1 = 0 no hay defectuosos y, con LCI = 0, la carta nunca señala → ARL = ∞."""
     assert pp.arl_binomial(100, 0.05, 0.0) == math.inf
-    assert pp.arl_poisson(9.0, 0.0) > 1.0  # c1 = 0 con LCI > 0: la carta señala en el primer punto
-    assert pp.arl_poisson(9.0, 0.0) == pytest.approx(1.0)
+    assert pp.arl_poisson(9.0, 0.0) == math.inf  # c0 = 9: LCI = 0, nada por debajo y 0 no supera el UCL
+    assert pp.arl_poisson(16.0, 0.0) == pytest.approx(1.0)  # c0 = 16: LCI = 4 > 0; con c1 = 0 el primer punto (0) señala
 
 
 def test_s009_rf_07_el_arl_baja_al_empeorar_el_proceso_y_coincide_con_el_monte_carlo():
