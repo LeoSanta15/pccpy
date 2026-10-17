@@ -1,12 +1,12 @@
 # Plan — 008 Leyenda de las dos sumas en el gráfico de la CUSUM
 
 - **Especificación:** [spec.md](spec.md)
-- **Respeta la constitución:** sí (principios 3, 5 y 7; ver las preguntas abiertas sobre opt-in).
+- **Respeta la constitución:** sí (principios 3, 5 y 7; el cambio visual se avisa en el CHANGELOG).
 
 ## Diseño
 
 - `plotting.py`, `_draw_panel`: poner `label=` a las dos líneas del panel con `secondary` y llamar a `ax.legend()` solo
-  en ese caso. El panel azul pasa a llamarse «Suma superior» y la naranja «Suma inferior». Las demás líneas del panel
+  en ese caso. La línea azul pasa a llamarse «C+ (suma superior)» y la naranja «C- (suma inferior)». Las demás líneas del panel
   no llevan etiqueta, para que la leyenda tenga solo dos entradas.
 - `charts/timeweighted.py` y `charts/timeweighted_attr.py` no cambian: el dibujo ya recibe `secondary`. Hoy `secondary`
   solo lo usan esas dos cartas; si otra carta lo usara con otro significado, habría que añadir un campo al panel con el
@@ -19,8 +19,6 @@
 |---|---|---|
 | Leyenda con `ax.legend()` en el panel | Etiquetas al borde como LCS/LC/LCI | Las dos series se solapan en el eje; un nombre junto al borde no dice cuál es cuál |
 | Nombre derivado del hecho de que haya `secondary` | Campo nuevo en `Panel` | Cambio mínimo; el campo solo se necesita si aparece otro uso |
-
-(Provisional hasta resolver las preguntas abiertas de la spec.)
 
 ## Validación independiente
 

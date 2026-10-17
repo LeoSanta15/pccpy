@@ -25,12 +25,12 @@ Afecta a las dos cartas con una segunda serie: `cusum_chart` y la CUSUM de atrib
 
 ### S008-RF-01 — Leyenda en los paneles con segunda serie
 
-El sistema debe mostrar, en todo panel que dibuje una segunda serie, una leyenda con un nombre para cada serie: «Suma
-superior» para la primera y «Suma inferior» para la segunda.
+El sistema debe mostrar siempre, en todo panel que dibuje una segunda serie, una leyenda con un nombre para cada serie:
+«C+ (suma superior)» para la primera y «C- (suma inferior)» para la segunda.
 
 **Aceptación:**
 - **Dado** `cusum_chart(...)` (y la CUSUM de atributos) **cuando** se dibuja con `plot()` **entonces** el eje del panel
-  tiene una leyenda con dos entradas, «Suma superior» y «Suma inferior», asociadas a las líneas azul y naranja.
+  tiene una leyenda con dos entradas, «C+ (suma superior)» y «C- (suma inferior)», asociadas a las líneas azul y naranja.
 - **Dado** una carta sin segunda serie (I-MR, Xbar-R, EWMA, G, T…) **cuando** se dibuja **entonces** ningún panel tiene
   leyenda.
 - **Referencia independiente:** no es un resultado numérico; se comprueba inspeccionando los objetos de matplotlib (las
@@ -75,12 +75,10 @@ No se ha comparado con el gráfico de Minitab (no se puede ejecutar aquí); no s
 
 ## Decisiones de la persona responsable
 
-(pendiente)
+1. **Siempre visible:** la leyenda se muestra siempre en los paneles con segunda serie. No se añade un parámetro para
+   quitarla (cambio mínimo); si más adelante hiciera falta, sería otra especificación. Descartado: dejarla opt-in.
+2. **Nombres:** «C+ (suma superior)» y «C- (suma inferior)». Descartado: «Suma superior» y «Suma inferior» sin la notación.
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: ¿La leyenda se muestra siempre en estos paneles, o solo con un parámetro (`plot(legend=True)`)?
-  Propuesta: siempre, porque sin ella el gráfico es ambiguo, con `legend=False` para quitarla. La alternativa opt-in es
-  más conservadora (principio 3 de la constitución) pero deja el gráfico ambiguo por defecto.]
-- [NECESITA ACLARACIÓN: nombres de las entradas. Propuesta: «Suma superior» y «Suma inferior». Alternativa: «C⁺ (suma
-  superior)» y «C⁻ (suma inferior)», más cercana a la notación de los libros pero menos legible para quien no la conoce.]
+Ninguna.
