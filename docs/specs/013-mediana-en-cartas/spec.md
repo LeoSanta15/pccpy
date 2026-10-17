@@ -1,6 +1,6 @@
 # 013 — Mediana en las cartas de variables
 
-- **Estado:** borrador
+- **Estado:** aprobada
 - **Identificador:** S013
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.6 (no cambia ningún resultado existente: opción nueva y función nueva)

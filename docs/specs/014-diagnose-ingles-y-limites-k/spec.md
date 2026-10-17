@@ -1,6 +1,6 @@
 # 014 — Valores en inglés de `diagnose()` y ancho de los límites de control
 
-- **Estado:** borrador
+- **Estado:** aprobada
 - **Identificador:** S014
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.6 (decisión de la persona responsable; la parte A es incompatible y se anuncia en el CHANGELOG, sin alias; la parte B no cambia ningún resultado con `k=3`).
