@@ -53,7 +53,7 @@ def _draw_panel(ax, panel: Panel, zones: bool = True) -> None:
         if panel.secondary is not None and panel.secondary[i] < panel.lcl[i]:
             y = panel.secondary[i]
         ax.plot(x[i], y, "s", color=RED, ms=7, zorder=4)
-        ax.annotate(",".join(map(str, sorted(ts))), (x[i], y), textcoords="offset points",
+        ax.annotate(",".join(sorted(map(str, ts))), (x[i], y), textcoords="offset points",
                     xytext=(0, 7), ha="center", fontsize=8, color=RED)
 
     if len(labels) > 1:

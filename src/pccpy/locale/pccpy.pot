@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-16 21:56+0000\n"
+"POT-Creation-Date: 2026-10-16 23:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2987,6 +2987,9 @@ msgid "Puntaje acumulado"
 msgstr ""
 
 msgid "Punto rojo — detener y corregir"
+msgstr ""
+
+msgid "Racha de conteos consecutivos iguales a 0 (prueba de Benneyan)"
 msgstr ""
 
 msgid "Racha más larga (arriba/abajo)"

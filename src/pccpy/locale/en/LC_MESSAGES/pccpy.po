@@ -3043,6 +3043,9 @@ msgstr "Cumulative score"
 msgid "Punto rojo — detener y corregir"
 msgstr "Red point — stop and correct"
 
+msgid "Racha de conteos consecutivos iguales a 0 (prueba de Benneyan)"
+msgstr "Run of consecutive counts equal to 0 (Benneyan test)"
+
 msgid "Racha más larga (arriba/abajo)"
 msgstr "Longest run (up/down)"
 

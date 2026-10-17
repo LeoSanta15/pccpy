@@ -28,7 +28,7 @@ class StagePanel:
     family: str = "full"  # 'full' | 'basic' | 'only1' (ver rules.FAMILIES)
     secondary: np.ndarray | None = None
     symmetric: bool = True
-    violations: dict[int, np.ndarray] | None = None  # si viene dado, se omiten las pruebas
+    violations: dict[int | str, np.ndarray] | None = None  # si viene dado, se omiten las pruebas
 
 
 def full(value, n: int) -> np.ndarray:
@@ -64,12 +64,13 @@ def build_chart(
             if sp.secondary is not None:
                 a["secondary"].append(sp.secondary)
 
+            found: dict[int | str, np.ndarray]
             if sp.violations is not None:
                 found = sp.violations
             else:
                 allowed = rules.FAMILIES[sp.family]
                 wanted = [t for t in tests if t in allowed]
-                found = rules.apply_tests(sp.values, sp.center, sp.sigma, wanted, test_params)
+                found = dict(rules.apply_tests(sp.values, sp.center, sp.sigma, wanted, test_params).items())
             for t, ii in found.items():
                 a["viol"].setdefault(t, []).append(np.asarray(ii, dtype=int) + int(idx[0]))
 
@@ -78,7 +79,7 @@ def build_chart(
         sp = a["sp"]
         viol = {
             t: (np.concatenate(v) if v else np.array([], dtype=int))
-            for t, v in sorted(a["viol"].items())
+            for t, v in sorted(a["viol"].items(), key=lambda kv: str(kv[0]))
         }
         panels_out.append(
             Panel(
