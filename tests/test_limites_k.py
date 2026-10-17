@@ -417,7 +417,8 @@ def test_s014_rf_13_el_readme_documenta_k_alpha_y_su_fragmento_corre(nombre):
     m = re.search(ENCABEZADO[nombre], texto, re.MULTILINE)
     assert m, f"{nombre}: falta la sección de `k` y `alpha`"
     seccion = texto[m.start():]
-    seccion = seccion[: re.search(r"^## ", seccion[3:], re.MULTILINE).start() + 3] if re.search(r"^## ", seccion[3:], re.MULTILINE) else seccion
+    siguiente = re.search(r"^#{2,3} ", seccion[3:], re.MULTILINE)
+    seccion = seccion[: siguiente.start() + 3] if siguiente else seccion
     for palabra in ("k_from_confidence", "rescale_zones"):
         assert palabra in seccion
     bloques = re.findall(r"```python\n(.*?)```", seccion, re.DOTALL)

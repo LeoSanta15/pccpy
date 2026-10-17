@@ -4217,3 +4217,6 @@ msgstr ""
 
 msgid "k_inf"
 msgstr ""
+
+msgid "Ancho de los límites de control (k y alpha) en las cartas de Shewhart"
+msgstr ""

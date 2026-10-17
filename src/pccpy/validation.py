@@ -1109,6 +1109,54 @@ def _probabilidad_cartas():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("limites-k", N_("Ancho de los límites de control (k y alpha) en las cartas de Shewhart"),
+               "Fórmulas de Montgomery con las constantes de sus tablas (d2, d3, c4, c5 de n = 5), fórmulas binomial y de Poisson a mano y "
+               "tabla normal estándar; especificación 014", 5e-4, relative=True)
+def _limites_k():
+    from .charts.attributes import c_chart, p_chart
+    from .charts.variables import imr_chart, xbar_r_chart, xbar_s_chart
+
+    d2_5, d3_5, c4_5 = 2.326, 0.864, 0.9400            # Montgomery, tabla de factores (n = 5)
+    c5_5 = math.sqrt(1.0 - c4_5 ** 2)
+    rng = np.random.default_rng(14)
+    esperado, obtenido = [], []
+    # I-MR con k = (3, 2): UCL = x̄ + 3σ y LCL = x̄ − 2σ, con σ = MR̄ / d2(2) y d2(2) = 2/√π
+    x = rng.normal(10, 1, 80)
+    s = float(np.mean(np.abs(np.diff(x))) / (2.0 / math.sqrt(math.pi)))
+    ci = imr_chart(x, k=(3, 2))["I"]
+    esperado += [x.mean() + 3 * s, x.mean() - 2 * s]
+    obtenido += [ci.ucl[0], ci.lcl[0]]
+    # Xbar-R y Xbar-S (n = 5) con k = 2: x̿ ± 2σ/√5 y límites de R y S con las constantes de la tabla
+    g = rng.normal(50, 2, (25, 5))
+    sr = float(np.mean(g.max(axis=1) - g.min(axis=1)) / d2_5)
+    xr = xbar_r_chart(g, k=2)
+    esperado += [g.mean() + 2 * sr / math.sqrt(5), d2_5 * sr + 2 * d3_5 * sr]
+    obtenido += [xr["Xbar"].ucl[0], xr["R"].ucl[0]]
+    ss = float(np.mean(g.std(axis=1, ddof=1)) / c4_5)
+    xs = xbar_s_chart(g, k=2)
+    esperado.append(c4_5 * ss + 2 * c5_5 * ss)
+    obtenido.append(xs["S"].ucl[0])
+    # P con n variable y C: p̄ ± k √(p̄(1−p̄)/nᵢ) y c̄ ± k √c̄
+    n = rng.integers(80, 160, 30)
+    d = rng.binomial(n, 0.06)
+    pbar = d.sum() / n.sum()
+    esperado += list(pbar + 2 * np.sqrt(pbar * (1 - pbar) / n))
+    obtenido += list(p_chart(d, n, k=2)["P"].ucl)
+    c = rng.poisson(6, 30)
+    esperado.append(c.mean() + 2.5 * math.sqrt(c.mean()))
+    obtenido.append(c_chart(c, k=2.5)["C"].ucl[0])
+    # probabilidad de falsa alarma con k = (3, 2): Φ(−3) + Φ(−2); alpha unilateral (0.00135, 0.025) ↔ k = (3, 1.96)
+    esperado.append(0.0013498980316301 + 0.0227501319481792)
+    obtenido.append(imr_chart(x, mu=10.0, sigma=1.0, k=(3, 2)).probability().probability)
+    esperado += [3.0, 1.959964]
+    prm = imr_chart(x, alpha=(0.0013498980316301, 0.025)).params[0]
+    obtenido += [prm["k_upper"], prm["k_lower"]]
+    from . import k_from_confidence
+    esperado += [1.959964, 2.575829]                  # tabla normal estándar
+    obtenido += [k_from_confidence(0.95), k_from_confidence(0.99)]
+    return np.array(esperado), np.array(obtenido)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 

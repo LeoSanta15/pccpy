@@ -32,7 +32,7 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Verificación y cierre
 
-- [ ] Comprobaciones en `run_validation()` (RF-04, RF-05, RF-10).
-- [ ] Documentación, README (es/en), traducciones y CHANGELOG (S014-RF-13).
-- [ ] `make check` en verde.
-- [ ] Estado de la especificación → `implementada`.
+- [x] Comprobaciones en `run_validation()` (RF-04, RF-05, RF-10).
+- [x] Documentación, README (es/en), traducciones y CHANGELOG (S014-RF-13).
+- [x] `make check` en verde.
+- [x] Estado de la especificación → `implementada`.

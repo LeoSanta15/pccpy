@@ -4274,3 +4274,6 @@ msgstr "k_upper"
 
 msgid "k_inf"
 msgstr "k_lower"
+
+msgid "Ancho de los límites de control (k y alpha) en las cartas de Shewhart"
+msgstr "Width of the control limits (k and alpha) on Shewhart charts"

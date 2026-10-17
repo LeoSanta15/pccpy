@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 21:53+0000\n"
+"POT-Creation-Date: 2026-10-17 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -127,6 +127,24 @@ msgstr "Rbar and Sbar sigma with unequal subgroups"
 msgid "Constantes de Montgomery y pesos de varianza inversa escritos aparte"
 msgstr "Montgomery constants and inverse-variance weights written separately"
 
+msgid "Prueba de Benneyan de la carta G"
+msgstr "Benneyan test of the G chart"
+
+msgid "Menor c con `p^c ≤ 1 − Φ(k)` buscado por potencias exactas; tasa de falsas alarmas por simulación (20 semillas)"
+msgstr "Smallest c with `p^c ≤ 1 − Φ(k)` found by exact powers; false alarm rate by simulation (20 seeds)"
+
+msgid "ARL de las cartas Shewhart, S, R, NP, C, G y T"
+msgstr "ARL of the Shewhart, S, R, NP, C, G and T charts"
+
+msgid "Fórmulas cerradas con SciPy (ji cuadrada, geométrica, Weibull), enumeración exacta (binomial y Poisson) e integral del rango escrita aparte"
+msgstr "Closed formulas with SciPy (chi-square, geometric, Weibull), exact enumeration (binomial and Poisson) and the range integral written separately"
+
+msgid "ARL de la CUSUM y de la EWMA"
+msgstr "ARL of the CUSUM and the EWMA"
+
+msgid "Simulación propia con 20 semillas fijas; la literatura (de memoria) solo se cita como contraste"
+msgstr "Own simulation with 20 fixed seeds; the literature (from memory) is only cited as a contrast"
+
 msgid "Gage R&R con la interacción agrupada"
 msgstr "Gage R&R with the interaction pooled"
 
@@ -193,6 +211,12 @@ msgstr "Hotelling's T² and MEWMA"
 msgid "Fórmulas y límites conocidos"
 msgstr "Known formulas and limits"
 
+msgid "Ancho de los límites (`k`, `alpha`)"
+msgstr "Width of the limits (`k`, `alpha`)"
+
+msgid "Fórmulas de Montgomery con las constantes de sus tablas, fórmulas binomial y de Poisson a mano y tabla normal estándar"
+msgstr "Montgomery's formulas with the constants of his tables, binomial and Poisson formulas by hand and the standard normal table"
+
 msgid "Qué no es"
 msgstr "What it is not"
 
@@ -238,21 +262,3 @@ msgstr "Text summary: passed checks and, if any, the failed ones."
 msgid "Informe completo en Markdown: entorno, resultado de cada comprobación y referencias."
 msgstr "Full report in Markdown: environment, result of each check and references."
 
-
-msgid "Prueba de Benneyan de la carta G"
-msgstr "Benneyan test of the G chart"
-
-msgid "Menor c con `p^c ≤ 1 − Φ(k)` buscado por potencias exactas; tasa de falsas alarmas por simulación (20 semillas)"
-msgstr "Smallest c with `p^c ≤ 1 − Φ(k)` found by exact powers; false alarm rate by simulation (20 seeds)"
-
-msgid "ARL de las cartas Shewhart, S, R, NP, C, G y T"
-msgstr "ARL of the Shewhart, S, R, NP, C, G and T charts"
-
-msgid "Fórmulas cerradas con SciPy (ji cuadrada, geométrica, Weibull), enumeración exacta (binomial y Poisson) e integral del rango escrita aparte"
-msgstr "Closed formulas with SciPy (chi-square, geometric, Weibull), exact enumeration (binomial and Poisson) and the range integral written separately"
-
-msgid "ARL de la CUSUM y de la EWMA"
-msgstr "ARL of the CUSUM and the EWMA"
-
-msgid "Simulación propia con 20 semillas fijas; la literatura (de memoria) solo se cita como contraste"
-msgstr "Own simulation with 20 fixed seeds; the literature (from memory) is only cited as a contrast"

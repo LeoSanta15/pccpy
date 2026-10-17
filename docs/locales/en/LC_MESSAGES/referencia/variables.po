@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-09 19:13+0000\n"
+"POT-Creation-Date: 2026-10-17 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -56,6 +56,15 @@ msgstr "Normalizes the data before computing the chart (useful with skewed data)
 msgid "Con ``transform``: escala en que se guarda y dibuja el panel I. ``'original'`` (por defecto) devuelve los valores, los límites y las líneas de 1 y 2 sigma en unidades originales (los límites quedan asimétricos); el panel MR se queda en la escala transformada. ``'transformed'`` deja todo en la escala transformada."
 msgstr "With ``transform``: scale on which the I panel is stored and drawn. ``'original'`` (default) returns the values, the limits and the 1- and 2-sigma lines in original units (the limits become asymmetric); the MR panel stays on the transformed scale. ``'transformed'`` leaves everything on the transformed scale."
 
+msgid "Ancho de los límites en sigmas (por defecto 3). Un número da límites simétricos; una pareja ``(k_superior, k_inferior)``, límites distintos arriba y abajo. La prueba 1 marca lo que sale de los límites dibujados (salvo que ``test_params`` traiga su propio umbral para la 1). No se combina con ``alpha``."
+msgstr "Width of the limits in sigmas (default 3). A number gives symmetric limits; a ``(k_upper, k_lower)`` pair gives different limits above and below. Test 1 flags what falls outside the plotted limits (unless ``test_params`` brings its own threshold for test 1). It is not combined with ``alpha``."
+
+msgid "Probabilidad de falsa alarma en lugar de ``k``: un número es **bilateral** (``k = Φ⁻¹(1 − α/2)``); una pareja ``(alpha_superior, alpha_inferior)`` es **unilateral** por lado (``k = Φ⁻¹(1 − α)``). Es exacta en el panel I (normal) y aproximada en el panel MR; ``carta.probability()`` da la probabilidad real."
+msgstr "False-alarm probability instead of ``k``: a number is **two-sided** (``k = Φ⁻¹(1 − α/2)``); an ``(alpha_upper, alpha_lower)`` pair is **one-sided** per side (``k = Φ⁻¹(1 − α)``). It is exact on the I panel (normal) and approximate on the MR panel; ``chart.probability()`` gives the real probability."
+
+msgid "Por defecto las zonas de las pruebas 2 a 8 siguen en 1σ y 2σ aunque cambie ``k``. Con ``True`` pasan a ``k/3`` y ``2k/3`` sigmas de cada lado."
+msgstr "By default the zones of tests 2 to 8 stay at 1σ and 2σ even if ``k`` changes. With ``True`` they become ``k/3`` and ``2k/3`` sigmas on each side."
+
 msgid "Tipo del valor devuelto"
 msgstr "Return type"
 
@@ -79,6 +88,9 @@ msgstr "``sigma_method``: ``'rbar'`` (the default) or ``'pooled'``. With unequal
 
 msgid "``transform`` y ``scale`` funcionan como en :func:`imr_chart`: se normalizan todas las observaciones, los límites y las pruebas se calculan en la escala transformada y, con ``scale='original'`` (por defecto), el panel X̄ se devuelve en unidades originales; el panel R queda en la escala transformada."
 msgstr "``transform`` and ``scale`` work as in :func:`imr_chart`: all observations are normalized, the limits and the tests are computed on the transformed scale and, with ``scale='original'`` (default), the X̄ panel is returned in original units; the R panel stays on the transformed scale."
+
+msgid "``k``, ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart`: ``k`` en sigmas del estadístico (un número o una pareja ``(superior, inferior)``) o ``alpha`` como probabilidad de falsa alarma. Los paneles de dispersión usan el mismo ``k``; allí ``alpha`` es una aproximación (la probabilidad real la da ``carta.probability()``)."
+msgstr "``k``, ``alpha`` and ``rescale_zones`` adjust the width of the limits and the zones as in :func:`imr_chart`: ``k`` in sigmas of the statistic (a number or an ``(upper, lower)`` pair) or ``alpha`` as a false-alarm probability. The dispersion panels use the same ``k``; there ``alpha`` is an approximation (the real probability is given by ``chart.probability()``)."
 
 msgid "Carta X-barra y S (Stat > Control Charts > Xbar-S)."
 msgstr "X-bar and S chart (Stat > Control Charts > Xbar-S)."

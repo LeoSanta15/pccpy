@@ -122,9 +122,12 @@ def zmr_chart(
         ``'relative'`` debe estar en escala logarítmica. Si no se da, se estima.
     sigma : float o dict, opcional
         Sigma histórica: un número para todas las partes o ``{parte: valor}``.
-
-    ``k``, ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart` (``k`` en sigmas, un
-    número o una pareja ``(superior, inferior)``; ``alpha`` como probabilidad de falsa alarma).
+    k : float | (float, float), opcional
+        Ancho de los límites en sigmas (por defecto 3); una pareja ``(superior, inferior)`` da límites distintos. Como en :func:`imr_chart`.
+    alpha : float | (float, float), opcional
+        Probabilidad de falsa alarma en lugar de ``k`` (un número es bilateral; una pareja, unilateral por lado).
+    rescale_zones : bool
+        Mide las zonas de las pruebas 2 a 8 en tercios de ``k`` en lugar de 1σ y 2σ.
     """
     limits = resolve_limits(k, alpha, rescale_zones)
     ku, kl = limits.upper, limits.lower

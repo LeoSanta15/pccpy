@@ -500,6 +500,40 @@ constant size the weights are equal and the result is the usual simple average.
 
 ---
 
+### Width of the limits (`k` and `alpha`)
+
+The limits of the I-MR, Xbar-R, Xbar-S, P, NP, C, U, Laney, Z-MR and I-MR-R/S charts are at ±3σ by default. `k` (in sigmas) or `alpha`
+(false-alarm probability) adjust them; the two options are mutually exclusive and take a value or an `(upper, lower)` pair.
+
+```python
+chart = pp.imr_chart(x, k=2)                      # limits at ±2σ
+chart = pp.imr_chart(x, k=(3, 2))                 # UCL at 3σ and LCL at 2σ
+
+# alpha: one value is two-sided; a pair is one-sided per side (upper, lower)
+chart = pp.imr_chart(x, alpha=0.0455)             # same as k = 2
+chart = pp.imr_chart(x, alpha=(0.00135, 0.025))   # same as k = (3, 1.96)
+
+# From a two-sided confidence to k
+k = pp.k_from_confidence(0.99)                    # 2.576
+chart = pp.xbar_r_chart(x, subgroup_size=5, k=k)
+
+# The zones of tests 2 to 8 stay at 1σ and 2σ; with rescale_zones they are measured in thirds of k
+chart = pp.imr_chart(x, k=2, rescale_zones=True)
+```
+
+| `k` | Two-sided confidence (normal panel) |
+|-----|-------------------------------------|
+| 2 | 95.45 % |
+| 2.576 | 99 % |
+| 3 | 99.73 % |
+
+- Test 1 flags what falls outside the plotted limits. If you also give `test_params={1: ...}`, that value wins and a warning is issued.
+- `k` and `alpha` are exact on normal panels (I and Xbar). On R, S, MR and the attribute charts `alpha` is an approximation:
+  `chart.probability()` gives the real false-alarm probability.
+- `chart.params[0]["k_upper"]` and `["k_lower"]` store the widths used. It was not checked whether Minitab allows a width other than 3σ on each chart.
+
+---
+
 ### Data input formats
 
 The subgroup charts (`xbar_r_chart`, `xbar_s_chart`, `ewma_chart`, `cusum_chart`,

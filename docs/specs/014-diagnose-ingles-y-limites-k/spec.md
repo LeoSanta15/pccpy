@@ -1,6 +1,6 @@
 # 014 — Valores en inglés de `diagnose()` y ancho de los límites de control
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S014
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.6 (decisión de la persona responsable; la parte A es incompatible y se anuncia en el CHANGELOG, sin alias; la parte B no cambia ningún resultado con `k=3`).
@@ -58,7 +58,7 @@ traducción de `_tendencia()`, los golden y el CHANGELOG.
 
 ### S014-RF-04 — `k` en I-MR, Xbar-R y Xbar-S
 
-`imr_chart`, `xbar_r_chart` y `xbar_s_chart` ganan `k: float | tuple[float, float] = 3.0` y `alpha: float | tuple[float, float] | None = None` (S014-RF-11: son excluyentes
+`imr_chart`, `xbar_r_chart` y `xbar_s_chart` ganan `k: float | tuple[float, float] | None = None` (sin `k` ni `alpha`, 3) y `alpha: float | tuple[float, float] | None = None` (S014-RF-11: son excluyentes
 y `alpha` se convierte en `k`). **Un valor** `k`: límites simétricos `centro ± k·σ` (`σ/√nᵢ` en Xbar). **Un par** `(k_sup, k_inf)`: `UCL = centro + k_sup·σ` y `LCL = centro − k_inf·σ`.
 En los paneles de dispersión (MR, R, S): `UCL = centro + k_sup·sd` y `LCL = max(0, centro − k_inf·sd)`, con `sd` la desviación del estadístico (`d3·σ` o `c5·σ`).
 
@@ -110,7 +110,7 @@ devuelven a la escala original (asimétricos, como hoy). Con `stages` el mismo `
 
 ### S014-RF-10 — Resultado y coherencia con `probability()` y `arl_*`
 
-`chart.params[i]` guarda `k_upper` y `k_lower` (claves en inglés, spec 012; `summary()` los muestra traducidos), iguales cuando el usuario dio un solo valor. `chart.probability()` sin argumentos refleja los límites con `k`.
+`chart.params[i]` guarda `k_upper` y `k_lower` (claves en inglés, spec 012; `summary()` los muestra traducidos como `k_sup` y `k_inf`, y solo si no son los dos 3, para que el resumen por defecto no cambie), iguales cuando el usuario dio un solo valor. `chart.probability()` sin argumentos refleja los límites con `k`.
 
 **Aceptación:**
 - **Dado** un I con `k=2` **cuando** `probability()` sin argumentos **entonces** es `2·Φ(−2) = 0,0455` y su inversa coincide con `arl_shewhart(k=2)`; con `k=(3, 2)` es `Φ(−3) + Φ(−2)` (cálculo con `scipy.stats.norm`).
