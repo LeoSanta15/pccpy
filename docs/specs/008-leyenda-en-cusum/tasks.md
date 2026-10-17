@@ -5,9 +5,9 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan
 
-- [ ] Test de S008-RF-01 (falla hoy: el panel de la CUSUM no tiene leyenda); incluye la guarda de las cartas sin segunda serie.
-- [ ] Test de S008-RF-02 (guarda: pasa antes y después; compara datos y `rcParams`).
-- [ ] Test de S008-RF-03 (falla hoy: no hay texto que traducir).
+- [x] Test de S008-RF-01 (falla hoy: el panel de la CUSUM no tiene leyenda); incluye la guarda de las cartas sin segunda serie.
+- [x] Test de S008-RF-02 (guarda: pasa antes y después; compara datos y `rcParams`).
+- [x] Test de S008-RF-03 (falla hoy: no hay texto que traducir).
 
 ## Fase 1 — Implementación
 

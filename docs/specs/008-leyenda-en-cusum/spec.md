@@ -1,6 +1,6 @@
 # 008 — Leyenda de las dos sumas en el gráfico de la CUSUM
 
-- **Estado:** borrador
+- **Estado:** aprobada
 - **Identificador:** S008
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.4 (cambia solo el dibujo, no los resultados; parche según CLAUDE.md)
