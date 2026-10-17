@@ -3,7 +3,7 @@
 - **Estado:** borrador
 - **Identificador:** S014
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** [NECESITA ACLARACIÓN: 0.15.6 o 0.16.0. La parte A (`trend_direction`) es incompatible; la parte B no cambia ningún resultado con `k=3`. Por la regla de CLAUDE.md, un cambio incompatible pide versión menor (0.16.0).]
+- **Versión objetivo:** 0.15.6 (decisión de la persona responsable; la parte A es incompatible y se anuncia en el CHANGELOG, sin alias; la parte B no cambia ningún resultado con `k=3`).
 
 Fusiona las antiguas especificaciones 014 (dirección de la tendencia) y 015 (ancho de los límites), por decisión de la persona responsable.
 
@@ -173,4 +173,4 @@ README (es/en), `docs/source`, docstrings y una advertencia: `k` no es un nivel 
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: versión objetivo (0.15.6 o 0.16.0).]
+Ninguna.
