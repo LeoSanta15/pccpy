@@ -1,30 +1,11 @@
 # Registro de cambios
 
-## [Sin publicar] - probabilidad de un valor en las cartas de control
+## [0.15.5] - claves en inglés, probabilidad de un valor en las cartas y figuras en el README
 
-No cambia ningún resultado existente: método nuevo y campos nuevos. Especificación `docs/specs/011-probabilidad-cartas`.
-
-### Añadido
-- **`ControlChart.probability(panel=…, below=…, above=…, between=…, point=…)`**: la probabilidad de un valor del estadístico que grafica una
-  carta, con el proceso en control y los parámetros de la carta tratados como conocidos. Cada panel guarda ahora la distribución de su
-  estadístico por punto (`Panel.dist`): normal en I, Xbar y EWMA; rango de normales en MR y R (`scipy.stats.studentized_range`);
-  σ·√(χ²ₙ₋₁/(n−1)) en S; binomial en P y NP; Poisson en C y U; geométrica en G y Weibull en T. En las cartas de atributos la desigualdad es
-  estricta sobre el conteo (en P y U el valor es la proporción o los defectos por unidad). Sin argumentos da la probabilidad de que un punto
-  salga de los límites (la falsa alarma de la prueba 1): su inversa coincide con el ARL en control de `arl_shewhart`, `arl_range`, `arl_sd`,
-  `arl_binomial`, `arl_poisson`, `arl_g` y `arl_t`. Cuando la distribución cambia de un punto a otro (tamaño de muestra variable, etapas, EWMA)
-  hay que indicar `point=` (base 1; un entero o un arreglo) o lanza `ValueError`. Con `transform=` los valores de los paneles I y Xbar van en
-  unidades originales. No lo admiten la CUSUM, la media móvil, la carta de zona, las de Laney ni las multivariadas (`ValueError`).
-- **`ProbabilityResult` de las cartas:** es el mismo de la capacidad (010) con dos campos opcionales nuevos, `panel` y `point`; en una carta
-  `dpmo`, `dpu` y `sigma` valen `None` y `to_frame()` muestra las columnas `panel` y `point`. En capacidad nada cambia.
-- Una comprobación más en la validación (63 en total) con fórmulas escritas aparte (integral del rango, gamma incompleta, sumas de la
-  binomial y de la Poisson, geométrica y Weibull cerradas), sección en la guía del ARL y en el README (es/en). Que Minitab ofrezca un cálculo
-  equivalente no está verificado.
-
-## [Sin publicar] - claves en inglés en los resultados de las cartas
-
-Cambio **incompatible** (sin alias; se publica en 0.15.5 por decisión de la persona responsable): los datos con clave de los
-resultados de las cartas pasan al inglés. Principio: el código está en inglés en cualquier idioma y solo las salidas dependen del
-idioma. Con el idioma español, lo que muestra `summary()` es idéntico al de 0.15.4. Especificación `docs/specs/012-claves-en-ingles`.
+Esta versión tiene un **cambio incompatible** (publicado como 0.15.5 por decisión de la persona responsable): los datos con clave de los
+resultados de las cartas (`chart.params`, `chart.kind` y los nombres de panel de las cartas de zona y de varianza generalizada) pasan al inglés, **sin alias**; ver
+«Cambios que alteran resultados». No cambia ningún valor numérico, y con el idioma español `summary()` es idéntico al de 0.15.4.
+Especificaciones `docs/specs/011-probabilidad-cartas` y `docs/specs/012-claves-en-ingles`.
 
 ### Cambios que alteran resultados
 - **Claves de `chart.params`** (una por etapa): leer `carta.params[0]["media"]` ahora lanza `KeyError`; usa `carta.params[0]["mean"]`.
@@ -42,20 +23,28 @@ idioma. Con el idioma español, lo que muestra `summary()` es idéntico al de 0.
 - **Sin cambios:** los valores numéricos, el formato de los archivos de Fase I (`phase_one(...).to_dict()` y `to_json()`; los guardados con
   0.15.x se siguen leyendo, hay un test con dos archivos de 0.15.4) y lo que muestra `summary()` en español.
 
-### Corregido
-- `summary()`, `to_frame()` y el título del gráfico traducen ahora el nombre de la carta («Zone», «Generalized variance») y de sus paneles:
-  antes el título de la carta de varianza generalizada quedaba en español con el idioma inglés.
-- Identificadores internos en español que pasan a inglés (no son API): los tipos de entrada de la Fase I y un nodo del asistente.
-
-## [Sin publicar] - figuras y salidas de los ejemplos en el README
-
-No cambia ningún resultado numérico ni las claves del código. Con el idioma inglés cambian algunos textos que se muestran (ver «Corregido»); en español todo queda igual.
-
 ### Añadido
+- **`ControlChart.probability(panel=…, below=…, above=…, between=…, point=…)`**: la probabilidad de un valor del estadístico que grafica una
+  carta, con el proceso en control y los parámetros de la carta tratados como conocidos. Cada panel guarda ahora la distribución de su
+  estadístico por punto (`Panel.dist`): normal en I, Xbar y EWMA; rango de normales en MR y R (`scipy.stats.studentized_range`);
+  σ·√(χ²ₙ₋₁/(n−1)) en S; binomial en P y NP; Poisson en C y U; geométrica en G y Weibull en T. En las cartas de atributos la desigualdad es
+  estricta sobre el conteo (en P y U el valor es la proporción o los defectos por unidad). Sin argumentos da la probabilidad de que un punto
+  salga de los límites (la falsa alarma de la prueba 1): su inversa coincide con el ARL en control de `arl_shewhart`, `arl_range`, `arl_sd`,
+  `arl_binomial`, `arl_poisson`, `arl_g` y `arl_t`. Cuando la distribución cambia de un punto a otro (tamaño de muestra variable, etapas, EWMA)
+  hay que indicar `point=` (base 1; un entero o un arreglo) o lanza `ValueError`. Con `transform=` los valores de los paneles I y Xbar van en
+  unidades originales. No lo admiten la CUSUM, la media móvil, la carta de zona, las de Laney ni las multivariadas (`ValueError`).
+- **`ProbabilityResult` de las cartas:** es el mismo de la capacidad (010) con dos campos opcionales nuevos, `panel` y `point`; en una carta
+  `dpmo`, `dpu` y `sigma` valen `None` y `to_frame()` muestra las columnas `panel` y `point`. En capacidad nada cambia.
+- Una comprobación más en la validación (63 en total) con fórmulas escritas aparte (integral del rango, gamma incompleta, sumas de la
+  binomial y de la Poisson, geométrica y Weibull cerradas), sección en la guía del ARL y en el README (es/en). Que Minitab ofrezca un cálculo
+  equivalente no está verificado.
 - **Sección «Ejemplos con resultados» en `README.md` y `README_en.md`**: las 13 figuras de `examples/basic_example.py` y `examples/advanced_example.py` (I-MR, Xbar-R, P, Sixpack, Pareto, Z-MR, I-MR-R, G, Zona, T², MEWMA, MCUSUM y varianza generalizada) con el código y la salida real de cada ejemplo, en español y en inglés (semilla `default_rng(2026)`). La página de PyPI no mostraba ninguna figura porque el README no tenía imágenes y PyPI no resuelve rutas relativas: las figuras (`docs/imagenes/<idioma>/*.png`, paleta de 256 colores, unos 340 KB por idioma) se enlazan con URL absolutas a `raw.githubusercontent.com` (se ven en PyPI desde la siguiente versión publicada). Se regeneran con `python scripts/generar_figuras_readme.py`; `tests/test_readme_imagenes.py` comprueba que existen, que son absolutas y que están todas en los dos README. Las salidas del README son extractos de esos archivos.
 - **Los ejemplos pasan a inglés** (`examples/ejemplo_basico.py` → `basic_example.py`, `ejemplo_avanzado.py` → `advanced_example.py`; carpeta de salida `output/`): identificadores, comentarios y datos en inglés y sin mensajes propios en español, de modo que el código es el mismo en cualquier idioma y lo que cambia con el idioma de pccpy son las salidas, las etiquetas y los gráficos. En `README.md` los nombres de las variables de los fragmentos van en español y en `README_en.md` en inglés (el resto es igual); un test ejecuta los fragmentos en orden y comprueba que imprimen cada línea de salida que muestra el README, en los dos idiomas. Si enlazabas esos dos archivos, cambia la ruta.
 
 ### Corregido
+- `summary()`, `to_frame()` y el título del gráfico traducen ahora el nombre de la carta («Zone», «Generalized variance») y de sus paneles:
+  antes el título de la carta de varianza generalizada quedaba en español con el idioma inglés.
+- Identificadores internos en español que pasan a inglés (no son API): los tipos de entrada de la Fase I y un nodo del asistente.
 - **Textos que seguían en español con el idioma inglés** en `summary()` de las cartas: en la Z-MR, `método=histórica`, `sigma_mín` y `sigma_máx` (ahora `method=historical`, `sigma_min`, `sigma_max`); en la carta de zona, el nombre «Zona» del título, del resumen y de las líneas de violaciones (ahora «Zone»); y la etiqueta de `T2.contributions()` («contribución (punto N)» → «contribution (point N)»). Las claves de `params` y los nombres de panel (`chart["Zona"]`, `params["sigma_mín"]`) **no cambian**: son código y solo se traduce lo que se muestra. Con el idioma español todo queda igual. Quedan claves de `params` en español (`media`, `sigma_dentro`, `tamaño`…): llevarlas al inglés cambiaría la API y necesita su propia especificación.
 
 ## [0.15.4] - ARL, probabilidad de un valor en la capacidad y leyenda de la CUSUM
