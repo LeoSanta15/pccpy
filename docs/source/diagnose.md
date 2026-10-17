@@ -207,7 +207,7 @@ Cpk = min(USL − x̄, x̄ − LSL) / (3 · s)
 | `normality_stat`, `normality_p` | `float` | Estadístico y valor p de la prueba de normalidad. |
 | `is_normal` | `bool` | `True` si `normality_p > 0.05`. |
 | `has_trend` | `bool` | `True` si se detectó tendencia. |
-| `trend_direction` | `str` | `'creciente'`, `'decreciente'` o `''`. |
+| `trend_direction` | `str` | `'increasing'`, `'decreasing'` o `''`. |
 | `outlier_count` | `int` | Número de valores atípicos detectados (IQR). |
 | `outlier_indices` | `list[int]` | Índices de los valores atípicos. |
 | `non_normal_reason` | `str` | `'outliers'`, `'skewed'`, `'shape'` o `''` (si es normal). |

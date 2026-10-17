@@ -4247,3 +4247,30 @@ msgstr "The chart has no known distribution of the plotted statistic."
 
 msgid "Probabilidad de un valor en las cartas de control (normal, rango, S, binomial, Poisson, geométrica y Weibull)"
 msgstr "Probability of a value on control charts (normal, range, S, binomial, Poisson, geometric and Weibull)"
+
+msgid "'confidence' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}."
+msgstr "'confidence' must be a number between 0 and 1 (exclusive); received: {valor!r}."
+
+msgid "'{nombre}' debe ser un número o una pareja (superior, inferior); recibido: {valor!r}."
+msgstr "'{nombre}' must be a number or a pair (upper, lower); received: {valor!r}."
+
+msgid "'rescale_zones' debe ser True o False; recibido: {valor!r}."
+msgstr "'rescale_zones' must be True or False; received: {valor!r}."
+
+msgid "Indica 'k' o 'alpha', no los dos."
+msgstr "Give 'k' or 'alpha', not both."
+
+msgid "'alpha' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}."
+msgstr "'alpha' must be a number between 0 and 1 (exclusive); received: {valor!r}."
+
+msgid "'k' debe ser un número finito mayor que 0 (o una pareja de ellos); recibido: {valor!r}."
+msgstr "'k' must be a finite number greater than 0 (or a pair of them); received: {valor!r}."
+
+msgid "'test_params[1]' ({umbral}) difiere del ancho de los límites (k = {superior} arriba y {inferior} abajo): la prueba 1 usa {umbral} sigmas y marca puntos que no coinciden con los límites dibujados."
+msgstr "'test_params[1]' ({umbral}) differs from the width of the limits (k = {superior} above and {inferior} below): test 1 uses {umbral} sigmas and flags points that do not match the plotted limits."
+
+msgid "k_sup"
+msgstr "k_upper"
+
+msgid "k_inf"
+msgstr "k_lower"

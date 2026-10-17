@@ -11,7 +11,15 @@ from .._i18n import N_, tr
 from .._labels import con_etiquetas
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
-from ._engine import StagePanel, aplicar_escala, build_chart, check_method, full, resolver_transformacion
+from ._engine import (
+    StagePanel,
+    aplicar_escala,
+    build_chart,
+    check_method,
+    full,
+    resolve_limits,
+    resolver_transformacion,
+)
 
 
 @con_etiquetas
@@ -27,6 +35,9 @@ def imr_chart(
     test_params: dict[int, float] | None = None,
     transform=None,
     scale: str = "original",
+    k=None,
+    alpha=None,
+    rescale_zones: bool = False,
 ) -> ControlChart:
     """Carta de valores individuales y rango móvil (Stat > Control Charts > I-MR).
 
@@ -56,7 +67,20 @@ def imr_chart(
         Con ``transform``: escala en que se guarda y dibuja el panel I. ``'original'`` (por defecto) devuelve los
         valores, los límites y las líneas de 1 y 2 sigma en unidades originales (los límites quedan asimétricos);
         el panel MR se queda en la escala transformada. ``'transformed'`` deja todo en la escala transformada.
+    k : float | (float, float), opcional
+        Ancho de los límites en sigmas (por defecto 3). Un número da límites simétricos; una pareja ``(k_superior, k_inferior)``,
+        límites distintos arriba y abajo. La prueba 1 marca lo que sale de los límites dibujados (salvo que ``test_params``
+        traiga su propio umbral para la 1). No se combina con ``alpha``.
+    alpha : float | (float, float), opcional
+        Probabilidad de falsa alarma en lugar de ``k``: un número es **bilateral** (``k = Φ⁻¹(1 − α/2)``); una pareja
+        ``(alpha_superior, alpha_inferior)`` es **unilateral** por lado (``k = Φ⁻¹(1 − α)``). Es exacta en el panel I (normal)
+        y aproximada en el panel MR; ``carta.probability()`` da la probabilidad real.
+    rescale_zones : bool
+        Por defecto las zonas de las pruebas 2 a 8 siguen en 1σ y 2σ aunque cambie ``k``. Con ``True`` pasan a ``k/3`` y
+        ``2k/3`` sigmas de cada lado.
     """
+    limits = resolve_limits(k, alpha, rescale_zones)
+    ku, kl = limits.upper, limits.lower
     x = as_1d_con_huecos(x)
     t = resolver_transformacion(transform, x[np.isfinite(x)], scale)
     x_original = x
@@ -76,25 +100,26 @@ def imr_chart(
             warnings.warn(tr("Sigma estimada = 0 (los datos no varían): los límites de control coinciden con la línea "
                              "central y ningún punto es informativo."), UserWarning, stacklevel=5)
         i_panel = StagePanel(
-            "I", xs, full(m, xs.size), full(m + 3 * s, xs.size), full(m - 3 * s, xs.size), full(s, xs.size),
+            "I", xs, full(m, xs.size), full(m + ku * s, xs.size), full(m - kl * s, xs.size), full(s, xs.size),
             N_("Valor individual"), "full",
             dist={"family": "normal", "loc": full(m, xs.size), "scale": full(s, xs.size)},
         )
         c = dd2 * s
         mr_panel = StagePanel(
-            "MR", moving_range(xs, span), full(c, xs.size), full(c + 3 * dd3 * s, xs.size),
-            full(max(0.0, c - 3 * dd3 * s), xs.size), full(dd3 * s, xs.size),
+            "MR", moving_range(xs, span), full(c, xs.size), full(c + ku * dd3 * s, xs.size),
+            full(max(0.0, c - kl * dd3 * s), xs.size), full(dd3 * s, xs.size),
             N_("Rango móvil"), "only1", symmetric=False,
             dist={"family": "range", "n": full(span, xs.size), "scale": full(s, xs.size)},
         )
         return [i_panel, mr_panel], {"mean": m, "sigma": s, "mr_mean": c, "n": n}
 
-    chart = build_chart("I-MR", x.size, stages, stage_fn, tests, test_params)
+    chart = build_chart("I-MR", x.size, stages, stage_fn, tests, test_params, limits)
     return chart if t is None else aplicar_escala(chart, t, scale, originales=x_original)
 
 
 def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sigma,
-                stages, tests, test_params, value=None, transform=None, scale="original") -> ControlChart:
+                stages, tests, test_params, value=None, transform=None, scale="original", limits=None) -> ControlChart:
+    ku, kl = limits.upper, limits.lower
     g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
     t = resolver_transformacion(transform, g[~np.isnan(g)], scale)
     if t is None:
@@ -118,28 +143,28 @@ def _xbar_chart(kind, disp, data, subgroup_size, subgroup, sigma_method, mu, sig
 
         sig_x = sg / np.sqrt(n_i)
         x_panel = StagePanel(
-            "Xbar", means, full(m, k), m + 3 * sig_x, m - 3 * sig_x, sig_x,
+            "Xbar", means, full(m, k), m + ku * sig_x, m - kl * sig_x, sig_x,
             N_("Media de la muestra"), "full",
             dist={"family": "normal", "loc": full(m, k), "scale": sig_x},
         )
         if disp == "r":
             c, sd = sg * vec(d2, n_i), sg * vec(d3, n_i)
             d_panel = StagePanel(
-                "R", rng, c, c + 3 * sd, np.maximum(0.0, c - 3 * sd), sd,
+                "R", rng, c, c + ku * sd, np.maximum(0.0, c - kl * sd), sd,
                 N_("Rango de la muestra"), "basic", symmetric=False,
                 dist={"family": "range", "n": n_i, "scale": full(sg, k)},
             )
         else:
             c, sd = sg * vec(c4, n_i), sg * vec(c5, n_i)
             d_panel = StagePanel(
-                "S", s_i, c, c + 3 * sd, np.maximum(0.0, c - 3 * sd), sd,
+                "S", s_i, c, c + ku * sd, np.maximum(0.0, c - kl * sd), sd,
                 N_("Desv. est. de la muestra"), "basic", symmetric=False,
                 dist={"family": "sd", "n": n_i, "scale": full(sg, k)},
             )
         size = int(n_i[0]) if n_i.min() == n_i.max() else "variable"
         return [x_panel, d_panel], {"mean": m, "sigma": sg, "subgroups": k, "size": size}
 
-    chart = build_chart(kind, total, stages, stage_fn, tests, test_params)
+    chart = build_chart(kind, total, stages, stage_fn, tests, test_params, limits)
     return chart if t is None else aplicar_escala(chart, t, scale)
 
 
@@ -158,6 +183,9 @@ def xbar_r_chart(
     test_params: dict[int, float] | None = None,
     transform=None,
     scale: str = "original",
+    k=None,
+    alpha=None,
+    rescale_zones: bool = False,
 ) -> ControlChart:
     """Carta X-barra y R (Stat > Control Charts > Xbar-R).
 
@@ -178,10 +206,15 @@ def xbar_r_chart(
     ``transform`` y ``scale`` funcionan como en :func:`imr_chart`: se normalizan todas las observaciones, los límites y
     las pruebas se calculan en la escala transformada y, con ``scale='original'`` (por defecto), el panel X̄ se
     devuelve en unidades originales; el panel R queda en la escala transformada.
+
+    ``k``, ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart`: ``k`` en sigmas del
+    estadístico (un número o una pareja ``(superior, inferior)``) o ``alpha`` como probabilidad de falsa alarma. Los paneles de
+    dispersión usan el mismo ``k``; allí ``alpha`` es una aproximación (la probabilidad real la da ``carta.probability()``).
     """
+    limits = resolve_limits(k, alpha, rescale_zones)
     check_method(sigma_method, ("rbar", "pooled"))
     return _xbar_chart("Xbar-R", "r", data, subgroup_size, subgroup, sigma_method,
-                       mu, sigma, stages, tests, test_params, value=value, transform=transform, scale=scale)
+                       mu, sigma, stages, tests, test_params, value=value, transform=transform, scale=scale, limits=limits)
 
 
 @con_etiquetas
@@ -199,13 +232,21 @@ def xbar_s_chart(
     test_params: dict[int, float] | None = None,
     transform=None,
     scale: str = "original",
+    k=None,
+    alpha=None,
+    rescale_zones: bool = False,
 ) -> ControlChart:
     """Carta X-barra y S (Stat > Control Charts > Xbar-S).
 
     Acepta los mismos formatos de entrada que :func:`xbar_r_chart`, incluidos ``transform`` y ``scale``.
     ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``. Con tamaños desiguales, sigma es el promedio de s_i/c4(n_i)
     ponderado por c4(n_i)²/(1 − c4(n_i)²) (varianza inversa).
+
+    ``k``, ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart`: ``k`` en sigmas del
+    estadístico (un número o una pareja ``(superior, inferior)``) o ``alpha`` como probabilidad de falsa alarma. Los paneles de
+    dispersión usan el mismo ``k``; allí ``alpha`` es una aproximación (la probabilidad real la da ``carta.probability()``).
     """
+    limits = resolve_limits(k, alpha, rescale_zones)
     check_method(sigma_method, ("sbar", "pooled"))
     return _xbar_chart("Xbar-S", "s", data, subgroup_size, subgroup, sigma_method,
-                       mu, sigma, stages, tests, test_params, value=value, transform=transform, scale=scale)
+                       mu, sigma, stages, tests, test_params, value=value, transform=transform, scale=scale, limits=limits)

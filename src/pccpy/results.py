@@ -32,6 +32,7 @@ _PARAMETROS = {
     "points": N_("puntos"), "sigma_known": N_("sigma_conocida"), "sigma_within": N_("sigma_dentro"),
     "sigma_between": N_("sigma_entre"), "sigma_between_within": N_("sigma_entre_dentro"), "variables": N_("variables"),
     "ucl": N_("LCS"), "sigma_min": N_("sigma_mín"), "sigma_max": N_("sigma_máx"),
+    "k_upper": N_("k_sup"), "k_lower": N_("k_inf"),
 }
 # Valores de parámetros que son texto del idioma fuente (no identificadores técnicos como 'mr' o 'weibull').
 _VALORES_PARAMETRO = {"historical": N_("histórica"), "known": N_("parámetros conocidos")}
@@ -53,6 +54,11 @@ def _nombre_parametro(clave) -> str:
 
 def _nombre_visible(nombre):
     return tr(_NOMBRES_VISIBLES[nombre]) if nombre in _NOMBRES_VISIBLES else nombre
+
+
+def _limites_por_defecto(prm) -> bool:
+    """Con los límites a 3σ por los dos lados el resumen no los repite (queda igual que antes de ``k``)."""
+    return prm.get("k_upper") == 3.0 and prm.get("k_lower") == 3.0
 
 
 def _valor_parametro(valor):
@@ -259,7 +265,7 @@ class ControlChart:
             body = ", ".join(
                 f"{_nombre_parametro(k)}={v:.6g}" if isinstance(v, (float, np.floating))
                 else f"{_nombre_parametro(k)}={_valor_parametro(v)}"
-                for k, v in prm.items() if k != "stage"
+                for k, v in prm.items() if k != "stage" and not (k in ("k_upper", "k_lower") and _limites_por_defecto(prm))
             )
             lines.append(f"{head}: {body}")
         if not self.tests:

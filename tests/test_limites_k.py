@@ -150,7 +150,7 @@ def test_s014_rf_05_np_c_u():
 
 def test_s014_rf_05_p_se_recorta_en_0_y_1():
     d = np.array([90, 95, 92, 91, 93])
-    p = pccpy.p_chart(d, np.full(5, 100), k=10)["P"]
+    p = pccpy.p_chart(d, np.full(5, 100), k=40)["P"]
     assert p.ucl.max() == 1.0
     assert p.lcl.min() == 0.0
 
@@ -306,9 +306,12 @@ def test_s014_rf_10_params_guarda_k_upper_y_k_lower(kw, esperado):
 
 def test_s014_rf_10_summary_muestra_las_claves_traducidas():
     c = pccpy.imr_chart(_x(), k=(3, 2))
-    assert "k_upper" in c.summary() or "k_lower" in c.summary()  # claves en inglés, sin traducción para el nombre del parámetro
-    from pccpy import results
-    assert "k_upper" in results._PARAMETROS and "k_lower" in results._PARAMETROS
+    with pccpy.language("es"):
+        assert "k_sup=3" in c.summary() and "k_inf=2" in c.summary()
+    with pccpy.language("en"):
+        assert "k_upper=3" in c.summary() and "k_lower=2" in c.summary()
+    with pccpy.language("es"):  # con los límites a 3σ el resumen queda como antes
+        assert "k_sup" not in pccpy.imr_chart(_x()).summary()
 
 
 def test_s014_rf_10_probability_coincide_con_el_arl_y_con_scipy():
@@ -372,7 +375,7 @@ def _viol(x, tests, **kw):
 
 
 def test_s014_rf_12_por_defecto_las_zonas_siguen_en_1_y_2_sigma():
-    x = [0, 0, 1.5, 1.5, 0, 0, 0.8, 0.8, 0.8, 0.8, 0]
+    x = [0, 0, 1.5, 1.5, 0, 0, 0, 0.8, 0.8, 0.8, 0.8, 0]
     for kw in ({}, {"k": 2}, {"k": 2, "rescale_zones": False}):
         v = _viol(x, (5, 6), **kw)
         assert len(v.get(5, [])) == 0 and len(v.get(6, [])) == 0
@@ -382,8 +385,8 @@ def test_s014_rf_12_rescale_zones_mueve_las_fronteras_a_k_sobre_3():
     # k = 2: fronteras en 2/3 σ y 4/3 σ; 1,5σ (dos de tres) activa la prueba 5 y 0,8σ (cuatro de cinco) la 6
     v5 = _viol([0, 0, 1.5, 1.5, 0, 0], (5,), k=2, rescale_zones=True)
     assert 3 in v5.get(5, [])
-    v6 = _viol([0.8, 0.8, 0.8, 0.8, 0, 0], (6,), k=2, rescale_zones=True)
-    assert 3 in v6.get(6, [])
+    v6 = _viol([0, 0.8, 0.8, 0.8, 0.8, 0], (6,), k=2, rescale_zones=True)
+    assert 4 in v6.get(6, [])
 
 
 def test_s014_rf_12_con_k_3_no_cambia_nada():

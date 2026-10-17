@@ -61,7 +61,7 @@ Las tablas de estadísticos tienen el índice `statistic` y la columna `value`; 
 (`ControlChart.to_frame`, `violations`) usan `point`, `stage`, `value`, `cl`, `ucl`, `lcl`, `test`, `description`…
 
 ```{note}
-Los valores de datos (p. ej. `DiagnoseResult.trend_direction`, `'creciente'`/`'decreciente'`) **no se traducen**.
+Los valores de datos (p. ej. `DiagnoseResult.trend_direction`, `'increasing'`/`'decreasing'`) **no se traducen**.
 Las claves de `chart.params` (p. ej. `chart.params[0]["mean"]`) y los nombres de las cartas y de sus paneles (`chart.kind`,
 `chart["Zone"]`) están en inglés y son iguales en cualquier idioma: `summary()` solo los muestra traducidos.
 Los textos que un resultado guarda al crearse (p. ej. `DiagnoseResult.issues`) quedan en el idioma activo en ese momento.

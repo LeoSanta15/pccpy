@@ -113,3 +113,23 @@ def control_chart_constants(n: int) -> dict[str, float]:
         "B3": max(0.0, 1.0 - 3.0 * _c5 / _c4),
         "B4": 1.0 + 3.0 * _c5 / _c4,
     }
+
+
+def k_from_confidence(confidence: float) -> float:
+    """Multiplicador ``k`` (en sigmas) de unos límites bilaterales con la confianza dada, para un estadístico normal.
+
+    ``k = Φ⁻¹(1 − (1 − confianza)/2)``: ``0.9973`` da ``k ≈ 3``, ``0.95`` da 1.960 y ``0.99`` da 2.576. Solo es exacto en los
+    paneles normales (individuales y medias); en R, S, MR y atributos la probabilidad real la da ``chart.probability()``.
+
+    Parameters
+    ----------
+    confidence : float
+        Confianza bilateral, ``0 < confidence < 1``.
+    """
+    if isinstance(confidence, (bool, np.bool_)) or not isinstance(confidence, (int, float, np.integer, np.floating)) \
+            or not 0.0 < float(confidence) < 1.0:
+        raise ValueError(tr("'confidence' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}.").format(
+            valor=confidence))
+    from scipy import stats
+
+    return float(stats.norm.isf((1.0 - float(confidence)) / 2.0))

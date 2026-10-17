@@ -1,5 +1,5 @@
 """pccpy - Control Estadístico de Procesos (SPC) en Python, al estilo Minitab."""
-from ._constants import c4, c5, control_chart_constants, d2, d3
+from ._constants import c4, c5, control_chart_constants, d2, d3, k_from_confidence
 from ._diagnose import DiagnoseResult, diagnose
 from ._i18n import available_languages, get_language, language, set_language, tr
 from ._probabilidad import ProbabilityResult
@@ -180,6 +180,7 @@ __all__ = [
     "get_language",
     "imr_chart",
     "imr_rs_chart",
+    "k_from_confidence",
     "laney_p_chart",
     "laney_u_chart",
     "language",

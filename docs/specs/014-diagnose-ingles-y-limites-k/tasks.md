@@ -21,14 +21,14 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S014-RF-01: valores en inglés en `_diagnose.py`.
-- [ ] S014-RF-02: `_tendencia()` traduce desde las claves inglesas.
-- [ ] S014-RF-03: literales en tests y documentación.
-- [ ] S014-RF-08 y RF-11: `resolve_k`, `alpha` y `k_from_confidence`.
-- [ ] S014-RF-04 a RF-06: `k` en las cartas (arriba y abajo).
-- [ ] S014-RF-07: umbral de la prueba 1 y aviso.
-- [ ] S014-RF-12: `rescale_zones`.
-- [ ] S014-RF-09 y RF-10: transformación, etapas y `params`.
+- [x] S014-RF-01: valores en inglés en `_diagnose.py`.
+- [x] S014-RF-02: `_tendencia()` traduce desde las claves inglesas.
+- [x] S014-RF-03: literales en tests y documentación.
+- [x] S014-RF-08 y RF-11: `resolve_k`, `alpha` y `k_from_confidence`.
+- [x] S014-RF-04 a RF-06: `k` en las cartas (arriba y abajo).
+- [x] S014-RF-07: umbral de la prueba 1 y aviso.
+- [x] S014-RF-12: `rescale_zones`.
+- [x] S014-RF-09 y RF-10: transformación, etapas y `params`.
 
 ## Fase 2 — Verificación y cierre
 

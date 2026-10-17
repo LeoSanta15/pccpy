@@ -371,8 +371,8 @@ msgstr "`trend_direction`"
 msgid "`str`"
 msgstr "`str`"
 
-msgid "`'creciente'`, `'decreciente'` o `''`."
-msgstr "`'creciente'`, `'decreciente'` or `''`."
+msgid "`'increasing'`, `'decreasing'` o `''`."
+msgstr "`'increasing'`, `'decreasing'` or `''`."
 
 msgid "`outlier_count`"
 msgstr "`outlier_count`"

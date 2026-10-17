@@ -45,20 +45,20 @@ def _cartas():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         casos = {
-            "imr": (pccpy.imr_chart(x), {"mean", "sigma", "mr_mean", "n"}),
-            "xbar_r": (pccpy.xbar_r_chart(g), {"mean", "sigma", "subgroups", "size"}),
-            "xbar_s": (pccpy.xbar_s_chart(g), {"mean", "sigma", "subgroups", "size"}),
-            "p": (pccpy.p_chart(dd, n), {"center", "n_points"}),
-            "np": (pccpy.np_chart(dd, n), {"center", "n_points"}),
-            "c": (pccpy.c_chart(c), {"center", "n_points"}),
-            "u": (pccpy.u_chart(c, n), {"center", "n_points"}),
-            "laney_p": (pccpy.laney_p_chart(dd, n), {"center", "n_points", "sigma_z"}),
-            "laney_u": (pccpy.laney_u_chart(c, n), {"center", "n_points", "sigma_z"}),
+            "imr": (pccpy.imr_chart(x), {"mean", "sigma", "mr_mean", "n", "k_upper", "k_lower"}),
+            "xbar_r": (pccpy.xbar_r_chart(g), {"mean", "sigma", "subgroups", "size", "k_upper", "k_lower"}),
+            "xbar_s": (pccpy.xbar_s_chart(g), {"mean", "sigma", "subgroups", "size", "k_upper", "k_lower"}),
+            "p": (pccpy.p_chart(dd, n), {"center", "n_points", "k_upper", "k_lower"}),
+            "np": (pccpy.np_chart(dd, n), {"center", "n_points", "k_upper", "k_lower"}),
+            "c": (pccpy.c_chart(c), {"center", "n_points", "k_upper", "k_lower"}),
+            "u": (pccpy.u_chart(c, n), {"center", "n_points", "k_upper", "k_lower"}),
+            "laney_p": (pccpy.laney_p_chart(dd, n), {"center", "n_points", "sigma_z", "k_upper", "k_lower"}),
+            "laney_u": (pccpy.laney_u_chart(c, n), {"center", "n_points", "sigma_z", "k_upper", "k_lower"}),
             "ewma": (pccpy.ewma_chart(x), {"k", "subgroup_size", "target", "weight", "sigma"}),
             "cusum": (pccpy.cusum_chart(x), {"h", "headstart", "k", "subgroup_size", "target", "sigma"}),
             "ma": (pccpy.ma_chart(x), {"k", "length", "mean", "subgroup_size", "sigma"}),
-            "zmr": (pccpy.zmr_chart(x, partes), {"method", "parts", "runs", "n", "sigma"}),
-            "imr_rs": (pccpy.imr_rs_chart(g), {"mean", "sigma_within", "sigma_between", "sigma_between_within", "subgroups"}),
+            "zmr": (pccpy.zmr_chart(x, partes), {"method", "parts", "runs", "n", "sigma", "k_upper", "k_lower"}),
+            "imr_rs": (pccpy.imr_rs_chart(g), {"mean", "sigma_within", "sigma_between", "sigma_between_within", "subgroups", "k_upper", "k_lower"}),
             "zone": (pccpy.zone_chart(x, mu=10.0, sigma=1.0), {"mean", "n", "weights", "reset", "sigma"}),
             "g": (pccpy.g_chart(d["geom"]), {"mean", "n", "p"}),
             "t": (pccpy.t_chart(d["weib"]), {"distribution", "scale", "shape", "n"}),
@@ -96,7 +96,7 @@ def test_s012_rf_01_las_claves_no_dependen_del_idioma():
         en = set(pccpy.xbar_r_chart(d["g"]).params[0])
     with pccpy.language("es"):
         es = set(pccpy.xbar_r_chart(d["g"]).params[0])
-    assert en == es == {"mean", "sigma", "subgroups", "size", "stage"}
+    assert en == es == {"mean", "sigma", "subgroups", "size", "stage", "k_upper", "k_lower"}
 
 
 def test_s012_rf_01_zmr_con_sigma_historica():

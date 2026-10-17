@@ -1,11 +1,13 @@
 """Motor común: calcula cada etapa por separado y ensambla el resultado."""
 from __future__ import annotations
 
+import warnings
 from collections.abc import Sequence
 from dataclasses import dataclass
 from typing import Callable
 
 import numpy as np
+from scipy import stats
 
 from .. import rules
 from .._data import stage_slices
@@ -44,6 +46,61 @@ def full(value, n: int) -> np.ndarray:
     return np.full(n, value, dtype=float)
 
 
+@dataclass(frozen=True)
+class Limits:
+    """Ancho de los límites de control en sigmas (``upper`` arriba, ``lower`` abajo) y si las zonas se reescalan con ellos."""
+
+    upper: float = 3.0
+    lower: float = 3.0
+    rescale_zones: bool = False
+
+    @property
+    def default(self) -> bool:
+        return self.upper == 3.0 and self.lower == 3.0
+
+
+def _real(valor) -> bool:
+    return isinstance(valor, (int, float, np.integer, np.floating)) and not isinstance(valor, (bool, np.bool_))
+
+
+def _par(valor, nombre: str) -> tuple:
+    """Un valor o una pareja (superior, inferior) -> ``(superior, inferior, es_pareja)``."""
+    if isinstance(valor, (list, tuple, np.ndarray)):
+        if len(valor) != 2:
+            raise ValueError(tr("'{nombre}' debe ser un número o una pareja (superior, inferior); recibido: {valor!r}.").format(
+                nombre=nombre, valor=valor))
+        return valor[0], valor[1], True
+    return valor, valor, False
+
+
+def resolve_limits(k=None, alpha=None, rescale_zones: bool = False) -> Limits:
+    """Valida ``k``/``alpha`` y devuelve los anchos de los límites (S014-RF-08 y RF-11).
+
+    ``k`` es un número (los dos lados) o una pareja ``(k_superior, k_inferior)``. ``alpha`` es la probabilidad **bilateral** de
+    falsa alarma de un panel normal si es un número (``k = Φ⁻¹(1 − α/2)``) y la **unilateral** de cada lado si es una pareja
+    (``k = Φ⁻¹(1 − α)``). Sin ninguno de los dos, ``k = 3``.
+    """
+    if not isinstance(rescale_zones, (bool, np.bool_)):
+        raise ValueError(tr("'rescale_zones' debe ser True o False; recibido: {valor!r}.").format(valor=rescale_zones))  # noqa: TRY004
+    if k is not None and alpha is not None:
+        raise ValueError(tr("Indica 'k' o 'alpha', no los dos."))
+    if alpha is not None:
+        a_sup, a_inf, es_par = _par(alpha, "alpha")
+        for a in (a_sup, a_inf):
+            if not _real(a) or not 0.0 < float(a) < 1.0:
+                raise ValueError(tr("'alpha' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}.").format(valor=alpha))
+        f = (lambda a: stats.norm.isf(float(a))) if es_par else (lambda a: stats.norm.isf(float(a) / 2.0))
+        return Limits(float(f(a_sup)), float(f(a_inf)), bool(rescale_zones))
+    if k is None:
+        return Limits(3.0, 3.0, bool(rescale_zones))
+    k_sup, k_inf, _ = _par(k, "k")
+    for v in (k_sup, k_inf):
+        if not _real(v) or not np.isfinite(v) or v <= 0:
+            raise ValueError(tr("'k' debe ser un número finito mayor que 0 (o una pareja de ellos); recibido: {valor!r}.").format(
+                valor=k))
+    return Limits(float(k_sup), float(k_inf), bool(rescale_zones))
+
+
 def build_chart(
     kind: str,
     n_points: int,
@@ -51,16 +108,27 @@ def build_chart(
     stage_fn: Callable[[np.ndarray], tuple[list[StagePanel], dict]],
     tests,
     test_params: dict[int, float] | None = None,
+    limits: Limits | None = None,
 ) -> ControlChart:
-    """Ejecuta ``stage_fn`` en cada etapa, aplica las pruebas y concatena."""
+    """Ejecuta ``stage_fn`` en cada etapa, aplica las pruebas y concatena.
+
+    Con ``limits`` (cartas con ancho de límites ajustable) la prueba 1 usa como umbral el ancho de cada lado, ``params`` guarda
+    ``k_upper`` y ``k_lower`` y las zonas se reescalan si ``limits.rescale_zones``.
+    """
     tests = rules.normalize_tests(tests)
     test_params = dict(test_params or {})
+    if limits is not None and not limits.default and 1 in test_params \
+            and not test_params[1] == limits.upper == limits.lower:
+        warnings.warn(tr("'test_params[1]' ({umbral}) difiere del ancho de los límites (k = {superior} arriba y {inferior} abajo): "
+                         "la prueba 1 usa {umbral} sigmas y marca puntos que no coinciden con los límites dibujados.").format(
+            umbral=test_params[1], superior=limits.upper, inferior=limits.lower), UserWarning, stacklevel=5)
     acc: dict[str, dict] = {}
     params_list: list[dict] = []
 
     for label, idx in stage_slices(n_points, stages):
         panels, params = stage_fn(idx)
-        params_list.append({"stage": label, **params})
+        params_list.append({"stage": label, **params,
+                            **({"k_upper": limits.upper, "k_lower": limits.lower} if limits is not None else {})})
         for sp in panels:
             a = acc.setdefault(
                 sp.name,
@@ -80,7 +148,10 @@ def build_chart(
             else:
                 allowed = rules.FAMILIES[sp.family]
                 wanted = [t for t in tests if t in allowed]
-                found = dict(rules.apply_tests(sp.values, sp.center, sp.sigma, wanted, test_params).items())
+                found = dict(rules.apply_tests(
+                    sp.values, sp.center, sp.sigma, wanted, test_params,
+                    limits=None if limits is None else (limits.upper, limits.lower),
+                    rescale_zones=limits is not None and limits.rescale_zones).items())
             for t, ii in found.items():
                 a["viol"].setdefault(t, []).append(np.asarray(ii, dtype=int) + int(idx[0]))
 

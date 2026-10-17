@@ -8,7 +8,7 @@ from .._data import as_1d
 from .._i18n import N_, tr
 from .._labels import con_etiquetas
 from ..results import ControlChart
-from ._engine import StagePanel, build_chart, full
+from ._engine import StagePanel, build_chart, full, resolve_limits
 
 
 def _prep(counts, n, need_n: bool):
@@ -30,7 +30,9 @@ def _prep(counts, n, need_n: bool):
 
 
 def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
-                     historical, laney) -> ControlChart:
+                     historical, laney, k=None, alpha=None) -> ControlChart:
+    limits = resolve_limits(k, alpha)
+    ku, kl = limits.upper, limits.lower
     c, n_arr = _prep(counts, n, need_n=code != "c")
     if code in ("p", "np") and not np.all(n_arr == np.round(n_arr)):
         raise ValueError(tr("En las cartas P, NP y Laney P' los tamaños de muestra deben ser enteros (recibido: {valor}). "
@@ -79,61 +81,84 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
 
         panel = StagePanel(
             code.upper(), y, full(ctr, k),
-            np.minimum(hi, ctr + 3 * sig), np.maximum(lo, ctr - 3 * sig), sig,
+            np.minimum(hi, ctr + ku * sig), np.maximum(lo, ctr - kl * sig), sig,
             ylabel, "basic", symmetric=False, dist=dist,
         )
         return [panel], params
 
-    return build_chart(kind, c.size, stages, stage_fn, tests, test_params)
+    return build_chart(kind, c.size, stages, stage_fn, tests, test_params, limits)
 
 
 @con_etiquetas
 def p_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
-            test_params: dict[int, float] | None = None) -> ControlChart:
-    """Carta P: proporción de unidades defectuosas (n constante o variable)."""
+            test_params: dict[int, float] | None = None, k=None, alpha=None) -> ControlChart:
+    """Carta P: proporción de unidades defectuosas (n constante o variable).
+
+    ``k`` (en sigmas, un número o una pareja ``(superior, inferior)``) o ``alpha`` ajustan el ancho de los límites
+    como en :func:`imr_chart`; el LCL se recorta en 0 y, en las cartas de proporción, el UCL en 1.
+    """
     return _attribute_chart("p", "P", N_("Proporción"), defectives, n, stages, tests,
-                            test_params, p, laney=False)
+                            test_params, p, laney=False, k=k, alpha=alpha)
 
 
 @con_etiquetas
 def np_chart(defectives, n, *, p: float | None = None, stages=None, tests=(1,),
-             test_params: dict[int, float] | None = None) -> ControlChart:
-    """Carta NP: número de defectuosos (n constante)."""
+             test_params: dict[int, float] | None = None, k=None, alpha=None) -> ControlChart:
+    """Carta NP: número de defectuosos (n constante).
+
+    ``k`` (en sigmas, un número o una pareja ``(superior, inferior)``) o ``alpha`` ajustan el ancho de los límites
+    como en :func:`imr_chart`; el LCL se recorta en 0 y, en las cartas de proporción, el UCL en 1.
+    """
     return _attribute_chart("np", "NP", N_("Conteo"), defectives, n, stages, tests,
-                            test_params, p, laney=False)
+                            test_params, p, laney=False, k=k, alpha=alpha)
 
 
 @con_etiquetas
 def c_chart(defects, *, c: float | None = None, stages=None, tests=(1,),
-            test_params: dict[int, float] | None = None) -> ControlChart:
-    """Carta C: número de defectos por unidad de inspección (tamaño constante)."""
+            test_params: dict[int, float] | None = None, k=None, alpha=None) -> ControlChart:
+    """Carta C: número de defectos por unidad de inspección (tamaño constante).
+
+    ``k`` (en sigmas, un número o una pareja ``(superior, inferior)``) o ``alpha`` ajustan el ancho de los límites
+    como en :func:`imr_chart`; el LCL se recorta en 0 y, en las cartas de proporción, el UCL en 1.
+    """
     return _attribute_chart("c", "C", N_("Conteo"), defects, None, stages, tests,
-                            test_params, c, laney=False)
+                            test_params, c, laney=False, k=k, alpha=alpha)
 
 
 @con_etiquetas
 def u_chart(defects, n, *, u: float | None = None, stages=None, tests=(1,),
-            test_params: dict[int, float] | None = None) -> ControlChart:
-    """Carta U: defectos por unidad (tamaño de muestra constante o variable)."""
+            test_params: dict[int, float] | None = None, k=None, alpha=None) -> ControlChart:
+    """Carta U: defectos por unidad (tamaño de muestra constante o variable).
+
+    ``k`` (en sigmas, un número o una pareja ``(superior, inferior)``) o ``alpha`` ajustan el ancho de los límites
+    como en :func:`imr_chart`; el LCL se recorta en 0 y, en las cartas de proporción, el UCL en 1.
+    """
     return _attribute_chart("u", "U", N_("Conteo por unidad"), defects, n, stages, tests,
-                            test_params, u, laney=False)
+                            test_params, u, laney=False, k=k, alpha=alpha)
 
 
 @con_etiquetas
 def laney_p_chart(defectives, n, *, stages=None, tests=(1,),
-                  test_params: dict[int, float] | None = None) -> ControlChart:
+                  test_params: dict[int, float] | None = None, k=None, alpha=None) -> ControlChart:
     """Carta P' de Laney: corrige la sobredispersión/subdispersión de la carta P.
 
     Los límites se multiplican por sigma_z, estimada con el rango móvil promedio de
     los puntajes z estandarizados.
+
+    ``k`` (en sigmas, un número o una pareja ``(superior, inferior)``) o ``alpha`` ajustan el ancho de los límites
+    como en :func:`imr_chart`; el LCL se recorta en 0 y, en las cartas de proporción, el UCL en 1.
     """
     return _attribute_chart("p", "Laney P'", N_("Proporción"), defectives, n, stages, tests,
-                            test_params, None, laney=True)
+                            test_params, None, laney=True, k=k, alpha=alpha)
 
 
 @con_etiquetas
 def laney_u_chart(defects, n, *, stages=None, tests=(1,),
-                  test_params: dict[int, float] | None = None) -> ControlChart:
-    """Carta U' de Laney: corrige la sobredispersión/subdispersión de la carta U."""
+                  test_params: dict[int, float] | None = None, k=None, alpha=None) -> ControlChart:
+    """Carta U' de Laney: corrige la sobredispersión/subdispersión de la carta U.
+
+    ``k`` (en sigmas, un número o una pareja ``(superior, inferior)``) o ``alpha`` ajustan el ancho de los límites
+    como en :func:`imr_chart`; el LCL se recorta en 0 y, en las cartas de proporción, el UCL en 1.
+    """
     return _attribute_chart("u", "Laney U'", N_("Conteo por unidad"), defects, n, stages, tests,
-                            test_params, None, laney=True)
+                            test_params, None, laney=True, k=k, alpha=alpha)

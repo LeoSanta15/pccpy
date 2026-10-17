@@ -4190,3 +4190,30 @@ msgstr ""
 
 msgid "Probabilidad de un valor en las cartas de control (normal, rango, S, binomial, Poisson, geométrica y Weibull)"
 msgstr ""
+
+msgid "'confidence' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}."
+msgstr ""
+
+msgid "'{nombre}' debe ser un número o una pareja (superior, inferior); recibido: {valor!r}."
+msgstr ""
+
+msgid "'rescale_zones' debe ser True o False; recibido: {valor!r}."
+msgstr ""
+
+msgid "Indica 'k' o 'alpha', no los dos."
+msgstr ""
+
+msgid "'alpha' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}."
+msgstr ""
+
+msgid "'k' debe ser un número finito mayor que 0 (o una pareja de ellos); recibido: {valor!r}."
+msgstr ""
+
+msgid "'test_params[1]' ({umbral}) difiere del ancho de los límites (k = {superior} arriba y {inferior} abajo): la prueba 1 usa {umbral} sigmas y marca puntos que no coinciden con los límites dibujados."
+msgstr ""
+
+msgid "k_sup"
+msgstr ""
+
+msgid "k_inf"
+msgstr ""
