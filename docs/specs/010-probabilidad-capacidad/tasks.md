@@ -15,9 +15,9 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S010-RF-01, RF-02, RF-05 y RF-06: `CapabilityResult.probability` y `ProbabilityResult`.
-- [ ] S010-RF-03: transformación de los valores.
-- [ ] S010-RF-04: `NonNormalCapabilityResult.probability`.
+- [x] S010-RF-01, RF-02, RF-05 y RF-06: `CapabilityResult.probability` y `ProbabilityResult`.
+- [x] S010-RF-03: transformación de los valores.
+- [x] S010-RF-04: `NonNormalCapabilityResult.probability`.
 
 ## Fase 2 — Verificación y cierre
 
