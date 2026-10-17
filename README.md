@@ -112,8 +112,8 @@ carta.plot()                  # figura de matplotlib (se muestra con plt.show())
 ## Ejemplos con resultados
 
 Figuras y salidas reales de los ejemplos [`examples/basic_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/basic_example.py) y
-[`examples/advanced_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/advanced_example.py), con la semilla `default_rng(2026)`. El código es el mismo en
-todos los idiomas; las salidas, las etiquetas y los gráficos siguen el idioma de pccpy (aquí, español). Los fragmentos son extractos
+[`examples/advanced_example.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/advanced_example.py), con la semilla `default_rng(2026)`. Los scripts de `examples/` están en inglés
+(son el mismo código en cualquier idioma); aquí los nombres de las variables van en español. Las salidas, las etiquetas y los gráficos siguen el idioma de pccpy (aquí, español). Los fragmentos son extractos
 que se ejecutan en secuencia (los datos se generan con el mismo `rng`); las salidas se acortan con «…» y completas están en
 [`output_basic_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/output_basic_example.txt) y
 [`output_advanced_example.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/output_advanced_example.txt). Se regeneran con
@@ -126,9 +126,9 @@ Un proceso que se desplaza de 100 a 103 en la observación 41, con las pruebas 1
 ```python
 rng = np.random.default_rng(2026)
 x = np.r_[rng.normal(100, 1.5, 40), rng.normal(103, 1.5, 20)]   # el proceso pasa de 100 a 103
-chart = pp.imr_chart(x, tests=[1, 2, 3, 4, 5, 6])
-print(chart.summary())
-chart.plot()
+carta = pp.imr_chart(x, tests=[1, 2, 3, 4, 5, 6])
+print(carta.summary())
+carta.plot()
 ```
 
 ```text
@@ -147,8 +147,8 @@ Carta de control I-MR
 25 subgrupos de 5 piezas, sin señales.
 
 ```python
-subgroups = rng.normal(50, 0.8, (25, 5))
-xr = pp.xbar_r_chart(subgroups, tests="all")
+subgrupos = rng.normal(50, 0.8, (25, 5))
+xr = pp.xbar_r_chart(subgrupos, tests="all")
 print(xr.summary())
 xr.plot(zones=True)
 ```
@@ -168,8 +168,8 @@ Carta de control Xbar-R
 
 ```python
 n = rng.integers(150, 250, 30)
-defectives = rng.binomial(n, 0.04)
-pp.p_chart(defectives, n, tests=[1, 2, 3, 4]).plot()
+defectuosos = rng.binomial(n, 0.04)
+pp.p_chart(defectuosos, n, tests=[1, 2, 3, 4]).plot()
 ```
 
 ![Carta P con límites variables](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/p.png)
@@ -179,11 +179,11 @@ pp.p_chart(defectives, n, tests=[1, 2, 3, 4]).plot()
 Capacidad normal con límites 95 y 105, y las seis vistas del Capability Sixpack.
 
 ```python
-data = rng.normal(100.4, 1.5, 150)
-cap = pp.capability_analysis(data, lsl=95, usl=105, target=100)
+datos = rng.normal(100.4, 1.5, 150)
+cap = pp.capability_analysis(datos, lsl=95, usl=105, target=100)
 print(cap.summary())
 print(round(cap.cpk, 3), round(cap.ppk, 3))
-fig, _, _ = pp.capability_sixpack(subgroups, lsl=48, usl=52, target=50)
+fig, _, _ = pp.capability_sixpack(subgrupos, lsl=48, usl=52, target=50)
 ```
 
 ```text
@@ -246,9 +246,9 @@ Análisis de capacidad del proceso (distribución normal)
 Tabla de frecuencias acumuladas y su gráfico.
 
 ```python
-counts = pp.pareto(["Scratch", "Dent", "Scratch", "Stain", "Scratch", "Dent", "Other"])
-print(counts)
-pp.plot_pareto(counts)
+tabla = pp.pareto(["Scratch", "Dent", "Scratch", "Stain", "Scratch", "Dent", "Other"])
+print(tabla)
+pp.plot_pareto(tabla)
 ```
 
 ```text
@@ -266,12 +266,13 @@ pp.plot_pareto(counts)
 Tres partes con medias y variaciones distintas en una sola carta.
 
 ```python
-parts = ["A"] * 12 + ["B"] * 10 + ["A"] * 12 + ["C"] * 8
-means = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
-x = np.array([rng.normal(*means[p]) for p in parts])
+rng = np.random.default_rng(2026)              # el script avanzado reinicia la semilla
+partes = ["A"] * 12 + ["B"] * 10 + ["A"] * 12 + ["C"] * 8
+medias = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
+x = np.array([rng.normal(*medias[p]) for p in partes])
 x[15] += 10                                    # una pieza B fuera de lo normal
-zmr = pp.zmr_chart(x, parts, mu={p: m for p, (m, _) in means.items()},
-                   sigma={p: s for p, (_, s) in means.items()}, tests=(1, 2, 3, 4, 5, 6))
+zmr = pp.zmr_chart(x, partes, mu={p: m for p, (m, _) in medias.items()},
+                   sigma={p: s for p, (_, s) in medias.items()}, tests=(1, 2, 3, 4, 5, 6))
 print(zmr.summary())
 ```
 
@@ -293,9 +294,9 @@ Carta de control Z-MR
 Con variación entre lotes, Xbar-R alarma de más y I-MR-R no.
 
 ```python
-lots = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
-print(len(pp.xbar_r_chart(lots).violations()))   # puntos marcados por Xbar-R
-ch = pp.imr_rs_chart(lots)
+lotes = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
+print(len(pp.xbar_r_chart(lotes).violations()))   # puntos marcados por Xbar-R
+ch = pp.imr_rs_chart(lotes)
 print(len(ch.violations()))                      # puntos marcados por I-MR-R
 ```
 
@@ -311,12 +312,12 @@ print(len(ch.violations()))                      # puntos marcados por I-MR-R
 Carta G con los conteos entre eventos y carta T con los tiempos entre eventos.
 
 ```python
-between = rng.geometric(0.01, 40) - 1
-between[25] = 600
-pp.g_chart(between).plot()
-times = rng.weibull(1.4, 40) * 30
-times[12] = 250
-print(pp.t_chart(times).summary())
+entre = rng.geometric(0.01, 40) - 1
+entre[25] = 600
+pp.g_chart(entre).plot()
+tiempos = rng.weibull(1.4, 40) * 30
+tiempos[12] = 250
+print(pp.t_chart(tiempos).summary())
 ```
 
 ```text
@@ -334,10 +335,10 @@ Carta de control T
 Puntaje acumulado ante un desplazamiento sostenido.
 
 ```python
-drift = rng.normal(0, 1, 50)
-drift[30:] += 1.2                              # desplazamiento sostenido de 1,2 sigmas
-zone = pp.zone_chart(drift, mu=0.0, sigma=1.0, reset=True)
-print(zone.summary())
+deriva = rng.normal(0, 1, 50)
+deriva[30:] += 1.2                              # desplazamiento sostenido de 1,2 sigmas
+zona = pp.zone_chart(deriva, mu=0.0, sigma=1.0, reset=True)
+print(zona.summary())
 ```
 
 ```text
@@ -358,15 +359,15 @@ Fase I con 100 observaciones y Fase II con 50 nuevas; la variable 3 se desplaza 
 ```python
 Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
 hist = rng.multivariate_normal([0, 0, 0], Sigma, 100)
-new = rng.multivariate_normal([0, 0, 0], Sigma, 50)
-new[30:, 2] += 4                               # la variable 3 se desplaza
+nuevos = rng.multivariate_normal([0, 0, 0], Sigma, 50)
+nuevos[30:, 2] += 4                               # la variable 3 se desplaza
 mu, cov = hist.mean(axis=0), np.cov(hist, rowvar=False)
-t2 = pp.t2_chart(new, mu=mu, cov=cov, n_hist=100)
-first = int(t2["T2"].flagged[0]) + 1
-print(t2.contributions(first).round(2))        # contribución de cada variable a la señal
-me = pp.mewma_chart(new, mu=mu, cov=cov)
+t2 = pp.t2_chart(nuevos, mu=mu, cov=cov, n_hist=100)
+primero = int(t2["T2"].flagged[0]) + 1
+print(t2.contributions(primero).round(2))        # contribución de cada variable a la señal
+me = pp.mewma_chart(nuevos, mu=mu, cov=cov)
 print(int(me["MEWMA"].flagged[0]) + 1)         # primera señal de la MEWMA
-mc = pp.mcusum_chart(new, mu=mu, cov=cov)
+mc = pp.mcusum_chart(nuevos, mu=mu, cov=cov)
 print(int(mc["MCUSUM"].flagged[0]) + 1, round(mc.params[0]["LCS"], 2))   # primera señal de la MCUSUM y su límite
 ```
 
@@ -385,6 +386,26 @@ Name: contribución (punto 31), dtype: float64
 ![Carta MEWMA](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/mewma.png)
 
 ![Carta MCUSUM](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/mcusum.png)
+
+### Etapas y Box-Cox multivariado
+
+Cada etapa reestima sus propios límites; con datos sesgados, Box-Cox por variable.
+
+```python
+dos_etapas = np.vstack([nuevos[:40], nuevos[:40] + [0, 0, 3]])      # dos periodos con medias distintas: cada etapa estima sus límites
+etiquetas = [1] * 40 + [2] * 40
+t2_st = pp.t2_chart(dos_etapas, stages=etiquetas)
+print(t2_st.stage_mean[1].round(2), t2_st.stage_mean[2].round(2))
+sesgados = rng.lognormal(0, 0.4, (60, 3))                        # datos positivos y sesgados
+t2_bc = pp.t2_chart(sesgados, boxcox=True)
+print(t2_bc.params[0]["lambda_boxcox"])
+```
+
+```text
+[-0.   -0.03  1.17] [-0.   -0.03  4.17]
+  …
+{'X1': 0.1041, 'X2': 0.114, 'X3': 0.2551}
+```
 
 ### Varianza generalizada
 

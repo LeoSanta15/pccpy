@@ -8,12 +8,15 @@
 - `charts/_engine.py`: `StagePanel` y `results.Panel` ganan un campo opcional `dist` (familia y parámetros por punto). `build_chart`
   lo concatena por etapas como ya hace con `sigma`. Cada cartero rellena su familia: `variables.py` (normal en I y Xbar; `range`
   con `span` o `n` y `σ` en MR y R; `sd` con `n` y `σ` en S), `attributes.py` (binomial y Poisson), `timeweighted.py` (normal
-  con la σ por punto de la EWMA). CUSUM, G, T, Laney, MA, Zona y multivariadas dejan `dist = None`.
+  con la σ por punto de la EWMA). CUSUM, Laney, MA, Zona y multivariadas dejan `dist = None`; G (geométrica con `p`) y T (Weibull con forma y escala) la llevan
+  desde `advanced.py`.
 - Archivo nuevo `_probabilidad_cartas.py` (o ampliar `_probabilidad.py` de la 010): para cada familia, `cdf`/`sf` en el punto
   (normal con `ndtr`, rango con `studentized_range`, `sd` con `chi2`, discretas con `binom`/`poisson` y la regla estricta).
   Reutiliza el núcleo de la 010 (validación, difusión de arreglos, `between`).
 - `results.py`: método `ControlChart.probability(...)` delgado; la transformación usa `chart.transformation.forward`.
-- Resultado: según la decisión de la pregunta abierta (reutilizar `ProbabilityResult` o clase propia con `arl`).
+- Resultado: `ProbabilityResult` de la 010 con dos campos opcionales nuevos, `panel` y `point` (al final de la dataclass, con
+  valor por defecto `None`, para no tocar la construcción actual); `to_frame` añade las columnas `panel` y `point` solo cuando
+  existen. En cartas, `dpmo`, `dpu` y `sigma` valen `None`.
 - Mensajes con `tr()` (R-17) y traducciones en `pccpy.po`.
 
 ## Decisiones
@@ -24,11 +27,13 @@
 | Método de `ControlChart` | Función suelta (`chart_probability`) | Coherencia con la 010 |
 | Límites tal como los traza la carta; probabilidad exacta | Aproximación normal en atributos | Es lo que dice la carta; `arl_binomial`/`arl_poisson` hacen lo mismo |
 | Sin CUSUM | Cadena de Markov para la marginal | No tiene forma cerrada; es el ARL |
+| Reutilizar `ProbabilityResult` | Clase propia con `arl` | Decisión de la persona responsable |
+| `point=` obligatorio si la distribución cambia | Devolver todos los puntos | Decisión de la persona responsable (opción A) |
 
 ## Validación independiente
 
-`scipy.stats.norm`, `studentized_range`, `chi2`, `binom` y `poisson` escritos en los tests; simulación del rango de `n` normales
-(≥ 20 semillas); consistencia `1/probability()` con `arl_*`. Una comprobación en `run_validation()` (63 en total).
+`scipy.stats.norm`, `studentized_range`, `chi2`, `binom`, `poisson`, `geom` y `weibull_min` escritos en los tests; simulación del rango de `n` normales
+(≥ 20 semillas); consistencia `1/probability()` con `arl_*` (también `arl_g` y `arl_t`). Una comprobación en `run_validation()` (63 en total).
 
 ## Riesgos
 

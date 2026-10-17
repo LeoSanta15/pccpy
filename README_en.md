@@ -268,6 +268,7 @@ pp.plot_pareto(counts)
 Three parts with different means and variations on one chart.
 
 ```python
+rng = np.random.default_rng(2026)              # the advanced script restarts the seed
 parts = ["A"] * 12 + ["B"] * 10 + ["A"] * 12 + ["C"] * 8
 means = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
 x = np.array([rng.normal(*means[p]) for p in parts])
@@ -387,6 +388,26 @@ Name: contribution (point 31), dtype: float64
 ![MEWMA chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/mewma.png)
 
 ![MCUSUM chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/mcusum.png)
+
+### Stages and multivariate Box-Cox
+
+Each stage re-estimates its own limits; with skewed data, Box-Cox per variable.
+
+```python
+two_stages = np.vstack([new[:40], new[:40] + [0, 0, 3]])      # two periods with different means: each stage estimates its own limits
+labels = [1] * 40 + [2] * 40
+t2_st = pp.t2_chart(two_stages, stages=labels)
+print(t2_st.stage_mean[1].round(2), t2_st.stage_mean[2].round(2))
+skewed = rng.lognormal(0, 0.4, (60, 3))                        # positive, skewed data
+t2_bc = pp.t2_chart(skewed, boxcox=True)
+print(t2_bc.params[0]["lambda_boxcox"])
+```
+
+```text
+[-0.   -0.03  1.17] [-0.   -0.03  4.17]
+  …
+{'X1': 0.1041, 'X2': 0.114, 'X3': 0.2551}
+```
 
 ### Generalized variance
 
