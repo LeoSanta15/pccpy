@@ -21,42 +21,43 @@ documenta Minitab.
 1. [Instalación](#instalación)
    - [Idioma de los mensajes](#idioma-de-los-mensajes)
 2. [Inicio rápido](#inicio-rápido)
-3. [Cartas de variables](#cartas-de-variables)
+3. [Ejemplos con resultados](#ejemplos-con-resultados)
+4. [Cartas de variables](#cartas-de-variables)
    - [I-MR](#carta-i-mr)
    - [Xbar-R y Xbar-S](#cartas-xbar-r-y-xbar-s)
    - [Formatos de entrada de datos](#formatos-de-entrada-de-datos)
    - [Parámetros históricos y etapas](#parámetros-históricos-y-etapas)
    - [Fase I iterativa](#fase-i-iterativa)
    - [Fechas en el eje x](#fechas-en-el-eje-x)
-4. [Cartas de atributos](#cartas-de-atributos)
-5. [Cartas de tiempo ponderado](#cartas-de-tiempo-ponderado)
+5. [Cartas de atributos](#cartas-de-atributos)
+6. [Cartas de tiempo ponderado](#cartas-de-tiempo-ponderado)
    - [EWMA](#ewma)
    - [CUSUM](#cusum)
    - [Media móvil](#media-móvil)
-6. [Cartas avanzadas](#cartas-avanzadas)
+7. [Cartas avanzadas](#cartas-avanzadas)
    - [Z-MR (corridas cortas)](#z-mr-corridas-cortas)
    - [I-MR-R/S (variación entre/dentro)](#i-mr-rs-variación-entrodentro)
    - [Eventos raros (G y T)](#eventos-raros-g-y-t)
    - [ARL (longitud media de racha)](#arl-longitud-media-de-racha)
-7. [Cartas multivariadas](#cartas-multivariadas)
+8. [Cartas multivariadas](#cartas-multivariadas)
    - [T² de Hotelling](#t²-de-hotelling)
    - [Varianza generalizada](#varianza-generalizada)
    - [MEWMA](#mewma)
    - [MCUSUM](#mcusum)
    - [Etapas y Box-Cox en cartas multivariadas](#etapas-y-box-cox-en-cartas-multivariadas)
-8. [Pruebas de causas especiales](#pruebas-de-causas-especiales)
-9. [Visualización de las cartas](#visualización-de-las-cartas)
-10. [Capacidad del proceso](#capacidad-del-proceso)
-11. [Normalidad, Pareto y constantes SPC](#normalidad-pareto-y-constantes-spc)
-12. [Carta de corridas y pre-control](#carta-de-corridas-y-pre-control)
-13. [EWMA y CUSUM para atributos](#ewma-y-cusum-para-atributos)
-14. [Intervalos de tolerancia](#intervalos-de-tolerancia)
-15. [Muestreo de aceptación](#muestreo-de-aceptación)
-16. [MSA / Gage R&R](#msa--gage-rr)
-17. [Acceso a los datos del resultado](#acceso-a-los-datos-del-resultado)
-18. [Validación](#validación)
-19. [Desarrollo](#desarrollo)
-20. [Licencia](#licencia)
+9. [Pruebas de causas especiales](#pruebas-de-causas-especiales)
+10. [Visualización de las cartas](#visualización-de-las-cartas)
+11. [Capacidad del proceso](#capacidad-del-proceso)
+12. [Normalidad, Pareto y constantes SPC](#normalidad-pareto-y-constantes-spc)
+13. [Carta de corridas y pre-control](#carta-de-corridas-y-pre-control)
+14. [EWMA y CUSUM para atributos](#ewma-y-cusum-para-atributos)
+15. [Intervalos de tolerancia](#intervalos-de-tolerancia)
+16. [Muestreo de aceptación](#muestreo-de-aceptación)
+17. [MSA / Gage R&R](#msa--gage-rr)
+18. [Acceso a los datos del resultado](#acceso-a-los-datos-del-resultado)
+19. [Validación](#validación)
+20. [Desarrollo](#desarrollo)
+21. [Licencia](#licencia)
 
 ---
 
@@ -105,6 +106,292 @@ carta.violations()            # DataFrame: panel, punto, prueba, descripción
 carta.to_frame()              # todos los valores, límites y pruebas fallidas
 carta.plot()                  # figura de matplotlib (se muestra con plt.show())
 ```
+
+---
+
+## Ejemplos con resultados
+
+Figuras y salidas reales de los ejemplos [`examples/ejemplo_basico.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/ejemplo_basico.py) y
+[`examples/ejemplo_avanzado.py`](https://github.com/LeoSanta15/pccpy/blob/main/examples/ejemplo_avanzado.py), con la semilla `default_rng(2026)`. Los fragmentos son
+extractos que se ejecutan en secuencia (los datos se generan con el mismo `rng`); las salidas se acortan con «…» y completas están
+en [`salida_ejemplo_basico.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/salida_ejemplo_basico.txt) y
+[`salida_ejemplo_avanzado.txt`](https://github.com/LeoSanta15/pccpy/blob/main/docs/imagenes/es/salida_ejemplo_avanzado.txt). Se regeneran con
+`python scripts/generar_figuras_readme.py`. Con `import numpy as np` y `import pccpy as pp`.
+
+### Valores individuales (I-MR)
+
+Un proceso que se desplaza de 100 a 103 en la observación 41, con las pruebas 1 a 6.
+
+```python
+rng = np.random.default_rng(2026)
+x = np.r_[rng.normal(100, 1.5, 40), rng.normal(103, 1.5, 20)]
+chart = pp.imr_chart(x, tests=[1, 2, 3, 4, 5, 6])
+print(chart.summary())
+chart.plot()
+```
+
+```text
+Carta de control I-MR
+  Parámetros: media=101.347, sigma=1.45895, MR_prom=1.64624, n=60
+  Pruebas solicitadas: 1, 2, 3, 4, 5, 6
+  Puntos marcados: 44
+    [I] punto 10: prueba 6 (valor 99.6611) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 13: prueba 2 (valor 99.9038) - 9 puntos consecutivos del mismo lado de la línea central
+```
+
+![Carta I-MR con el desplazamiento y las pruebas marcadas](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/imr.png)
+
+### Subgrupos (Xbar-R)
+
+25 subgrupos de 5 piezas, sin señales.
+
+```python
+subgrupos = rng.normal(50, 0.8, (25, 5))
+xr = pp.xbar_r_chart(subgrupos, tests="all")
+print(xr.summary())
+xr.plot(zones=True)
+```
+
+```text
+Carta de control Xbar-R
+  Parámetros: media=50.0238, sigma=0.876888, subgrupos=25, tamaño=5
+  Pruebas solicitadas: 1, 2, 3, 4, 5, 6, 7, 8
+  Resultado: sin puntos fuera de control
+```
+
+![Carta Xbar-R](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/xbar_r.png)
+
+### Atributos (carta P con n variable)
+
+30 muestras de entre 150 y 250 piezas, con 4 % de defectuosos.
+
+```python
+n = rng.integers(150, 250, 30)
+defectuosos = rng.binomial(n, 0.04)
+pp.p_chart(defectuosos, n, tests=[1, 2, 3, 4]).plot()
+```
+
+![Carta P con límites variables](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/p.png)
+
+### Capacidad del proceso y Sixpack
+
+Capacidad normal con límites 95 y 105, y las seis vistas del Capability Sixpack.
+
+```python
+datos = rng.normal(100.4, 1.5, 150)
+cap = pp.capability_analysis(datos, lsl=95, usl=105, target=100)
+print(cap.summary())
+print("Cpk =", round(cap.cpk, 3), "| Ppk =", round(cap.ppk, 3))
+fig, _, _ = pp.capability_sixpack(subgrupos, lsl=48, usl=52, target=50)
+```
+
+```text
+Análisis de capacidad del proceso (distribución normal)
+  LEI=95.0000  Objetivo=100.0000  LES=105.0000
+  N=150  Media=100.44554  Desv.Est.(dentro)=1.37977 [mr]  Desv.Est.(general)=1.52887
+  Capacidad potencial (dentro):
+    Cp=1.21  CPL=1.32  CPU=1.10  Cpk=1.10
+    Z.Bench=3.28
+  Desempeño general:
+    Pp=1.09  PPL=1.19  PPU=0.99  Ppk=0.99  Cpm=1.05
+    IC 95% Pp: (0.97, 1.21)   IC 95% Ppk: (0.87, 1.12)
+    Z.Bench=2.94  Z.LEI=3.56  Z.LES=2.98  Nivel Sigma=2.94  DPMO=1,630
+  Desempeño (PPM):            < LEI       > LES      Total
+    Observado               0.00        0.00       0.00
+    Esperado dentro        39.62      481.91     521.53
+    Esperado general      184.16     1446.09    1630.25
+  …
+Cpk = 1.1 | Ppk = 0.993
+```
+
+![Capability Sixpack](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/sixpack.png)
+
+### Datos no normales (Weibull y Box-Cox)
+
+Prueba de normalidad y capacidad con la distribución ajustada y con Box-Cox.
+
+```python
+w = rng.weibull(1.8, 200) * 3 + 0.5
+print(pp.normality_test(w))
+print(pp.capability_nonnormal(w, lsl=0.1, usl=12, distribution="weibull").summary())
+print(pp.capability_boxcox(w, lsl=0.1, usl=12).summary())
+```
+
+```text
+Anderson-Darling: estadístico = 3.3147, valor p < 0.005 (n = 200)
+Análisis de capacidad (no normal) - distribución weibull
+  LEI=0.1000  LES=12.0000  N=200  logL=-363.872  AIC=731.745
+  Percentiles: 0.135% = 0.17925   50% = 3.13714   99.865% = 8.82399
+  Pp=1.38  PPL=1.03  PPU=1.56  Ppk=1.03
+  Desempeño (PPM):            < LEI       > LES      Total
+    Observado               0.00        0.00       0.00
+    Esperado              378.35        2.46     380.81
+  …
+Análisis de capacidad del proceso (distribución normal)
+  LEI=0.1000  Objetivo=*  LES=12.0000
+  N=200  Media=1.18909  Desv.Est.(dentro)=0.58063 [mr]  Desv.Est.(general)=0.58889
+  Transformación Box-Cox con lambda = 0.1615 (Media, Desv.Est. y Z.* están en la escala transformada; LEI/LES/objetivo y PPM observado, en unidades originales)
+  Capacidad potencial (dentro):
+    Cp=1.43  CPL=1.79  CPU=1.07  Cpk=1.07
+    Z.Bench=3.22
+  Desempeño general:
+    Pp=1.41  PPL=1.76  PPU=1.06  Ppk=1.06  Cpm=*
+    IC 95% Pp: (1.27, 1.55)   IC 95% Ppk: (0.94, 1.17)
+    Z.Bench=3.17  Z.LEI=5.28  Z.LES=3.17  Nivel Sigma=3.17  DPMO=754
+```
+
+### Pareto
+
+Tabla de frecuencias acumuladas y su gráfico.
+
+```python
+tabla = pp.pareto(["Rayón", "Abolladura", "Rayón", "Mancha", "Rayón", "Abolladura", "Otro"])
+print(tabla)
+pp.plot_pareto(tabla)
+```
+
+```text
+    categoría  conteo  porcentaje   acumulado
+0       Rayón       3   42.857143   42.857143
+1  Abolladura       2   28.571429   71.428571
+2      Mancha       1   14.285714   85.714286
+3        Otro       1   14.285714  100.000000
+```
+
+![Diagrama de Pareto](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/pareto.png)
+
+### Corridas cortas (Z-MR)
+
+Tres partes con medias y variaciones distintas en una sola carta; una pieza B está fuera de lo normal.
+
+```python
+medias = {"A": (50, 1.0), "B": (80, 2.0), "C": (20, 0.5)}
+zmr = pp.zmr_chart(x, partes, mu={p: m for p, (m, _) in medias.items()},
+                   sigma={p: s for p, (_, s) in medias.items()}, tests=(1, 2, 3, 4, 5, 6))
+print(zmr.summary())
+```
+
+```text
+Carta de control Z-MR
+  …
+  Pruebas solicitadas: 1, 2, 3, 4, 5, 6
+  Puntos marcados: 4
+    [MR] punto 16: prueba 1 (valor 4.22507) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [MR] punto 17: prueba 1 (valor 4.78973) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [Z] punto 16: prueba 1 (valor 4.38598) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [Z] punto 38: prueba 4 (valor -0.457385) - 14 puntos consecutivos alternando arriba y abajo
+```
+
+![Carta Z-MR](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/zmr.png)
+
+### Variación entre y dentro de subgrupos (I-MR-R)
+
+Con variación entre lotes, Xbar-R alarma de más y I-MR-R no.
+
+```python
+lotes = rng.normal(20, 1, (30, 5)) + rng.normal(0, 2, (30, 1))
+print("Xbar-R  puntos marcados:", len(pp.xbar_r_chart(lotes).violations()))
+ch = pp.imr_rs_chart(lotes)
+print("I-MR-R  puntos marcados:", len(ch.violations()))
+```
+
+```text
+Xbar-R  puntos marcados: 12
+I-MR-R  puntos marcados: 1
+```
+
+![Carta I-MR-R](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/imr_r.png)
+
+### Eventos raros (G y T)
+
+Carta G con los conteos entre eventos y carta T con los tiempos entre eventos.
+
+```python
+entre = rng.geometric(0.01, 40) - 1
+entre[25] = 600
+pp.g_chart(entre).plot()
+tiempos = rng.weibull(1.4, 40) * 30
+tiempos[12] = 250
+print(pp.t_chart(tiempos).summary())
+```
+
+```text
+Carta de control T
+  …
+  Pruebas solicitadas: 1
+  Puntos marcados: 1
+    [T] punto 13: prueba 1 (valor 250) - 1 punto fuera de los percentiles de la distribución weibull
+```
+
+![Carta G](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/g.png)
+
+### Carta de zona
+
+Puntaje acumulado ante un desplazamiento sostenido de 1,2 sigmas.
+
+```python
+deriva = rng.normal(0, 1, 50)
+deriva[30:] += 1.2
+zona = pp.zone_chart(deriva, mu=0.0, sigma=1.0, reset=True)
+print(zona.summary())
+```
+
+```text
+Carta de control Zona
+  Parámetros: media=0, sigma=1, pesos=(0.0, 2.0, 4.0, 8.0), reinicio=True, n=50
+  Pruebas solicitadas: 1
+  Puntos marcados: 2
+    [Zona] punto 43: prueba 1 (valor 2.03228) - puntaje acumulado de zona >= 8
+    [Zona] punto 48: prueba 1 (valor 2.57529) - puntaje acumulado de zona >= 8
+```
+
+![Carta de zona](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/zona.png)
+
+### Multivariadas: T², MEWMA y MCUSUM
+
+Fase I con 100 observaciones y Fase II con 50 nuevas; la variable 3 se desplaza desde el punto 31.
+
+```python
+Sigma = [[1, .6, .3], [.6, 1, .2], [.3, .2, 1]]
+hist = rng.multivariate_normal([0, 0, 0], Sigma, 100)
+nuevos = rng.multivariate_normal([0, 0, 0], Sigma, 50)
+nuevos[30:, 2] += 4
+mu, cov = hist.mean(axis=0), np.cov(hist, rowvar=False)
+t2 = pp.t2_chart(nuevos, mu=mu, cov=cov, n_hist=100)
+primero = int(t2["T2"].flagged[0]) + 1
+print(t2.contributions(primero).round(2))
+me = pp.mewma_chart(nuevos, mu=mu, cov=cov)
+mc = pp.mcusum_chart(nuevos, mu=mu, cov=cov)
+print("MEWMA primera señal en el punto", int(me["MEWMA"].flagged[0]) + 1)
+print("MCUSUM primera señal en el punto", int(mc["MCUSUM"].flagged[0]) + 1)
+```
+
+```text
+X1     6.81
+X2     1.32
+X3    16.09
+
+MEWMA primera señal en el punto 33
+MCUSUM primera señal en el punto 33
+```
+
+![Carta T² de Hotelling](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/t2.png)
+
+![Carta MEWMA](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/mewma.png)
+
+![Carta MCUSUM](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/mcusum.png)
+
+### Varianza generalizada
+
+Subgrupos de 6 observaciones trivariadas cuya dispersión aumenta 2,5 veces en la segunda mitad.
+
+```python
+subs = rng.multivariate_normal([0, 0, 0], Sigma, 120)
+subs[60:] *= 2.5
+pp.generalized_variance_chart(subs, subgroup_size=6).plot()
+```
+
+![Carta de varianza generalizada |S|](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/gv.png)
 
 ---
 

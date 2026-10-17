@@ -191,6 +191,7 @@ src/pccpy/
   normality.py       # Anderson-Darling, Shapiro, D'Agostino
   plotting.py        # plot_control_chart, plot_capability, ...
   quality_tools.py   # pareto, plot_pareto
+scripts/             # comprobaciones de CI y generar_figuras_readme.py (figuras de docs/imagenes/ que muestran los README)
 tests/               # un archivo por área; fixture `rng` en conftest.py
 examples/            # ejemplo_basico.py, ejemplo_avanzado.py
 docs/source/         # Sphinx: referencia/*.rst usa autodoc (ver R-12)

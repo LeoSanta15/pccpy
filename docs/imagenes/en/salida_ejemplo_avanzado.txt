@@ -1,0 +1,46 @@
+Control chart Z-MR
+  Parameters: method=histórica, parts=3, runs=4, n=42, sigma_mín=0.5, sigma_máx=2
+  Tests requested: 1, 2, 3, 4, 5, 6
+  Flagged points: 4
+    [MR] point 16: test 1 (value 4.22507) - 1 point more than 3 standard deviations from the center line
+    [MR] point 17: test 1 (value 4.78973) - 1 point more than 3 standard deviations from the center line
+    [Z] point 16: test 1 (value 4.38598) - 1 point more than 3 standard deviations from the center line
+    [Z] point 38: test 4 (value -0.457385) - 14 consecutive points alternating up and down 
+
+Xbar-R  puntos marcados: 12
+I-MR-R  puntos marcados: 1
+{'stage': 1, 'media': 19.799, 'sigma_dentro': 1.195, 'sigma_entre': 1.095, 'sigma_entre_dentro': 1.62, 'subgrupos': 30} 
+
+Control chart T
+  Parameters: distribution=weibull, shape=1.16087, scale=36.2814, n=40
+  Tests requested: 1
+  Flagged points: 1
+    [T] point 13: test 1 (value 250) - 1 point outside the percentiles of the weibull distribution 
+
+Control chart Zona
+  Parameters: mean=0, sigma=1, weights=(0.0, 2.0, 4.0, 8.0), reset=True, n=50
+  Tests requested: 1
+  Flagged points: 2
+    [Zona] point 43: test 1 (value 2.03228) - cumulative zone score >= 8
+    [Zona] point 48: test 1 (value 2.57529) - cumulative zone score >= 8 
+
+Control chart T²
+  Parameters: phase=I, variables=3, points=100, size=1, alpha=0.0013499
+  Tests requested: 1
+  Result: no out-of-control points 
+
+['Control chart T²', '  Parameters: phase=II, variables=3, points=50, size=1, alpha=0.0013499', '  Tests requested: 1']
+Contribuciones en el punto 31:
+X1     6.81
+X2     1.32
+X3    16.09
+Name: contribución (punto 31), dtype: float64
+
+MEWMA primera señal en el punto 33
+MCUSUM primera señal en el punto 33 (h = 6.88)
+T2 por etapas -> centros: [np.float64(2.92), np.float64(2.92)]
+medias por etapa: [-0.   -0.03  1.17] [-0.   -0.03  4.17] 
+
+lambda de Box-Cox por variable: {'X1': 0.1041, 'X2': 0.114, 'X3': 0.2551} 
+
+Figuras en salida

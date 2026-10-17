@@ -1,0 +1,46 @@
+Carta de control Z-MR
+  Parámetros: método=histórica, partes=3, corridas=4, n=42, sigma_mín=0.5, sigma_máx=2
+  Pruebas solicitadas: 1, 2, 3, 4, 5, 6
+  Puntos marcados: 4
+    [MR] punto 16: prueba 1 (valor 4.22507) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [MR] punto 17: prueba 1 (valor 4.78973) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [Z] punto 16: prueba 1 (valor 4.38598) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [Z] punto 38: prueba 4 (valor -0.457385) - 14 puntos consecutivos alternando arriba y abajo 
+
+Xbar-R  puntos marcados: 12
+I-MR-R  puntos marcados: 1
+{'stage': 1, 'media': 19.799, 'sigma_dentro': 1.195, 'sigma_entre': 1.095, 'sigma_entre_dentro': 1.62, 'subgrupos': 30} 
+
+Carta de control T
+  Parámetros: distribución=weibull, forma=1.16087, escala=36.2814, n=40
+  Pruebas solicitadas: 1
+  Puntos marcados: 1
+    [T] punto 13: prueba 1 (valor 250) - 1 punto fuera de los percentiles de la distribución weibull 
+
+Carta de control Zona
+  Parámetros: media=0, sigma=1, pesos=(0.0, 2.0, 4.0, 8.0), reinicio=True, n=50
+  Pruebas solicitadas: 1
+  Puntos marcados: 2
+    [Zona] punto 43: prueba 1 (valor 2.03228) - puntaje acumulado de zona >= 8
+    [Zona] punto 48: prueba 1 (valor 2.57529) - puntaje acumulado de zona >= 8 
+
+Carta de control T²
+  Parámetros: fase=I, variables=3, puntos=100, tamaño=1, alfa=0.0013499
+  Pruebas solicitadas: 1
+  Resultado: sin puntos fuera de control 
+
+['Carta de control T²', '  Parámetros: fase=II, variables=3, puntos=50, tamaño=1, alfa=0.0013499', '  Pruebas solicitadas: 1']
+Contribuciones en el punto 31:
+X1     6.81
+X2     1.32
+X3    16.09
+Name: contribución (punto 31), dtype: float64
+
+MEWMA primera señal en el punto 33
+MCUSUM primera señal en el punto 33 (h = 6.88)
+T2 por etapas -> centros: [np.float64(2.92), np.float64(2.92)]
+medias por etapa: [-0.   -0.03  1.17] [-0.   -0.03  4.17] 
+
+lambda de Box-Cox por variable: {'X1': 0.1041, 'X2': 0.114, 'X3': 0.2551} 
+
+Figuras en salida

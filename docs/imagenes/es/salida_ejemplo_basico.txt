@@ -1,0 +1,111 @@
+Carta de control I-MR
+  Parámetros: media=101.347, sigma=1.45895, MR_prom=1.64624, n=60
+  Pruebas solicitadas: 1, 2, 3, 4, 5, 6
+  Puntos marcados: 44
+    [I] punto 10: prueba 6 (valor 99.6611) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 13: prueba 2 (valor 99.9038) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 14: prueba 2 (valor 99.8718) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 15: prueba 2 (valor 100.241) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 16: prueba 2 (valor 99.079) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 17: prueba 2 (valor 99.3944) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 18: prueba 2 (valor 100.822) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 19: prueba 2 (valor 99.8043) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 20: prueba 2 (valor 97.9384) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 20: prueba 6 (valor 97.9384) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 21: prueba 2 (valor 99.2841) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 21: prueba 6 (valor 99.2841) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 22: prueba 2 (valor 100.985) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 23: prueba 2 (valor 99.6516) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 23: prueba 6 (valor 99.6516) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 24: prueba 2 (valor 99.7769) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 24: prueba 6 (valor 99.7769) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 25: prueba 2 (valor 100.963) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 31: prueba 5 (valor 98.2457) - 2 de 3 puntos a más de 2 desviaciones estándar (mismo lado)
+    [I] punto 38: prueba 4 (valor 99.3139) - 14 puntos consecutivos alternando arriba y abajo
+    [I] punto 47: prueba 1 (valor 106.275) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [I] punto 47: prueba 6 (valor 106.275) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 49: prueba 1 (valor 106.839) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [I] punto 49: prueba 2 (valor 106.839) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 49: prueba 5 (valor 106.839) - 2 de 3 puntos a más de 2 desviaciones estándar (mismo lado)
+    [I] punto 49: prueba 6 (valor 106.839) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 50: prueba 1 (valor 107.726) - 1 punto a más de 3 desviaciones estándar de la línea central
+    [I] punto 50: prueba 2 (valor 107.726) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 50: prueba 5 (valor 107.726) - 2 de 3 puntos a más de 2 desviaciones estándar (mismo lado)
+    [I] punto 50: prueba 6 (valor 107.726) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 51: prueba 2 (valor 105.428) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 51: prueba 5 (valor 105.428) - 2 de 3 puntos a más de 2 desviaciones estándar (mismo lado)
+    [I] punto 51: prueba 6 (valor 105.428) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 52: prueba 2 (valor 104.241) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 52: prueba 6 (valor 104.241) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 53: prueba 2 (valor 102.004) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 54: prueba 2 (valor 104.492) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 54: prueba 6 (valor 104.492) - 4 de 5 puntos a más de 1 desviación estándar (mismo lado)
+    [I] punto 55: prueba 2 (valor 102.336) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 56: prueba 2 (valor 102.968) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 57: prueba 2 (valor 102.564) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 58: prueba 2 (valor 103.426) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 59: prueba 2 (valor 104.932) - 9 puntos consecutivos del mismo lado de la línea central
+    [I] punto 60: prueba 2 (valor 102.167) - 9 puntos consecutivos del mismo lado de la línea central
+  panel  punto  ...       valor                                        descripcion
+0     I     10  ...   99.661137  4 de 5 puntos a más de 1 desviación estándar (...
+1     I     13  ...   99.903808  9 puntos consecutivos del mismo lado de la lín...
+2     I     14  ...   99.871785  9 puntos consecutivos del mismo lado de la lín...
+3     I     15  ...  100.241374  9 puntos consecutivos del mismo lado de la lín...
+4     I     16  ...   99.078972  9 puntos consecutivos del mismo lado de la lín...
+
+[5 rows x 5 columns] 
+
+Carta de control Xbar-R
+  Parámetros: media=50.0238, sigma=0.876888, subgrupos=25, tamaño=5
+  Pruebas solicitadas: 1, 2, 3, 4, 5, 6, 7, 8
+  Resultado: sin puntos fuera de control 
+
+Análisis de capacidad del proceso (distribución normal)
+  LEI=95.0000  Objetivo=100.0000  LES=105.0000
+  N=150  Media=100.44554  Desv.Est.(dentro)=1.37977 [mr]  Desv.Est.(general)=1.52887
+  Capacidad potencial (dentro):
+    Cp=1.21  CPL=1.32  CPU=1.10  Cpk=1.10
+    Z.Bench=3.28
+  Desempeño general:
+    Pp=1.09  PPL=1.19  PPU=0.99  Ppk=0.99  Cpm=1.05
+    IC 95% Pp: (0.97, 1.21)   IC 95% Ppk: (0.87, 1.12)
+    Z.Bench=2.94  Z.LEI=3.56  Z.LES=2.98  Nivel Sigma=2.94  DPMO=1,630
+  Desempeño (PPM):            < LEI       > LES      Total
+    Observado               0.00        0.00       0.00
+    Esperado dentro        39.62      481.91     521.53
+    Esperado general      184.16     1446.09    1630.25 
+
+Cpk = 1.1 | Ppk = 0.993 
+
+Anderson-Darling: estadístico = 3.3147, valor p < 0.005 (n = 200)
+Análisis de capacidad (no normal) - distribución weibull
+  LEI=0.1000  LES=12.0000  N=200  logL=-363.872  AIC=731.745
+  Percentiles: 0.135% = 0.17925   50% = 3.13714   99.865% = 8.82399
+  Pp=1.38  PPL=1.03  PPU=1.56  Ppk=1.03
+  Desempeño (PPM):            < LEI       > LES      Total
+    Observado               0.00        0.00       0.00
+    Esperado              378.35        2.46     380.81 
+
+Análisis de capacidad del proceso (distribución normal)
+  LEI=0.1000  Objetivo=*  LES=12.0000
+  N=200  Media=1.18909  Desv.Est.(dentro)=0.58063 [mr]  Desv.Est.(general)=0.58889
+  Transformación Box-Cox con lambda = 0.1615 (Media, Desv.Est. y Z.* están en la escala transformada; LEI/LES/objetivo y PPM observado, en unidades originales)
+  Capacidad potencial (dentro):
+    Cp=1.43  CPL=1.79  CPU=1.07  Cpk=1.07
+    Z.Bench=3.22
+  Desempeño general:
+    Pp=1.41  PPL=1.76  PPU=1.06  Ppk=1.06  Cpm=*
+    IC 95% Pp: (1.27, 1.55)   IC 95% Ppk: (0.94, 1.17)
+    Z.Bench=3.17  Z.LEI=5.28  Z.LES=3.17  Nivel Sigma=3.17  DPMO=754
+  Desempeño (PPM):            < LEI       > LES      Total
+    Observado               0.00        0.00       0.00
+    Esperado dentro         0.04      645.19     645.23
+    Esperado general        0.06      754.37     754.43 
+
+    categoría  conteo  porcentaje   acumulado
+0       Rayón       3   42.857143   42.857143
+1  Abolladura       2   28.571429   71.428571
+2      Mancha       1   14.285714   85.714286
+3        Otro       1   14.285714  100.000000
+
+Figuras guardadas en salida

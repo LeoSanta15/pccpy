@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - figuras y salidas de los ejemplos en el README
+
+Solo documentación: no cambia código ni resultados.
+
+### Añadido
+- **Sección «Ejemplos con resultados» en `README.md` y `README_en.md`**: las 13 figuras de `examples/ejemplo_basico.py` y `examples/ejemplo_avanzado.py` (I-MR, Xbar-R, P, Sixpack, Pareto, Z-MR, I-MR-R, G, Zona, T², MEWMA, MCUSUM y varianza generalizada) con el código y la salida real de cada ejemplo, en español y en inglés (semilla `default_rng(2026)`). La página de PyPI no mostraba ninguna figura porque el README no tenía imágenes y PyPI no resuelve rutas relativas: las figuras (`docs/imagenes/<idioma>/*.png`, paleta de 256 colores, unos 340 KB por idioma) se enlazan con URL absolutas a `raw.githubusercontent.com` (se ven en PyPI desde la siguiente versión publicada). Se regeneran con `python scripts/generar_figuras_readme.py`; `tests/test_readme_imagenes.py` comprueba que existen, que son absolutas y que están todas en los dos README. Las salidas del README son extractos de esos archivos.
+
 ## [0.15.4] - ARL, probabilidad de un valor en la capacidad y leyenda de la CUSUM
 
 No cambia ningún resultado numérico existente: son funciones y un método nuevos, y una leyenda en el gráfico de la CUSUM.
