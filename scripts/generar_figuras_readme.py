@@ -22,7 +22,7 @@ from PIL import Image
 
 RAIZ = Path(__file__).resolve().parent.parent
 DESTINO = RAIZ / "docs" / "imagenes"
-EJEMPLOS = ("basic_example", "advanced_example")
+EJEMPLOS = ("basic_example", "advanced_example", "gallery_example")
 
 
 def _optimizar(origen: Path, destino: Path) -> None:

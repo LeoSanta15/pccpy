@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - figuras en las secciones de referencia del README
+
+No cambia ningún resultado ni la API.
+
+### Añadido
+- **11 figuras más en `README.md` y `README_en.md`** (24 por idioma), en las secciones de referencia que no tenían: Xbar-S, C, Laney P', EWMA, CUSUM, media móvil, T, capacidad normal, no normal (Weibull), Box-Cox y binomial. Las genera el nuevo `examples/gallery_example.py` (semilla `default_rng(2026)`) mediante `python scripts/generar_figuras_readme.py`.
+
 ## [0.15.5] - claves en inglés, probabilidad de un valor en las cartas y figuras en el README
 
 Esta versión tiene un **cambio incompatible** (publicado como 0.15.5 por decisión de la persona responsable): los datos con clave de los

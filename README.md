@@ -494,6 +494,8 @@ Con **tamaños de subgrupo desiguales**, `'rbar'` y `'sbar'` promedian las estim
 inversa: `Σ wᵢ·Rᵢ/d2(nᵢ) / Σ wᵢ` con `wᵢ = d2(nᵢ)²/d3(nᵢ)²`, y `Σ hᵢ·sᵢ/c4(nᵢ) / Σ hᵢ` con `hᵢ = c4(nᵢ)²/(1 − c4(nᵢ)²)`. Con tamaño
 constante los pesos son iguales y el resultado es el promedio simple de siempre.
 
+![Carta Xbar-S con subgrupos de 10 observaciones](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/xbar_s.png)
+
 ---
 
 ### Formatos de entrada de datos
@@ -662,6 +664,10 @@ pp.laney_u_chart(defectos, n=n_unidades)
 Cuando `n` es un escalar se aplica el mismo tamaño a todas las muestras. Con `n`
 variable los límites se calculan individualmente para cada punto.
 
+![Carta C](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/c.png)
+
+![Carta Laney P' con proporciones sobredispersas](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/laney_p.png)
+
 ---
 
 ## Cartas de tiempo ponderado
@@ -693,6 +699,8 @@ cada una. ARL en control con σ conocida y λ = 0,2, L = 3: ≈ 560 con límites
 | 0.20 | desplazamientos moderados (½σ – 1σ) | moderada (recomendado Minitab) |
 | 0.40+ | parecido a carta Shewhart | poca |
 
+![Carta EWMA ante un desplazamiento pequeño](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/ewma.png)
+
 ---
 
 ### CUSUM
@@ -718,6 +726,8 @@ El gráfico nombra sus dos series con una leyenda: «C+ (suma superior)» y «C-
 > control mayor sube `H` (con `H = 5`, ≈ 470). `sigma_method=` y `stages=` funcionan como en la EWMA
 > (las sumas se reinician en `headstart` al empezar cada etapa).
 
+![Carta CUSUM: acumuladores C+ y C-](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/cusum.png)
+
 ---
 
 ### Media móvil
@@ -732,6 +742,8 @@ pp.ma_chart(
     length=5,   # ventana de la media móvil; defecto: 3
 )
 ```
+
+![Carta de media móvil](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/ma.png)
 
 ---
 
@@ -822,6 +834,8 @@ que los eventos se vuelven más frecuentes, algo que el límite inferior 0 de la
 G no puede mostrar. Diferencias posibles con Minitab: Minitab la activa por defecto
 y pccpy no; la fórmula de `c` es una definición propia de pccpy, no contrastada con
 Minitab (no se pudo consultar su fórmula).
+
+![Carta T (tiempo entre eventos)](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/t.png)
 
 ### ARL (longitud media de racha)
 
@@ -1101,6 +1115,8 @@ res.plot()       # histograma con curvas dentro / general y especificaciones
 Si el proceso está en control, Cpk ≈ Ppk. Una diferencia grande indica inestabilidad
 o variación entre subgrupos.
 
+![Histograma de capacidad normal](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/capability.png)
+
 ---
 
 ### Capacidad no normal
@@ -1125,6 +1141,8 @@ print(res_nn.summary())
 Los parámetros se ajustan por máxima verosimilitud. Los índices Pp/Ppk se calculan
 por el **método de percentiles** (ISO 22514-2), que es compatible con Minitab.
 
+![Capacidad con ajuste Weibull](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/capability_nonnormal.png)
+
 ---
 
 ### Capacidad con transformación Box-Cox
@@ -1139,6 +1157,8 @@ res_bc = pp.capability_boxcox(
 print(res_bc.summary())
 res_bc.transform     # {'lambda': 0.42}
 ```
+
+![Capacidad con transformación Box-Cox](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/capability_boxcox.png)
 
 ---
 
@@ -1224,6 +1244,8 @@ r.plot()                                               # tasa por muestra y esti
 q = pp.capability_poisson(defectos, units=10, opportunities=20)
 q.dpu, q.dpu_ci, q.dpmo, q.z
 ```
+
+![Capacidad binomial por muestra](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/capability_binomial.png)
 
 ---
 

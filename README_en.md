@@ -496,6 +496,8 @@ With **unequal subgroup sizes**, `'rbar'` and `'sbar'` average the per-subgroup 
 `Σ wᵢ·Rᵢ/d2(nᵢ) / Σ wᵢ` with `wᵢ = d2(nᵢ)²/d3(nᵢ)²`, and `Σ hᵢ·sᵢ/c4(nᵢ) / Σ hᵢ` with `hᵢ = c4(nᵢ)²/(1 − c4(nᵢ)²)`. With a
 constant size the weights are equal and the result is the usual simple average.
 
+![Xbar-S chart with subgroups of 10 observations](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/xbar_s.png)
+
 ---
 
 ### Data input formats
@@ -665,6 +667,10 @@ pp.laney_u_chart(defects, n=n_units)
 When `n` is a scalar, the same size is applied to all the samples. With a variable
 `n` the limits are computed individually for each point.
 
+![C chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/c.png)
+
+![Laney P' chart with overdispersed proportions](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/laney_p.png)
+
 ---
 
 ## Time-weighted charts
@@ -696,6 +702,8 @@ start of each one. In-control ARL with known σ, λ = 0.2 and L = 3: ≈ 560 wit
 | 0.20 | moderate shifts (½σ – 1σ) | moderate (Minitab recommended) |
 | 0.40+ | similar to a Shewhart chart | short |
 
+![EWMA chart on a small shift](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/ewma.png)
+
 ---
 
 ### CUSUM
@@ -721,6 +729,8 @@ The plot names its two series in a legend: "C+ (upper sum)" and "C- (lower sum)"
 > raise `H` (with `H = 5`, ≈ 470). `sigma_method=` and `stages=` work as in the EWMA (the sums
 > restart at `headstart` at the beginning of each stage).
 
+![CUSUM chart: C+ and C- accumulators](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/cusum.png)
+
 ---
 
 ### Moving average
@@ -735,6 +745,8 @@ pp.ma_chart(
     length=5,   # moving average window; default: 3
 )
 ```
+
+![Moving average chart](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/ma.png)
 
 ---
 
@@ -823,6 +835,8 @@ with `c` the smallest integer such that `p^c ≤ 1 − Φ(k)`; it detects events
 more frequent, which the lower limit of 0 of the G chart cannot show. Possible differences
 from Minitab: Minitab enables it by default and pccpy does not; the formula for `c` is
 pccpy's own definition, not checked against Minitab (its formula could not be consulted).
+
+![T chart (time between events)](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/t.png)
 
 ### ARL (average run length)
 
@@ -1103,6 +1117,8 @@ res.plot()       # histogram with within / overall curves and specifications
 If the process is in control, Cpk ≈ Ppk. A large difference indicates instability
 or between-subgroup variation.
 
+![Normal capability histogram](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/capability.png)
+
 ---
 
 ### Non-normal capability
@@ -1127,6 +1143,8 @@ print(res_nn.summary())
 The parameters are fitted by maximum likelihood. The Pp/Ppk indices are computed
 with the **percentile method** (ISO 22514-2), which is compatible with Minitab.
 
+![Capability with a Weibull fit](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/capability_nonnormal.png)
+
 ---
 
 ### Capability with Box-Cox transformation
@@ -1141,6 +1159,8 @@ res_bc = pp.capability_boxcox(
 print(res_bc.summary())
 res_bc.transform     # {'lambda': 0.42}
 ```
+
+![Capability with a Box-Cox transformation](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/capability_boxcox.png)
 
 ---
 
@@ -1226,6 +1246,8 @@ r.plot()                                               # rate by sample and cumu
 q = pp.capability_poisson(defects, units=10, opportunities=20)
 q.dpu, q.dpu_ci, q.dpmo, q.z
 ```
+
+![Binomial capability by sample](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/capability_binomial.png)
 
 ---
 
