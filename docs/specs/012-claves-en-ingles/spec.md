@@ -3,7 +3,8 @@
 - **Estado:** borrador
 - **Identificador:** S012
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** 0.16.0 (rompe `chart.params` y los nombres de la carta de zona: versión menor y aviso en «Cambios que alteran resultados»)
+- **Versión objetivo:** 0.15.5 (decisión de la persona responsable; aunque rompe `chart.params` y los nombres de la carta de zona,
+  que según la regla del proyecto pedirían versión menor, se publica como 0.15.5 con aviso en «Cambios que alteran resultados»)
 
 ## Problema
 
@@ -83,7 +84,19 @@ canónicas.
 - La suite completa pasa.
 - `grep` de las claves españolas de la tabla en `src/` solo las encuentra en el diccionario que traduce lo que se muestra.
 
-### S012-RF-06 — Documentación, CHANGELOG y traducciones
+### S012-RF-06 — Los archivos de Fase I guardados con 0.15.x se siguen leyendo
+
+Un resultado de Fase I guardado con 0.15.x (límites congelados derivados de las claves en español) se lee con la versión nueva y da
+los mismos límites. No es un alias del código: es compatibilidad con archivos que el usuario ya guardó y no puede regenerar sin los
+datos. Los archivos nuevos se escriben con las claves en inglés y un `schema_version` mayor.
+
+**Aceptación:**
+- **Dado** un archivo de Fase I escrito con 0.15.5 (fixture en `tests/`, tal como lo escribía esa versión) **cuando** se lee
+  **entonces** da los mismos límites que antes.
+- Un archivo escrito con la versión nueva se lee con la nueva. Con una versión anterior no se garantiza.
+- **Referencia independiente:** los límites del archivo antiguo, escritos en el test.
+
+### S012-RF-07 — Documentación, CHANGELOG y traducciones
 
 **Aceptación:**
 - «Cambios que alteran resultados» del CHANGELOG lista la tabla completa de claves, dice que no hay alias y cómo actualizar el código
@@ -120,13 +133,13 @@ Los nombres de la derecha son código: no cambian con el idioma. `summary()` los
 | Etapas (varios diccionarios) | Todas con claves canónicas; `stage` ya es inglés |
 | Cartas multivariadas | Mismas claves canónicas (`phase`, `variables`, `points`, `size`, `alpha`…) |
 | `summary()` con el idioma español | Idéntico al de 0.15.5 |
-| Resultado de Fase I guardado con 0.15.x | Ver las preguntas abiertas |
+| Resultado de Fase I guardado con 0.15.x | Se lee y da los mismos límites (RF-06) |
 
 ## Resultados existentes que cambian
 
 `chart.params[i]` deja de tener las claves en español (`KeyError` si se leen). Para la carta de zona, `chart.kind` y los nombres de
 panel pasan de `"Zona"`/`"Puntaje"` a `"Zone"`/`"Score"`. Ningún valor numérico cambia. Es un cambio incompatible, anunciado en el
-CHANGELOG y con versión menor.
+CHANGELOG y publicado como 0.15.5 por decisión de la persona responsable.
 
 ## No verificable sin la fuente
 
@@ -140,10 +153,9 @@ actualizar. Que Minitab use estos nombres no es relevante (son datos internos de
 3. **Sin alias**: cambio de golpe (`carta.params[0]["mean"]`).
 4. Los nombres de la tabla son código en inglés y no dependen del idioma; `summary()` los traduce al mostrarlos. (Los nombres
    concretos de la tabla se revisan al aprobar la especificación.)
+5. Los archivos de Fase I guardados con 0.15.x **se siguen leyendo** (RF-06).
+6. **Versión 0.15.5**, no 0.16.0.
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: **Resultados de Fase I guardados con 0.15.x.** `phase_one(...)` guarda archivos con los límites congelados
-  (derivados de `params`). Sin alias, ¿esos archivos antiguos dejan de poder leerse (cambio de golpe también ahí) o el lector
-  los convierte al leerlos? Recomiendo que el lector los siga leyendo (no es un alias del código: es compatibilidad con archivos que
-  el usuario ya guardó y que no se pueden regenerar sin los datos).]
+Ninguna.

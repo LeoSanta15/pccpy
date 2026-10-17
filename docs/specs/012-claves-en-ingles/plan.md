@@ -2,8 +2,8 @@
 
 - **Especificación:** [spec.md](spec.md)
 - **Respeta la constitución:** sí con una excepción justificada: rompe lo que devuelve `chart.params` y los nombres de la carta de
-  zona (principio 3, «lo existente no cambia sin avisar»); se avisa en el CHANGELOG y sube la versión menor. Sin alias, por decisión
-  de la persona responsable.
+  zona (principio 3, «lo existente no cambia sin avisar»); se avisa en el CHANGELOG y se publica como 0.15.5. Sin alias y
+  con versión 0.15.5, por decisión de la persona responsable.
 
 ## Diseño
 
@@ -11,7 +11,8 @@
   `_VALORES_PARAMETRO` mapea `"historical"` a su texto en español; el `summary()` los traduce como hoy.
 - Las cartas (`charts/*.py`, `multivariate.py`) construyen sus diccionarios con las claves en inglés de la tabla
   (`variables.py`, `attributes.py`, `timeweighted*.py`, `advanced.py`, `multivariate.py`).
-- `phase1.py` y su serialización: lee las claves nuevas; para los archivos guardados con 0.15.x, según la pregunta abierta.
+- `phase1.py` y su serialización: escribe las claves en inglés con un `schema_version` mayor y, al leer un archivo guardado con 0.15.x,
+  convierte las claves españolas (tabla de equivalencias) antes de congelar los límites; es compatibilidad con archivos, no un alias.
 - Carta de zona: `kind` y paneles `"Zone"`/`"Score"`; `_NOMBRES_VISIBLES` mapea esos nombres a «Zona»/«Puntaje» para mostrarlos.
 - Ejemplos, README, guías y tests usan las claves nuevas.
 - Catálogos `.po`: las entradas pasan a tener como `msgid` el texto en español que ya existe; no cambia el texto mostrado.
@@ -23,7 +24,7 @@
 | Sin alias | Alias con `DeprecationWarning` hasta la 0.18.0 | Decisión de la persona responsable |
 | Claves en inglés, texto mostrado traducido | Claves en el idioma activo | El código no puede depender del idioma |
 | Renombrar `kind` y paneles de la carta de zona | Dejarlos | Mismo principio |
-| Versión menor (0.16.0) | Parche | Es un cambio incompatible |
+| Versión 0.15.5 | 0.16.0 (versión menor) | Decisión de la persona responsable, aunque el cambio es incompatible |
 
 ## Validación independiente
 
@@ -34,7 +35,7 @@ nueva en `run_validation()`.
 ## Riesgos
 
 - Código de usuario que lea `params["media"]`: falla con `KeyError`; se anuncia en el CHANGELOG con la tabla y la receta.
-- Archivos de Fase I guardados: según la pregunta abierta; fixture de un archivo de 0.15.x.
+- Archivos de Fase I guardados con 0.15.x: se siguen leyendo; fixture escrita con 0.15.5.
 - Tests, README y guías con las claves antiguas: `grep` en `tests/`, `docs/` y `README*.md`.
 
 ## Documentación y traducciones
