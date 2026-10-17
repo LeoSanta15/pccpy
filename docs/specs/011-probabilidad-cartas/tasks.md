@@ -5,15 +5,16 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan
 
-- [ ] Test de S011-RF-01 (falla hoy: los paneles no guardan la distribución; y los valores de las cartas no cambian).
-- [ ] Test de S011-RF-02 (variables: Xbar, I, EWMA, R, S, MR).
-- [ ] Test de S011-RF-03 (atributos: NP, P, C, U).
-- [ ] Test de S011-RF-04 (G y T).
-- [ ] Test de S011-RF-05 (sin argumentos y consistencia con `arl_*`).
-- [ ] Test de S011-RF-06 (`point=`, etapas, `n` variable).
-- [ ] Test de S011-RF-07 (transformación).
-- [ ] Test de S011-RF-08 (resultado: `ProbabilityResult` con `panel` y `point`; los resultados de capacidad no cambian).
-- [ ] Test de S011-RF-09 (entrada y casos borde).
+- [x] Test de S011-RF-01 (falla hoy: los paneles no guardan la distribución; y los valores de las cartas no cambian).
+- [x] Test de S011-RF-02 (variables: Xbar, I, EWMA, R, S, MR).
+- [x] Test de S011-RF-03 (atributos: NP, P, C, U).
+- [x] Test de S011-RF-04 (G y T).
+- [x] Test de S011-RF-05 (sin argumentos y consistencia con `arl_*`).
+- [x] Test de S011-RF-06 (`point=`, etapas, `n` variable).
+- [x] Test de S011-RF-07 (transformación).
+- [x] Test de S011-RF-08 (resultado: `ProbabilityResult` con `panel` y `point`; los resultados de capacidad no cambian).
+- [x] Test de S011-RF-09 (entrada y casos borde).
+- [x] Test de S011-RF-10 (validación, docstring y ejemplo ejecutable de la guía; fallan hasta la Fase 2).
 
 ## Fase 1 — Implementación
 
