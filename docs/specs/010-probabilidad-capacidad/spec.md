@@ -19,7 +19,7 @@ transformar el valor con el `lambda` guardado.
 ## Fuera de alcance
 
 - Capacidad de atributos (`capability_binomial` y `capability_poisson`): su «probabilidad» es la de un conteo.
-- Varios valores a la vez (arreglos): cada llamada prueba un valor (o un intervalo). Se puede llamar en un bucle.
+- Arreglos de más de una dimensión: los valores son un número o un arreglo de una dimensión.
 - Intervalos de confianza de la probabilidad (el error de haber estimado la media y la sigma).
 - Cambiar los resultados existentes (`ppm_*`, `dpmo`, `z_*`).
 - Una función suelta: el cálculo es un método del resultado (decisión de la persona responsable).
@@ -27,6 +27,9 @@ transformar el valor con el `lambda` guardado.
 ## Requisitos
 
 Todos los valores van en las **unidades originales** de los datos, también cuando el análisis se hizo con una transformación.
+Cada valor (`below`, `above` y cada extremo de `between`) puede ser un número o un arreglo de una dimensión; los arreglos se
+combinan elemento a elemento (con las reglas de difusión de NumPy: un número se repite) y cada medida del resultado tiene la
+forma resultante (un número si todo son números).
 
 ### S010-RF-01 — Probabilidad por debajo, por encima o entre valores (distribución normal)
 
@@ -35,7 +38,7 @@ va en el propio parámetro. Con una observación `X` del proceso (normal con la 
 
 - `below=a`: `P(X < a)`;
 - `above=b`: `P(X > b)`;
-- `between=(a, b)`: `P(a ≤ X ≤ b)` (exige `a ≤ b`).
+- `between=(a, b)`: `P(a ≤ X ≤ b)` (exige `a ≤ b` en cada elemento).
 
 `sigma="overall"` (por defecto) usa `sigma_overall`; `sigma="within"` usa `sigma_within`.
 
@@ -95,7 +98,8 @@ distribución ajustada (`frozen`): `cdf` para `below`, `sf` para `above` y `cdf(
 
 Con `between` (la zona buena, no un defecto), `dpmo` y `dpu` **no aplican** y valen `None`. El resultado trae además `p_below` y
 `p_above` (las dos partes, `None` si no hay), el evento (`event`: `"below"`, `"above"`, `"outside"` o `"between"`), los valores
-usados y la sigma elegida; tiene `to_frame(stable=False)` (con claves canónicas si `stable=True`) y `summary()`.
+usados y la sigma elegida. Con arreglos, las medidas son arreglos de la forma resultante. Tiene `to_frame(stable=False)` (una fila por
+elemento; con claves canónicas si `stable=True`) y `summary()`.
 
 **Aceptación:**
 - `ppm == 1e6 · probability` y `dpmo == ppm` (cuando aplica).
@@ -109,11 +113,12 @@ usados y la sigma elegida; tiene `to_frame(stable=False)` (con claves canónicas
 
 **Aceptación:**
 - `sigma` fuera de `{"overall", "within"}` → `ValueError`.
-- `between` que no sea un par `(a, b)` o con `a > b`, o combinado con `below`/`above` → `ValueError`.
+- `between` que no sea un par `(a, b)` o con `a > b` en algún elemento, o combinado con `below`/`above` → `ValueError`.
 - Valores con NaN → `ValueError`; `±inf` es válido (`below=+inf` da 1, `above=+inf` da 0, `below=−inf` da 0).
+- Arreglos de más de una dimensión, vacíos o que no se pueden combinar (formas incompatibles) → `ValueError`.
+- Con arreglos, cada elemento da el mismo resultado que la llamada con ese número solo.
 - `opportunities` no entero o < 1 → `ValueError`.
 - Con sigma 0 (datos constantes) la probabilidad es un escalón: 0 o 1 según el lado, y 0,5 si el valor es la media.
-- Los valores son números, no arreglos (un arreglo lanza `ValueError` que sugiere un bucle).
 
 ### S010-RF-07 — Coherencia con los resultados existentes
 
@@ -142,6 +147,9 @@ usados y la sigma elegida; tiene `to_frame(stable=False)` (con claves canónicas
 | Sin argumentos y con LEI y LES | Fuera de especificaciones: `P(X < LEI) + P(X > LES)` |
 | Sin argumentos y sin límites | `ValueError` que pide indicar `below`, `above` o `between` |
 | Valor en la media | `below` = `above` = 0,5 |
+| `below=[44, 45, 46]` | Tres probabilidades, una por valor |
+| `below=[44, 45]` y `above=56` | `above` se repite: dos probabilidades de quedar fuera |
+| Arreglo vacío o de dos dimensiones | `ValueError` |
 | `±inf` | 0 o 1, sin error |
 | `between=(a, a)` | 0 |
 | Cola muy pequeña (a 10 sigmas) | `above` con la cola superior, sin cancelación |
@@ -164,17 +172,14 @@ conocidas: no incluye la incertidumbre de haberlas estimado.
 1. **Medidas:** devolver todas las que apliquen (probabilidad, PPM, DPMO y DPU), no una a elegir.
 2. **Parámetros:** `below`, `above` y `between` (el valor va en el propio parámetro); no hay un `x` aparte.
 3. **Sigma:** general por defecto y, si el usuario quiere, la de dentro.
-4. **Alcance:** distribución normal y no normal.
+4. **Alcance:** distribución normal y no normal; los valores pueden ser números o arreglos.
 5. **Forma:** método del resultado.
 6. **Versión:** 0.15.4.
 
+7. **`dpmo` y `dpu` con `between`:** no aplican (la zona buena no es un defecto); valen `None`.
+8. **`dpu`:** `opportunities · p` con `opportunities = 1` por defecto.
+9. **Sin argumentos:** `probability()` hereda `lsl` y `usl` del resultado.
+
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: 1. **`dpmo` y `dpu` con `between`.** «Las que apliquen» lo entendí así: `between` es la zona buena
-  (no un defecto), así que `dpmo` y `dpu` valen `None` y solo se dan `probability` y `ppm`. ¿Es lo que querías, o `dpmo` y
-  `dpu` también deben darse con `between`?]
-- [NECESITA ACLARACIÓN: 2. **Definición de `dpu`.** Propuesta (RF-05): `dpu = opportunities · p` con `opportunities = 1` por
-  defecto, de modo que para una sola característica `dpu` coincide con la probabilidad y `dpmo` con el PPM. ¿Te sirve, o `dpu`
-  debe ser otra cosa (por ejemplo, el número esperado de defectos en una pieza con varias características)?]
-- [NECESITA ACLARACIÓN: 3. **Sin argumentos.** Propuesta (RF-02): `probability()` hereda `lsl` y `usl` del resultado y da la
-  probabilidad de quedar fuera de especificaciones, con las dos partes. ¿Lo dejamos así, o sin argumentos debe lanzar un error?]
+Ninguna.

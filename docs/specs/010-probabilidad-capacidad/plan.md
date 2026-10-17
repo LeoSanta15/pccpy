@@ -7,7 +7,8 @@
 
 - `capability.py`: método `probability(*, below, above, between, sigma, opportunities)` en `CapabilityResult` y en
   `NonNormalCapabilityResult`, y la clase de resultado `ProbabilityResult` (dataclass con `event`, `probability`, `ppm`, `dpmo`,
-  `dpu`, `p_below`, `p_above`, los valores usados, `sigma` y `opportunities`; `summary()` y `to_frame(stable=False)`). Un auxiliar
+  `dpu`, `p_below`, `p_above`, los valores usados, `sigma` y `opportunities`; con arreglos, las medidas son arreglos;
+  `summary()` y `to_frame(stable=False)`, con una fila por elemento). Un auxiliar
   privado común valida la entrada, interpreta los parámetros y arma el resultado a partir de dos funciones que aporta cada clase:
   `cdf(x)` y `sf(x)` (la normal con `scipy.special.ndtr`; la no normal con `frozen`).
 - Con `CapabilityResult.transform`, los valores pasan por `Transformation.from_info(self.transform).forward` antes (la misma
@@ -25,7 +26,7 @@
 | `below`/`above`/`between` | `kind` + `x` | Decisión de la persona responsable: el valor va en el parámetro |
 | Devuelve todas las medidas en un `ProbabilityResult` | `unit=` para elegir una | Decisión de la persona responsable |
 | Sigma general por defecto | Dentro por defecto | Decisión de la persona responsable (como el DPMO) |
-| Un valor por llamada | Arreglos | Simplicidad; un bucle cubre el caso |
+| Acepta números o arreglos de una dimensión | Solo un valor por llamada | Decisión de la persona responsable |
 
 ## Validación independiente
 

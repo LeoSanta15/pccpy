@@ -10,7 +10,7 @@ deben fallar por el motivo esperado.
 - [ ] Test de S010-RF-03 (con Box-Cox, Yeo-Johnson y Johnson).
 - [ ] Test de S010-RF-04 (no normal).
 - [ ] Test de S010-RF-05 (todas las medidas y `ProbabilityResult`).
-- [ ] Test de S010-RF-06 (entrada y casos borde).
+- [ ] Test de S010-RF-06 (entrada y casos borde, con arreglos: elemento a elemento, difusión, vacíos y varias dimensiones).
 - [ ] Test de S010-RF-07 (coherencia con `ppm_overall`, `ppm_within` y `ppm_expected`).
 
 ## Fase 1 — Implementación
