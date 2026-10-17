@@ -47,8 +47,7 @@ límites no cambian (`centro ± 3σ/√nᵢ`).
 
 **Aceptación:**
 - **Dado** subgrupos **cuando** `center="median"` **entonces** el centro es `numpy.median(medias de subgrupo)`.
-- [NECESITA ACLARACIÓN: ¿la mediana de las medias de subgrupo, o la mediana de todas las observaciones? Se propone la primera: es el
-  estimador del centro de lo que se grafica.]
+- Decidido por la persona responsable: el centro es la mediana de las medias de subgrupo (el estimador del centro de lo que se grafica).
 
 ### S013-RF-03 — Combinación con `mu`
 
@@ -75,12 +74,9 @@ límites no cambian (`centro ± 3σ/√nᵢ`).
 
 ### S013-RF-05 — Tamaños de subgrupo de la carta X̃
 
-**Aceptación:** con un tamaño no admitido (según la respuesta de abajo) lanza `ValueError`; con uno admitido construye la carta.
+**Aceptación:** con `n = 1` o con tamaños de subgrupo desiguales lanza `ValueError`; con cualquier `n ≥ 2` constante construye la carta.
 
-[NECESITA ACLARACIÓN: ¿solo `n` impar (n = 3, 5, 7, 9, …), como las tablas de Montgomery, y error con `n` par o `n` desigual? Con `n` par la mediana
-es el promedio de los dos valores centrales y `cmed` se puede integrar igual, pero no hay tabla publicada con la que contrastarlo. Se propone
-aceptar cualquier `n ≥ 2` constante, calcular `cmed` por integración, y avisar en la documentación que solo los impares se contrastaron con
-la tabla.]
+Decidido por la persona responsable: se acepta cualquier `n ≥ 2` constante y `cmed(n)` se calcula por integración; solo los tamaños impares se contrastan con la tabla de Montgomery, y la documentación lo dice.
 
 ### S013-RF-06 — `ControlChart.probability()` en la carta X̃
 
@@ -124,9 +120,10 @@ Ninguno: `center` por defecto es `"mean"` y `chart.params` solo gana la clave `c
 
 - Si Minitab ofrece mediana como línea central o una carta X̃, y su fórmula: no se pudo consultar; no se afirma equivalencia.
 - La tabla de Ã2 de Montgomery está recordada de memoria; la verificación es la integración numérica y la simulación.
+- Qué dice la literatura sobre el centro de la carta (búsqueda web del 2026-10-17, **no se pudo abrir ni verificar ningún texto**): para la carta de medianas (X̃) el centro habitual es el promedio de las medianas
+  de subgrupo; no hallé una fuente que fije el centro de una carta Xbar con mediana. Rocke (1989) encontró que las cartas cuyo estadístico de subgrupo ya es resistente (las de medianas) tienen el peor
+  desempeño y recomienda estadísticos como la media recortada; Schoonhoven et al. (2011) comparan estimadores robustos de localización para la carta Xbar. Hay que leer esos artículos antes de afirmar nada en la documentación.
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: RF-02, mediana de medias de subgrupo o de todas las observaciones.]
-- [NECESITA ACLARACIÓN: RF-05, tamaños de subgrupo admitidos en la carta X̃.]
-- [NECESITA ACLARACIÓN: nombre público de la función, `median_r_chart` (propuesto) u otro.]
+Cerradas por la persona responsable: RF-02 (por defecto, la mediana de las medias de subgrupo), RF-05 (cualquier `n ≥ 2` constante, con `cmed(n)` por integración; solo los impares se contrastan con la tabla) y el nombre `median_r_chart`.
