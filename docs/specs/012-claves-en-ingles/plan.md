@@ -11,8 +11,8 @@
   `_VALORES_PARAMETRO` mapea `"historical"` a su texto en español; el `summary()` los traduce como hoy.
 - Las cartas (`charts/*.py`, `multivariate.py`) construyen sus diccionarios con las claves en inglés de la tabla
   (`variables.py`, `attributes.py`, `timeweighted*.py`, `advanced.py`, `multivariate.py`).
-- `phase1.py` y su serialización: escribe las claves en inglés con un `schema_version` mayor y, al leer un archivo guardado con 0.15.x,
-  convierte las claves españolas (tabla de equivalencias) antes de congelar los límites; es compatibilidad con archivos, no un alias.
+- `phase1.py`: lee `params` con las claves nuevas (`mean`, `center`, `sigma`) al construir el historial y congelar los límites; el
+  formato guardado no cambia (ya usa `mu`, `sigma`, `p`, `c`, `u`).
 - Carta de zona: `kind` y paneles `"Zone"`/`"Score"`; `_NOMBRES_VISIBLES` mapea esos nombres a «Zona»/«Puntaje» para mostrarlos.
 - Ejemplos, README, guías y tests usan las claves nuevas.
 - Catálogos `.po`: las entradas pasan a tener como `msgid` el texto en español que ya existe; no cambia el texto mostrado.
@@ -35,7 +35,7 @@ nueva en `run_validation()`.
 ## Riesgos
 
 - Código de usuario que lea `params["media"]`: falla con `KeyError`; se anuncia en el CHANGELOG con la tabla y la receta.
-- Archivos de Fase I guardados con 0.15.x: se siguen leyendo; fixture escrita con 0.15.5.
+- Archivos de Fase I guardados con 0.15.x: se siguen leyendo; fixtures escritas con 0.15.4 en `tests/data/`.
 - Tests, README y guías con las claves antiguas: `grep` en `tests/`, `docs/` y `README*.md`.
 
 ## Documentación y traducciones
