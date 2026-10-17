@@ -5,11 +5,11 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan (núcleo: RF-01 a RF-05)
 
-- [ ] Test de S009-RF-01 (falla hoy: no existe `arl_shewhart`).
-- [ ] Test de S009-RF-02 (falla hoy: no existe `arl_cusum`).
-- [ ] Test de S009-RF-03 (falla hoy: no existe `arl_ewma`).
-- [ ] Test de S009-RF-04 (elección de método, semilla, métodos no admitidos).
-- [ ] Test de S009-RF-05 (parámetros inválidos, simetría, monotonía, `shift` como arreglo).
+- [x] Test de S009-RF-01 (falla hoy: no existe `arl_shewhart`).
+- [x] Test de S009-RF-02 (falla hoy: no existe `arl_cusum`).
+- [x] Test de S009-RF-03 (falla hoy: no existe `arl_ewma`).
+- [x] Test de S009-RF-04 (elección de método, semilla, métodos no admitidos).
+- [x] Test de S009-RF-05 (parámetros inválidos, simetría, monotonía, `shift` como arreglo).
 
 ## Fase 1 — Implementación del núcleo
 

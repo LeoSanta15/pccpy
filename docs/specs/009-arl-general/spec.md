@@ -60,7 +60,9 @@ asintóticos (`L·σ·√(λ/(2−λ))`) o exactos (varianza `λ/(2−λ)·(1−
 
 **Aceptación:**
 - **Dado** `λ = 0,2`, `L = 2,962`, `shift = 0` **entonces** ARL ≈ 500 (valor de diseño de Lucas y Saccucci, 1990).
-- **Dado** `λ = 0,2`, `L = 3`, `shift = 0`, límites asintóticos **entonces** ARL ≈ 570 (cifra que cita el README).
+- **Dado** `λ = 0,2`, `L = 3`, `shift = 0`, límites asintóticos **entonces** ARL ≈ 561 (Monte Carlo propio: 561,4 ± 1,2 con
+  200 000 corridas); con límites exactos ≈ 552. El README cita «≈ 570 con límites exactos» y «≈ 550 con asintóticos»: no
+  coincide con la simulación y se revisa al implementar (queda anotado en el CHANGELOG).
 - **Dado** `λ = 1` **entonces** el ARL es el de la Shewhart de RF-01 con el mismo `L`.
 - **Referencia independiente:** literatura (recordada de memoria) y Monte Carlo con ≥ 20 semillas; la identidad `λ = 1`.
 
@@ -158,7 +160,7 @@ Ninguno. Funciones públicas nuevas.
 
 ## No verificable sin la fuente
 
-Las cifras de la literatura (168, 8,38, 500, 570, 370,4, 43,9) las recuerdo y las cito de memoria: no pude consultar
+Las cifras de la literatura (168, 8,38, 500, 370,4, 43,9) las recuerdo y las cito de memoria: no pude consultar
 Hawkins y Olwell (1998), Lucas y Saccucci (1990), Lucas y Crosier (1982), Brook y Evans (1972) ni Montgomery desde este
 entorno. Cada una se respalda con un cálculo independiente (fórmula cerrada o Monte Carlo) y consta como «recordada de
 memoria» (principio 12). Los ARL de la S, la R, la binomial, la Poisson y las G y T no tienen cifra de literatura citada:
