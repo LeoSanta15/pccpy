@@ -559,6 +559,36 @@ def _carta_t_sin_ceros():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("benneyan-umbral", N_("Carta G: ceros consecutivos que activan la prueba de Benneyan frente al menor c con p^c ≤ 1 − Φ(k)"),
+               "c = menor entero con p^c ≤ 1 − Φ(k), buscado por potencias exactas con scipy.stats.norm.sf (especificación 007; "
+               "definición propia de pccpy, no contrastada con Minitab)", 0.0)
+def _benneyan_umbral():
+    from .charts.advanced import g_chart
+
+    esperado, obtenido = [], []
+    for p, k in ((0.05, 3.0), (0.3, 3.0), (0.5, 3.0), (0.9, 3.0), (0.05, 2.0), (0.3, 2.0), (1e-9, 3.0)):
+        alfa, c = float(stats.norm.sf(k)), 1
+        while p ** c > alfa:
+            c += 1
+        ch = g_chart([0] * (c + 3), p=p, k=k, benneyan=True)
+        esperado.append(float(c))
+        obtenido.append(float(ch["G"].violations["B"][0] + 1))  # el primer punto marcado completa la racha de c ceros
+    return np.array(esperado), np.array(obtenido)
+
+
+@_comprobacion("benneyan-simulacion", N_("Carta G: tasa de falsas alarmas de la prueba de Benneyan en 20 × 50 000 conteos geométricos (p^c)"),
+               "P(c ceros seguidos) = p^c con p = 0,3 y c = 6 (7,29e-4); simulación con 20 semillas fijas; la tolerancia relativa "
+               "del 15 % cubre el error de Monte Carlo (≈ 5 % de sd con marcas agrupadas) (especificación 007)", 0.15, relative=True)
+def _benneyan_simulacion():
+    from .charts.advanced import g_chart
+
+    p, n, marcas = 0.3, 50_000, 0
+    for semilla in range(20):
+        x = np.random.default_rng(semilla).geometric(p, n) - 1
+        marcas += g_chart(x, p=p, benneyan=True)["G"].violations.get("B", np.array([], dtype=int)).size
+    return p ** 6, marcas / (20 * n)
+
+
 @_comprobacion("cpm-descentrado", N_("Cpm con objetivo descentrado y centrado frente a la fórmula de Minitab escrita aparte"),
                "Cpm = min(T − LEI, LES − T) / (3·s_T), con s_T² = Σ(xᵢ − T)²/(n − 1)", 1e-12)
 def _cpm_descentrado():

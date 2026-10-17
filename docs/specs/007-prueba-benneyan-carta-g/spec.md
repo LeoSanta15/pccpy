@@ -1,6 +1,6 @@
 # 007 — Prueba de Benneyan en la carta G
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S007
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.16.0 (nueva opción; ver «Resultados existentes que cambian»)

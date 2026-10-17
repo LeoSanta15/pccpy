@@ -15,7 +15,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 ## Estado actual (verificado el 2026-10-14)
 
 - Versión **0.15.1** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
-- **2 622 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 50 comprobaciones.
+- **2 670 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 52 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.13, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
   pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
@@ -202,9 +202,9 @@ reimplementes el bucle de etapas.
 
 ## Pendientes conocidos (verificados contra el código el 2026-10-14)
 
-1. Prueba de Benneyan en la carta G (`charts/advanced.py:317` dice que no la incluye).
-(`stages` en EWMA/CUSUM, la familia de Johnson, Box-Cox/Yeo-Johnson/Johnson en cartas univariadas y las duraciones = 0 en la
-carta T `zeros=`, spec 002, ya están hechos.)
+Ninguno abierto en el código. (`stages` en EWMA/CUSUM, la familia de Johnson, Box-Cox/Yeo-Johnson/Johnson en cartas
+univariadas, las duraciones = 0 en la carta T `zeros=`, spec 002, y la prueba de Benneyan en la carta G
+`benneyan=`, spec 007 —opt-in; Minitab la activa por defecto y su fórmula de `c` no se pudo verificar—, ya están hechos.)
 
 ## Deuda técnica detectada en la revisión del 2026-10-02
 

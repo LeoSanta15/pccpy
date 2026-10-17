@@ -3043,6 +3043,12 @@ msgstr "Cumulative score"
 msgid "Punto rojo — detener y corregir"
 msgstr "Red point — stop and correct"
 
+msgid "Carta G: ceros consecutivos que activan la prueba de Benneyan frente al menor c con p^c ≤ 1 − Φ(k)"
+msgstr "G chart: consecutive zeros that trigger the Benneyan test versus the smallest c with p^c ≤ 1 − Φ(k)"
+
+msgid "Carta G: tasa de falsas alarmas de la prueba de Benneyan en 20 × 50 000 conteos geométricos (p^c)"
+msgstr "G chart: false alarm rate of the Benneyan test in 20 × 50 000 geometric counts (p^c)"
+
 msgid "Racha de conteos consecutivos iguales a 0 (prueba de Benneyan)"
 msgstr "Run of consecutive counts equal to 0 (Benneyan test)"
 

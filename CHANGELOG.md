@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - prueba de Benneyan en la carta G
+
+No cambia resultados numéricos: la prueba es opcional y está desactivada por defecto.
+
+### Añadido
+- **Prueba de Benneyan en la carta G** (`g_chart(..., benneyan=True, benneyan_marks="from_c"|"run")`): como el límite inferior de la carta G es 0, la prueba 1 no detecta que los eventos se vuelvan más frecuentes; esta prueba señala `c` o más conteos consecutivos iguales a 0, con `c` el menor entero tal que `p^c ≤ 1 − Φ(k)` (el `p` de cada etapa; `c = 3` con `p = 0,05` y `k = 3`). Los puntos marcados llevan la clave `"B"` en `violations()`, en el gráfico y en `summary()`, y `params` guarda `benneyan_c`. Por defecto se marcan el `c`-ésimo cero de la racha y los siguientes (`"from_c"`); con `benneyan_marks="run"`, todos los ceros de la racha. Las rachas no cruzan etapas. **Diferencia con Minitab:** Minitab activa su prueba de Benneyan por defecto; pccpy no, para no cambiar resultados existentes. La fórmula de `c` es una definición propia de pccpy: la documentación pública de Minitab dice que el número de puntos depende de la tasa de falsas alarmas y de la probabilidad del evento, pero no se pudo consultar su fórmula ni el artículo de Benneyan (2001), así que la equivalencia con Minitab no está verificada. Especificación `docs/specs/007-prueba-benneyan-carta-g`. Dos comprobaciones más en la validación (52 en total).
+
 ## [0.15.1] - carta T con duraciones iguales a 0
 
 No cambia resultados numéricos: con datos positivos todo sale igual que en 0.15.0.

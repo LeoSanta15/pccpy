@@ -490,6 +490,7 @@ T (time between events) charts are used.
 # G: number of cases between events (geometric distribution)
 between_events = rng.geometric(0.02, 40) - 1   # p = event probability
 pp.g_chart(between_events)
+pp.g_chart(between_events, p=0.02, benneyan=True)   # adds the Benneyan test (runs of zeros)
 
 # T: time between events (Weibull or exponential distribution)
 times = rng.weibull(1.5, 40) * 30
@@ -500,6 +501,12 @@ pp.t_chart(times, distribution="exponential")  # exponential
 The limits of the G chart are based on exact percentiles of the geometric
 distribution; those of the T chart on the Weibull or exponential distribution fitted by
 maximum likelihood.
+
+The Benneyan test (`benneyan=True`) signals `c` or more consecutive counts equal to 0,
+with `c` the smallest integer such that `p^c ≤ 1 − Φ(k)`; it detects events becoming
+more frequent, which the lower limit of 0 of the G chart cannot show. Possible differences
+from Minitab: Minitab enables it by default and pccpy does not; the formula for `c` is
+pccpy's own definition, not checked against Minitab (its formula could not be consulted).
 
 ---
 
