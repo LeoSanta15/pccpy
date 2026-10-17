@@ -1,6 +1,6 @@
 # 009 — ARL de las cartas de control
 
-- **Estado:** borrador
+- **Estado:** aprobada
 - **Identificador:** S009
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.4 (función pública nueva; no cambia ningún resultado existente; decisión de la persona responsable)
