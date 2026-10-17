@@ -843,6 +843,22 @@ pp.arl_cusum(h=4, k=0.5, shift=1.0, method="simulation", n_runs=20_000, seed=1) 
 370.4, and the G and T charts detect events spreading out much better than events getting closer together. See the
 [ARL guide](https://github.com/LeoSanta15/pccpy/blob/main/docs/source/arl.md). It has not been compared with Minitab's ARL.
 
+With a chart already built, `chart.probability()` gives the probability of a value of the statistic it plots (with the process in
+control and the chart parameters treated as known); with no arguments it is the probability that one point falls outside the limits,
+and its inverse is the in-control ARL:
+
+```python
+chart = pp.xbar_r_chart(subgroups, mu=50, sigma=2)
+p = chart.probability()                          # one point outside the limits: 0.0027
+1 / p.probability                                # 370.4, the in-control ARL
+chart.probability(above=51).probability          # P(subgroup mean > 51)
+chart.probability(panel="R", above=6).probability    # P(range > 6), on the R panel
+chart_p.probability(above=0.08, point=[1, 3])    # with variable n, give the point (1-based)
+```
+
+The I-MR, Xbar-R, Xbar-S, P, NP, C, U, EWMA, G and T charts support the query; it returns the same `ProbabilityResult` as capability
+(with `dpmo`, `dpu` and `sigma` as `None`, and the `panel` and `point` fields). It has not been compared with Minitab.
+
 ---
 
 ## Multivariate charts

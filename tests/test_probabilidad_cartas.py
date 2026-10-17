@@ -397,3 +397,45 @@ def test_s011_rf_10_docstrings_de_probabilidad_y_del_resultado():
     assert "point" in pccpy.ProbabilityResult.__doc__ and "panel" in pccpy.ProbabilityResult.__doc__
     doc = pccpy.ControlChart.probability.__doc__
     assert "point" in doc and "panel" in doc and "ARL" in doc
+
+
+def test_s011_rf_10_validacion_con_63_comprobaciones():
+    """S011-RF-10: la validación suma ``probabilidad-cartas`` (63 en total) y pasa."""
+    from pccpy.validation import run_validation
+
+    informe = run_validation()
+    assert len(informe.checks) == 63
+    assert {c.id: c.passed for c in informe.checks}.get("probabilidad-cartas") is True
+
+
+def test_s011_rf_10_el_ejemplo_de_la_guia_se_ejecuta():
+    """S011-RF-10: los ejemplos de ``docs/source/arl.md`` con ``.probability(`` se ejecutan en orden tal como están escritos."""
+    import re
+    from pathlib import Path
+
+    texto = (Path(__file__).resolve().parents[1] / "docs" / "source" / "arl.md").read_text(encoding="utf-8")
+    bloques = re.findall(r"```python\n(.*?)```", texto, re.DOTALL)
+    bloques = bloques[bloques.index(next(b for b in bloques if ".probability(" in b)):]
+    assert bloques
+    espacio: dict = {}
+    for b in bloques:
+        exec(b, espacio)  # noqa: S102
+    assert espacio["p"].probability == pytest.approx(2 * stats.norm.sf(3.0), rel=1e-12)
+    assert 1 / espacio["p"].probability == pytest.approx(pccpy.arl_shewhart(k=3), rel=1e-9)
+
+
+@pytest.mark.parametrize(("nombre", "marca", "fin"), [
+    ("README.md", "Con una carta ya construida", "## Cartas multivariadas"),
+    ("README_en.md", "With a chart already built", "## Multivariate charts"),
+])
+def test_s011_rf_10_los_readme_documentan_la_probabilidad_en_cartas(nombre, marca, fin):
+    """S011-RF-10: README (es/en) con el ejemplo; el código de cada idioma es sintácticamente válido."""
+    import ast
+    import re
+    from pathlib import Path
+
+    texto = (Path(__file__).resolve().parents[1] / nombre).read_text(encoding="utf-8")
+    seccion = texto[texto.index(marca):texto.index(fin, texto.index(marca))]
+    bloques = re.findall(r"```python\n(.*?)```", seccion, re.DOTALL)
+    assert len(bloques) == 1 and ".probability(" in bloques[0]
+    ast.parse(bloques[0])

@@ -841,6 +841,22 @@ independientes y solo la regla «un punto fuera de los límites» (sin las prueb
 control no es 370,4, y las cartas G y T detectan mucho mejor que los eventos se espacien que que se acorten. Véase la
 [guía del ARL](https://github.com/LeoSanta15/pccpy/blob/main/docs/source/arl.md). No se ha comparado con el ARL de Minitab.
 
+Con una carta ya construida, `carta.probability()` da la probabilidad de un valor del estadístico que grafica (con el proceso en
+control y los parámetros de la carta tratados como conocidos); sin argumentos es la de que un punto salga de los límites, y su inversa
+es el ARL en control:
+
+```python
+carta = pp.xbar_r_chart(subgrupos, mu=50, sigma=2)
+p = carta.probability()                          # un punto fuera de los límites: 0.0027
+1 / p.probability                                # 370.4, el ARL en control
+carta.probability(above=51).probability          # P(media de un subgrupo > 51)
+carta.probability(panel="R", above=6).probability    # P(rango > 6), en el panel R
+carta_p.probability(above=0.08, point=[1, 3])    # con n variable, se indica el punto (base 1)
+```
+
+Admiten la consulta las cartas I-MR, Xbar-R, Xbar-S, P, NP, C, U, EWMA, G y T; devuelve el mismo `ProbabilityResult` de la capacidad
+(con `dpmo`, `dpu` y `sigma` en `None`, y los campos `panel` y `point`). No se ha comparado con Minitab.
+
 ---
 
 ## Cartas multivariadas

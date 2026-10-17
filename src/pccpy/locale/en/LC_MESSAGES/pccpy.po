@@ -4244,3 +4244,6 @@ msgstr "The distribution of the statistic changes between the chart points (samp
 
 msgid "La carta no tiene una distribución conocida del estadístico graficado."
 msgstr "The chart has no known distribution of the plotted statistic."
+
+msgid "Probabilidad de un valor en las cartas de control (normal, rango, S, binomial, Poisson, geométrica y Weibull)"
+msgstr "Probability of a value on control charts (normal, range, S, binomial, Poisson, geometric and Weibull)"

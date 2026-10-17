@@ -27,7 +27,7 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Verificación y cierre
 
-- [ ] Comprobación en `run_validation()` (S011-RF-10).
-- [ ] Documentación, exportación, traducciones y CHANGELOG (S011-RF-09).
-- [ ] `make check` en verde.
-- [ ] Estado de la especificación → `implementada`.
+- [x] Comprobación en `run_validation()` (S011-RF-10).
+- [x] Documentación, exportación, traducciones y CHANGELOG (S011-RF-09).
+- [x] `make check` en verde.
+- [x] Estado de la especificación → `implementada`.

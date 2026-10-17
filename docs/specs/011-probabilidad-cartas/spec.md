@@ -1,6 +1,6 @@
 # 011 — Probabilidad de un valor en las cartas de control
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S011
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.5 (método nuevo; no cambia ningún resultado existente; decisión de la persona responsable)

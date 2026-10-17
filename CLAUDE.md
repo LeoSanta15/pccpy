@@ -15,7 +15,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 ## Estado actual (verificado el 2026-10-17; ver el CHANGELOG para lo no publicado)
 
 - Versión **0.15.4** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
-- **3 069 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 62 comprobaciones.
+- **3 138 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 63 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.14, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
   pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
@@ -178,7 +178,8 @@ src/pccpy/
     run_chart.py     # carta de corridas
     advanced.py      # MA, Z-MR, I-MR-R/S, Zona, G, T
   multivariate.py    # T², |S|, MEWMA, MCUSUM
-  _probabilidad.py   # ProbabilityResult y probability() de los resultados de capacidad
+  _probabilidad.py   # ProbabilityResult y el núcleo de probability() (capacidad y cartas)
+  _probabilidad_cartas.py  # ControlChart.probability(): Panel.dist (familia + parámetros por punto) -> cdf/sf
   arl.py             # ARL (arl_shewhart/cusum/ewma/sd/range/binomial/poisson/g/t; method numeric|markov|simulation)
   capability.py      # capacidad normal/no normal/Box-Cox, sixpack (transform=, ci_method='bootstrap')
   bootstrap.py       # bootstrap_ci (percentil y BCa), bootstrap_summary

@@ -265,3 +265,14 @@ msgstr ""
 msgid "No se ha comparado con el ARL de Minitab."
 msgstr "It has not been compared with Minitab's ARL."
 
+msgid "Probabilidad de un valor desde una carta"
+msgstr "Probability of a value from a chart"
+
+msgid "El ARL parte de parámetros sueltos. Con una carta ya construida, `chart.probability()` da la probabilidad de un valor del estadístico que grafica (la media del subgrupo, el rango, el conteo…) con el proceso en control y los parámetros de la carta tratados como conocidos. Sin argumentos es la probabilidad de que **un punto** salga de los límites, cuya inversa es el ARL₀ de arriba:"
+msgstr "The ARL starts from loose parameters. With a chart already built, `chart.probability()` gives the probability of a value of the statistic it plots (the subgroup mean, the range, the count…) with the process in control and the chart parameters treated as known. With no arguments it is the probability that **one point** falls outside the limits, whose inverse is the ARL₀ above:"
+
+msgid "Con tamaños de muestra variables, etapas o una EWMA la distribución cambia de un punto a otro: indica `point=` (base 1) o recibes un error que lo pide."
+msgstr "With variable sample sizes, stages or an EWMA the distribution changes from one point to another: give `point=` (1-based) or you get an error asking for it."
+
+msgid "Los valores son del estadístico (en proporción o defectos por unidad en las cartas P y U; en unidades originales con `transform=`). Admiten la consulta las cartas I-MR, Xbar-R, Xbar-S, P, NP, C, U, EWMA, G y T; no la CUSUM, la media móvil, la carta de zona, las de Laney ni las multivariadas. El resultado es el mismo `ProbabilityResult` de la capacidad, con `dpmo`, `dpu` y `sigma` en `None` y los campos `panel` y `point`. No se ha comparado con Minitab."
+msgstr "The values are those of the statistic (as a proportion or defects per unit in the P and U charts; in original units with `transform=`). The I-MR, Xbar-R, Xbar-S, P, NP, C, U, EWMA, G and T charts support the query; the CUSUM, the moving average, the zone chart, the Laney charts and the multivariate charts do not. The result is the same `ProbabilityResult` as in capability, with `dpmo`, `dpu` and `sigma` as `None` and the `panel` and `point` fields. It has not been compared with Minitab."

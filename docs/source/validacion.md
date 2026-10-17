@@ -8,7 +8,7 @@ versión instalada calcula bien (por ejemplo, en un sistema de calidad regulado)
 import pccpy as pp
 
 informe = pp.run_validation()
-print(informe.summary())      # «Validación de pccpy …: 62 de 62 comprobaciones correctas»
+print(informe.summary())      # «Validación de pccpy …: 63 de 63 comprobaciones correctas»
 informe.passed                # True si todo coincide
 informe.to_frame()            # una fila por comprobación (error y tolerancia)
 ```
