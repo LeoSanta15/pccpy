@@ -193,7 +193,8 @@ _TOKENS_ES = sorted(ES_EN, key=len, reverse=True)
 
 def test_s012_rf_05_el_codigo_no_usa_claves_espanolas():
     """S012-RF-05: ``src/`` solo nombra las claves españolas en el diccionario que traduce lo que se muestra."""
-    patron = re.compile(r"""["'](?:%s)["']""" % "|".join(re.escape(k) for k in _TOKENS_ES))
+    alternativas = "|".join(re.escape(k) for k in _TOKENS_ES)
+    patron = re.compile(rf"""["'](?:{alternativas})["']""")
     hallazgos = {}
     for ruta in (RAIZ / "src" / "pccpy").rglob("*.py"):
         if ruta.name == "results.py":
@@ -230,7 +231,8 @@ def test_s012_rf_06_los_archivos_nuevos_conservan_el_formato():
 # ---------------------------------------------------------------- RF-07
 def test_s012_rf_07_la_documentacion_y_los_ejemplos_usan_las_claves_nuevas():
     """S012-RF-07: README, guías y ejemplos no leen ``params`` con claves españolas."""
-    patron = re.compile(r"""params(?:\[\d+\])?\[\s*["'](?:%s)["']\s*\]""" % "|".join(re.escape(k) for k in _TOKENS_ES))
+    alternativas = "|".join(re.escape(k) for k in _TOKENS_ES)
+    patron = re.compile(rf"""params(?:\[\d+\])?\[\s*["'](?:{alternativas})["']\s*\]""")
     archivos = [RAIZ / "README.md", RAIZ / "README_en.md", *(RAIZ / "docs" / "source").rglob("*.md"),
                 *(RAIZ / "docs" / "source").rglob("*.rst"), *(RAIZ / "examples").glob("*.py")]
     hallazgos = {}
