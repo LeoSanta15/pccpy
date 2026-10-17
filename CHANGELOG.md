@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - prueba de Benneyan en la carta G
+## [0.15.2] - prueba de Benneyan en la carta G
 
 No cambia resultados numéricos: la prueba es opcional y está desactivada por defecto.
 

@@ -3,7 +3,7 @@
 - **Estado:** implementada
 - **Identificador:** S007
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** 0.16.0 (nueva opción; ver «Resultados existentes que cambian»)
+- **Versión objetivo:** 0.15.2 (opción nueva sin cambiar resultados existentes; parche según CLAUDE.md)
 
 ## Problema
 
