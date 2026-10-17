@@ -1,0 +1,109 @@
+Control chart I-MR
+  Parameters: mean=101.347, sigma=1.45895, MR_avg=1.64624, n=60
+  Tests requested: 1, 2, 3, 4, 5, 6
+  Flagged points: 44
+    [I] point 10: test 6 (value 99.6611) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 13: test 2 (value 99.9038) - 9 consecutive points on the same side of the center line
+    [I] point 14: test 2 (value 99.8718) - 9 consecutive points on the same side of the center line
+    [I] point 15: test 2 (value 100.241) - 9 consecutive points on the same side of the center line
+    [I] point 16: test 2 (value 99.079) - 9 consecutive points on the same side of the center line
+    [I] point 17: test 2 (value 99.3944) - 9 consecutive points on the same side of the center line
+    [I] point 18: test 2 (value 100.822) - 9 consecutive points on the same side of the center line
+    [I] point 19: test 2 (value 99.8043) - 9 consecutive points on the same side of the center line
+    [I] point 20: test 2 (value 97.9384) - 9 consecutive points on the same side of the center line
+    [I] point 20: test 6 (value 97.9384) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 21: test 2 (value 99.2841) - 9 consecutive points on the same side of the center line
+    [I] point 21: test 6 (value 99.2841) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 22: test 2 (value 100.985) - 9 consecutive points on the same side of the center line
+    [I] point 23: test 2 (value 99.6516) - 9 consecutive points on the same side of the center line
+    [I] point 23: test 6 (value 99.6516) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 24: test 2 (value 99.7769) - 9 consecutive points on the same side of the center line
+    [I] point 24: test 6 (value 99.7769) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 25: test 2 (value 100.963) - 9 consecutive points on the same side of the center line
+    [I] point 31: test 5 (value 98.2457) - 2 out of 3 points more than 2 standard deviations (same side)
+    [I] point 38: test 4 (value 99.3139) - 14 consecutive points alternating up and down
+    [I] point 47: test 1 (value 106.275) - 1 point more than 3 standard deviations from the center line
+    [I] point 47: test 6 (value 106.275) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 49: test 1 (value 106.839) - 1 point more than 3 standard deviations from the center line
+    [I] point 49: test 2 (value 106.839) - 9 consecutive points on the same side of the center line
+    [I] point 49: test 5 (value 106.839) - 2 out of 3 points more than 2 standard deviations (same side)
+    [I] point 49: test 6 (value 106.839) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 50: test 1 (value 107.726) - 1 point more than 3 standard deviations from the center line
+    [I] point 50: test 2 (value 107.726) - 9 consecutive points on the same side of the center line
+    [I] point 50: test 5 (value 107.726) - 2 out of 3 points more than 2 standard deviations (same side)
+    [I] point 50: test 6 (value 107.726) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 51: test 2 (value 105.428) - 9 consecutive points on the same side of the center line
+    [I] point 51: test 5 (value 105.428) - 2 out of 3 points more than 2 standard deviations (same side)
+    [I] point 51: test 6 (value 105.428) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 52: test 2 (value 104.241) - 9 consecutive points on the same side of the center line
+    [I] point 52: test 6 (value 104.241) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 53: test 2 (value 102.004) - 9 consecutive points on the same side of the center line
+    [I] point 54: test 2 (value 104.492) - 9 consecutive points on the same side of the center line
+    [I] point 54: test 6 (value 104.492) - 4 out of 5 points more than 1 standard deviation (same side)
+    [I] point 55: test 2 (value 102.336) - 9 consecutive points on the same side of the center line
+    [I] point 56: test 2 (value 102.968) - 9 consecutive points on the same side of the center line
+    [I] point 57: test 2 (value 102.564) - 9 consecutive points on the same side of the center line
+    [I] point 58: test 2 (value 103.426) - 9 consecutive points on the same side of the center line
+    [I] point 59: test 2 (value 104.932) - 9 consecutive points on the same side of the center line
+    [I] point 60: test 2 (value 102.167) - 9 consecutive points on the same side of the center line
+  panel  point  ...       value                                        description
+0     I     10  ...   99.661137  4 out of 5 points more than 1 standard deviati...
+1     I     13  ...   99.903808  9 consecutive points on the same side of the c...
+2     I     14  ...   99.871785  9 consecutive points on the same side of the c...
+3     I     15  ...  100.241374  9 consecutive points on the same side of the c...
+4     I     16  ...   99.078972  9 consecutive points on the same side of the c...
+
+[5 rows x 5 columns] 
+
+Control chart Xbar-R
+  Parameters: mean=50.0238, sigma=0.876888, subgroups=25, size=5
+  Tests requested: 1, 2, 3, 4, 5, 6, 7, 8
+  Result: no out-of-control points 
+
+Process capability analysis (normal distribution)
+  LSL=95.0000  Target=100.0000  USL=105.0000
+  N=150  Mean=100.44554  Std.Dev.(within)=1.37977 [mr]  Std.Dev.(overall)=1.52887
+  Potential (within) capability:
+    Cp=1.21  CPL=1.32  CPU=1.10  Cpk=1.10
+    Z.Bench=3.28
+  Overall performance:
+    Pp=1.09  PPL=1.19  PPU=0.99  Ppk=0.99  Cpm=1.05
+    95% CI Pp: (0.97, 1.21)   95% CI Ppk: (0.87, 1.12)
+    Z.Bench=2.94  Z.LSL=3.56  Z.USL=2.98  Sigma Level=2.94  DPMO=1,630
+  Performance (PPM):          < LSL       > USL      Total
+    Observed                0.00        0.00       0.00
+    Expected within        39.62      481.91     521.53
+    Expected overall      184.16     1446.09    1630.25 
+
+1.1 0.993 
+
+Anderson-Darling: statistic = 3.3147, p-value < 0.005 (n = 200)
+Capability analysis (nonnormal) - weibull distribution
+  LSL=0.1000  USL=12.0000  N=200  logL=-363.872  AIC=731.745
+  Percentiles: 0.135% = 0.17925   50% = 3.13714   99.865% = 8.82399
+  Pp=1.38  PPL=1.03  PPU=1.56  Ppk=1.03
+  Performance (PPM):          < LSL       > USL      Total
+    Observed                0.00        0.00       0.00
+    Expected              378.35        2.46     380.81 
+
+Process capability analysis (normal distribution)
+  LSL=0.1000  Target=*  USL=12.0000
+  N=200  Mean=1.18909  Std.Dev.(within)=0.58063 [mr]  Std.Dev.(overall)=0.58889
+  Box-Cox transformation with lambda = 0.1615 (Mean, Std.Dev. and Z.* are on the transformed scale; LSL/USL/target and observed PPM, in original units)
+  Potential (within) capability:
+    Cp=1.43  CPL=1.79  CPU=1.07  Cpk=1.07
+    Z.Bench=3.22
+  Overall performance:
+    Pp=1.41  PPL=1.76  PPU=1.06  Ppk=1.06  Cpm=*
+    95% CI Pp: (1.27, 1.55)   95% CI Ppk: (0.94, 1.17)
+    Z.Bench=3.17  Z.LSL=5.28  Z.USL=3.17  Sigma Level=3.17  DPMO=754
+  Performance (PPM):          < LSL       > USL      Total
+    Observed                0.00        0.00       0.00
+    Expected within         0.04      645.19     645.23
+    Expected overall        0.06      754.37     754.43 
+
+  category  count    percent  cumulative
+0  Scratch      3  42.857143   42.857143
+1     Dent      2  28.571429   71.428571
+2    Stain      1  14.285714   85.714286
+3    Other      1  14.285714  100.000000
