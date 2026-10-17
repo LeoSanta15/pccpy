@@ -1,28 +1,31 @@
-# Plan — 010 Probabilidad de un valor x en el análisis de capacidad
+# Plan — 010 Probabilidad de un valor en el análisis de capacidad
 
 - **Especificación:** [spec.md](spec.md)
 - **Respeta la constitución:** sí (método nuevo, principio 3; referencias independientes con `scipy.stats`, principios 1 y 13).
 
 ## Diseño
 
-- `capability.py`: método `probability` en `CapabilityResult` y en `NonNormalCapabilityResult`, con un auxiliar privado común
-  (`_probabilidad(cdf, sf, x, x2, kind, unit, opportunities)`) que valida la entrada y convierte la unidad. Cada clase aporta
-  su `cdf` y su `sf`: la normal con `scipy.special.ndtr` (media y sigma elegida) y la no normal con `frozen`.
-- Con `CapabilityResult.transform`, `x` y `x2` pasan por `Transformation.from_info(self.transform).forward` antes (la misma
+- `capability.py`: método `probability(*, below, above, between, sigma, opportunities)` en `CapabilityResult` y en
+  `NonNormalCapabilityResult`, y la clase de resultado `ProbabilityResult` (dataclass con `event`, `probability`, `ppm`, `dpmo`,
+  `dpu`, `p_below`, `p_above`, los valores usados, `sigma` y `opportunities`; `summary()` y `to_frame(stable=False)`). Un auxiliar
+  privado común valida la entrada, interpreta los parámetros y arma el resultado a partir de dos funciones que aporta cada clase:
+  `cdf(x)` y `sf(x)` (la normal con `scipy.special.ndtr`; la no normal con `frozen`).
+- Con `CapabilityResult.transform`, los valores pasan por `Transformation.from_info(self.transform).forward` antes (la misma
   clase que ya usa `summary()`).
-- `above` se calcula con la cola superior (`sf`), no con `1 − cdf`, para no perder precisión en las colas.
-- `between` es `cdf(x2) − cdf(x)`; si ambos extremos caen en la misma cola, se usa `sf(x) − sf(x2)` para no restar dos números
-  casi iguales a 1.
-- Mensajes con `tr()` y traducción en `pccpy.po` (R-17).
+- `above` se calcula con la cola superior, no con `1 − cdf`, para no perder precisión; `between` es `cdf(b) − cdf(a)` o
+  `sf(a) − sf(b)` si ambos están en la cola superior.
+- Sin argumentos se usan `lsl` y `usl` del resultado (en unidades originales también con transformación).
+- Exportar `ProbabilityResult` en `__init__.py` y `__all__`; mensajes y etiquetas con `tr()` y traducción en `pccpy.po` (R-17).
 
 ## Decisiones
 
 | Decisión | Alternativa descartada | Por qué |
 |---|---|---|
 | Método del resultado | Función suelta | Decisión de la persona responsable |
-| Sigma general por defecto, `sigma="within"` opcional | Dentro por defecto | Decisión de la persona responsable (como el DPMO) |
-| `kind` + `x2` | `below=`/`above=`/`between=` | Provisional: una sola firma (pregunta 2) |
-| `dpu = opportunities·p` | Otra definición | Provisional (pregunta 1) |
+| `below`/`above`/`between` | `kind` + `x` | Decisión de la persona responsable: el valor va en el parámetro |
+| Devuelve todas las medidas en un `ProbabilityResult` | `unit=` para elegir una | Decisión de la persona responsable |
+| Sigma general por defecto | Dentro por defecto | Decisión de la persona responsable (como el DPMO) |
+| Un valor por llamada | Arreglos | Simplicidad; un bucle cubre el caso |
 
 ## Validación independiente
 
