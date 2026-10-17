@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-16 21:53+0000\n"
+"POT-Creation-Date: 2026-10-17 23:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -72,6 +72,15 @@ msgstr "Mean (or nominal value) per part, ``{part: value}``. With ``'relative'``
 msgid "Sigma histórica: un número para todas las partes o ``{parte: valor}``."
 msgstr "Historical sigma: one number for all parts or ``{part: value}``."
 
+msgid "Ancho de los límites en sigmas (por defecto 3); una pareja ``(superior, inferior)`` da límites distintos. Como en :func:`imr_chart`."
+msgstr "Width of the limits in sigmas (default 3); an ``(upper, lower)`` pair gives different limits. As in :func:`imr_chart`."
+
+msgid "Probabilidad de falsa alarma en lugar de ``k`` (un número es bilateral; una pareja, unilateral por lado)."
+msgstr "False-alarm probability instead of ``k`` (a number is two-sided; a pair is one-sided per side)."
+
+msgid "Mide las zonas de las pruebas 2 a 8 en tercios de ``k`` en lugar de 1σ y 2σ."
+msgstr "Measures the zones of tests 2 to 8 in thirds of ``k`` instead of 1σ and 2σ."
+
 msgid "Carta I-MR-R/S (Between/Within): variación entre y dentro de subgrupos."
 msgstr "I-MR-R/S chart (Between/Within): variation between and within subgroups."
 
@@ -86,6 +95,9 @@ msgstr "The ``params`` include the standard deviations *within* (``sigma_within`
 
 msgid "Acepta los mismos formatos de entrada que :func:`xbar_r_chart`."
 msgstr "Accepts the same input formats as :func:`xbar_r_chart`."
+
+msgid "``k``, ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart` (``k`` en sigmas, un número o una pareja ``(superior, inferior)``; ``alpha`` como probabilidad de falsa alarma)."
+msgstr "``k``, ``alpha`` and ``rescale_zones`` adjust the width of the limits and the zones as in :func:`imr_chart` (``k`` in sigmas, a number or an ``(upper, lower)`` pair; ``alpha`` as a false-alarm probability)."
 
 msgid "Carta de zona (Stat > Control Charts > Variables Charts for Subgroups > Zone)."
 msgstr "Zone chart (Stat > Control Charts > Variables Charts for Subgroups > Zone)."
@@ -116,4 +128,7 @@ msgstr "The parameters are estimated by maximum likelihood (or given with ``shap
 
 msgid "``zeros`` decide qué hacer con las duraciones iguales a 0 (dos eventos en la misma unidad de tiempo): ``'error'`` (por defecto) las rechaza y ``'drop'`` las excluye con un aviso que dice cuántas. Las duraciones negativas siempre se rechazan."
 msgstr "``zeros`` decides what to do with durations equal to 0 (two events in the same time unit): ``'error'`` (default) rejects them and ``'drop'`` excludes them with a warning saying how many. Negative durations are always rejected."
+
+#~ msgid ":param ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart` (``k`` en sigmas: :param un: :param número o una pareja ``(superior: :param inferior)``; ``alpha`` como probabilidad de falsa alarma).:"
+#~ msgstr ""
 

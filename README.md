@@ -498,6 +498,40 @@ constante los pesos son iguales y el resultado es el promedio simple de siempre.
 
 ---
 
+### Ancho de los límites (`k` y `alpha`)
+
+Los límites de las cartas I-MR, Xbar-R, Xbar-S, P, NP, C, U, Laney, Z-MR e I-MR-R/S están por defecto a ±3σ. Con `k` (en sigmas) o con
+`alpha` (probabilidad de falsa alarma) se ajustan; las dos opciones son excluyentes y aceptan un valor o una pareja `(superior, inferior)`.
+
+```python
+carta = pp.imr_chart(x, k=2)                      # límites a ±2σ
+carta = pp.imr_chart(x, k=(3, 2))                 # UCL a 3σ y LCL a 2σ
+
+# alpha: un valor es bilateral; una pareja es unilateral por lado (superior, inferior)
+carta = pp.imr_chart(x, alpha=0.0455)             # equivale a k = 2
+carta = pp.imr_chart(x, alpha=(0.00135, 0.025))   # equivale a k = (3, 1.96)
+
+# De una confianza bilateral a k
+k = pp.k_from_confidence(0.99)                    # 2.576
+carta = pp.xbar_r_chart(x, subgroup_size=5, k=k)
+
+# Las zonas de las pruebas 2 a 8 siguen en 1σ y 2σ; con rescale_zones se miden en tercios de k
+carta = pp.imr_chart(x, k=2, rescale_zones=True)
+```
+
+| `k` | Confianza bilateral (panel normal) |
+|-----|------------------------------------|
+| 2 | 95,45 % |
+| 2,576 | 99 % |
+| 3 | 99,73 % |
+
+- La prueba 1 marca lo que sale de los límites dibujados. Si además das `test_params={1: ...}`, gana ese valor y se avisa.
+- `k` y `alpha` son exactos en los paneles normales (I y Xbar). En R, S, MR y en las cartas de atributos `alpha` es una aproximación:
+  `carta.probability()` da la probabilidad real de falsa alarma.
+- `carta.params[0]["k_upper"]` y `["k_lower"]` guardan los anchos usados. No se comprobó si Minitab permite un ancho distinto de 3σ en cada carta.
+
+---
+
 ### Formatos de entrada de datos
 
 Las cartas de subgrupos (`xbar_r_chart`, `xbar_s_chart`, `ewma_chart`, `cusum_chart`,

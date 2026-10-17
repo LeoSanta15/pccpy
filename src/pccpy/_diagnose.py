@@ -20,8 +20,8 @@ __all__ = ["DiagnoseResult", "diagnose"]
 
 
 def _tendencia(direccion: str) -> str:
-    """Texto de la dirección de la tendencia; el valor guardado en el resultado ('creciente'/'decreciente') no se traduce."""
-    return {"creciente": tr("creciente"), "decreciente": tr("decreciente")}.get(direccion, direccion)
+    """Texto de la dirección de la tendencia; el valor guardado en el resultado ('increasing'/'decreasing') no se traduce."""
+    return {"increasing": tr("creciente"), "decreasing": tr("decreciente")}.get(direccion, direccion)
 
 
 @dataclass
@@ -46,7 +46,7 @@ class DiagnoseResult:
 
     # ── Tendencia ──────────────────────────────────────────────────────────
     has_trend: bool
-    trend_direction: str        # 'creciente', 'decreciente', ''
+    trend_direction: str        # 'increasing', 'decreasing', ''
 
     # ── Valores atípicos (método IQR) ───────────────────────────────────────
     outlier_count: int
@@ -364,7 +364,7 @@ def diagnose(
     diffs = np.diff(x)
     pct_inc = float((diffs > 0).mean())
     has_trend = pct_inc > 0.80 or pct_inc < 0.20
-    trend_dir = "creciente" if pct_inc > 0.80 else ("decreciente" if pct_inc < 0.20 else "")
+    trend_dir = "increasing" if pct_inc > 0.80 else ("decreasing" if pct_inc < 0.20 else "")
 
     # ── Valores atípicos (IQR × 1.5) ───────────────────────────────────────
     q1, q3 = float(np.percentile(x, 25)), float(np.percentile(x, 75))

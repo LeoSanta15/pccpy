@@ -1,5 +1,20 @@
 # Registro de cambios
 
+## [Sin publicar] - ancho de los límites de control (`k` y `alpha`) y `trend_direction` en inglés
+
+Cambio **incompatible** solo en `DiagnoseResult.trend_direction` (sin alias; se publica en 0.15.6 por decisión de la persona responsable). El ancho de los límites es opcional y con `k=3` nada cambia. Especificación `docs/specs/014-diagnose-ingles-y-limites-k`.
+
+### Cambios que alteran resultados
+- **`DiagnoseResult.trend_direction`** devuelve `'increasing'`/`'decreasing'` (o `''`) en lugar de `'creciente'`/`'decreciente'`, igual que `non_normal_reason` (`'outliers'`, `'skewed'`, `'shape'`): un dato del código está en inglés en cualquier idioma y solo cambia lo que se muestra. `summary()` y el texto «Se detectó tendencia creciente» no cambian; `to_frame()` muestra ahora el valor canónico. Si comparabas con el literal español, cámbialo: `d.trend_direction == "creciente"` → `d.trend_direction == "increasing"` (y `"decreciente"` → `"decreasing"`).
+
+### Añadido
+- **`k`, `alpha` y `rescale_zones`** en `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart`, `u_chart`, `laney_p_chart`, `laney_u_chart`, `zmr_chart` e `imr_rs_chart` (`rescale_zones` solo donde hay zonas). `k` fija el ancho de los límites en sigmas (por defecto 3): un número da límites simétricos y una pareja `(superior, inferior)` límites distintos arriba y abajo. `alpha` lo da como probabilidad de falsa alarma: un número es bilateral (`k = Φ⁻¹(1 − α/2)`) y una pareja es unilateral por lado (`k = Φ⁻¹(1 − α)`); son excluyentes. Es exacto en los paneles normales (I y Xbar) y aproximado en R, S, MR y atributos (`carta.probability()` da la probabilidad real). El LCL de los paneles de dispersión y de atributos se recorta en 0 y el UCL de las proporciones en 1. La prueba 1 marca lo que sale de los límites dibujados; con `test_params={1: …}` gana ese valor y se avisa. Las zonas de las pruebas 2 a 8 siguen en 1σ y 2σ salvo con `rescale_zones=True` (tercios de `k` de cada lado). `params` guarda `k_upper` y `k_lower`; `summary()` los muestra solo si no son los dos 3.
+- **`pp.k_from_confidence(confianza)`**: el `k` de unos límites bilaterales (`0.99` → 2,576).
+- Una comprobación más en la validación (64 en total) con las constantes de Montgomery, fórmulas binomial y de Poisson a mano y la tabla normal. No se pudo comprobar si Minitab permite un ancho distinto de 3σ en cada carta.
+
+### Corregido
+- Con `test_params={1: 2}` la prueba 1 marcaba los puntos a más de 2σ pero los límites dibujados seguían en 3σ; ahora `k` resuelve esa incoherencia (el valor de `test_params[1]` sigue ganando si se da).
+
 ## [Sin publicar] - figuras en las secciones de referencia del README
 
 No cambia ningún resultado ni la API.

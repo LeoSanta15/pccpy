@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-17 23:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -24,6 +24,9 @@ msgstr "Attribute charts"
 
 msgid "Carta P: proporción de unidades defectuosas (n constante o variable)."
 msgstr "P chart: proportion of defective units (constant or variable n)."
+
+msgid "``k`` (en sigmas, un número o una pareja ``(superior, inferior)``) o ``alpha`` ajustan el ancho de los límites como en :func:`imr_chart`; el LCL se recorta en 0 y, en las cartas de proporción, el UCL en 1."
+msgstr "``k`` (in sigmas, a number or an ``(upper, lower)`` pair) or ``alpha`` adjust the width of the limits as in :func:`imr_chart`; the LCL is clipped at 0 and, on the proportion charts, the UCL at 1."
 
 msgid "Parámetros"
 msgstr "Parameters"

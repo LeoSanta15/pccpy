@@ -17,7 +17,7 @@ from .._i18n import N_, tr
 from .._labels import con_etiquetas
 from .._sigma import moving_range, sigma_individuals, sigma_subgroups, subgroup_stats, vec
 from ..results import ControlChart
-from ._engine import StagePanel, build_chart, check_method, full
+from ._engine import StagePanel, build_chart, check_method, full, resolve_limits
 from .timeweighted import _series
 
 
@@ -92,6 +92,9 @@ def zmr_chart(
     sigma=None,
     tests=(1,),
     test_params: dict[int, float] | None = None,
+    k=None,
+    alpha=None,
+    rescale_zones: bool = False,
 ) -> ControlChart:
     """Carta Z-MR para producción de corridas cortas (Variables Charts for Individuals > Z-MR).
 
@@ -119,7 +122,15 @@ def zmr_chart(
         ``'relative'`` debe estar en escala logarítmica. Si no se da, se estima.
     sigma : float o dict, opcional
         Sigma histórica: un número para todas las partes o ``{parte: valor}``.
+    k : float | (float, float), opcional
+        Ancho de los límites en sigmas (por defecto 3); una pareja ``(superior, inferior)`` da límites distintos. Como en :func:`imr_chart`.
+    alpha : float | (float, float), opcional
+        Probabilidad de falsa alarma en lugar de ``k`` (un número es bilateral; una pareja, unilateral por lado).
+    rescale_zones : bool
+        Mide las zonas de las pruebas 2 a 8 en tercios de ``k`` en lugar de 1σ y 2σ.
     """
+    limits = resolve_limits(k, alpha, rescale_zones)
+    ku, kl = limits.upper, limits.lower
     y_raw = as_1d(x)
     parts = np.asarray(parts)
     if parts.shape != y_raw.shape:
@@ -179,11 +190,11 @@ def zmr_chart(
 
     def stage_fn(idx):
         n = z.size
-        z_panel = StagePanel("Z", z, full(0.0, n), full(3.0, n), full(-3.0, n), full(1.0, n),
+        z_panel = StagePanel("Z", z, full(0.0, n), full(ku, n), full(-kl, n), full(1.0, n),
                              N_("Valor Z"), "full")
         mr_panel = StagePanel(
-            "MR", moving_range(z, 2), full(dd2, n), full(dd2 + 3 * dd3, n),
-            full(max(0.0, dd2 - 3 * dd3), n), full(dd3, n),
+            "MR", moving_range(z, 2), full(dd2, n), full(dd2 + ku * dd3, n),
+            full(max(0.0, dd2 - kl * dd3), n), full(dd3, n),
             N_("Rango móvil de Z"), "only1", symmetric=False,
         )
         params = {"method": "historical" if sigma is not None else sigma_method, "parts": len(labels), "runs": len(runs), "n": n}
@@ -193,7 +204,7 @@ def zmr_chart(
             params["sigma_min"], params["sigma_max"] = float(min(run_sigma)), float(max(run_sigma))
         return [z_panel, mr_panel], params
 
-    return build_chart("Z-MR", z.size, None, stage_fn, tests, test_params)
+    return build_chart("Z-MR", z.size, None, stage_fn, tests, test_params, limits)
 
 
 # ------------------------------------------------------------- I-MR-R/S (entre/dentro)
@@ -212,6 +223,9 @@ def imr_rs_chart(
     stages=None,
     tests=(1,),
     test_params: dict[int, float] | None = None,
+    k=None,
+    alpha=None,
+    rescale_zones: bool = False,
 ) -> ControlChart:
     """Carta I-MR-R/S (Between/Within): variación entre y dentro de subgrupos.
 
@@ -231,7 +245,12 @@ def imr_rs_chart(
     ``sigma_between`` histórica, la sigma de las medias es sqrt(sigma_between² + sigma_within²/n).
 
     Acepta los mismos formatos de entrada que :func:`xbar_r_chart`.
+
+    ``k``, ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart` (``k`` en sigmas, un
+    número o una pareja ``(superior, inferior)``; ``alpha`` como probabilidad de falsa alarma).
     """
+    limits = resolve_limits(k, alpha, rescale_zones)
+    ku, kl = limits.upper, limits.lower
     within = within.lower()
     if within not in ("r", "s"):
         raise ValueError(tr("'within' debe ser 'r' o 's'."))
@@ -264,27 +283,27 @@ def imr_rs_chart(
             sx = sx_mr
         sbw = float(np.sqrt(sb**2 + sw**2)) if np.isfinite(sb) else float("nan")
 
-        i_panel = StagePanel("I", means, full(m, k), full(m + 3 * sx, k), full(m - 3 * sx, k),
+        i_panel = StagePanel("I", means, full(m, k), full(m + ku * sx, k), full(m - kl * sx, k),
                              full(sx, k), N_("Media de la muestra"), "full")
         c = d2(2) * sx
         mr_panel = StagePanel(
-            "MR", moving_range(means, 2), full(c, k), full(c + 3 * d3(2) * sx, k),
-            full(max(0.0, c - 3 * d3(2) * sx), k), full(d3(2) * sx, k),
+            "MR", moving_range(means, 2), full(c, k), full(c + ku * d3(2) * sx, k),
+            full(max(0.0, c - kl * d3(2) * sx), k), full(d3(2) * sx, k),
             N_("Rango móvil de las medias"), "only1", symmetric=False,
         )
         if within == "r":
             cc, sd = sw * vec(d2, n_i), sw * vec(d3, n_i)
-            w_panel = StagePanel("R", rng, cc, cc + 3 * sd, np.maximum(0.0, cc - 3 * sd), sd,
+            w_panel = StagePanel("R", rng, cc, cc + ku * sd, np.maximum(0.0, cc - kl * sd), sd,
                                  N_("Rango dentro del subgrupo"), "basic", symmetric=False)
         else:
             cc, sd = sw * vec(c4, n_i), sw * vec(c5, n_i)
-            w_panel = StagePanel("S", s_i, cc, cc + 3 * sd, np.maximum(0.0, cc - 3 * sd), sd,
+            w_panel = StagePanel("S", s_i, cc, cc + ku * sd, np.maximum(0.0, cc - kl * sd), sd,
                                  N_("Desv. est. dentro del subgrupo"), "basic", symmetric=False)
         params = {"mean": m, "sigma_within": sw, "sigma_between": sb, "sigma_between_within": sbw,
                   "subgroups": k}
         return [i_panel, mr_panel, w_panel], params
 
-    return build_chart(f"I-MR-{within.upper()}", g.shape[0], stages, stage_fn, tests, test_params)
+    return build_chart(f"I-MR-{within.upper()}", g.shape[0], stages, stage_fn, tests, test_params, limits)
 
 
 # ------------------------------------------------------------- eventos raros: G y T

@@ -77,8 +77,11 @@ def _run_positions(mask: np.ndarray) -> np.ndarray:
     return pos
 
 
-def test1(z: np.ndarray, k: float = 3) -> np.ndarray:
-    return np.flatnonzero(np.abs(z) > k)
+def test1(z: np.ndarray, k: float = 3, k_lower: float | None = None) -> np.ndarray:
+    """Puntos a más de ``k`` sigmas del centro; con ``k_lower`` el límite inferior está a ``k_lower`` sigmas."""
+    if k_lower is None:
+        return np.flatnonzero(np.abs(z) > k)
+    return np.flatnonzero((z > k) | (z < -k_lower))
 
 
 def test2(z: np.ndarray, k: int = 9) -> np.ndarray:
@@ -133,10 +136,10 @@ def test8(z: np.ndarray, k: int = 8) -> np.ndarray:
     return np.flatnonzero(_run_positions(np.abs(z) > 1.0) >= k)
 
 
-def _aplicar_prueba(t: int, k: float, v: np.ndarray, zz: np.ndarray) -> np.ndarray:
+def _aplicar_prueba(t: int, k: float, v: np.ndarray, zz: np.ndarray, k_lower: float | None = None) -> np.ndarray:
     """Posiciones (dentro de ``v``) que marca la prueba ``t`` con parámetro ``k``; las pruebas 3 y 4 usan los valores."""
     if t == 1:
-        return test1(zz, k)
+        return test1(zz, k, k_lower)
     if t == 3:
         return test3(v, int(k))
     if t == 4:
@@ -151,6 +154,9 @@ def apply_tests(
     sigma: np.ndarray,
     tests: Iterable[int],
     params: dict[int, float] | None = None,
+    *,
+    limits: tuple[float, float] | None = None,
+    rescale_zones: bool = False,
 ) -> dict[int, np.ndarray]:
     """Aplica las pruebas ``tests`` y devuelve ``{prueba: índices marcados}``.
 
@@ -158,6 +164,10 @@ def apply_tests(
     desviación estándar del estadístico graficado en cada punto). Los NaN se ignoran y **cortan** las rachas: las
     pruebas se aplican por separado a cada tramo de puntos consecutivos válidos, de modo que una racha no une
     observaciones separadas por un hueco.
+
+    ``limits = (k_superior, k_inferior)`` son los anchos de los límites de control en sigmas: la prueba 1 los usa como umbral
+    de cada lado salvo que ``params`` traiga uno explícito (el mismo para los dos lados). Las zonas de las pruebas 2 a 8 quedan en
+    1σ y 2σ; con ``rescale_zones`` se miden en tercios de cada ``k`` (``k/3`` y ``2k/3``).
     """
     params = params or {}
     values = np.asarray(values, dtype=float)
@@ -166,6 +176,9 @@ def apply_tests(
 
     with np.errstate(divide="ignore", invalid="ignore"):
         z = (values - center) / sigma
+    z_zona = z
+    if rescale_zones and limits is not None:
+        z_zona = np.where(z > 0, z * 3.0 / limits[0], z * 3.0 / limits[1])
     valid = np.isfinite(values) & np.isfinite(z)
     where = np.flatnonzero(valid)
     # tramos de puntos válidos consecutivos (un hueco corta las rachas)
@@ -175,5 +188,8 @@ def apply_tests(
     out: dict[int, list[np.ndarray]] = {t: [] for t in tests}
     for pos in tramos:
         for t in tests:
-            out[t].append(pos[_aplicar_prueba(t, params.get(t, DEFAULT_K[t]), values[pos], z[pos])])
+            if t == 1 and 1 not in params and limits is not None:
+                out[t].append(pos[test1(z[pos], limits[0], limits[1])])
+            else:
+                out[t].append(pos[_aplicar_prueba(t, params.get(t, DEFAULT_K[t]), values[pos], z_zona[pos] if t != 1 else z[pos])])
     return {t: (np.concatenate(v).astype(int) if v else np.array([], dtype=int)) for t, v in out.items()}
