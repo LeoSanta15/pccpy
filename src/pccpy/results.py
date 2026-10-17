@@ -9,7 +9,7 @@ import pandas as pd
 from ._data import _excel_writer
 from ._frames import etiquetas
 from ._i18n import N_, tr
-from .rules import DEFAULT_K, describe
+from .rules import BENNEYAN_DESCRIPTION, DEFAULT_K, describe
 from .transforms import Transformation
 
 # Claves estables (inglés) → texto de la columna en español, marcado para traducir.
@@ -59,7 +59,7 @@ class Panel:
     sigma: np.ndarray
     stage: np.ndarray
     ylabel: str = ""
-    violations: dict[int, np.ndarray] = field(default_factory=dict)
+    violations: dict[int | str, np.ndarray] = field(default_factory=dict)
     secondary: np.ndarray | None = None  # 2ª serie (CUSUM inferior)
     symmetric: bool = True  # ¿tiene sentido dibujar zonas de 1 y 2 sigma?
     zones_upper: dict[int, np.ndarray] | None = None  # líneas de 1 y 2 sigma si no son simétricas (escala original)
@@ -162,9 +162,13 @@ class ControlChart:
         """Puntos que fallan pruebas, con claves estables (``panel``, ``point``, ``test``, ``value``, ``description``)."""
         rows = []
         for p in self.panels:
-            for t, idx in sorted(p.violations.items()):
-                desc = (tr(self.test1_text).format(**self.test1_params) if t == 1 and self.test1_text
-                        else describe(t, self.test_params.get(t, DEFAULT_K[t])))
+            for t, idx in sorted(p.violations.items(), key=lambda kv: str(kv[0])):
+                if isinstance(t, str):  # "B": prueba de Benneyan de la carta G
+                    desc = tr(BENNEYAN_DESCRIPTION)
+                elif t == 1 and self.test1_text:
+                    desc = tr(self.test1_text).format(**self.test1_params)
+                else:
+                    desc = describe(t, self.test_params.get(t, DEFAULT_K[t]))
                 for i in idx:
                     rows.append(
                         {"panel": p.name, "point": int(i) + 1, "test": t,
@@ -175,7 +179,9 @@ class ControlChart:
             for r in rows:
                 r["label"] = self.labels[int(r["point"]) - 1]  # type: ignore[call-overload]
             cols.append("label")
-        return pd.DataFrame(rows, columns=cols).sort_values(["panel", "point", "test"]).reset_index(drop=True)
+        df = pd.DataFrame(rows, columns=cols)
+        orden = df["test"].astype(str)  # las pruebas son enteros 1-8 y, en la carta G, "B"
+        return df.assign(_orden=orden).sort_values(["panel", "point", "_orden"]).drop(columns="_orden").reset_index(drop=True)
 
     def violations(self, stable: bool = False) -> pd.DataFrame:
         """Tabla de puntos que fallan pruebas: panel, punto (base 1), prueba, valor y descripción.

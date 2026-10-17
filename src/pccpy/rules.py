@@ -30,6 +30,9 @@ TEST_DESCRIPTIONS: dict[int, str] = {
     8: N_("{k} puntos consecutivos a más de 1 desviación estándar (ambos lados)"),
 }
 
+#: Descripción de la prueba de Benneyan de la carta G (clave de violación ``"B"``).
+BENNEYAN_DESCRIPTION = N_("Racha de conteos consecutivos iguales a 0 (prueba de Benneyan)")
+
 
 def describe(test: int, k=None) -> str:
     """Descripción de la prueba con su parámetro K ya sustituido."""

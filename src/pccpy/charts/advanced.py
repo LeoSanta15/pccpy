@@ -4,6 +4,7 @@ Las fórmulas siguen la documentación de métodos de Minitab.
 """
 from __future__ import annotations
 
+import math
 import warnings
 
 import numpy as np
@@ -290,7 +291,7 @@ def imr_rs_chart(
 def _rare_violations(values, center, lcl, ucl, tests, test_params):
     """Prueba 1 con los límites propios de la carta; pruebas 2-4 estándar."""
     wanted = [t for t in tests if t in rules.FAMILIES["basic"]]
-    found = {}
+    found: dict[int | str, np.ndarray] = {}
     if 1 in wanted:
         found[1] = np.flatnonzero((values > ucl) | (values < lcl))
     rest = [t for t in wanted if t != 1]
@@ -308,6 +309,42 @@ def _geom_quantile(p: float, q: float) -> float:
     return ka + (q - pa) / (pb - pa)
 
 
+def _benneyan_run(p: float, k: float) -> int:
+    """Número ``c`` de conteos consecutivos iguales a 0 que señalan la prueba de Benneyan.
+
+    Es el menor entero ``c >= 1`` con ``p**c <= alfa``, ``alfa = 1 - Phi(k)``: la probabilidad de ``c`` ceros seguidos
+    (cada uno con probabilidad ``p``) no supera la tasa de falsas alarmas de la prueba 1. Definición propia de pccpy,
+    no contrastada con Minitab (ver la especificación 007).
+    """
+    log_p, log_alfa = math.log(p), float(stats.norm.logsf(k))  # logsf: sin desbordes con k grande
+    c = max(1, math.ceil(log_alfa / log_p))
+    while c * log_p > log_alfa:  # guarda contra el redondeo del cociente
+        c += 1
+    while c > 1 and (c - 1) * log_p <= log_alfa:
+        c -= 1
+    return c
+
+
+def _benneyan_violations(xs: np.ndarray, c: int, marks: str) -> np.ndarray:
+    """Índices marcados por rachas de ``c`` o más ceros: desde el ``c``-ésimo cero (``'from_c'``) o toda la racha (``'run'``)."""
+    pos = rules._run_positions(xs == 0)  # longitud de la racha de ceros que termina en cada punto
+    if marks == "from_c":
+        return np.flatnonzero(pos >= c)
+    marcados = np.zeros(xs.size, dtype=bool)
+    i = 0
+    while i < xs.size:
+        if xs[i] != 0:
+            i += 1
+            continue
+        j = i
+        while j < xs.size and xs[j] == 0:
+            j += 1
+        if j - i >= c:
+            marcados[i:j] = True
+        i = j
+    return np.flatnonzero(marcados)
+
+
 @con_etiquetas
 def g_chart(
     x,
@@ -317,6 +354,8 @@ def g_chart(
     stages=None,
     tests=(1,),
     test_params: dict[int, float] | None = None,
+    benneyan: bool = False,
+    benneyan_marks: str = "from_c",
 ) -> ControlChart:
     """Carta G para eventos raros: número de casos (u oportunidades) entre eventos.
 
@@ -324,8 +363,17 @@ def g_chart(
     se da, se estima como 1 / (1 + media). La línea central es la mediana, el LCS es el
     percentil que corresponde a ``k`` sigmas de una normal (0.99865 con k=3) y el LCI
     es 0. La prueba 1 marca los puntos sobre el LCS; las pruebas 2-4 son las usuales.
-    No incluye la prueba de Benneyan.
+
+    Como el LCI es 0, la prueba 1 no detecta que los eventos se vuelvan más frecuentes. Con
+    ``benneyan=True`` se añade la prueba de Benneyan: señal ante ``c`` o más conteos consecutivos
+    iguales a 0, con ``c`` el menor entero tal que ``p**c <= 1 - Phi(k)`` (``p`` de cada etapa).
+    Los puntos marcados llevan la clave ``"B"`` en ``violations()``. ``benneyan_marks`` elige
+    cuáles: ``'from_c'`` (por defecto) el ``c``-ésimo cero de la racha y los siguientes, o
+    ``'run'`` todos los ceros de la racha. Es opcional (``False`` por defecto) e independiente de
+    ``tests``. La fórmula de ``c`` es una definición propia de pccpy: no se ha contrastado con
+    Minitab, que activa la prueba por defecto.
     """
+    check_method(benneyan_marks, ("from_c", "run"), "benneyan_marks")
     x = as_1d(x)
     if np.any(x < 0):
         raise ValueError(tr("Los conteos entre eventos no pueden ser negativos."))
@@ -344,9 +392,16 @@ def g_chart(
         center, ucl = _geom_quantile(pe, 0.5) - 1, _geom_quantile(pe, q_hi) - 1
         c, u, l = full(center, n), full(ucl, n), full(0.0, n)
         viol = _rare_violations(xs, c, l, u, tests_n, test_params)
+        params = {"p": pe, "media": mean, "n": n}
+        if benneyan:
+            c_run = _benneyan_run(pe, k)
+            params["benneyan_c"] = c_run
+            marcados = _benneyan_violations(xs, c_run, benneyan_marks)
+            if marcados.size:
+                viol["B"] = marcados
         panel = StagePanel("G", xs, c, u, l, full(np.nan, n), N_("Cantidad entre eventos"), "basic",
                            symmetric=False, violations=viol)
-        return [panel], {"p": pe, "media": mean, "n": n}
+        return [panel], params
 
     chart = build_chart("G", x.size, stages, stage_fn, tests_n, test_params)
     chart.test1_text = N_("1 punto fuera de los percentiles de la distribución geométrica")

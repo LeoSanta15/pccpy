@@ -487,6 +487,7 @@ T (tiempo entre eventos).
 # G: número de casos entre eventos (distribución geométrica)
 entre_eventos = rng.geometric(0.02, 40) - 1   # p = probabilidad del evento
 pp.g_chart(entre_eventos)
+pp.g_chart(entre_eventos, p=0.02, benneyan=True)   # añade la prueba de Benneyan (rachas de ceros)
 
 # T: tiempo entre eventos (distribución Weibull o exponencial)
 tiempos = rng.weibull(1.5, 40) * 30
@@ -498,6 +499,13 @@ pp.t_chart(tiempos, zeros="drop")  # excluye con aviso las duraciones iguales a 
 Los límites de la carta G se basan en percentiles exactos de la distribución
 geométrica; los de la carta T en los de la Weibull o exponencial ajustada por
 máxima verosimilitud.
+
+La prueba de Benneyan (`benneyan=True`) señala `c` o más conteos consecutivos
+iguales a 0, con `c` el menor entero tal que `p^c ≤ 1 − Φ(k)`; sirve para detectar
+que los eventos se vuelven más frecuentes, algo que el límite inferior 0 de la carta
+G no puede mostrar. Diferencias posibles con Minitab: Minitab la activa por defecto
+y pccpy no; la fórmula de `c` es una definición propia de pccpy, no contrastada con
+Minitab (no se pudo consultar su fórmula).
 
 ---
 
