@@ -1,6 +1,16 @@
 # Registro de cambios
 
-## [Sin publicar] - probabilidad de un valor en las cartas de control
+## [Sin publicar] - figuras en las secciones de referencia del README
+
+No cambia ningún resultado ni la API.
+
+### Añadido
+- **11 figuras más en `README.md` y `README_en.md`** (24 por idioma), en las secciones de referencia que no tenían: Xbar-S, C, Laney P', EWMA, CUSUM, media móvil, T, capacidad normal, no normal (Weibull), Box-Cox y binomial. Las genera el nuevo `examples/gallery_example.py` (semilla `default_rng(2026)`) mediante `python scripts/generar_figuras_readme.py`.
+
+### Corregido
+- Las entradas de 0.15.5 del CHANGELOG seguían tituladas «Sin publicar» en la versión publicada.
+
+## [0.15.5] - probabilidad de un valor en las cartas de control
 
 No cambia ningún resultado existente: método nuevo y campos nuevos. Especificación `docs/specs/011-probabilidad-cartas`.
 
@@ -20,7 +30,7 @@ No cambia ningún resultado existente: método nuevo y campos nuevos. Especifica
   binomial y de la Poisson, geométrica y Weibull cerradas), sección en la guía del ARL y en el README (es/en). Que Minitab ofrezca un cálculo
   equivalente no está verificado.
 
-## [Sin publicar] - claves en inglés en los resultados de las cartas
+## [0.15.5] - claves en inglés en los resultados de las cartas
 
 Cambio **incompatible** (sin alias; se publica en 0.15.5 por decisión de la persona responsable): los datos con clave de los
 resultados de las cartas pasan al inglés. Principio: el código está en inglés en cualquier idioma y solo las salidas dependen del
@@ -47,7 +57,7 @@ idioma. Con el idioma español, lo que muestra `summary()` es idéntico al de 0.
   antes el título de la carta de varianza generalizada quedaba en español con el idioma inglés.
 - Identificadores internos en español que pasan a inglés (no son API): los tipos de entrada de la Fase I y un nodo del asistente.
 
-## [Sin publicar] - figuras y salidas de los ejemplos en el README
+## [0.15.5] - figuras y salidas de los ejemplos en el README
 
 No cambia ningún resultado numérico ni las claves del código. Con el idioma inglés cambian algunos textos que se muestran (ver «Corregido»); en español todo queda igual.
 

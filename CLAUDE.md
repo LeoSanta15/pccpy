@@ -195,7 +195,7 @@ src/pccpy/
   quality_tools.py   # pareto, plot_pareto
 scripts/             # comprobaciones de CI y generar_figuras_readme.py (figuras de docs/imagenes/ que muestran los README)
 tests/               # un archivo por área; fixture `rng` en conftest.py
-examples/            # basic_example.py, advanced_example.py
+examples/            # basic_example.py, advanced_example.py, gallery_example.py
 docs/source/         # Sphinx: referencia/*.rst usa autodoc (ver R-12)
 docs/retrospectiva/  # LESSONS_LEARNED, BUG_CATALOG, PLAYBOOK, SCORECARD, ...
 ```
