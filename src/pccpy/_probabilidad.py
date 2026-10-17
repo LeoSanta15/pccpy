@@ -68,8 +68,13 @@ class ProbabilityResult:
     - ``p_below, p_above`` (float | ndarray | None): Las dos partes del evento (``None`` si no hay esa parte).
     - ``below, above`` (float | ndarray | None): Valores usados, en unidades originales (los límites de especificación si se heredaron).
     - ``between`` (tuple | None): Par ``(inferior, superior)`` usado con ``between``.
-    - ``sigma`` (str): ``'overall'`` o ``'within'``.
+    - ``sigma`` (str | None): ``'overall'`` o ``'within'``; ``None`` en los resultados de las cartas de control.
     - ``opportunities`` (int): Oportunidades de defecto por unidad (para ``dpu``).
+    - ``panel`` (str | None): Panel de la carta de control (``ControlChart.probability``); ``None`` en capacidad.
+    - ``point`` (int | ndarray | None): Puntos (base 1) de la carta de que se pidió la probabilidad; ``None`` si no se indicó
+      ``point=`` y en capacidad.
+
+    En una carta de control el evento no es un defecto: ``dpmo`` y ``dpu`` valen ``None``.
 
     """
 
@@ -83,8 +88,10 @@ class ProbabilityResult:
     below: object
     above: object
     between: tuple | None
-    sigma: str
+    sigma: str | None
     opportunities: int
+    panel: str | None = None
+    point: object = None
 
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Tabla con una fila por elemento.
@@ -102,18 +109,26 @@ class ProbabilityResult:
             "between_lower": col(lo), "between_upper": col(hi), "probability": col(self.probability),
             "ppm": col(self.ppm), "dpmo": col(self.dpmo), "dpu": col(self.dpu),
         }
+        etiquetas = list(_COLUMNAS)
+        if self.panel is not None:  # solo en los resultados de las cartas de control
+            datos["panel"] = [self.panel] * n
+            etiquetas.append(("panel", N_("Panel")))
+            if self.point is not None:
+                datos["point"] = np.broadcast_to(np.asarray(self.point), (n,)).copy()
+                etiquetas.append(("point", N_("Punto")))
         frame = pd.DataFrame(datos)
         if not stable:
-            frame.columns = [tr(etiqueta) for _clave, etiqueta in _COLUMNAS]
+            frame.columns = [tr(etiqueta) for _clave, etiqueta in etiquetas]
         return frame
 
     def summary(self) -> str:
         """Texto con el evento y la tabla de medidas."""
-        return "\n".join([
-            tr("Probabilidad de un valor (sigma {sigma}, oportunidades por unidad: {oportunidades})").format(
-                sigma=self.sigma, oportunidades=self.opportunities),
-            self.to_frame().to_string(index=False),
-        ])
+        if self.panel is not None:
+            encabezado = tr("Probabilidad de un valor en la carta de control (panel {panel})").format(panel=self.panel)
+        else:
+            encabezado = tr("Probabilidad de un valor (sigma {sigma}, oportunidades por unidad: {oportunidades})").format(
+                sigma=self.sigma, oportunidades=self.opportunities)
+        return "\n".join([encabezado, self.to_frame().to_string(index=False)])
 
     def __str__(self) -> str:  # pragma: no cover - trivial
         return self.summary()
@@ -131,20 +146,24 @@ def _combinar(*valores):
         raise ValueError(tr("Los valores indicados tienen formas incompatibles.")) from None
 
 
-def _armar(evento, p, p_below, p_above, below, above, between, sigma, opportunities) -> ProbabilityResult:
+def _armar(evento, p, p_below, p_above, below, above, between, sigma, opportunities, *, es_defecto=True, panel=None,
+           point=None) -> ProbabilityResult:
     ppm = 1e6 * np.asarray(p) if np.ndim(p) else 1e6 * p
-    defecto = evento != "between"
+    defecto = es_defecto and evento != "between"
     return ProbabilityResult(
         event=evento, probability=p, ppm=ppm, dpmo=ppm if defecto else None,
         dpu=opportunities * p if defecto else None, p_below=p_below, p_above=p_above,
-        below=below, above=above, between=between, sigma=sigma, opportunities=int(opportunities))
+        below=below, above=above, between=between, sigma=sigma, opportunities=int(opportunities), panel=panel, point=point)
 
 
 def calcular_probabilidad(cdf, sf, *, lsl, usl, below, above, between, sigma, opportunities,
-                          escala=None) -> ProbabilityResult:
+                          escala=None, cdf_le=None, sf_ge=None, es_defecto=True, panel=None,
+                          point=None) -> ProbabilityResult:
     """Núcleo común: valida, combina los arreglos y evalúa ``cdf``/``sf`` de la escala del modelo.
 
-    ``escala`` lleva los valores originales a la escala del modelo (transformación creciente); ``sigma`` ya viene
+    ``cdf`` es ``P(X < v)`` y ``sf`` es ``P(X > v)``; ``cdf_le`` (``P(X ≤ v)``) y ``sf_ge`` (``P(X ≥ v)``) solo se dan en las
+    distribuciones discretas (por defecto son iguales a ``cdf`` y ``sf``). ``es_defecto=False`` en las cartas de control: el
+    evento no es un defecto (``dpmo`` y ``dpu`` valen ``None``). ``escala`` lleva los valores originales a la escala del modelo (transformación creciente); ``sigma`` ya viene
     validado por quien llama.
     """
     entero = isinstance(opportunities, (int, np.integer)) and not isinstance(opportunities, bool)
@@ -156,6 +175,9 @@ def calcular_probabilidad(cdf, sf, *, lsl, usl, below, above, between, sigma, op
         below, above = lsl, usl
         if below is None and above is None:
             raise ValueError(tr("Indica 'below', 'above' o 'between': el resultado no tiene límites de especificación."))
+
+    cdf_le = cdf if cdf_le is None else cdf_le
+    sf_ge = sf if sf_ge is None else sf_ge
 
     def a_modelo(v):
         if escala is None:
@@ -172,8 +194,9 @@ def calcular_probabilidad(cdf, sf, *, lsl, usl, below, above, between, sigma, op
             raise ValueError(tr("En 'between' el valor inferior no puede ser mayor que el superior."))
         ta, tb = a_modelo(a), a_modelo(b)
         # la resta de colas más pequeñas evita la cancelación lejos de la media
-        p = np.where(cdf(ta) > 0.5, sf(ta) - sf(tb), cdf(tb) - cdf(ta))
-        return _armar("between", _salida(p), None, None, None, None, (_salida(a), _salida(b)), sigma, opportunities)
+        p = np.where(cdf(ta) > 0.5, sf_ge(ta) - sf(tb), cdf_le(tb) - cdf(ta))
+        return _armar("between", _salida(p), None, None, None, None, (_salida(a), _salida(b)), sigma, opportunities,
+                      es_defecto=es_defecto, panel=panel, point=point)
 
     lo = None if below is None else _a_arreglo(below, "below")
     hi = None if above is None else _a_arreglo(above, "above")
@@ -186,4 +209,4 @@ def calcular_probabilidad(cdf, sf, *, lsl, usl, below, above, between, sigma, op
     else:
         evento, p = ("below", pl) if pl is not None else ("above", ph)
     return _armar(evento, p, pl, ph, None if lo is None else _salida(lo), None if hi is None else _salida(hi),
-                  None, sigma, opportunities)
+                  None, sigma, opportunities, es_defecto=es_defecto, panel=panel, point=point)

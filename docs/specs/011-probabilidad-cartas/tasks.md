@@ -14,16 +14,16 @@ deben fallar por el motivo esperado.
 - [x] Test de S011-RF-07 (transformación).
 - [x] Test de S011-RF-08 (resultado: `ProbabilityResult` con `panel` y `point`; los resultados de capacidad no cambian).
 - [x] Test de S011-RF-09 (entrada y casos borde).
-- [x] Test de S011-RF-10 (validación, docstring y ejemplo ejecutable de la guía; fallan hasta la Fase 2).
+- [x] Test de S011-RF-10 (docstrings; la comprobación de validación y el ejemplo ejecutable de la guía se prueban en la Fase 2).
 
 ## Fase 1 — Implementación
 
-- [ ] S011-RF-01: campo `dist` en `StagePanel`/`Panel` y su relleno en cada carta admitida.
-- [ ] S011-RF-02 y RF-03: familias de distribución y `ControlChart.probability`.
-- [ ] S011-RF-04: familias geométrica (G) y Weibull (T).
-- [ ] S011-RF-05 y RF-06: sin argumentos, `point=` y etapas.
-- [ ] S011-RF-07: transformación.
-- [ ] S011-RF-08 y RF-09: resultado y validación de entrada.
+- [x] S011-RF-01: campo `dist` en `StagePanel`/`Panel` y su relleno en cada carta admitida.
+- [x] S011-RF-02 y RF-03: familias de distribución y `ControlChart.probability`.
+- [x] S011-RF-04: familias geométrica (G) y Weibull (T).
+- [x] S011-RF-05 y RF-06: sin argumentos, `point=` y etapas.
+- [x] S011-RF-07: transformación.
+- [x] S011-RF-08 y RF-09: resultado y validación de entrada.
 
 ## Fase 2 — Verificación y cierre
 

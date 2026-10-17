@@ -99,7 +99,7 @@ def ewma_chart(
         ucl, lcl = t0 + k * sig_t, t0 - k * sig_t
         flagged = np.flatnonzero((z > ucl) | (z < lcl))
         panel = StagePanel("EWMA", z, full(t0, N), ucl, lcl, sig_t, "EWMA", "only1",
-                           violations={1: flagged})
+                           violations={1: flagged}, dist={"family": "normal", "loc": full(t0, N), "scale": sig_t})
         return [panel], {"target": t0, "sigma": s, "weight": weight, "k": k, "subgroup_size": n}
 
     return build_chart("EWMA", len(means), stages, stage_fn, (1,), {1: k})

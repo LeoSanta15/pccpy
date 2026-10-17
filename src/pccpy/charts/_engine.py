@@ -29,6 +29,15 @@ class StagePanel:
     secondary: np.ndarray | None = None
     symmetric: bool = True
     violations: dict[int | str, np.ndarray] | None = None  # si viene dado, se omiten las pruebas
+    dist: dict | None = None  # distribución en control del estadístico: {"family": ..., parámetros por punto}
+
+
+def _unir_dist(por_etapa: list) -> dict | None:
+    """Concatena la distribución de cada etapa (``None`` si la carta no tiene una distribución conocida)."""
+    if not por_etapa or por_etapa[0] is None:
+        return None
+    return {"family": por_etapa[0]["family"],
+            **{k: np.concatenate([np.atleast_1d(d[k]) for d in por_etapa]) for k in por_etapa[0] if k != "family"}}
 
 
 def full(value, n: int) -> np.ndarray:
@@ -56,11 +65,12 @@ def build_chart(
             a = acc.setdefault(
                 sp.name,
                 {"sp": sp, "values": [], "center": [], "ucl": [], "lcl": [], "sigma": [],
-                 "stage": [], "secondary": [], "viol": {}},
+                 "stage": [], "secondary": [], "viol": {}, "dist": []},
             )
             for key in ("values", "center", "ucl", "lcl", "sigma"):
                 a[key].append(getattr(sp, key))
             a["stage"].append(np.full(len(idx), label, dtype=object))
+            a["dist"].append(sp.dist)
             if sp.secondary is not None:
                 a["secondary"].append(sp.secondary)
 
@@ -94,6 +104,7 @@ def build_chart(
                 violations=viol,
                 secondary=np.concatenate(a["secondary"]) if a["secondary"] else None,
                 symmetric=sp.symmetric,
+                dist=_unir_dist(a["dist"]),
             )
         )
     return ControlChart(kind=kind, panels=panels_out, params=params_list,

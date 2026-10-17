@@ -400,7 +400,7 @@ def g_chart(
             if marcados.size:
                 viol["B"] = marcados
         panel = StagePanel("G", xs, c, u, l, full(np.nan, n), N_("Cantidad entre eventos"), "basic",
-                           symmetric=False, violations=viol)
+                           symmetric=False, violations=viol, dist={"family": "geometric", "p": full(pe, n)})
         return [panel], params
 
     chart = build_chart("G", x.size, stages, stage_fn, tests_n, test_params)
@@ -494,7 +494,8 @@ def t_chart(
         cc, l, u = full(cen, n), full(lo, n), full(hi, n)
         viol = _rare_violations(xs, cc, l, u, tests_n, test_params)
         panel = StagePanel("T", xs, cc, u, l, full(np.nan, n), N_("Tiempo entre eventos"), "basic",
-                           symmetric=False, violations=viol)
+                           symmetric=False, violations=viol,
+                           dist={"family": "weibull", "shape": full(c, n), "scale": full(sc, n)})
         return [panel], {"distribution": distribution, "shape": c, "scale": sc, "n": n}
 
     chart = build_chart("T", x.size, stages, stage_fn, tests_n, test_params)

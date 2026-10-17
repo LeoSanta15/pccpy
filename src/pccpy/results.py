@@ -76,6 +76,9 @@ class Panel:
     symmetric: bool = True  # ¿tiene sentido dibujar zonas de 1 y 2 sigma?
     zones_upper: dict[int, np.ndarray] | None = None  # líneas de 1 y 2 sigma si no son simétricas (escala original)
     zones_lower: dict[int, np.ndarray] | None = None
+    # distribución del estadístico graficado en control, por punto: ``{"family": ..., <parámetro>: arreglo, ...}``; ``None`` si no
+    # tiene una conocida (CUSUM, MA, zona, Laney, multivariadas). La usa ``ControlChart.probability``.
+    dist: dict | None = None
 
     @property
     def flagged(self) -> np.ndarray:
@@ -125,6 +128,43 @@ class ControlChart:
     labels: np.ndarray | None = None  # etiqueta de cada punto graficado (fechas, lotes…); ver :meth:`with_labels`
     transformation: Transformation | None = None  # transformación con la que se calculó la carta (``transform=``)
     chart_scale: str = ""  # escala en que se guardan y dibujan los paneles de posición: 'original' o 'transformed'
+
+    def probability(self, *, panel=None, below=None, above=None, between=None, point=None):
+        """Probabilidad de que el estadístico graficado quede por debajo, por encima o entre valores, con el proceso en control.
+
+        Usa la distribución del estadístico de cada panel con los parámetros de la carta (los límites y la sigma
+        que se ven en el gráfico), tratados como conocidos: normal en I, Xbar y EWMA; rango de normales en MR y R;
+        σ·√(χ²ₙ₋₁/(n−1)) en S; binomial en P y NP; Poisson en C y U; geométrica en G y Weibull en T.
+        No admiten esta consulta la CUSUM, la media móvil, la carta de zona, las de Laney ni las multivariadas
+        (``ValueError``).
+
+        Parameters
+        ----------
+        panel : str, opcional
+            Panel de la carta (``chart.panels``); por defecto el primero.
+        below, above : float | array-like, opcional
+            ``P(X < below)`` y ``P(X > above)``; con ambos, la probabilidad de quedar fuera (suma de las dos partes). En las
+            cartas de atributos la desigualdad es estricta sobre el conteo (en P y U, el valor está en proporción o
+            defectos por unidad). Son valores del estadístico: en unidades originales si la carta se calculó con
+            ``transform=`` y ``scale="original"`` (solo en los paneles I y Xbar; los de dispersión, en la escala transformada).
+        between : (float, float), opcional
+            ``P(a ≤ X ≤ b)``; no se combina con ``below`` ni ``above``.
+        point : int | array-like, opcional
+            Puntos (base 1) de la carta de que se pide la probabilidad; cada uno usa su tamaño de muestra, su etapa y su
+            ponderación. Es obligatorio cuando la distribución cambia de un punto a otro (``n`` variable, etapas, EWMA).
+
+        Sin ``below``, ``above`` ni ``between`` da la probabilidad de que un punto salga de los límites de control del panel
+        (falsa alarma de la prueba 1); su inversa es el ARL en control.
+
+        Returns
+        -------
+        ProbabilityResult
+            Con ``probability`` y ``ppm``; ``dpmo``, ``dpu`` y ``sigma`` valen ``None`` (no hay defectos) y trae ``panel`` y
+            ``point``.
+        """
+        from ._probabilidad_cartas import probabilidad_carta
+
+        return probabilidad_carta(self, panel=panel, below=below, above=above, between=between, point=point)
 
     def with_labels(self, labels) -> ControlChart:
         """Asocia una etiqueta a cada punto graficado (fechas, lotes…) y devuelve la propia carta.

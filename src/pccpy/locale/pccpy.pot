@@ -4160,3 +4160,30 @@ msgstr ""
 
 msgid "Varianza generalizada"
 msgstr ""
+
+msgid "Probabilidad de un valor en la carta de control (panel {panel})"
+msgstr ""
+
+msgid "Panel"
+msgstr ""
+
+msgid "Punto"
+msgstr ""
+
+msgid "Los valores indicados y 'point' tienen formas incompatibles."
+msgstr ""
+
+msgid "'point' debe ser un entero (o un arreglo de enteros) entre 1 y {n}."
+msgstr ""
+
+msgid "'{panel}' no es un panel de la carta (paneles: {paneles})."
+msgstr ""
+
+msgid "La carta {kind} no admite probability(): el estadístico que grafica no tiene una distribución conocida en control."
+msgstr ""
+
+msgid "La distribución del estadístico cambia entre los puntos de la carta (tamaño de muestra, etapas o ponderación): indica 'point=' con el punto (base 1) o los puntos que quieres."
+msgstr ""
+
+msgid "La carta no tiene una distribución conocida del estadístico graficado."
+msgstr ""

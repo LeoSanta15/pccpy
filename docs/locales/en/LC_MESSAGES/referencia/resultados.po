@@ -223,9 +223,6 @@ msgstr "``below, above`` (float | ndarray | None): Values used, in original unit
 msgid "Notas"
 msgstr "Notes"
 
-msgid "``sigma`` (str): ``'overall'`` o ``'within'``."
-msgstr "``sigma`` (str): ``'overall'`` or ``'within'``."
-
 msgid "``ppm`` (float | ndarray): ``1e6 · probability`` (partes por millón)."
 msgstr "``ppm`` (float | ndarray): ``1e6 · probability`` (parts per million)."
 
@@ -240,3 +237,33 @@ msgstr "Text with the event and the table of measures."
 
 msgid "Campos:"
 msgstr "Fields:"
+
+msgid "Probabilidad de que el estadístico graficado quede por debajo, por encima o entre valores, con el proceso en control."
+msgstr "Probability that the plotted statistic falls below, above or between values, with the process in control."
+
+msgid "Usa la distribución del estadístico de cada panel con los parámetros de la carta (los límites y la sigma que se ven en el gráfico), tratados como conocidos: normal en I, Xbar y EWMA; rango de normales en MR y R; σ·√(χ²ₙ₋₁/(n−1)) en S; binomial en P y NP; Poisson en C y U; geométrica en G y Weibull en T. No admiten esta consulta la CUSUM, la media móvil, la carta de zona, las de Laney ni las multivariadas (``ValueError``)."
+msgstr "Uses the distribution of each panel's statistic with the chart parameters (the limits and sigma shown in the plot), treated as known: normal in I, Xbar and EWMA; range of normals in MR and R; σ·√(χ²ₙ₋₁/(n−1)) in S; binomial in P and NP; Poisson in C and U; geometric in G and Weibull in T. The CUSUM, the moving average, the zone chart, the Laney charts and the multivariate charts do not support this query (``ValueError``)."
+
+msgid "Panel de la carta (``chart.panels``); por defecto el primero."
+msgstr "Chart panel (``chart.panels``); the first one by default."
+
+msgid "``P(X < below)`` y ``P(X > above)``; con ambos, la probabilidad de quedar fuera (suma de las dos partes). En las cartas de atributos la desigualdad es estricta sobre el conteo (en P y U, el valor está en proporción o defectos por unidad). Son valores del estadístico: en unidades originales si la carta se calculó con ``transform=`` y ``scale=\"original\"`` (solo en los paneles I y Xbar; los de dispersión, en la escala transformada)."
+msgstr "``P(X < below)`` and ``P(X > above)``; with both, the probability of falling outside (the sum of the two parts). In attribute charts the inequality is strict on the count (in P and U the value is a proportion or defects per unit). These are values of the statistic: in original units if the chart was computed with ``transform=`` and ``scale=\"original\"`` (only in the I and Xbar panels; dispersion panels are in the transformed scale)."
+
+msgid "Puntos (base 1) de la carta de que se pide la probabilidad; cada uno usa su tamaño de muestra, su etapa y su ponderación. Es obligatorio cuando la distribución cambia de un punto a otro (``n`` variable, etapas, EWMA)."
+msgstr "Chart points (1-based) whose probability is requested; each one uses its own sample size, stage and weighting. It is required when the distribution changes from one point to another (variable ``n``, stages, EWMA)."
+
+msgid "*ProbabilityResult* -- Con ``probability`` y ``ppm``; ``dpmo``, ``dpu`` y ``sigma`` valen ``None`` (no hay defectos) y trae ``panel`` y ``point``."
+msgstr "*ProbabilityResult* -- With ``probability`` and ``ppm``; ``dpmo``, ``dpu`` and ``sigma`` are ``None`` (there are no defects) and it carries ``panel`` and ``point``."
+
+msgid "``sigma`` (str | None): ``'overall'`` o ``'within'``; ``None`` en los resultados de las cartas de control."
+msgstr "``sigma`` (str | None): ``'overall'`` or ``'within'``; ``None`` in the control chart results."
+
+msgid "``panel`` (str | None): Panel de la carta de control (``ControlChart.probability``); ``None`` en capacidad."
+msgstr "``panel`` (str | None): Control chart panel (``ControlChart.probability``); ``None`` in capability."
+
+msgid "``point`` (int | ndarray | None): Puntos (base 1) de la carta de que se pidió la probabilidad; ``None`` si no se indicó ``point=`` y en capacidad."
+msgstr "``point`` (int | ndarray | None): Chart points (1-based) whose probability was requested; ``None`` if ``point=`` was not given and in capability."
+
+msgid "En una carta de control el evento no es un defecto: ``dpmo`` y ``dpu`` valen ``None``."
+msgstr "In a control chart the event is not a defect: ``dpmo`` and ``dpu`` are ``None``."
