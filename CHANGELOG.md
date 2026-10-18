@@ -1,17 +1,10 @@
 # Registro de cambios
 
-## [Sin publicar] - mediana en las cartas de variables
-
-No cambia ningún resultado existente: opción y carta nuevas. Especificación `docs/specs/013-mediana-en-cartas`.
-
-### Añadido
-- **`center="median"`** en `imr_chart`, `xbar_r_chart` y `xbar_s_chart` (por defecto `"mean"`, que da lo de siempre): la línea central pasa a la mediana de las observaciones de la etapa (en Xbar, la mediana de las medias de subgrupo de los subgrupos completos); sigma y los límites se calculan igual. No se combina con `mu`. `params` guarda `center` (`summary()` lo muestra solo si no es `"mean"`). Con límites simétricos la mediana **no** elimina las falsas alarmas de la prueba 1 con datos asimétricos (para eso, `transform=`); sí hace que la prueba 2 no dependa de la distribución.
-- **`median_r_chart`**: carta de medianas de subgrupo (X̃-R) con límites `centro ± 3·cmed(n)·σ`, `σ = R̄/d2(n)`; el panel R es el de Xbar-R. Subgrupos del mismo tamaño `n ≥ 2`; acepta `stages`, `mu`, `sigma` y `k`/`alpha`/`rescale_zones`. `cmed(n)` (desviación estándar de la mediana de `n` normales) se calcula por integración numérica para cualquier `n`; con `n` = 3, 5, 7, 9 da `Ã2 = 3·cmed/d2` = 1,187 / 0,691 / 0,509 / 0,412, los valores de Montgomery (recordados de memoria, no verificados contra el libro). Con datos normales la mediana varía de 1,3 a 1,5 veces más que la media: es menos sensible que Xbar-R. `carta.probability()` usa la distribución exacta de la mediana (beta con `n` impar; integración con `n` par).
-- Una comprobación más en la validación (65 en total) con la integración del estadístico de orden, la tabla de Ã2 y la beta de la mediana. No se pudo comprobar si Minitab ofrece estas opciones ni qué dice la literatura sobre el centro de una Xbar con mediana (Rocke, 1989, recomienda estadísticos resistentes como la media recortada).
-
-## [Sin publicar] - ancho de los límites de control (`k` y `alpha`) y `trend_direction` en inglés
+## [0.15.6] - ancho de los límites de control (`k` y `alpha`), mediana en las cartas, `trend_direction` en inglés y más figuras
 
 Cambio **incompatible** solo en `DiagnoseResult.trend_direction` (sin alias; se publica en 0.15.6 por decisión de la persona responsable). El ancho de los límites es opcional y con `k=3` nada cambia. Especificación `docs/specs/014-diagnose-ingles-y-limites-k`.
+
+Además, opciones y funciones nuevas que no cambian ningún resultado existente (con `k=3` y `center="mean"`, que son los valores por defecto, todo sale igual). Especificaciones `docs/specs/013-mediana-en-cartas` y `docs/specs/014-diagnose-ingles-y-limites-k`.
 
 ### Cambios que alteran resultados
 - **`DiagnoseResult.trend_direction`** devuelve `'increasing'`/`'decreasing'` (o `''`) en lugar de `'creciente'`/`'decreciente'`, igual que `non_normal_reason` (`'outliers'`, `'skewed'`, `'shape'`): un dato del código está en inglés en cualquier idioma y solo cambia lo que se muestra. `summary()` y el texto «Se detectó tendencia creciente» no cambian; `to_frame()` muestra ahora el valor canónico. Si comparabas con el literal español, cámbialo: `d.trend_direction == "creciente"` → `d.trend_direction == "increasing"` (y `"decreciente"` → `"decreasing"`).
@@ -19,17 +12,13 @@ Cambio **incompatible** solo en `DiagnoseResult.trend_direction` (sin alias; se 
 ### Añadido
 - **`k`, `alpha` y `rescale_zones`** en `imr_chart`, `xbar_r_chart`, `xbar_s_chart`, `p_chart`, `np_chart`, `c_chart`, `u_chart`, `laney_p_chart`, `laney_u_chart`, `zmr_chart` e `imr_rs_chart` (`rescale_zones` solo donde hay zonas). `k` fija el ancho de los límites en sigmas (por defecto 3): un número da límites simétricos y una pareja `(superior, inferior)` límites distintos arriba y abajo. `alpha` lo da como probabilidad de falsa alarma: un número es bilateral (`k = Φ⁻¹(1 − α/2)`) y una pareja es unilateral por lado (`k = Φ⁻¹(1 − α)`); son excluyentes. Es exacto en los paneles normales (I y Xbar) y aproximado en R, S, MR y atributos (`carta.probability()` da la probabilidad real). El LCL de los paneles de dispersión y de atributos se recorta en 0 y el UCL de las proporciones en 1. La prueba 1 marca lo que sale de los límites dibujados; con `test_params={1: …}` gana ese valor y se avisa. Las zonas de las pruebas 2 a 8 siguen en 1σ y 2σ salvo con `rescale_zones=True` (tercios de `k` de cada lado). `params` guarda `k_upper` y `k_lower`; `summary()` los muestra solo si no son los dos 3.
 - **`pp.k_from_confidence(confianza)`**: el `k` de unos límites bilaterales (`0.99` → 2,576).
-- Una comprobación más en la validación (64 en total) con las constantes de Montgomery, fórmulas binomial y de Poisson a mano y la tabla normal. No se pudo comprobar si Minitab permite un ancho distinto de 3σ en cada carta.
+- **`center="median"`** en `imr_chart`, `xbar_r_chart` y `xbar_s_chart` (por defecto `"mean"`, que da lo de siempre): la línea central pasa a la mediana de las observaciones de la etapa (en Xbar, la mediana de las medias de subgrupo de los subgrupos completos); sigma y los límites se calculan igual. No se combina con `mu`. `params` guarda `center` (`summary()` lo muestra solo si no es `"mean"`). Con límites simétricos la mediana **no** elimina las falsas alarmas de la prueba 1 con datos asimétricos (para eso, `transform=`); sí hace que la prueba 2 no dependa de la distribución.
+- **`median_r_chart`**: carta de medianas de subgrupo (X̃-R) con límites `centro ± 3·cmed(n)·σ`, `σ = R̄/d2(n)`; el panel R es el de Xbar-R. Subgrupos del mismo tamaño `n ≥ 2`; acepta `stages`, `mu`, `sigma` y `k`/`alpha`/`rescale_zones`. `cmed(n)` (desviación estándar de la mediana de `n` normales) se calcula por integración numérica para cualquier `n`; con `n` = 3, 5, 7, 9 da `Ã2 = 3·cmed/d2` = 1,187 / 0,691 / 0,509 / 0,412, los valores de Montgomery (recordados de memoria, no verificados contra el libro). Con datos normales la mediana varía de 1,3 a 1,5 veces más que la media: es menos sensible que Xbar-R. `carta.probability()` usa la distribución exacta de la mediana (beta con `n` impar; integración con `n` par).
+- Dos comprobaciones más en la validación (65 en total): una con las constantes de Montgomery, fórmulas binomial y de Poisson a mano y la tabla normal (ancho de los límites), y otra con la integración del estadístico de orden, la tabla de Ã2 y la beta de la mediana (mediana). No se pudo comprobar si Minitab permite un ancho distinto de 3σ en cada carta, ni si ofrece la mediana o la carta X̃-R, ni qué dice la literatura sobre el centro de una Xbar con mediana (Rocke, 1989, recomienda estadísticos resistentes como la media recortada).
+- **12 figuras más en `README.md` y `README_en.md`** (25 por idioma), en las secciones de referencia que no tenían: Xbar-S, C, Laney P', EWMA, CUSUM, media móvil, T, capacidad normal, no normal (Weibull), Box-Cox y binomial, más la carta de medianas. Las genera el nuevo `examples/gallery_example.py` (semilla `default_rng(2026)`) mediante `python scripts/generar_figuras_readme.py`.
 
 ### Corregido
 - Con `test_params={1: 2}` la prueba 1 marcaba los puntos a más de 2σ pero los límites dibujados seguían en 3σ; ahora `k` resuelve esa incoherencia (el valor de `test_params[1]` sigue ganando si se da).
-
-## [Sin publicar] - figuras en las secciones de referencia del README
-
-No cambia ningún resultado ni la API.
-
-### Añadido
-- **11 figuras más en `README.md` y `README_en.md`** (24 por idioma), en las secciones de referencia que no tenían: Xbar-S, C, Laney P', EWMA, CUSUM, media móvil, T, capacidad normal, no normal (Weibull), Box-Cox y binomial. Las genera el nuevo `examples/gallery_example.py` (semilla `default_rng(2026)`) mediante `python scripts/generar_figuras_readme.py`.
 
 ## [0.15.5] - claves en inglés, probabilidad de un valor en las cartas y figuras en el README
 
