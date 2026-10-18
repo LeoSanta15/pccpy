@@ -58,8 +58,9 @@ examples in this README assume English is active.
 17. [MSA / Gage R&R](#msa--gage-rr)
 18. [Accessing the result data](#accessing-the-result-data)
 19. [Validation](#validation)
-20. [Development](#development)
-21. [License](#license)
+20. [Other libraries](#other-libraries)
+21. [Development](#development)
+22. [License](#license)
 
 ---
 
@@ -1781,6 +1782,15 @@ More than 1,800 automated tests. The references are independent of pccpy:
 > it has not been compared run by run against the Minitab software for lack of a
 > license. If you find a difference, open an
 > [issue](https://github.com/LeoSanta15/pccpy/issues).
+
+---
+
+## Other libraries
+
+`pccpy` is limited to statistical process control. It does not include design of experiments (DOE): to generate factorial,
+fractional, response-surface and other designs you can use [`pyDOE`](https://pydoe.github.io/pydoe/) (`pip install pyDOE`;
+the forks `pyDOE2` and `pyDOE3` also exist). It was not checked how much of the analysis of the results (effects, ANOVA,
+plots) it covers, nor whether it matches what Minitab does.
 
 ---
 

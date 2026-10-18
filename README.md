@@ -57,8 +57,9 @@ documenta Minitab.
 17. [MSA / Gage R&R](#msa--gage-rr)
 18. [Acceso a los datos del resultado](#acceso-a-los-datos-del-resultado)
 19. [Validación](#validación)
-20. [Desarrollo](#desarrollo)
-21. [Licencia](#licencia)
+20. [Otras librerías](#otras-librerías)
+21. [Desarrollo](#desarrollo)
+22. [Licencia](#licencia)
 
 ---
 
@@ -1780,6 +1781,15 @@ Más de 1 800 pruebas automatizadas. Las referencias son independientes de pccpy
 > no se ha comparado corrida a corrida contra el software Minitab por ausencia de
 > licencia. Si encuentras una diferencia, abre un
 > [issue](https://github.com/LeoSanta15/pccpy/issues).
+
+---
+
+## Otras librerías
+
+`pccpy` se limita al control estadístico de procesos. No incluye diseño de experimentos (DOE): para generar diseños factoriales,
+fraccionales, de superficie de respuesta y otros puedes usar [`pyDOE`](https://pydoe.github.io/pydoe/) (`pip install pyDOE`;
+también existen las bifurcaciones `pyDOE2` y `pyDOE3`). No se ha comprobado qué parte del análisis de los resultados (efectos,
+ANOVA, gráficas) cubre ni si coincide con lo que hace Minitab.
 
 ---
 

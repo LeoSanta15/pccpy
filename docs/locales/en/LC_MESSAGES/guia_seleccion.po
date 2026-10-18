@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-05 01:30+0000\n"
+"POT-Creation-Date: 2026-10-18 01:09+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -177,6 +177,12 @@ msgstr "I don't know what to use"
 
 msgid "`diagnose`"
 msgstr "`diagnose`"
+
+msgid "Otras librerías"
+msgstr "Other libraries"
+
+msgid "`pccpy` no incluye diseño de experimentos (DOE). Para generar diseños factoriales, fraccionales o de superficie de respuesta puedes usar [`pyDOE`](https://pydoe.github.io/pydoe/) (`pip install pyDOE`). No se ha comprobado qué parte del análisis de los resultados cubre ni si coincide con Minitab."
+msgstr "`pccpy` does not include design of experiments (DOE). To generate factorial, fractional or response-surface designs you can use [`pyDOE`](https://pydoe.github.io/pydoe/) (`pip install pyDOE`). It was not checked how much of the analysis of the results it covers, nor whether it matches Minitab."
 
 msgid "Ver también"
 msgstr "See also"

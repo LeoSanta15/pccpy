@@ -179,6 +179,14 @@ d.plot()                    # histograma + secuencia
 
 ---
 
+## Otras librerías
+
+`pccpy` no incluye diseño de experimentos (DOE). Para generar diseños factoriales, fraccionales o de superficie de respuesta
+puedes usar [`pyDOE`](https://pydoe.github.io/pydoe/) (`pip install pyDOE`). No se ha comprobado qué parte del análisis de los
+resultados cubre ni si coincide con Minitab.
+
+---
+
 ## Ver también
 
 - {doc}`inicio_rapido` — ejemplos de cada función
