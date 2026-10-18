@@ -14,7 +14,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 
 ## Estado actual (verificado el 2026-10-17; ver el CHANGELOG para lo no publicado)
 
-- Versión **0.15.5** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
+- Versión **0.15.6** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
 - **3 283 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 65 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.14, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
