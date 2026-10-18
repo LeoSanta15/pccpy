@@ -4298,3 +4298,6 @@ msgstr "The median chart requires subgroups of the same size (they have from {mi
 
 msgid "La carta de medianas requiere subgrupos de al menos 2 observaciones."
 msgstr "The median chart requires subgroups of at least 2 observations."
+
+msgid "Mediana como línea central y carta de medianas de subgrupo (X̃-R)"
+msgstr "Median as the center line and subgroup-median chart (X̃-R)"

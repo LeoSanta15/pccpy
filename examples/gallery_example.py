@@ -45,3 +45,6 @@ pccpy.capability_boxcox(w, lsl=0.1, usl=12).plot().savefig(output / "capability_
 # 6) Capability for attributes (binomial)
 n = rng.integers(180, 220, 25)
 pccpy.capability_binomial(rng.binomial(n, 0.03), n=n).plot().savefig(output / "capability_binomial.png", dpi=110)
+
+# 7) Subgroup medians: median-R chart on skewed data (drawn last so the figures above keep their data)
+pccpy.median_r_chart(rng.lognormal(1.0, 0.4, (25, 5))).plot().savefig(output / "median_r.png", dpi=110)

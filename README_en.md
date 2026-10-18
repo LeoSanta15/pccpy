@@ -534,6 +534,33 @@ chart = pp.imr_chart(x, k=2, rescale_zones=True)
 
 ---
 
+### Median instead of the mean
+
+`center="median"` puts the center line of I-MR, Xbar-R and Xbar-S on the median (on Xbar, the median of the subgroup means of the complete subgroups);
+sigma and the limits are computed the same way. It cannot be combined with `mu`. `median_r_chart` plots the median of each subgroup together with its range.
+
+```python
+chart = pp.imr_chart(x, center="median")
+chart = pp.xbar_r_chart(x, subgroup_size=5, center="median")
+
+# With skewed data, what fixes the false alarms of test 1 is transforming
+chart = pp.imr_chart(x, transform="boxcox")
+
+# Subgroup median chart (X̃-R): subgroups of the same size n >= 2
+chart = pp.median_r_chart(x, subgroup_size=5)
+```
+
+![Subgroup median chart X̃-R](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/en/median_r.png)
+
+- With symmetric limits, the median as the center does **not** remove the false alarms of test 1 on skewed data; it does make test 2
+  (9 points in a row on the same side) distribution-free. For skewed data use `transform=`.
+- The limits of `median_r_chart` are `center ± 3·cmed(n)·σ`, with `σ = R̄/d2(n)` and `cmed(n)` the standard deviation of the median of `n` normals
+  (Montgomery's `Ã2 = 3·cmed(n)/d2(n)`: 1.187 / 0.691 / 0.509 / 0.412 for n = 3, 5, 7, 9; computed by integration and checked against those values, which are from memory).
+  With normal data the median varies 1.3 to 1.5 times more than the mean: this chart is less sensitive than Xbar-R. Only odd sizes were checked against the table.
+- It was not checked whether Minitab offers these options, nor the literature on the center of an Xbar with the median (Rocke, 1989, recommends resistant statistics such as the trimmed mean).
+
+---
+
 ### Data input formats
 
 The subgroup charts (`xbar_r_chart`, `xbar_s_chart`, `ewma_chart`, `cusum_chart`,

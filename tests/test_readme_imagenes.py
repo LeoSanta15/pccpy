@@ -32,7 +32,7 @@ def test_todas_las_figuras_de_los_ejemplos_estan_en_el_readme(idioma):
     carpeta = RAIZ / "docs" / "imagenes" / idioma
     en_readme = {u.rsplit("/", 1)[1] for u in _imagenes((RAIZ / README[idioma]).read_text(encoding="utf-8"))}
     en_disco = {p.name for p in carpeta.glob("*.png")}
-    assert len(en_disco) == 24
+    assert len(en_disco) == 25
     assert en_disco == en_readme
 
 

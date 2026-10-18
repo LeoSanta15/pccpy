@@ -4241,3 +4241,6 @@ msgstr ""
 
 msgid "La carta de medianas requiere subgrupos de al menos 2 observaciones."
 msgstr ""
+
+msgid "Mediana como línea central y carta de medianas de subgrupo (X̃-R)"
+msgstr ""

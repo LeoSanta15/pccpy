@@ -1,5 +1,14 @@
 # Registro de cambios
 
+## [Sin publicar] - mediana en las cartas de variables
+
+No cambia ningún resultado existente: opción y carta nuevas. Especificación `docs/specs/013-mediana-en-cartas`.
+
+### Añadido
+- **`center="median"`** en `imr_chart`, `xbar_r_chart` y `xbar_s_chart` (por defecto `"mean"`, que da lo de siempre): la línea central pasa a la mediana de las observaciones de la etapa (en Xbar, la mediana de las medias de subgrupo de los subgrupos completos); sigma y los límites se calculan igual. No se combina con `mu`. `params` guarda `center` (`summary()` lo muestra solo si no es `"mean"`). Con límites simétricos la mediana **no** elimina las falsas alarmas de la prueba 1 con datos asimétricos (para eso, `transform=`); sí hace que la prueba 2 no dependa de la distribución.
+- **`median_r_chart`**: carta de medianas de subgrupo (X̃-R) con límites `centro ± 3·cmed(n)·σ`, `σ = R̄/d2(n)`; el panel R es el de Xbar-R. Subgrupos del mismo tamaño `n ≥ 2`; acepta `stages`, `mu`, `sigma` y `k`/`alpha`/`rescale_zones`. `cmed(n)` (desviación estándar de la mediana de `n` normales) se calcula por integración numérica para cualquier `n`; con `n` = 3, 5, 7, 9 da `Ã2 = 3·cmed/d2` = 1,187 / 0,691 / 0,509 / 0,412, los valores de Montgomery (recordados de memoria, no verificados contra el libro). Con datos normales la mediana varía de 1,3 a 1,5 veces más que la media: es menos sensible que Xbar-R. `carta.probability()` usa la distribución exacta de la mediana (beta con `n` impar; integración con `n` par).
+- Una comprobación más en la validación (65 en total) con la integración del estadístico de orden, la tabla de Ã2 y la beta de la mediana. No se pudo comprobar si Minitab ofrece estas opciones ni qué dice la literatura sobre el centro de una Xbar con mediana (Rocke, 1989, recomienda estadísticos resistentes como la media recortada).
+
 ## [Sin publicar] - ancho de los límites de control (`k` y `alpha`) y `trend_direction` en inglés
 
 Cambio **incompatible** solo en `DiagnoseResult.trend_direction` (sin alias; se publica en 0.15.6 por decisión de la persona responsable). El ancho de los límites es opcional y con `k=3` nada cambia. Especificación `docs/specs/014-diagnose-ingles-y-limites-k`.

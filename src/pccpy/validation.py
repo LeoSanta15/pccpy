@@ -1157,6 +1157,36 @@ def _limites_k():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("mediana-cartas", N_("Mediana como línea central y carta de medianas de subgrupo (X̃-R)"),
+               "Integración numérica de la densidad del estadístico de orden, tabla de Ã2 de Montgomery (recordada de memoria) y beta de la "
+               "mediana (scipy.special.betainc); especificación 013", 1.5e-3, relative=True)
+def _mediana_cartas():
+    from scipy import integrate, special
+
+    from ._constants import cmed, d2
+    from .charts.variables import imr_chart, median_r_chart
+
+    esperado, obtenido = [], []
+    a2_tilde = {3: 1.187, 5: 0.691, 7: 0.509, 9: 0.412}
+    for n, a2 in a2_tilde.items():
+        m = (n - 1) // 2
+        c = math.factorial(n) / math.factorial(m) ** 2
+        f = lambda x, c=c, m=m: x * x * c * stats.norm.cdf(x) ** m * stats.norm.sf(x) ** m * stats.norm.pdf(x)
+        integral = math.sqrt(integrate.quad(f, -12, 12, epsabs=1e-13, epsrel=1e-13)[0])
+        esperado += [integral, a2]
+        obtenido += [cmed(n), 3 * cmed(n) / d2(n)]
+    rng = np.random.default_rng(13)
+    x = rng.lognormal(1.0, 0.6, 90)
+    esperado.append(float(np.median(x)))
+    obtenido.append(imr_chart(x, center="median")["I"].center[0])
+    g = rng.normal(0, 1, (20, 5))
+    c = median_r_chart(g, mu=0.0, sigma=1.0)
+    lcl, ucl = c["Median"].lcl[0], c["Median"].ucl[0]
+    esperado.append(float(special.betainc(3, 3, stats.norm.cdf(lcl)) + special.betainc(3, 3, stats.norm.sf(ucl))))
+    obtenido.append(c.probability().probability)
+    return np.array(esperado), np.array(obtenido)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 

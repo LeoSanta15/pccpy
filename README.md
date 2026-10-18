@@ -532,6 +532,33 @@ carta = pp.imr_chart(x, k=2, rescale_zones=True)
 
 ---
 
+### Mediana en lugar de la media
+
+`center="median"` pone la línea central de I-MR, Xbar-R y Xbar-S en la mediana (en Xbar, la mediana de las medias de subgrupo de los subgrupos
+completos); sigma y los límites se calculan igual. No se combina con `mu`. `median_r_chart` grafica la mediana de cada subgrupo con su rango.
+
+```python
+carta = pp.imr_chart(x, center="median")
+carta = pp.xbar_r_chart(x, subgroup_size=5, center="median")
+
+# Con datos asimétricos, lo que corrige las falsas alarmas de la prueba 1 es transformar
+carta = pp.imr_chart(x, transform="boxcox")
+
+# Carta de medianas de subgrupo (X̃-R): subgrupos del mismo tamaño n >= 2
+carta = pp.median_r_chart(x, subgroup_size=5)
+```
+
+![Carta de medianas de subgrupo X̃-R](https://raw.githubusercontent.com/LeoSanta15/pccpy/main/docs/imagenes/es/median_r.png)
+
+- Con límites simétricos, la mediana como centro **no** elimina las falsas alarmas de la prueba 1 con datos asimétricos; sí hace que la prueba 2
+  (9 puntos seguidos del mismo lado) no dependa de la distribución. Para datos asimétricos usa `transform=`.
+- Los límites de `median_r_chart` son `centro ± 3·cmed(n)·σ`, con `σ = R̄/d2(n)` y `cmed(n)` la desviación estándar de la mediana de `n` normales
+  (el `Ã2 = 3·cmed(n)/d2(n)` de Montgomery: 1,187 / 0,691 / 0,509 / 0,412 para n = 3, 5, 7, 9; calculado por integración y contrastado con esos valores, que son de memoria).
+  Con datos normales la mediana varía de 1,3 a 1,5 veces más que la media: esta carta es menos sensible que Xbar-R. Solo los tamaños impares se contrastaron con la tabla.
+- No se comprobó si Minitab ofrece estas opciones ni la literatura sobre el centro de una Xbar con mediana (Rocke, 1989, recomienda estadísticos resistentes como la media recortada).
+
+---
+
 ### Formatos de entrada de datos
 
 Las cartas de subgrupos (`xbar_r_chart`, `xbar_s_chart`, `ewma_chart`, `cusum_chart`,
