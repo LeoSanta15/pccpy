@@ -1,18 +1,12 @@
 # Registro de cambios
 
-## [Sin publicar] - nota «Otras librerías»
+## [0.15.7] - metadatos de PyPI, erratas del README y nota «Otras librerías»
 
-No cambia código ni resultados.
-
-### Añadido
-- **Sección «Otras librerías»** en `README.md`, `README_en.md` y en la guía de selección: `pccpy` no incluye diseño de experimentos (DOE) y apunta a `pyDOE` (con sus bifurcaciones `pyDOE2` y `pyDOE3`). No se comprobó qué parte del análisis de los resultados cubre `pyDOE` ni si coincide con Minitab.
-
-## [Sin publicar] - metadatos de PyPI y erratas del README
-
-No cambia código ni resultados. Se verá en PyPI con el siguiente release.
+No cambia código ni resultados: solo metadatos del paquete, texto del README y documentación.
 
 ### Añadido
 - **Metadatos del paquete** (`pyproject.toml`): `keywords` con «gráficas de control», «capacidad de proceso», `cpk`, `ewma`, `cusum`, `python` y «statistical process control»; clasificadores `Natural Language :: Spanish` y `English`; `Repository` en `[project.urls]`. La primera frase del README nombra «gráficas (cartas) de control», Cp/Cpk/Pp/Ppk y las cartas principales.
+- **Sección «Otras librerías»** en `README.md`, `README_en.md` y en la guía de selección: `pccpy` no incluye diseño de experimentos (DOE) y apunta a `pyDOE` (con sus bifurcaciones `pyDOE2` y `pyDOE3`). No se comprobó qué parte del análisis de los resultados cubre `pyDOE` ni si coincide con Minitab.
 
 ### Corregido
 - README: la cabecera «Nú» de la tabla de pruebas pasa a «Nº» y «descompone es dos fuentes» a «descompone en dos fuentes». La frase del ARL «detectan mucho mejor que los eventos se espacien que que se acorten» (correcta pero torpe) pasa a «detectan mucho mejor un aumento del espaciado entre eventos que su acortamiento», también en el título de `docs/source/arl.md`.
