@@ -1,6 +1,6 @@
 # 013 — Mediana en las cartas de variables
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S013
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.15.6 (no cambia ningún resultado existente: opción nueva y función nueva)
@@ -65,6 +65,7 @@ límites no cambian (`centro ± 3σ/√nᵢ`).
 - límites = `centro ± 3·cmed(n)·σ̂` con `cmed(n)` = desviación estándar de la mediana de `n` normales estándar (el coeficiente `Ã2 = 3·cmed(n)/d2(n)`
   de Montgomery: `centro ± Ã2·R̄`);
 - el panel R es el de Xbar-R.
+- acepta también `k`, `alpha` y `rescale_zones` (spec 014): una carta nueva con límites de Shewhart los admite (aclaración de la implementación, sin cambiar lo aprobado).
 
 **Aceptación:**
 - **Dado** `n` = 3, 5, 7 y 9 **cuando** se construye la carta **entonces** `Ã2` coincide con la integración numérica de la densidad de la
@@ -84,7 +85,7 @@ La mediana de `n` normales (con `n` impar) tiene distribución exacta `F⁻¹(Be
 `Panel.dist` de la carta X̃ usa la familia `"median"`; con `n` par se usa la integración numérica.
 
 **Aceptación:** `probability()` sin argumentos coincide con la probabilidad de caer fuera de los límites calculada por simulación
-(≥ 20 semillas) y, para `n` = 1, con la de I.
+(≥ 20 semillas) (el caso `n` = 1 de la versión aprobada se omite: la carta X̃ exige `n ≥ 2`, RF-05).
 
 ### S013-RF-07 — Claves y textos
 

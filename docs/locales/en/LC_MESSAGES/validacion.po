@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-17 23:36+0000\n"
+"POT-Creation-Date: 2026-10-18 00:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -210,6 +210,12 @@ msgstr "Hotelling's T² and MEWMA"
 
 msgid "Fórmulas y límites conocidos"
 msgstr "Known formulas and limits"
+
+msgid "Mediana como línea central y carta de medianas (X̃-R)"
+msgstr "Median as the center line and median chart (X̃-R)"
+
+msgid "Integración numérica de la densidad del estadístico de orden, tabla de Ã2 de Montgomery (de memoria) y beta de la mediana"
+msgstr "Numerical integration of the order-statistic density, Montgomery's Ã2 table (from memory) and the beta distribution of the median"
 
 msgid "Ancho de los límites (`k`, `alpha`)"
 msgstr "Width of the limits (`k`, `alpha`)"

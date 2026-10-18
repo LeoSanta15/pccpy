@@ -101,6 +101,15 @@ def resolve_limits(k=None, alpha=None, rescale_zones: bool = False) -> Limits:
     return Limits(float(k_sup), float(k_inf), bool(rescale_zones))
 
 
+def resolve_center(center, mu) -> str:
+    """Valida ``center`` (``"mean"`` o ``"median"``): ``mu`` ya fija la línea central, así que no se combina con la mediana (S013-RF-03)."""
+    if not isinstance(center, str) or center not in ("mean", "median"):
+        raise ValueError(tr("'center' debe ser 'mean' o 'median' (recibido: {valor!r}).").format(valor=center))
+    if center == "median" and mu is not None:
+        raise ValueError(tr("'center=\"median\"' no se combina con 'mu': 'mu' ya fija la línea central."))
+    return center
+
+
 def build_chart(
     kind: str,
     n_points: int,

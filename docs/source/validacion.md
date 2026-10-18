@@ -8,7 +8,7 @@ versión instalada calcula bien (por ejemplo, en un sistema de calidad regulado)
 import pccpy as pp
 
 informe = pp.run_validation()
-print(informe.summary())      # «Validación de pccpy …: 64 de 64 comprobaciones correctas»
+print(informe.summary())      # «Validación de pccpy …: 65 de 65 comprobaciones correctas»
 informe.passed                # True si todo coincide
 informe.to_frame()            # una fila por comprobación (error y tolerancia)
 ```
@@ -52,6 +52,7 @@ python -m pccpy.validation --markdown validacion.md
 | Muestreo de aceptación | Celdas de las tablas I y II-A de Z1.4 (niveles I, II y III); probabilidad binomial acumulada |
 | Gage R&R, Tipo 1, linealidad, kappa | Cuadrados medios del ANOVA, fórmulas de Cg/Cgk, regresión exacta, definición de κ |
 | T² de Hotelling y MEWMA | Fórmulas y límites conocidos |
+| Mediana como línea central y carta de medianas (X̃-R) | Integración numérica de la densidad del estadístico de orden, tabla de Ã2 de Montgomery (de memoria) y beta de la mediana |
 | Ancho de los límites (`k`, `alpha`) | Fórmulas de Montgomery con las constantes de sus tablas, fórmulas binomial y de Poisson a mano y tabla normal estándar |
 
 ## Qué no es

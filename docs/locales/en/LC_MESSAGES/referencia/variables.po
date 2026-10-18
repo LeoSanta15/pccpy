@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy 0.11.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-17 23:36+0000\n"
+"POT-Creation-Date: 2026-10-18 00:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: en\n"
@@ -65,6 +65,9 @@ msgstr "False-alarm probability instead of ``k``: a number is **two-sided** (``k
 msgid "Por defecto las zonas de las pruebas 2 a 8 siguen en 1σ y 2σ aunque cambie ``k``. Con ``True`` pasan a ``k/3`` y ``2k/3`` sigmas de cada lado."
 msgstr "By default the zones of tests 2 to 8 stay at 1σ and 2σ even if ``k`` changes. With ``True`` they become ``k/3`` and ``2k/3`` sigmas on each side."
 
+msgid "Línea central del panel I: la media (por defecto) o la mediana de las observaciones de la etapa. σ y los límites se calculan igual (``centro ± kσ``). La mediana no corrige las falsas alarmas de la prueba 1 con datos asimétricos (los límites siguen siendo simétricos; para eso está ``transform=``), pero hace que la prueba 2 no dependa de la distribución. No se combina con ``mu``."
+msgstr "Center line of the I panel: the mean (default) or the median of the observations of the stage. σ and the limits are computed the same way (``center ± kσ``). The median does not fix the false alarms of test 1 on skewed data (the limits stay symmetric; that is what ``transform=`` is for), but it makes test 2 independent of the distribution. It cannot be combined with ``mu``."
+
 msgid "Tipo del valor devuelto"
 msgstr "Return type"
 
@@ -92,9 +95,21 @@ msgstr "``transform`` and ``scale`` work as in :func:`imr_chart`: all observatio
 msgid "``k``, ``alpha`` y ``rescale_zones`` ajustan el ancho de los límites y las zonas como en :func:`imr_chart`: ``k`` en sigmas del estadístico (un número o una pareja ``(superior, inferior)``) o ``alpha`` como probabilidad de falsa alarma. Los paneles de dispersión usan el mismo ``k``; allí ``alpha`` es una aproximación (la probabilidad real la da ``carta.probability()``)."
 msgstr "``k``, ``alpha`` and ``rescale_zones`` adjust the width of the limits and the zones as in :func:`imr_chart`: ``k`` in sigmas of the statistic (a number or an ``(upper, lower)`` pair) or ``alpha`` as a false-alarm probability. The dispersion panels use the same ``k``; there ``alpha`` is an approximation (the real probability is given by ``chart.probability()``)."
 
+msgid "``center``: ``'mean'`` (por defecto, la media de todas las observaciones) o ``'median'`` (la mediana de las medias de subgrupo de los subgrupos completos de la etapa); σ y los límites no cambian. No se combina con ``mu``."
+msgstr "``center``: ``'mean'`` (default, the mean of all the observations) or ``'median'`` (the median of the subgroup means of the complete subgroups of the stage); σ and the limits do not change. It cannot be combined with ``mu``."
+
 msgid "Carta X-barra y S (Stat > Control Charts > Xbar-S)."
 msgstr "X-bar and S chart (Stat > Control Charts > Xbar-S)."
 
 msgid "Acepta los mismos formatos de entrada que :func:`xbar_r_chart`, incluidos ``transform`` y ``scale``. ``sigma_method``: ``'sbar'`` (por defecto) o ``'pooled'``. Con tamaños desiguales, sigma es el promedio de s_i/c4(n_i) ponderado por c4(n_i)²/(1 − c4(n_i)²) (varianza inversa)."
 msgstr "It accepts the same input formats as :func:`xbar_r_chart`, including ``transform`` and ``scale``. ``sigma_method``: ``'sbar'`` (the default) or ``'pooled'``. With unequal sizes, sigma is the average of s_i/c4(n_i) weighted by c4(n_i)²/(1 − c4(n_i)²) (inverse variance)."
+
+msgid "Carta de medianas de subgrupo y R (X̃-R)."
+msgstr "Subgroup median and R chart (X̃-R)."
+
+msgid "Grafica la mediana de cada subgrupo con la línea central en el promedio de las medianas (o ``mu``) y los límites ``centro ± 3·cmed(n)·σ``, con ``σ = R̄/d2(n)`` y ``cmed(n)`` la desviación estándar de la mediana de ``n`` normales estándar (el coeficiente ``Ã2 = 3·cmed(n)/d2(n)`` de Montgomery; ``n`` = 3, 5, 7, 9: 1.187, 0.691, 0.509, 0.412). El panel R es el de :func:`xbar_r_chart`. Acepta los mismos formatos de entrada, ``stages``, ``mu`` y ``sigma``, y ``k``/``alpha``/``rescale_zones`` como :func:`imr_chart`."
+msgstr "Plots the median of each subgroup with the center line at the average of the medians (or ``mu``) and the limits ``center ± 3·cmed(n)·σ``, with ``σ = R̄/d2(n)`` and ``cmed(n)`` the standard deviation of the median of ``n`` standard normals (Montgomery's coefficient ``Ã2 = 3·cmed(n)/d2(n)``; ``n`` = 3, 5, 7, 9: 1.187, 0.691, 0.509, 0.412). The R panel is that of :func:`xbar_r_chart`. It accepts the same input formats, ``stages``, ``mu`` and ``sigma``, and ``k``/``alpha``/``rescale_zones`` as :func:`imr_chart`."
+
+msgid "Los subgrupos deben tener el mismo tamaño ``n >= 2``. Solo los tamaños impares (3, 5, 7, 9) se contrastaron con la tabla publicada; ``cmed(n)`` se calcula por integración para cualquier ``n``. Con datos normales la mediana varía de 1.3 a 1.5 veces más que la media (``n`` = 3 a 9), así que esta carta es menos sensible que Xbar-R; ``carta.probability()`` usa la distribución exacta de la mediana (beta con ``n`` impar, integración con ``n`` par)."
+msgstr "The subgroups must have the same size ``n >= 2``. Only the odd sizes (3, 5, 7, 9) were checked against the published table; ``cmed(n)`` is computed by integration for any ``n``. With normal data the median varies 1.3 to 1.5 times more than the mean (``n`` = 3 to 9), so this chart is less sensitive than Xbar-R; ``chart.probability()`` uses the exact distribution of the median (beta with odd ``n``, integration with even ``n``)."
 
