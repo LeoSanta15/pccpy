@@ -45,9 +45,9 @@ def _cartas():
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
         casos = {
-            "imr": (pccpy.imr_chart(x), {"mean", "sigma", "mr_mean", "n", "k_upper", "k_lower"}),
-            "xbar_r": (pccpy.xbar_r_chart(g), {"mean", "sigma", "subgroups", "size", "k_upper", "k_lower"}),
-            "xbar_s": (pccpy.xbar_s_chart(g), {"mean", "sigma", "subgroups", "size", "k_upper", "k_lower"}),
+            "imr": (pccpy.imr_chart(x), {"mean", "sigma", "mr_mean", "n", "k_upper", "k_lower", "center"}),
+            "xbar_r": (pccpy.xbar_r_chart(g), {"mean", "sigma", "subgroups", "size", "k_upper", "k_lower", "center"}),
+            "xbar_s": (pccpy.xbar_s_chart(g), {"mean", "sigma", "subgroups", "size", "k_upper", "k_lower", "center"}),
             "p": (pccpy.p_chart(dd, n), {"center", "n_points", "k_upper", "k_lower"}),
             "np": (pccpy.np_chart(dd, n), {"center", "n_points", "k_upper", "k_lower"}),
             "c": (pccpy.c_chart(c), {"center", "n_points", "k_upper", "k_lower"}),
@@ -96,7 +96,7 @@ def test_s012_rf_01_las_claves_no_dependen_del_idioma():
         en = set(pccpy.xbar_r_chart(d["g"]).params[0])
     with pccpy.language("es"):
         es = set(pccpy.xbar_r_chart(d["g"]).params[0])
-    assert en == es == {"mean", "sigma", "subgroups", "size", "stage", "k_upper", "k_lower"}
+    assert en == es == {"mean", "sigma", "subgroups", "size", "stage", "k_upper", "k_lower", "center"}
 
 
 def test_s012_rf_01_zmr_con_sigma_historica():
