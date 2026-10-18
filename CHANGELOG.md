@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - nota «Otras librerías»
+
+No cambia código ni resultados.
+
+### Añadido
+- **Sección «Otras librerías»** en `README.md`, `README_en.md` y en la guía de selección: `pccpy` no incluye diseño de experimentos (DOE) y apunta a `pyDOE` (con sus bifurcaciones `pyDOE2` y `pyDOE3`). No se comprobó qué parte del análisis de los resultados cubre `pyDOE` ni si coincide con Minitab.
+
 ## [Sin publicar] - metadatos de PyPI y erratas del README
 
 No cambia código ni resultados. Se verá en PyPI con el siguiente release.
