@@ -15,7 +15,8 @@ license-files = ["LICENSE"]
 authors = [
     { name = "LeoSanta15", email = "angelsanta1@gmail.com" }
 ]
-keywords = ["spc", "control estadístico de procesos", "cartas de control", "capacidad", "minitab", "six sigma"]
+keywords = ["spc", "control estadístico de procesos", "cartas de control", "gráficas de control", "capacidad de proceso",
+            "cpk", "ewma", "cusum", "minitab", "six sigma", "python", "statistical process control"]
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.9",
@@ -25,6 +26,8 @@ classifiers = [
     "Programming Language :: Python :: 3.13",
     "Programming Language :: Python :: 3.14",
     "Operating System :: OS Independent",
+    "Natural Language :: Spanish",
+    "Natural Language :: English",
     "Intended Audience :: Science/Research",
     "Topic :: Scientific/Engineering :: Information Analysis",
 ]
@@ -41,6 +44,7 @@ docs = ["sphinx>=7", "sphinx-rtd-theme>=2", "myst-parser>=2", "sphinx-intl>=2.1"
 excel = ["openpyxl>=3.0"]
 
 [project.urls]
+Repository = "https://github.com/LeoSanta15/pccpy"
 Homepage = "https://github.com/LeoSanta15/pccpy"
 Issues = "https://github.com/LeoSanta15/pccpy/issues"
 Changelog = "https://github.com/LeoSanta15/pccpy/blob/main/CHANGELOG.md"
