@@ -6,8 +6,10 @@ de ``_probabilidad.py`` (validación de los valores, arreglos, ``between``, resu
 """
 from __future__ import annotations
 
+import math
+
 import numpy as np
-from scipy import stats
+from scipy import integrate, special, stats
 from scipy.special import ndtr
 
 from ._i18n import tr
@@ -95,6 +97,38 @@ def _desviacion(n, scale):
     return lt, gt
 
 
+def _cdf_mediana(z, n: int):
+    """``P(mediana de n normales estándar <= z)``: beta exacta con ``n`` impar; con ``n`` par, integral del par central."""
+    z = np.asarray(z, dtype=float)
+    if n % 2 == 1:
+        k = (n + 1) // 2
+        return special.betainc(k, k, ndtr(z))
+    m = n // 2
+    c = math.exp(special.gammaln(n + 1) - special.gammaln(m) - special.gammaln(m + 1))
+
+    def un_valor(zi: float) -> float:
+        if not np.isfinite(zi):
+            return 1.0 if zi > 0 else 0.0
+
+        def f(x: float) -> float:
+            return c * ndtr(x) ** (m - 1) * stats.norm.pdf(x) * (ndtr(-x) ** m - ndtr(-(2.0 * zi - x)) ** m)
+
+        return float(integrate.quad(f, -np.inf, zi, epsabs=1e-13, epsrel=1e-11)[0])
+
+    return np.vectorize(un_valor, otypes=[float])(z)
+
+
+def _mediana(n, loc, scale):
+    """Mediana de ``n`` normales ``N(loc, scale²)``: simétrica, así que ``P(X > v) = P(X < 2·loc − v)``."""
+    def lt(v):
+        return _por_n(np.asarray(v, dtype=float) - loc, n, scale, _cdf_mediana)
+
+    def gt(v):
+        return _por_n(loc - np.asarray(v, dtype=float), n, scale, _cdf_mediana)
+
+    return lt, gt
+
+
 def _discreta(cdf_le, sf_gt, divisor):
     """P(Y < v), P(Y > v), P(Y ≤ v) y P(Y ≥ v) con ``Y = conteo/divisor`` y ``conteo`` discreto de soporte 0, 1, 2…"""
     def umbral(v):
@@ -113,6 +147,8 @@ def _funciones(d: dict):
         return (*_rango(d["n"], d["scale"]), None, None)
     if fam == "sd":
         return (*_desviacion(d["n"], d["scale"]), None, None)
+    if fam == "median":
+        return (*_mediana(d["n"], d["loc"], d["scale"]), None, None)
     if fam == "weibull":
         forma, escala = d["shape"], d["scale"]
 

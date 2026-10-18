@@ -29,6 +29,12 @@ def _g(seed=1, filas=25, n=5):
     return np.random.default_rng(seed).normal(50, 2, (filas, n))
 
 
+def _con_salida():
+    g = _g()
+    g[3] += 12.0  # un subgrupo cuya mediana sale de los límites
+    return g
+
+
 def _cmed_integral(n):
     """Desviación estándar de la mediana de ``n`` (impar) normales estándar por integración de la densidad del estadístico de orden."""
     m = (n - 1) // 2
@@ -241,11 +247,12 @@ def test_s013_rf_07_summary_traduce_center_y_oculta_el_valor_por_defecto():
         assert "centro=mediana" in pccpy.imr_chart(x, center="median").summary()
         assert "centro=" not in pccpy.imr_chart(x).summary().split("Parámetros")[1].split("\n")[0]
         assert "Carta de control Median-R" in pccpy.median_r_chart(_g()).summary()
-        assert "Mediana" in pccpy.median_r_chart(_g()).summary()
+        assert "[Mediana]" in pccpy.median_r_chart(_con_salida()).summary()
     with pccpy.language("en"):
         assert "center=median" in pccpy.imr_chart(x, center="median").summary()
         assert "center=mean_of_medians" not in pccpy.median_r_chart(_g()).summary()
         assert "mean of medians" in pccpy.median_r_chart(_g()).summary()
+        assert "[Median]" in pccpy.median_r_chart(_con_salida()).summary()
 
 
 def test_s013_rf_07_claves_en_ingles_y_traducidas():

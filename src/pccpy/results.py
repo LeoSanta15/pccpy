@@ -35,9 +35,11 @@ _PARAMETROS = {
     "k_upper": N_("k_sup"), "k_lower": N_("k_inf"),
 }
 # Valores de parámetros que son texto del idioma fuente (no identificadores técnicos como 'mr' o 'weibull').
-_VALORES_PARAMETRO = {"historical": N_("histórica"), "known": N_("parámetros conocidos")}
+_VALORES_PARAMETRO = {"historical": N_("histórica"), "known": N_("parámetros conocidos"), "median": N_("mediana"),
+                      "mean_of_medians": N_("media de las medianas")}
 # Nombres de carta o de panel que son palabras en inglés del código: solo se muestran traducidos.
-_NOMBRES_VISIBLES = {"Zone": N_("Zona"), "Score": N_("Puntaje"), "Generalized variance": N_("Varianza generalizada")}
+_NOMBRES_VISIBLES = {"Zone": N_("Zona"), "Score": N_("Puntaje"), "Generalized variance": N_("Varianza generalizada"),
+                     "Median": N_("Mediana")}
 
 
 def _texto_etiqueta(valor) -> str:
@@ -266,6 +268,7 @@ class ControlChart:
                 f"{_nombre_parametro(k)}={v:.6g}" if isinstance(v, (float, np.floating))
                 else f"{_nombre_parametro(k)}={_valor_parametro(v)}"
                 for k, v in prm.items() if k != "stage" and not (k in ("k_upper", "k_lower") and _limites_por_defecto(prm))
+                and not (k == "center" and v == "mean")
             )
             lines.append(f"{head}: {body}")
         if not self.tests:

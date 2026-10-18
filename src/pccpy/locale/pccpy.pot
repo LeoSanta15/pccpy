@@ -4220,3 +4220,24 @@ msgstr ""
 
 msgid "Ancho de los límites de control (k y alpha) en las cartas de Shewhart"
 msgstr ""
+
+msgid "'center' debe ser 'mean' o 'median' (recibido: {valor!r})."
+msgstr ""
+
+msgid "'center=\"median\"' no se combina con 'mu': 'mu' ya fija la línea central."
+msgstr ""
+
+msgid "mediana"
+msgstr ""
+
+msgid "media de las medianas"
+msgstr ""
+
+msgid "Mediana de la muestra"
+msgstr ""
+
+msgid "La carta de medianas requiere subgrupos del mismo tamaño (hay de {minimo} a {maximo} observaciones)."
+msgstr ""
+
+msgid "La carta de medianas requiere subgrupos de al menos 2 observaciones."
+msgstr ""

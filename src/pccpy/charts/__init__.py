@@ -10,7 +10,7 @@ from .timeweighted_attr import (
     ewma_p_chart,
     ewma_u_chart,
 )
-from .variables import imr_chart, xbar_r_chart, xbar_s_chart
+from .variables import imr_chart, median_r_chart, xbar_r_chart, xbar_s_chart
 
 __all__ = [
     "RunChartResult",
@@ -29,6 +29,7 @@ __all__ = [
     "laney_p_chart",
     "laney_u_chart",
     "ma_chart",
+    "median_r_chart",
     "np_chart",
     "p_chart",
     "run_chart",

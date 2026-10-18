@@ -15,11 +15,11 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S013-RF-01 y RF-02: `center=` en las tres cartas.
-- [ ] S013-RF-03: validaciones.
-- [ ] S013-RF-04 y RF-05: `cmed(n)` y `median_r_chart`.
-- [ ] S013-RF-06: familia `"median"` en `Panel.dist`.
-- [ ] S013-RF-07: claves, `_PARAMETROS` y textos traducidos.
+- [x] S013-RF-01 y RF-02: `center=` en las tres cartas.
+- [x] S013-RF-03: validaciones.
+- [x] S013-RF-04 y RF-05: `cmed(n)` y `median_r_chart`.
+- [x] S013-RF-06: familia `"median"` en `Panel.dist`.
+- [x] S013-RF-07: claves, `_PARAMETROS` y textos traducidos.
 
 ## Fase 2 — Verificación y cierre
 

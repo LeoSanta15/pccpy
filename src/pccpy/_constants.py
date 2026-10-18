@@ -133,3 +133,35 @@ def k_from_confidence(confidence: float) -> float:
     from scipy import stats
 
     return float(stats.norm.isf((1.0 - float(confidence)) / 2.0))
+
+
+@cache
+def cmed(n: int) -> float:
+    """Desviación estándar de la mediana de ``n`` normales estándar (``cmed(n) = sd(mediana)/σ``).
+
+    Con ``n`` impar es la integral de ``x²`` por la densidad del estadístico de orden central; con ``n`` par, la mediana es el
+    promedio de los dos valores centrales y se integra su densidad conjunta. El coeficiente de Montgomery para la carta de
+    medianas es ``Ã2 = 3·cmed(n)/d2(n)`` (``n`` = 3, 5, 7, 9: 1.187, 0.691, 0.509, 0.412).
+    """
+    n = _check_n(n)
+    if n == 1:
+        return 1.0
+    log_c = gammaln(n + 1)
+    if n % 2 == 1:
+        m = (n - 1) // 2
+        c = math.exp(log_c - 2.0 * gammaln(m + 1))
+
+        def f(x: float) -> float:
+            p = _Phi(x)
+            return x * x * c * p**m * (1.0 - p) ** m * _phi(x)
+
+        return math.sqrt(integrate.quad(f, -12.0, 12.0, epsabs=1e-13, epsrel=1e-13)[0])
+    m = n // 2
+    c = math.exp(log_c - 2.0 * gammaln(m))  # n!/((m − 1)!)²: m − 1 por debajo de x, ninguna entre x e y y m − 1 por encima de y
+
+    def g(y: float, x: float) -> float:  # densidad conjunta de X(m), X(m+1) con x < y, por ((x + y)/2)²
+        px, qy = _Phi(x), 1.0 - _Phi(y)
+        return 0.25 * (x + y) ** 2 * c * px ** (m - 1) * qy ** (m - 1) * _phi(x) * _phi(y)
+
+    valor = integrate.dblquad(g, -12.0, 12.0, lambda x: x, lambda x: 12.0, epsabs=1e-12, epsrel=1e-12)[0]
+    return math.sqrt(valor)
