@@ -8,8 +8,9 @@
 
 > 🇬🇧 [English version](https://github.com/LeoSanta15/pccpy/blob/main/README_en.md)
 
-`pccpy` es una librería de SPC en español diseñada para ingenieros y técnicos que conocen
-Minitab y quieren hacer el mismo análisis desde Python. Todas las convenciones de
+`pccpy` es una librería de SPC en español para calcular gráficas (cartas) de control, capacidad de proceso (Cp, Cpk, Pp, Ppk) y
+pruebas de causas especiales, diseñada para ingenieros y técnicos que conocen Minitab y quieren hacer el mismo análisis desde
+Python. Incluye I-MR, Xbar-R, EWMA, CUSUM y cartas multivariadas. Todas las convenciones de
 nomenclatura (LCS/LCI, LEI/LES, Cp/Cpk/Pp/Ppk, Z.Bench, PPM, Anderson-Darling),
 los métodos de estimación de sigma y las 8 pruebas de causas especiales siguen lo que
 documenta Minitab.
@@ -850,7 +851,7 @@ carta = pp.zmr_chart(
 Cuando los subgrupos tienen una variación **entre subgrupos** grande (diferencias
 de operario, turno, lote), la carta Xbar-R genera falsas alarmas porque su límite
 de control solo refleja la variación **dentro**. La carta **I-MR-R/S** descompone
-es dos fuentes y las trata por separado.
+en dos fuentes y las trata por separado.
 
 ```python
 # sub: matriz (n_subgrupos x tamaño_subgrupo)
@@ -913,7 +914,7 @@ pp.arl_cusum(h=4, k=0.5, shift=1.0, method="simulation", n_runs=20_000, seed=1) 
 
 `method` elige `"numeric"` (por defecto), `"markov"` o `"simulation"`. Se suponen parámetros conocidos, observaciones
 independientes y solo la regla «un punto fuera de los límites» (sin las pruebas 2 a 8). Con atributos y eventos raros el ARL en
-control no es 370,4, y las cartas G y T detectan mucho mejor que los eventos se espacien que que se acorten. Véase la
+control no es 370,4, y las cartas G y T detectan mucho mejor un aumento del espaciado entre eventos que su acortamiento. Véase la
 [guía del ARL](https://github.com/LeoSanta15/pccpy/blob/main/docs/source/arl.md). No se ha comparado con el ARL de Minitab.
 
 Con una carta ya construida, `carta.probability()` da la probabilidad de un valor del estadístico que grafica (con el proceso en
@@ -1072,7 +1073,7 @@ pp.mcusum_chart(datos_positivos, boxcox=True)
 `pccpy` implementa las **8 pruebas de Western Electric / Nelson** tal como
 las documenta Minitab, con sus parámetros K por defecto:
 
-| Nú | Descripción | K defecto | Equivalente Minitab |
+| Nº | Descripción | K defecto | Equivalente Minitab |
 |----|-------------|-----------|---------------------|
 | 1 | 1 punto más allá de Kσ | 3 | Prueba 1 |
 | 2 | K puntos consecutivos en el mismo lado de la LC | 9 | Prueba 2 |

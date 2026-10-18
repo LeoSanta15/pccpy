@@ -99,7 +99,7 @@ En las cartas de atributos el ARL₀ **no** es 370,4: la distribución es discre
 una probabilidad de señal de 0,0027. La carta P con tamaño de muestra constante es la NP, y la U con área constante es la C
 (con `c0 = n·u0`); con tamaños variables no hay un ARL único.
 
-### Las cartas G y T detectan mucho mejor que los eventos se espacien que que se acorten
+### Las cartas G y T detectan mucho mejor un aumento del espaciado entre eventos que su acortamiento
 
 La carta G tiene límite superior pero su límite inferior es 0, así que `arl_g` solo detecta que los eventos se vuelven menos
 frecuentes (`p1 < p0`). Con eventos más frecuentes (`p1 > p0`) el ARL se dispara:

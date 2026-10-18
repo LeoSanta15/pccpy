@@ -1,5 +1,15 @@
 # Registro de cambios
 
+## [Sin publicar] - metadatos de PyPI y erratas del README
+
+No cambia código ni resultados. Se verá en PyPI con el siguiente release.
+
+### Añadido
+- **Metadatos del paquete** (`pyproject.toml`): `keywords` con «gráficas de control», «capacidad de proceso», `cpk`, `ewma`, `cusum`, `python` y «statistical process control»; clasificadores `Natural Language :: Spanish` y `English`; `Repository` en `[project.urls]`. La primera frase del README nombra «gráficas (cartas) de control», Cp/Cpk/Pp/Ppk y las cartas principales.
+
+### Corregido
+- README: la cabecera «Nú» de la tabla de pruebas pasa a «Nº» y «descompone es dos fuentes» a «descompone en dos fuentes». La frase del ARL «detectan mucho mejor que los eventos se espacien que que se acorten» (correcta pero torpe) pasa a «detectan mucho mejor un aumento del espaciado entre eventos que su acortamiento», también en el título de `docs/source/arl.md`.
+
 ## [0.15.6] - ancho de los límites de control (`k` y `alpha`), mediana en las cartas, `trend_direction` en inglés y más figuras
 
 Cambio **incompatible** solo en `DiagnoseResult.trend_direction` (sin alias; se publica en 0.15.6 por decisión de la persona responsable). El ancho de los límites es opcional y con `k=3` nada cambia. Especificación `docs/specs/014-diagnose-ingles-y-limites-k`.
