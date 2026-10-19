@@ -3,7 +3,7 @@
 - **Estado:** implementada
 - **Identificador:** S015
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** 0.16.0 (cambia resultados existentes: versión menor)
+- **Versión objetivo:** 0.15.8 (cambia resultados existentes; por decisión de la persona responsable se publica como parche, como la 0.15.5)
 
 ## Problema
 
@@ -179,7 +179,7 @@ Los límites `b1 ± k√b2` (aproximación normal, Montgomery 11.3) dan `P(|S| >
 
 ## Resultados existentes que cambian
 
-Cambian (versión 0.16.0, a listar en «Cambios que alteran resultados»): límites de EWMA-P/U con `n` variable; planes y AOQL de Dodge-Romig y AOQL de Z1.4; p-valor de tendencias de la carta de corridas con empates;
+Cambian (versión 0.15.8, a listar en «Cambios que alteran resultados»): límites de EWMA-P/U con `n` variable; planes y AOQL de Dodge-Romig y AOQL de Z1.4; p-valor de tendencias de la carta de corridas con empates;
 `has_trend` de `diagnose()`/`wizard()` y sus recomendaciones; p-valor del kappa de Cohen; sigma dentro y capacidad con huecos (`capability_boxcox`, individuales); sigma del último subgrupo incompleto en EWMA/CUSUM/MA;
 %Linealidad/%Sesgo y, según las decisiones, límites de |S| y `%Tolerancia`. Con datos sin los casos descritos no cambia nada.
 

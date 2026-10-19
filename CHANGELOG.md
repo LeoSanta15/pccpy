@@ -1,8 +1,8 @@
 # Registro de cambios
 
-## [Sin publicar] - correcciones de la auditoría estadística 0.15
+## [0.15.8] - 2026-10-19 - correcciones de la auditoría estadística 0.15
 
-Una auditoría estadística de la 0.15.7 (cuatro revisiones independientes, con referencias escritas aparte, `scipy`/`statsmodels` y simulaciones con ≥ 20 semillas) encontró errores que daban resultados incorrectos sin aviso. Esta versión los corrige y **cambia resultados existentes** (versión menor). Especificación `docs/specs/015-correcciones-auditoria-0-15`. Nada se pudo contrastar con Minitab real: ver «Notas sobre diferencias posibles con Minitab» en el README.
+Una auditoría estadística de la 0.15.7 (cuatro revisiones independientes, con referencias escritas aparte, `scipy`/`statsmodels` y simulaciones con ≥ 20 semillas) encontró errores que daban resultados incorrectos sin aviso. Esta versión los corrige y **cambia resultados existentes**; se publica como 0.15.8 (parche) por decisión de la persona responsable, como la 0.15.5. Especificación `docs/specs/015-correcciones-auditoria-0-15`. Nada se pudo contrastar con Minitab real: ver «Notas sobre diferencias posibles con Minitab» en el README.
 
 ### Cambios que alteran resultados
 - **EWMA-P y EWMA-U con `n` variable:** la varianza del estadístico sigue la recursión `Vᵢ = (1−λ)²Vᵢ₋₁ + λ²σ²(nᵢ)`. Antes los límites eran demasiado estrechos (falsas alarmas 0,152 por punto frente a 0,0027 con `n` alternando 30 y 600). Con `n` constante no cambia nada.
