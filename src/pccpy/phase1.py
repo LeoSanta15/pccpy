@@ -234,7 +234,8 @@ class PhaseOneResult:
             Argumentos de la función de la carta para los datos nuevos (por ejemplo ``n=`` en las cartas de atributos o
             ``subgroup_size=``); sustituyen a los usados en la Fase I.
         """
-        argumentos = {**self._argumentos, **self.limits, **kwargs}
+        # 'mu' congelado ya fija la línea central: 'center' (de la Fase I o de un archivo guardado antes) no se vuelve a pasar
+        argumentos = {**{k: v for k, v in self._argumentos.items() if k != "center"}, **self.limits, **kwargs}
         if self.transformation is not None:
             argumentos["transform"] = self.transformation  # fija: no se reajusta a los datos nuevos
         return self._funcion(data, **argumentos)

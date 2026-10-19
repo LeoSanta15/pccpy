@@ -23,7 +23,7 @@ import pandas as pd
 from scipy import stats
 from scipy.special import boxcox as _boxcox
 
-from ._data import _excel_writer, as_1d, avisar_asimetria_subgrupos, to_subgroups
+from ._data import _excel_writer, as_1d, as_1d_con_huecos, avisar_asimetria_subgrupos, to_subgroups
 from ._frames import tabla_estadisticos
 from ._i18n import N_, tr
 from ._probabilidad import SIGMAS, ProbabilityResult, _normal, calcular_probabilidad
@@ -366,11 +366,12 @@ def capability_analysis(
         avisar_asimetria_subgrupos(g_lim, destino="capacidad", stacklevel=3)
         sw = float(sigma_within) if sigma_within is not None else sigma_subgroups(g_lim, method)
     else:
-        x = as_1d(arr)
+        xh = as_1d_con_huecos(arr)  # los huecos (NaN) se conservan: el rango móvil no los cruza (como en la carta I-MR)
+        x = xh[np.isfinite(xh)]
         method = within_method or "mr"
         if method not in ("mr", "median_mr", "mssd"):
             raise ValueError(tr("Con individuales, within_method debe ser 'mr', 'median_mr' o 'mssd'."))
-        sw = float(sigma_within) if sigma_within is not None else sigma_individuals(x, method)
+        sw = float(sigma_within) if sigma_within is not None else sigma_individuals(xh, method)
     if sigma_within is not None:
         method = "especificada"
     if x.size < 2:
@@ -392,7 +393,9 @@ def capability_analysis(
             g_lim = transformacion.forward(g_lim)
             sw = sigma_subgroups(g_lim, method)
         else:
-            sw = sigma_individuals(x, method)
+            xh_t = np.full(xh.shape, np.nan)
+            xh_t[np.isfinite(xh)] = x
+            sw = sigma_individuals(xh_t, method)
 
     n, mean = x.size, float(x.mean())
     so = float(x.std(ddof=1))
@@ -559,7 +562,8 @@ def capability_boxcox(
         if x.size == 0:
             raise ValueError(tr("'data' no tiene valores válidos tras eliminar NaN/inf."))
     else:
-        arr = x = as_1d(data, "data")
+        arr = as_1d_con_huecos(data, "data")  # el hueco se conserva para no desplazar los subgrupos siguientes
+        x = arr[np.isfinite(arr)]
     if x.min() <= 0:
         raise ValueError(tr("Box-Cox requiere datos estrictamente positivos."))
     for name, v in (("lsl", lsl), ("usl", usl), ("target", target)):
@@ -569,9 +573,7 @@ def capability_boxcox(
         _, lam = stats.boxcox(x)
         if round_lambda:
             lam = round(lam * 2) / 2
-    y = _boxcox(np.where(np.isfinite(arr), arr, 1.0), lam) if arr.ndim == 2 else _boxcox(x, lam)
-    if arr.ndim == 2:
-        y = np.where(np.isfinite(arr), y, np.nan)
+    y = np.where(np.isfinite(arr), _boxcox(np.where(np.isfinite(arr), arr, 1.0), lam), np.nan)
     t = lambda v: None if v is None else float(_boxcox(v, lam))
     res = capability_analysis(y, t(lsl), t(usl), t(target), **kwargs)
     res.transform = {"lambda": float(lam)}

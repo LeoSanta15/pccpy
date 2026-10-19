@@ -39,12 +39,12 @@ def _runs_about_median(x: np.ndarray):
 
 
 def _runs_updown(x: np.ndarray):
-    n = len(x)
     diff = np.sign(np.diff(x.astype(float)))
     diff = diff[diff != 0]
     m = len(diff)
     if m < 2:
         return 0, NAN, NAN, NAN, NAN, 0
+    n = m + 1  # con empates, los puntos que quedan tras quitar las diferencias nulas
     runs = 1 + int(np.sum(diff[1:] != diff[:-1]))
     er = (2.0 * n - 1) / 3.0
     vr = max((16.0 * n - 29.0) / 90.0, 1e-12)

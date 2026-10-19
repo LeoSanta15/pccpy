@@ -23,9 +23,9 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] Gravedad alta: S015-RF-01 a RF-05.
-- [ ] Gravedad media: S015-RF-06 a RF-12.
-- [ ] Gravedad baja: S015-RF-13 y RF-14.
+- [x] Gravedad alta: S015-RF-01 a RF-05.
+- [x] Gravedad media: S015-RF-06 a RF-12.
+- [x] Gravedad baja: S015-RF-13 y RF-14.
 
 ## Fase 2 — Verificación y cierre
 

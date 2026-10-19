@@ -17,7 +17,7 @@ from typing import Callable
 import numpy as np
 from numpy.lib.stride_tricks import sliding_window_view
 
-from ._constants import c4, d2, d3
+from ._constants import c4, c_mssd, d2, d3
 from ._i18n import tr
 
 MEDIAN_MR_CONSTANT = 0.954  # constante que usa Minitab para span = 2
@@ -68,7 +68,8 @@ def sigma_individuals(x: np.ndarray, method: str = "mr", span: int = 2) -> float
         d = d[~np.isnan(d)]  # una diferencia que cruza un hueco (NaN) no se usa
         if d.size == 0:
             raise ValueError(tr("Se necesitan al menos 2 observaciones consecutivas para estimar sigma."))
-        return float(np.sqrt(np.sum(d**2) / (2.0 * d.size)))
+        # se divide por c_mssd(m + 1) = E[√(MSSD/2)]/σ para quitar el sesgo (con huecos es una aproximación: m diferencias)
+        return float(np.sqrt(np.sum(d**2) / (2.0 * d.size)) / c_mssd(d.size + 1))
     raise ValueError(tr("sigma_method debe ser 'mr', 'median_mr' o 'mssd'."))
 
 

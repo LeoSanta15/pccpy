@@ -78,10 +78,16 @@ def test_variables_evalua_la_muestra_con_formulas_manuales():
     assert math.isinf(constante["Q_usl"]) and constante["accept"]
 
 
-def test_variables_bilateral_es_el_producto_de_dos_unilaterales():
+def test_variables_bilateral_con_proceso_centrado_coincide_con_monte_carlo():
+    """S015-RF-14: Pa bilateral = P(|x̄| ≤ z − k·s) con el proceso centrado y p/2 en cada cola (no el producto de dos unilaterales)."""
     uni = pp.acceptance_sampling_variables(N=500, aql=1.0, n=20, k=1.7)
     bi = pp.acceptance_sampling_variables(N=500, aql=1.0, spec_type="two", n=20, k=1.7)
-    assert bi.pa(0.02) == pytest.approx(uni.pa(0.01) ** 2)
+    z = 2.3263478740408408  # z_{0,01}: p = 0,02 en total
+    X = np.random.default_rng(0).normal(size=(400_000, 20))
+    m, sd = X.mean(1), X.std(1, ddof=1)
+    mc = np.mean(((z - m) / sd >= 1.7) & ((m + z) / sd >= 1.7))
+    assert bi.pa(0.02) == pytest.approx(mc, abs=0.004)
+    assert bi.pa(0.02) > uni.pa(0.01) ** 2  # el producto de unilaterales se queda corto
     assert uni.pa(0) == 1.0 and uni.pa(1) == 0.0
 
 

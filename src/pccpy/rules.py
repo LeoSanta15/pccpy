@@ -176,10 +176,11 @@ def apply_tests(
 
     with np.errstate(divide="ignore", invalid="ignore"):
         z = (values - center) / sigma
+    z = np.where((sigma == 0) & (values == center), 0.0, z)  # sigma = 0: un punto en el centro no está desviado
     z_zona = z
     if rescale_zones and limits is not None:
         z_zona = np.where(z > 0, z * 3.0 / limits[0], z * 3.0 / limits[1])
-    valid = np.isfinite(values) & np.isfinite(z)
+    valid = np.isfinite(values) & ~np.isnan(z)  # z = ±inf (sigma = 0 con el punto fuera del centro) es válido
     where = np.flatnonzero(valid)
     # tramos de puntos válidos consecutivos (un hueco corta las rachas)
     cortes = np.flatnonzero(np.diff(where) > 1) + 1

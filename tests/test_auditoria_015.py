@@ -315,10 +315,15 @@ def test_s015_rf08_cusum_ultimo_subgrupo_incompleto():
 
 
 def test_s015_rf08_ewma_ultimo_subgrupo_incompleto():
-    """S015-RF-08: en EWMA la σ del último punto crece √5 respecto del anterior."""
+    """S015-RF-08: la σ del estadístico EWMA sigue la recursión con σ²/nᵢ (21 subgrupos: 20 de 5 y uno de 1)."""
     x = np.random.default_rng(0).normal(size=101)
     s = pp.ewma_chart(x, subgroup_size=5, sigma=1, target=0).panels[0].sigma
-    assert s[-1] / s[-2] == pytest.approx(math.sqrt(5), rel=1e-3)
+    var_i = np.r_[np.full(20, 1 / 5), 1.0]
+    v, ref = 0.0, []
+    for vi in var_i:
+        v = 0.8**2 * v + 0.2**2 * vi
+        ref.append(math.sqrt(v))
+    np.testing.assert_allclose(s, ref, rtol=1e-12)
 
 
 def test_s015_rf08_ma_ultimo_subgrupo_incompleto():
@@ -471,6 +476,19 @@ def test_s015_rf14_mssd_insesgado():
         x = np.random.default_rng(semilla).normal(0, 1, (400, 10))
         est.append(np.mean([pp.imr_chart(f, sigma_method="mssd").params[0]["sigma"] for f in x]))
     assert np.mean(est) == pytest.approx(1.0, abs=0.003)
+
+
+@pytest.mark.parametrize("n", [2, 3, 10, 30])
+def test_s015_rf14_constante_c_mssd_contra_monte_carlo(n):
+    """S015-RF-14: ``c_mssd(n)`` = E[√(MSSD/2)]/σ por integración numérica; contraste con Monte Carlo (20 semillas)."""
+    from pccpy._constants import c_mssd
+
+    valores = []
+    for semilla in range(20):
+        d = np.diff(np.random.default_rng(semilla).normal(size=(20000, n)), axis=1)
+        valores.append(np.mean(np.sqrt(np.sum(d**2, axis=1) / (2 * (n - 1)))))
+    assert c_mssd(n) == pytest.approx(np.mean(valores), abs=0.002)
+    assert c_mssd(2) == pytest.approx(math.sqrt(2 / math.pi), rel=1e-9)
 
 
 def test_s015_rf14_curva_oc_variables_bilateral():

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-17 15:52+0000\n"
+"POT-Creation-Date: 2026-10-19 18:34+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -533,6 +533,12 @@ msgid "  % defectivo={p:.4f}  IC {nivel:g}%: ({lo:.4f}, {hi:.4f})"
 msgstr ""
 
 #, python-brace-format
+msgid ""
+"  %Tolerancia (T = {t:.5g}): Gage R&R = {gage:.2f}%  Repetibilidad = "
+"{rep:.2f}%  Reproducibilidad = {repro:.2f}%"
+msgstr ""
+
+#, python-brace-format
 msgid "  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}"
 msgstr ""
 
@@ -1054,6 +1060,15 @@ msgstr ""
 msgid "%Contribución reproducibilidad"
 msgstr ""
 
+msgid "%Tolerancia Gage R&R"
+msgstr ""
+
+msgid "%Tolerancia repetibilidad"
+msgstr ""
+
+msgid "%Tolerancia reproducibilidad"
+msgstr ""
+
 msgid "%Var. estudio Gage R&R"
 msgstr ""
 
@@ -1061,6 +1076,10 @@ msgid "'L' debe ser un número finito > 0."
 msgstr ""
 
 msgid "'alpha' debe estar en (0, 1)."
+msgstr ""
+
+#, python-brace-format
+msgid "'alpha' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}."
 msgstr ""
 
 msgid "'alpha_interaction' debe estar entre 0 y 1."
@@ -1073,6 +1092,12 @@ msgid "'aql' debe estar en (0, 10] %."
 msgstr ""
 
 msgid "'arl' debe ser > 1."
+msgstr ""
+
+msgid "'between' debe ser un par (inferior, superior)."
+msgstr ""
+
+msgid "'between' no se puede combinar con 'below' ni con 'above'."
 msgstr ""
 
 msgid "'boxcox' no se puede combinar con parámetros históricos ('mu'/'cov')."
@@ -1090,6 +1115,13 @@ msgstr ""
 msgid "'categories' y 'counts' deben tener la misma longitud."
 msgstr ""
 
+#, python-brace-format
+msgid "'center' debe ser 'mean' o 'median' (recibido: {valor!r})."
+msgstr ""
+
+msgid "'center=\"median\"' no se combina con 'mu': 'mu' ya fija la línea central."
+msgstr ""
+
 msgid "'ci_level' debe estar entre 0 y 1."
 msgstr ""
 
@@ -1100,6 +1132,12 @@ msgid "'ci_method' debe ser 'normal' o 'bootstrap'."
 msgstr ""
 
 msgid "'confidence' debe estar en (0, 1)."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"'confidence' debe ser un número entre 0 y 1 (exclusivos); recibido: "
+"{valor!r}."
 msgstr ""
 
 #, python-brace-format
@@ -1142,6 +1180,12 @@ msgid "'k' debe ser un número finito > 0."
 msgstr ""
 
 msgid "'k' debe ser un número finito >= 0."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"'k' debe ser un número finito mayor que 0 (o una pareja de ellos); "
+"recibido: {valor!r}."
 msgstr ""
 
 msgid "'k' es demasiado grande: Φ(k) debe ser menor que 1."
@@ -1223,6 +1267,9 @@ msgstr ""
 msgid "'opportunities' debe ser positivo."
 msgstr ""
 
+msgid "'opportunities' debe ser un entero >= 1."
+msgstr ""
+
 msgid "'p' debe estar en (0, 1)."
 msgstr ""
 
@@ -1242,10 +1289,21 @@ msgstr ""
 msgid "'point' debe estar entre 1 y {m}."
 msgstr ""
 
+#, python-brace-format
+msgid "'point' debe ser un entero (o un arreglo de enteros) entre 1 y {n}."
+msgstr ""
+
 msgid "'process_avg' debe estar en (0, 1)."
 msgstr ""
 
+msgid "'process_variation' debe ser positiva."
+msgstr ""
+
 msgid "'ratio' debe contener solo valores finitos > 0."
+msgstr ""
+
+#, python-brace-format
+msgid "'rescale_zones' debe ser True o False; recibido: {valor!r}."
 msgstr ""
 
 #, python-brace-format
@@ -1266,6 +1324,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "'sides' debe ser uno de {opciones}."
+msgstr ""
+
+msgid "'sigma' debe ser 'overall' o 'within'."
 msgstr ""
 
 msgid "'sigma' debe ser positiva."
@@ -1312,7 +1373,17 @@ msgid ""
 " en lugar de xbar_r_chart()."
 msgstr ""
 
+#, python-brace-format
+msgid ""
+"'test_params[1]' ({umbral}) difiere del ancho de los límites (k = "
+"{superior} arriba y {inferior} abajo): la prueba 1 usa {umbral} sigmas y "
+"marca puntos que no coinciden con los límites dibujados."
+msgstr ""
+
 msgid "'tests' debe ser 'all', None o una lista de enteros 1-8."
+msgstr ""
+
+msgid "'tolerance' debe ser positiva."
 msgstr ""
 
 #, python-brace-format
@@ -1373,7 +1444,29 @@ msgid "'{nombre}' debe contener enteros no negativos."
 msgstr ""
 
 #, python-brace-format
+msgid "'{nombre}' debe ser un número o un arreglo de una dimensión."
+msgstr ""
+
+#, python-brace-format
+msgid "'{nombre}' debe ser un número o un arreglo no vacío de una dimensión."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"'{nombre}' debe ser un número o una pareja (superior, inferior); "
+"recibido: {valor!r}."
+msgstr ""
+
+#, python-brace-format
+msgid "'{nombre}' no puede contener NaN."
+msgstr ""
+
+#, python-brace-format
 msgid "'{nombre}' no puede estar vacío."
+msgstr ""
+
+#, python-brace-format
+msgid "'{panel}' no es un panel de la carta (paneles: {paneles})."
 msgstr ""
 
 #, python-brace-format
@@ -1476,6 +1569,9 @@ msgid "Alternativas: {alternatives}"
 msgstr ""
 
 msgid "Analizar la capacidad del proceso"
+msgstr ""
+
+msgid "Ancho de los límites de control (k y alpha) en las cartas de Shewhart"
 msgstr ""
 
 msgid "Análisis Gage R&R"
@@ -1817,6 +1913,9 @@ msgstr ""
 msgid "DPMO"
 msgstr ""
 
+msgid "DPU"
+msgstr ""
+
 msgid "DPU (defectos por unidad)"
 msgstr ""
 
@@ -1985,10 +2084,19 @@ msgstr ""
 msgid "El texto no es un JSON válido: {error}"
 msgstr ""
 
+msgid "En 'between' el valor inferior no puede ser mayor que el superior."
+msgstr ""
+
 #, python-brace-format
 msgid ""
 "En las cartas P, NP y Laney P' los tamaños de muestra deben ser enteros "
 "(recibido: {valor}). Con áreas de oportunidad no enteras usa la carta U."
+msgstr ""
+
+msgid "Entre (inferior)"
+msgstr ""
+
+msgid "Entre (superior)"
 msgstr ""
 
 msgid "Error"
@@ -2042,6 +2150,9 @@ msgid "Estudio Tipo 1 — sesgo, t-test, Cg y Cgk"
 msgstr ""
 
 msgid "Estudio Tipo 1: sesgo, Cg y Cgk (K = 20 %, 6σ)"
+msgstr ""
+
+msgid "Evento"
 msgstr ""
 
 msgid "Eventos raros (muy poca frecuencia de defectos)"
@@ -2149,9 +2260,17 @@ msgid ""
 "calculado aparte"
 msgstr ""
 
+msgid "Gage R&R necesita al menos 2 operadores."
+msgstr ""
+
 msgid ""
 "Gage R&R necesita al menos 2 réplicas por parte y operador para estimar "
 "la repetibilidad."
+msgstr ""
+
+msgid ""
+"Gage R&R no admite valores faltantes ni infinitos (NaN/inf): elimínalos o"
+" imputa antes."
 msgstr ""
 
 msgid "General"
@@ -2208,6 +2327,14 @@ msgstr ""
 
 #, python-brace-format
 msgid "Idioma no disponible: {lang!r}. Idiomas disponibles: {disponibles}."
+msgstr ""
+
+msgid ""
+"Indica 'below', 'above' o 'between': el resultado no tiene límites de "
+"especificación."
+msgstr ""
+
+msgid "Indica 'k' o 'alpha', no los dos."
 msgstr ""
 
 msgid "Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."
@@ -2398,7 +2525,25 @@ msgstr ""
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr ""
 
+msgid "La carta de medianas requiere subgrupos de al menos 2 observaciones."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"La carta de medianas requiere subgrupos del mismo tamaño (hay de {minimo}"
+" a {maximo} observaciones)."
+msgstr ""
+
 msgid "La carta no tiene media/covarianza calculadas para este punto."
+msgstr ""
+
+msgid "La carta no tiene una distribución conocida del estadístico graficado."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"La carta {kind} no admite probability(): el estadístico que grafica no "
+"tiene una distribución conocida en control."
 msgstr ""
 
 msgid ""
@@ -2407,8 +2552,17 @@ msgid ""
 msgstr ""
 
 msgid ""
+"La distribución del estadístico cambia entre los puntos de la carta "
+"(tamaño de muestra, etapas o ponderación): indica 'point=' con el punto "
+"(base 1) o los puntos que quieres."
+msgstr ""
+
+msgid ""
 "La distribución no es normal (p ≤ 0.05). Considera transformación o "
 "análisis no paramétrico."
+msgstr ""
+
+msgid "La distribución no normal no tiene sigma 'within': usa sigma='overall'."
 msgstr ""
 
 #, python-brace-format
@@ -2441,6 +2595,9 @@ msgid ""
 "normales): investiga su origen antes de transformar los datos."
 msgstr ""
 
+msgid "La proporción de referencia 'p' debe estar entre 0 y 1."
+msgstr ""
+
 #, python-brace-format
 msgid ""
 "La prueba de Dixon admite como máximo {n} observaciones; usa Grubbs o la "
@@ -2460,6 +2617,9 @@ msgid ""
 "La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los"
 " planes que da pueden aceptar casi cualquier lote). Use los valores n y k"
 " de su ejemplar de ANSI/ASQ Z1.9 con n= y k=."
+msgstr ""
+
+msgid "La tasa de referencia debe ser mayor o igual que 0."
 msgstr ""
 
 #, python-brace-format
@@ -2605,6 +2765,12 @@ msgstr ""
 msgid "Los tamaños de muestra deben ser positivos."
 msgstr ""
 
+msgid "Los valores indicados tienen formas incompatibles."
+msgstr ""
+
+msgid "Los valores indicados y 'point' tienen formas incompatibles."
+msgstr ""
+
 msgid "Límite H de la MEWMA para p = 2, λ = 0,1 y ARL en control = 200"
 msgstr ""
 
@@ -2668,6 +2834,12 @@ msgid "Media={v:.3f}"
 msgstr ""
 
 msgid "Mediana"
+msgstr ""
+
+msgid "Mediana como línea central y carta de medianas de subgrupo (X̃-R)"
+msgstr ""
+
+msgid "Mediana de la muestra"
 msgstr ""
 
 #, python-brace-format
@@ -2921,6 +3093,9 @@ msgstr ""
 msgid "PPL"
 msgstr ""
 
+msgid "PPM"
+msgstr ""
+
 msgid "PPM defectivo"
 msgstr ""
 
@@ -2955,6 +3130,9 @@ msgid "PPM, límite superior"
 msgstr ""
 
 msgid "PPU"
+msgstr ""
+
+msgid "Panel"
 msgstr ""
 
 msgid "Para parámetros históricos Weibull indique 'shape' y 'scale' juntos."
@@ -3008,6 +3186,12 @@ msgstr ""
 msgid "Por atributos (conforme / no conforme) → norma Z1.4"
 msgstr ""
 
+msgid "Por debajo de"
+msgstr ""
+
+msgid "Por encima de"
+msgstr ""
+
 msgid "Por variables (medición continua)      → norma Z1.9"
 msgstr ""
 
@@ -3047,9 +3231,32 @@ msgid ""
 "tolerancia"
 msgstr ""
 
+msgid "Probabilidad"
+msgstr ""
+
 msgid ""
 "Probabilidad de aceptación del plan (n = 80, c = 2) para p = 0,5 %, 1 % y"
 " 3 %"
+msgstr ""
+
+msgid ""
+"Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la "
+"desviación calculadas aparte"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Probabilidad de un valor (sigma {sigma}, oportunidades por unidad: "
+"{oportunidades})"
+msgstr ""
+
+#, python-brace-format
+msgid "Probabilidad de un valor en la carta de control (panel {panel})"
+msgstr ""
+
+msgid ""
+"Probabilidad de un valor en las cartas de control (normal, rango, S, "
+"binomial, Poisson, geométrica y Weibull)"
 msgstr ""
 
 msgid "Promedio de proceso (%)"
@@ -3089,7 +3296,13 @@ msgstr ""
 msgid "Pruebas no válidas: {bad}. Use enteros entre 1 y 8."
 msgstr ""
 
+msgid "Puntaje"
+msgstr ""
+
 msgid "Puntaje acumulado"
+msgstr ""
+
+msgid "Punto"
 msgstr ""
 
 msgid "Punto rojo — detener y corregir"
@@ -3200,9 +3413,6 @@ msgstr ""
 msgid ""
 "Se ignoraron {n} valor(es) no finito(s); los índices son los de la "
 "entrada original."
-msgstr ""
-
-msgid "Se necesita al menos una observación."
 msgstr ""
 
 msgid "Se necesitan al menos 2 mediciones."
@@ -3449,6 +3659,9 @@ msgstr ""
 msgid "Varianza Gage R&R"
 msgstr ""
 
+msgid "Varianza generalizada"
+msgstr ""
+
 msgid "Varianza interacción (IA²)"
 msgstr ""
 
@@ -3502,6 +3715,9 @@ msgstr ""
 msgid "Z.Bench y PPM esperado globales desde la distribución normal"
 msgstr ""
 
+msgid "Zona"
+msgstr ""
+
 msgid "acumulado"
 msgstr ""
 
@@ -3533,6 +3749,10 @@ msgid "clásico superior"
 msgstr ""
 
 msgid "conteo"
+msgstr ""
+
+#, python-brace-format
+msgid "contribución (punto {point})"
 msgstr ""
 
 msgid "correcta"
@@ -3597,6 +3817,9 @@ msgstr ""
 msgid "formas distintas {e} y {o}"
 msgstr ""
 
+msgid "histórica"
+msgstr ""
+
 msgid "id"
 msgstr ""
 
@@ -3659,6 +3882,12 @@ msgstr ""
 msgid "k (factor de aceptabilidad)"
 msgstr ""
 
+msgid "k_inf"
+msgstr ""
+
+msgid "k_sup"
+msgstr ""
+
 msgid "kappa"
 msgstr ""
 
@@ -3678,6 +3907,12 @@ msgid "límite superior"
 msgstr ""
 
 msgid "media"
+msgstr ""
+
+msgid "media de las medianas"
+msgstr ""
+
+msgid "mediana"
 msgstr ""
 
 msgid "method debe ser 'anderson', 'shapiro' o 'dagostino'."
@@ -3774,6 +4009,9 @@ msgstr ""
 msgid "partes"
 msgstr ""
 
+msgid "parámetros conocidos"
+msgstr ""
+
 msgid "paso"
 msgstr ""
 
@@ -3850,6 +4088,12 @@ msgstr ""
 msgid "sigma_method debe ser 'rbar', 'sbar' o 'pooled'."
 msgstr ""
 
+msgid "sigma_máx"
+msgstr ""
+
+msgid "sigma_mín"
+msgstr ""
+
 msgid "subgrupos"
 msgstr ""
 
@@ -3896,7 +4140,10 @@ msgid "zona"
 msgstr ""
 
 #, python-brace-format
-msgid "{count} valor(es) atípico(s) detectado(s). Investiga su origen."
+msgid ""
+"{count} posible(s) valor(es) atípico(s) según la regla del IQR (1.5·IQR);"
+" con muestras grandes la regla marca algunos aun en datos normales: "
+"revísalos antes de descartarlos."
 msgstr ""
 
 #, python-brace-format
@@ -4074,173 +4321,3 @@ msgstr ""
 msgid "✔ Análisis recomendado: <code style='font-size:13px'>{function}</code>"
 msgstr ""
 
-msgid "Indica 'below', 'above' o 'between': el resultado no tiene límites de especificación."
-msgstr ""
-
-msgid "Probabilidad de un valor (sigma {sigma}, oportunidades por unidad: {oportunidades})"
-msgstr ""
-
-msgid "'between' debe ser un par (inferior, superior)."
-msgstr ""
-
-msgid "'between' no se puede combinar con 'below' ni con 'above'."
-msgstr ""
-
-msgid "'opportunities' debe ser un entero >= 1."
-msgstr ""
-
-msgid "'sigma' debe ser 'overall' o 'within'."
-msgstr ""
-
-msgid "'{nombre}' debe ser un número o un arreglo de una dimensión."
-msgstr ""
-
-msgid "'{nombre}' debe ser un número o un arreglo no vacío de una dimensión."
-msgstr ""
-
-msgid "'{nombre}' no puede contener NaN."
-msgstr ""
-
-msgid "DPU"
-msgstr ""
-
-msgid "En 'between' el valor inferior no puede ser mayor que el superior."
-msgstr ""
-
-msgid "Entre (inferior)"
-msgstr ""
-
-msgid "Entre (superior)"
-msgstr ""
-
-msgid "Evento"
-msgstr ""
-
-msgid "La distribución no normal no tiene sigma 'within': usa sigma='overall'."
-msgstr ""
-
-msgid "Los valores indicados tienen formas incompatibles."
-msgstr ""
-
-msgid "PPM"
-msgstr ""
-
-msgid "Por debajo de"
-msgstr ""
-
-msgid "Por encima de"
-msgstr ""
-
-msgid "Probabilidad"
-msgstr ""
-
-msgid "Probabilidad de un valor (capacidad normal y Box-Cox) con la media y la desviación calculadas aparte"
-msgstr ""
-
-msgid "sigma_mín"
-msgstr ""
-
-msgid "sigma_máx"
-msgstr ""
-
-msgid "histórica"
-msgstr ""
-
-msgid "contribución (punto {point})"
-msgstr ""
-
-msgid "Zona"
-msgstr ""
-
-msgid "Puntaje"
-msgstr ""
-
-msgid "parámetros conocidos"
-msgstr ""
-
-msgid "Varianza generalizada"
-msgstr ""
-
-msgid "Probabilidad de un valor en la carta de control (panel {panel})"
-msgstr ""
-
-msgid "Panel"
-msgstr ""
-
-msgid "Punto"
-msgstr ""
-
-msgid "Los valores indicados y 'point' tienen formas incompatibles."
-msgstr ""
-
-msgid "'point' debe ser un entero (o un arreglo de enteros) entre 1 y {n}."
-msgstr ""
-
-msgid "'{panel}' no es un panel de la carta (paneles: {paneles})."
-msgstr ""
-
-msgid "La carta {kind} no admite probability(): el estadístico que grafica no tiene una distribución conocida en control."
-msgstr ""
-
-msgid "La distribución del estadístico cambia entre los puntos de la carta (tamaño de muestra, etapas o ponderación): indica 'point=' con el punto (base 1) o los puntos que quieres."
-msgstr ""
-
-msgid "La carta no tiene una distribución conocida del estadístico graficado."
-msgstr ""
-
-msgid "Probabilidad de un valor en las cartas de control (normal, rango, S, binomial, Poisson, geométrica y Weibull)"
-msgstr ""
-
-msgid "'confidence' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}."
-msgstr ""
-
-msgid "'{nombre}' debe ser un número o una pareja (superior, inferior); recibido: {valor!r}."
-msgstr ""
-
-msgid "'rescale_zones' debe ser True o False; recibido: {valor!r}."
-msgstr ""
-
-msgid "Indica 'k' o 'alpha', no los dos."
-msgstr ""
-
-msgid "'alpha' debe ser un número entre 0 y 1 (exclusivos); recibido: {valor!r}."
-msgstr ""
-
-msgid "'k' debe ser un número finito mayor que 0 (o una pareja de ellos); recibido: {valor!r}."
-msgstr ""
-
-msgid "'test_params[1]' ({umbral}) difiere del ancho de los límites (k = {superior} arriba y {inferior} abajo): la prueba 1 usa {umbral} sigmas y marca puntos que no coinciden con los límites dibujados."
-msgstr ""
-
-msgid "k_sup"
-msgstr ""
-
-msgid "k_inf"
-msgstr ""
-
-msgid "Ancho de los límites de control (k y alpha) en las cartas de Shewhart"
-msgstr ""
-
-msgid "'center' debe ser 'mean' o 'median' (recibido: {valor!r})."
-msgstr ""
-
-msgid "'center=\"median\"' no se combina con 'mu': 'mu' ya fija la línea central."
-msgstr ""
-
-msgid "mediana"
-msgstr ""
-
-msgid "media de las medianas"
-msgstr ""
-
-msgid "Mediana de la muestra"
-msgstr ""
-
-msgid "La carta de medianas requiere subgrupos del mismo tamaño (hay de {minimo} a {maximo} observaciones)."
-msgstr ""
-
-msgid "La carta de medianas requiere subgrupos de al menos 2 observaciones."
-msgstr ""
-
-msgid "Mediana como línea central y carta de medianas de subgrupo (X̃-R)"
-msgstr ""

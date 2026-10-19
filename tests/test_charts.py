@@ -2,6 +2,7 @@ import numpy as np
 import pytest
 
 import pccpy
+from pccpy._constants import c_mssd
 from pccpy import control_chart_constants as cc
 
 RNG = np.random.default_rng(2024)
@@ -29,7 +30,10 @@ def test_imr_alternative_sigma_methods():
     med = pccpy.imr_chart(X, sigma_method="median_mr").params[0]["sigma"]
     assert med == pytest.approx(np.median(mr) / 0.954)
     mssd = pccpy.imr_chart(X, sigma_method="mssd").params[0]["sigma"]
-    assert mssd == pytest.approx(np.sqrt(np.sum(np.diff(X) ** 2) / (2 * (len(X) - 1))))
+    # S015-RF-14: se divide por c_mssd(n) = E[√(MSSD/2)]/σ (insesgado); la constante se comprueba aparte con Monte Carlo
+    sin_corregir = np.sqrt(np.sum(np.diff(X) ** 2) / (2 * (len(X) - 1)))
+    assert mssd == pytest.approx(sin_corregir / c_mssd(len(X)))
+    assert mssd > sin_corregir
     with pytest.raises(ValueError):
         pccpy.imr_chart(X, sigma_method="nope")
     with pytest.raises(ValueError):
