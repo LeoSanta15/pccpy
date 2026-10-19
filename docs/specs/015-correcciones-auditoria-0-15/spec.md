@@ -1,6 +1,6 @@
 # 015 — Correcciones de la auditoría estadística 0.15
 
-- **Estado:** borrador
+- **Estado:** aprobada
 - **Identificador:** S015
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.16.0 (cambia resultados existentes: versión menor)
