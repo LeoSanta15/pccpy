@@ -39,7 +39,7 @@ print(res.summary())              # explicación completa
 | 2-D, columnas > 10 | multivariado | `t2_chart` |
 | 2-D, columnas ≤ 8 | subgrupos pequeños | `xbar_r_chart` |
 | 2-D, 9-10 columnas | subgrupos medianos | `xbar_s_chart` |
-| 1-D, tendencia clara | > 80 % o < 20 % incrementos | `run_chart` |
+| 1-D, tendencia clara | Mann-Kendall significativo (n ≥ 8) | `run_chart` |
 | 1-D, n ≥ 30, normal | p > 0.05 con especificaciones | `capability_analysis` |
 | 1-D, n ≥ 30, no normal, todos los datos positivos | p ≤ 0.05 | `capability_boxcox` |
 | 1-D, n ≥ 30, no normal, con ceros o negativos | p ≤ 0.05 | `capability_analysis(..., transform='yeo-johnson')` |

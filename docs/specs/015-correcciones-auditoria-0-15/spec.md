@@ -1,6 +1,6 @@
 # 015 — Correcciones de la auditoría estadística 0.15
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S015
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.16.0 (cambia resultados existentes: versión menor)
@@ -161,7 +161,7 @@ Los límites `b1 ± k√b2` (aproximación normal, Montgomery 11.3) dan `P(|S| >
 
 - Sección «Notas sobre diferencias posibles con Minitab» en `README.md` y `README_en.md` (R-02): Johnson por máxima verosimilitud frente al método de percentiles de Chou, Box-Cox, covarianza de T² en Fase I con individuales (clásica, no de diferencias sucesivas), covarianza asintótica de la MEWMA, kappa entre evaluadores y su repetibilidad, tendencia de `diagnose`, `mssd`.
 - Los comentarios de `DiagnoseResult` dicen «Anderson-Darling» y el código usa D'Agostino K²: se corrigen.
-- `wizard()` llama a `normaltest` sin la guardia de n < 8 que sí tiene `diagnose()` (posible regresión de BUG-15 con scipy 1.9): se añade la guardia y se prueba con la versión mínima del CI.
+- `wizard()` llama a `normaltest` sin la guardia de n < 8 que sí tiene `diagnose()` (posible regresión de BUG-10 con scipy 1.9): se añade la guardia y se prueba con la versión mínima del CI.
 - La regla 2-D del `wizard` mezcla «columnas = tamaño de subgrupo» con «columnas = variables»: se aclara la pregunta o la regla.
 
 **Aceptación:** `sphinx-build -W` sin avisos; el job `versiones-minimas` pasa un test de `wizard` con 3 ≤ n ≤ 7 sin tendencia.

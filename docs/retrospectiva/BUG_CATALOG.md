@@ -219,6 +219,176 @@
 
 ---
 
+### BUG-15 · EWMA-P/EWMA-U con tamaño de muestra variable: límites demasiado estrechos
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-15 |
+| **Síntoma** | Con `n` alternando 30 y 600 (p = 0,1; λ = 0,2) la tasa de falsas alarmas por punto era 0,152 en lugar de ≈ 0,0027 |
+| **Causa raíz** | `_ewma_attr` usaba `σ(nᵢ)·√(λ/(2−λ)·(1−(1−λ)^{2i}))`, fórmula cerrada válida solo con `n` constante; la varianza exacta es `Vᵢ = (1−λ)²Vᵢ₋₁ + λ²σ²(nᵢ)` |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 (simulación con 20 semillas contra la recursión escrita aparte) |
+| **Solución aplicada** | CORREGIDO en 0.16.0: recursión de la varianza (también en `ewma_chart` para el último subgrupo incompleto) |
+| **Archivo/línea** | `src/pccpy/charts/timeweighted_attr.py` |
+| **Test de regresión** | SÍ — `tests/test_auditoria_015.py::test_s015_rf01_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — cualquier fórmula «de régimen estacionario» aplicada con entradas de tamaño variable. |
+
+Requisitos de la especificación 015: S015-RF-01, S015-RF-08.
+
+---
+
+### BUG-16 · Dodge-Romig: ATI con `Pa` en lugar de `1−Pa` y AOQL aproximado con holgura del 5 %
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-16 |
+| **Síntoma** | `dodge_romig(1000, ltpd=0.05)` elegía n=45, c=0 (ATI 392) en lugar de n=132, c=3 (ATI 170,4); el plan por AOQL superaba el objetivo (0,02095 > 0,02); el AOQL de Z1.4 daba 0,000255 en lugar de 0,000287 |
+| **Causa raíz** | `ATI = n + Pa·(N−n)` (debe ser `(1−Pa)`); el AOQL se tomaba como máximo de una rejilla de 400 a 500 puntos y se aceptaba hasta un 5 % por encima del objetivo |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 (búsqueda exhaustiva con `scipy.stats.binom`) |
+| **Solución aplicada** | CORREGIDO en 0.16.0: `_ati`, `_aoql_exacto` (rejilla y `minimize_scalar`) y bisección por `c`; `_ltpd_exacto` ya no depende del AQL |
+| **Archivo/línea** | `src/pccpy/acceptance.py` |
+| **Test de regresión** | SÍ — `test_s015_rf02_*` y `test_s015_rf13_ltpd_de_plan_a_medida` |
+| **¿Puede ocurrir en otras libs?** | Sí — optimizar con una fórmula escrita al revés pasa desapercibido si solo se comprueba que el plan «cumple». |
+
+Requisitos de la especificación 015: S015-RF-02, S015-RF-13.
+
+---
+
+### BUG-17 · Carta de corridas: prueba de tendencias descalibrada con empates
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-17 |
+| **Síntoma** | Con datos redondeados (n = 30) el 38 % de las series daba `p_trends < 0,05` (con datos continuos, 3 %) |
+| **Causa raíz** | Las diferencias nulas se descartaban pero `E = (2n−1)/3` y `V = (16n−29)/90` usaban la `n` original; con empates `n` debe ser `m + 1` (puntos que quedan) |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 (20 semillas × 500 series) |
+| **Solución aplicada** | CORREGIDO en 0.16.0: `n = m + 1` en `_runs_updown`. Minitab podría tratar los empates de otro modo (no se pudo verificar) |
+| **Archivo/línea** | `src/pccpy/charts/run_chart.py` |
+| **Test de regresión** | SÍ — `test_s015_rf03_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — datos con resolución limitada (instrumentos digitales) rompen pruebas pensadas para datos continuos. |
+
+Requisitos de la especificación 015: S015-RF-03.
+
+---
+
+### BUG-18 · `diagnose()` y `wizard()` casi no detectaban tendencias
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-18 |
+| **Síntoma** | Una deriva total de 3σ con n = 20 o 50 se detectaba en 0 % de los casos; con n = 3 daba 33 % de falsas alarmas |
+| **Causa raíz** | La regla «más del 80 % o menos del 20 % de las diferencias positivas» (llamada «Mann-Kendall simplificado») exige casi monotonía |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 (simulación con 20 semillas) |
+| **Solución aplicada** | CORREGIDO en 0.16.0: Mann-Kendall (`scipy.stats.kendalltau` contra el índice, α = 0,05 bilateral) con mínimo de 8 observaciones; `wizard` usa la misma prueba y protege `normaltest` con n < 8 |
+| **Archivo/línea** | `src/pccpy/_diagnose.py`, `src/pccpy/_wizard.py` |
+| **Test de regresión** | SÍ — `test_s015_rf04_*`, `test_s015_rf15_wizard_con_n_pequeno_no_avisa` |
+| **¿Puede ocurrir en otras libs?** | Sí — una prueba «simplificada» sin potencia calculada. |
+
+Requisitos de la especificación 015: S015-RF-04, S015-RF-15.
+
+---
+
+### BUG-19 · p-valor del kappa de Cohen con error estándar incorrecto
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-19 |
+| **Síntoma** | Tasa de rechazo bajo H₀ al 5 % de 0,13 % (marginales 85/15, n = 100); el error estándar salía 1,15 a 1,38 veces mayor con 3 categorías |
+| **Causa raíz** | Se usaba `√(pₑ/(n(1−pₑ)))`; el error estándar bajo H₀ es el de Fleiss, Cohen y Everitt (1969): `√((pₑ + pₑ² − Σ pᵢ.p.ᵢ(pᵢ. + p.ᵢ))/(n(1−pₑ)²))` |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 (`statsmodels.cohens_kappa(...).std_kappa0` y simulación) |
+| **Solución aplicada** | CORREGIDO en 0.16.0. Minitab podría usar otro error estándar (no se pudo verificar). La repetibilidad ya no promedia p-valores de pares |
+| **Archivo/línea** | `src/pccpy/msa.py` (`_cohen_kappa`) |
+| **Test de regresión** | SÍ — `test_s015_rf05_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — mezclar el error estándar de H₀ con el de la estimación. |
+
+Requisitos de la especificación 015: S015-RF-05, S015-RF-14.
+
+---
+
+### BUG-20 · Capacidad con huecos: `capability_boxcox` desplazaba subgrupos y el rango móvil cruzaba los huecos
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-20 |
+| **Síntoma** | `capability_boxcox` daba σ_within 0,3012 en lugar de 0,1897; la capacidad con individuales daba 0,9527 en lugar de 0,6077 |
+| **Causa raíz** | `capability_boxcox` quitaba los NaN antes de agrupar; `capability_analysis` con individuales compactaba la serie (`as_1d`) y unía observaciones no consecutivas |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 |
+| **Solución aplicada** | CORREGIDO en 0.16.0: los huecos se conservan (`as_1d_con_huecos`), como en `imr_chart` (decisión S006-RF-06) |
+| **Archivo/línea** | `src/pccpy/capability.py` |
+| **Test de regresión** | SÍ — `test_s015_rf06_*`, `test_s015_rf07_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — dos rutas que limpian NaN en lugares distintos. |
+
+Requisitos de la especificación 015: S015-RF-06, S015-RF-07.
+
+---
+
+### BUG-21 · `phase2()` fallaba tras `phase_one(..., center="median")`
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-21 |
+| **Síntoma** | `ValueError: 'center="median"' no se combina con 'mu'` al llamar a `phase2()` |
+| **Causa raíz** | `phase2()` volvía a pasar `center` junto con la `mu` congelada |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 |
+| **Solución aplicada** | CORREGIDO en 0.16.0: `phase2()` no pasa `center` (también con archivos de Fase I guardados antes) |
+| **Archivo/línea** | `src/pccpy/phase1.py` |
+| **Test de regresión** | SÍ — `test_s015_rf09_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — una opción que genera un parámetro congelado no debe reenviarse. |
+
+Requisitos de la especificación 015: S015-RF-09.
+
+---
+
+### BUG-22 · `gage_rr(tolerance=)` sin efecto
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-22 |
+| **Síntoma** | El docstring y el README prometían `%Tolerancia`, pero el parámetro no cambiaba ninguna salida |
+| **Causa raíz** | El parámetro se aceptaba y no se usaba |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 |
+| **Solución aplicada** | CORREGIDO en 0.16.0: `pct_tolerance_gage`, `pct_tolerance_repeatability` y `pct_tolerance_reproducibility` (`100·K·σ/T`) en `to_frame()` y `summary()` |
+| **Archivo/línea** | `src/pccpy/msa.py` |
+| **Test de regresión** | SÍ — `test_s015_rf10_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — parámetros aceptados y no usados. |
+
+Requisitos de la especificación 015: S015-RF-10.
+
+---
+
+### BUG-23 · %Linealidad y %Sesgo medían el instrumento, no el proceso
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-23 |
+| **Síntoma** | Con pendiente −0,117, `%Linealidad` daba 84,3 % en lugar de 11,7 % |
+| **Causa raíz** | El denominador era `6·s_residual` (variación del instrumento); AIAG usa la variación del proceso: `%Linealidad = 100·|pendiente|` y `%Sesgo = 100·|sesgo medio| / variación del proceso` |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 (definición de AIAG MSA 3.ª ed., recordada de memoria; no se comprobó la de Minitab) |
+| **Solución aplicada** | CORREGIDO en 0.16.0: `%Linealidad = 100·|pendiente|` y `process_variation=` para el %Sesgo |
+| **Archivo/línea** | `src/pccpy/msa.py` |
+| **Test de regresión** | SÍ — `test_s015_rf11_*` |
+| **¿Puede ocurrir en otras libs?** | Sí. |
+
+Requisitos de la especificación 015: S015-RF-11.
+
+---
+
+### BUG-24 · Límites de la carta |S| con aproximación normal
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-24 |
+| **Síntoma** | `P(|S| > LCS) ≈ 0,0197` (ARL₀ ≈ 50) en lugar de 0,00135, y el LCI quedaba en 0 |
+| **Causa raíz** | `b1 ± k·√b2` (Montgomery 11.3) supone una distribución simétrica de `|S|`, que es muy asimétrica |
+| **Cómo se detectó** | Auditoría estadística 0.15.7 (simulación de |S|) |
+| **Solución aplicada** | CORREGIDO en 0.16.0: límites por percentiles de `|S| = |Σ|·Πχ²_{n−i}/(n−1)^p` (Bartlett) por convolución numérica de las ln χ² |
+| **Archivo/línea** | `src/pccpy/multivariate.py` |
+| **Test de regresión** | SÍ — `test_s015_rf12_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — aproximaciones normales de estadísticos con cola larga. |
+
+Requisitos de la especificación 015: S015-RF-12.
+
+---
+
 ## TAXONOMÍA DE CLASES DE ERROR
 
 | Clase | Descripción | Cómo prevenirla | Cómo detectarla | Bugs en este proyecto |
@@ -232,3 +402,4 @@
 | **C-07 Estado global de entorno** | La librería modifica estado global (rcParams) contaminando el entorno del usuario | Usar context managers (`rc_context`, `warnings.catch_warnings`) | Test que verifica estado antes/después de la llamada | BUG-12 |
 | **C-08 Versión múltiple fuente** | La versión se gestiona en N>1 lugares y se desincroniza | Literal único en `__init__.py` + `[tool.setuptools.dynamic] version = {attr = ...}` (probado). **No** `importlib.metadata` en `__init__.py`: se congela al instalar (probado) | Guarda tag==versión del wheel en el workflow de publicación (R-13); en dev, `grep -n '^version\|^__version__'` | BUG-13, L-10 |
 | **C-09 Autodoc duplicado/ambiguo** | Dos directivas autodoc para el mismo símbolo, o tipos en docstring (`shape (n,)`) que Sphinx resuelve como referencia | Una directiva canónica por símbolo; `:no-index:` en la procesada primero; `array-like` en vez de `shape (n,)` | `sphinx-build -W` en CI | BUG-11 |
+| **C-10 Fórmula estadística fuera de su supuesto** | Una fórmula de régimen estacionario, de datos continuos o de una aproximación normal se usa donde no vale (n variable, empates, estadísticos asimétricos) | Contrastar cada resultado con una referencia independiente y una simulación con ≥ 20 semillas (R-02), incluidos los casos de entrada «incómodos» | Auditoría con Monte Carlo; `run_validation()` | BUG-15, BUG-16, BUG-17, BUG-18, BUG-19, BUG-23, BUG-24 |

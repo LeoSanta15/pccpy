@@ -29,8 +29,8 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Verificación y cierre
 
-- [ ] Comprobaciones en `run_validation()` (RF-01, RF-02, RF-03, RF-04, RF-05 y RF-12 si se decide).
-- [ ] Fichas en `BUG_CATALOG.md` (un bug por RF de gravedad alta y media) y tests de regresión.
-- [ ] Documentación, README (es/en) con la sección de diferencias con Minitab, traducciones y CHANGELOG (S015-RF-15).
-- [ ] `make check` en verde.
-- [ ] Estado de la especificación → `implementada`.
+- [x] Comprobaciones en `run_validation()` (RF-01, RF-02, RF-03, RF-04, RF-05 y RF-12 si se decide).
+- [x] Fichas en `BUG_CATALOG.md` (un bug por RF de gravedad alta y media) y tests de regresión.
+- [x] Documentación, README (es/en) con la sección de diferencias con Minitab, traducciones y CHANGELOG (S015-RF-15).
+- [x] `make check` en verde.
+- [x] Estado de la especificación → `implementada`.

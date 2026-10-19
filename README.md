@@ -454,7 +454,7 @@ print(carta.summary())
 |--------|---------|---------------|
 | `'mr'` | `MR_prom / d2` | por defecto; el mismo que Minitab |
 | `'median_mr'` | `mediana(MR) / 0.9540` | más robusto ante valores atípicos (solo span=2) |
-| `'mssd'` | `√(MSSD / 2)` | cuando no hay observaciones consecutivas correladas |
+| `'mssd'` | `√(MSSD / 2) / c_mssd(n)` | cuando no hay observaciones consecutivas correladas (`c_mssd` quita el sesgo: 0,962 con n = 10) |
 
 ---
 
@@ -987,7 +987,9 @@ pp.t2_chart(df)
 ### Varianza generalizada
 
 Panel complementario al T² para **datos en subgrupos**: monitorea la dispersión
-multivariada mediante el determinante de la matriz de covarianza muestral `|S|`.
+multivariada mediante el determinante de la matriz de covarianza muestral `|S|`. Los límites son percentiles de la
+distribución de `|S|` (la misma probabilidad que `±k` sigmas de una normal: 0,00135 por cola con `k = 3`), no la aproximación
+normal `b1 ± k√b2`, que daba unas 7 veces más falsas alarmas por encima y un límite inferior en 0.
 
 ```python
 pp.generalized_variance_chart(
@@ -1613,6 +1615,7 @@ print(grr.summary())
 # Repetibilidad: 14.3%  Reproducibilidad: 3.1%  %R&R: 14.6%  NDC: 9
 
 grr.pct_gage            # % Estudio de variación total del sistema de medición
+grr.pct_tolerance_gage  # %Tolerancia = 100·K·σ/T (solo con tolerance=; también pct_tolerance_repeatability y _reproducibility)
 grr.var_repeatability   # varianza de repetibilidad
 grr.var_reproducibility # varianza de reproducibilidad
 grr.var_part            # varianza de partes
@@ -1675,7 +1678,7 @@ Evalúa si el sesgo es constante en todo el rango de operación del instrumento:
 refs       = np.repeat([2, 4, 6, 8, 10], 5)    # 5 referentes × 5 réplicas
 mediciones = refs + rng.normal(0.05, 0.1, 25)
 
-lin = pp.gage_linearity(mediciones, refs, tolerance=10.0)
+lin = pp.gage_linearity(mediciones, refs, process_variation=6.0)   # %Linealidad = 100·|pendiente|; %Sesgo respecto de process_variation
 print(lin.summary())
 # Pendiente: 0.001  Intercepto: 0.048  R²: 0.002  Linealidad: 0.01%
 
@@ -1757,6 +1760,25 @@ carta.summary()     # resumen en texto
 # --- Acceso programatico a violaciones por prueba ---
 carta.panels[0].violations   # dict {prueba: array de índices}
 ```
+
+---
+
+## Notas sobre diferencias posibles con Minitab
+
+`pccpy` sigue las fórmulas y convenciones que Minitab documenta, pero **no se ha comparado corrida a corrida contra el software** (sin licencia). Estas son las decisiones de la biblioteca donde Minitab podría hacer otra cosa; ninguna se pudo verificar:
+
+- **Johnson:** la transformación se ajusta por máxima verosimilitud, no por el método de percentiles de Chou et al.
+- **Box-Cox:** lambda por máxima verosimilitud (`scipy.stats.boxcox`); Minitab usa otro optimizador y otro criterio de redondeo (`lam=` o `round_lambda=True` fijan el valor).
+- **T² de Fase I con individuales:** covarianza clásica de los datos, no la de las diferencias sucesivas.
+- **MEWMA:** covarianza asintótica del estadístico (no la exacta de cada punto).
+- **Kappa de Cohen:** el p-valor usa el error estándar bajo H₀ de Fleiss, Cohen y Everitt (1969). La repetibilidad (kappa entre réplicas) no promedia p-valores de pares: con más de un par queda en `nan`.
+- **Carta de corridas:** con empates, la prueba de tendencias usa `n = m + 1` (los puntos que quedan al quitar las diferencias nulas).
+- **Tendencia de `diagnose()` y `wizard()`:** prueba de Mann-Kendall (α = 0,05, con al menos 8 observaciones); Minitab no tiene una equivalente.
+- **`sigma_method="mssd"`:** `√(MSSD/2)` dividido por la constante de insesgamiento `c_mssd(n)` (calculada por integración numérica).
+- **Linealidad y sesgo:** `%Linealidad = 100·|pendiente|` y `%Sesgo = 100·|sesgo medio| / variación del proceso`, definiciones de AIAG (MSA, 3.ª ed.) recordadas de memoria.
+- **Carta de varianza generalizada:** límites por percentiles de `|S|` (la misma probabilidad que ±k sigmas de una normal), no la aproximación normal `b1 ± k√b2`.
+- **Ancho de los límites (`k`/`alpha`), mediana como línea central y carta X̃-R:** no se comprobó si Minitab los ofrece ni cómo.
+- **Muestreo de aceptación:** los planes Dodge-Romig minimizan el ATI con el AOQL exacto; la tabla Z1.9 incluida no reproduce la norma y Z1.4 no trae los niveles especiales.
 
 ---
 

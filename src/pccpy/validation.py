@@ -1187,6 +1187,75 @@ def _mediana_cartas():
     return np.array(esperado), np.array(obtenido)
 
 
+@_comprobacion("auditoria-015", N_("Correcciones de la auditoría 0.15: EWMA-P con n variable, Dodge-Romig, empates en la carta de corridas, Mann-Kendall, kappa, |S| y mssd"),
+               "Recursión de la varianza del EWMA, búsqueda exhaustiva con scipy.stats.binom, E y V de las rachas con n = m + 1, scipy.stats.kendalltau, "
+               "error estándar de Fleiss, Cohen y Everitt (1969), producto de dos χ² por integración (scipy.integrate) y E|z| = √(2/π); especificación 015", 1e-4, relative=True)
+def _auditoria_015():
+    from scipy import stats
+
+    from . import diagnose, dodge_romig, ewma_p_chart, generalized_variance_chart, run_chart
+    from ._constants import c_mssd
+    from .msa import _cohen_kappa
+
+    esperado, obtenido = [], []
+    # RF-01: varianza recursiva del EWMA con n variable
+    n = np.where(np.arange(20) % 2 == 0, 30, 600)
+    v, ref = 0.0, []
+    for ni in n:
+        v = 0.8**2 * v + 0.2**2 * 0.1 * 0.9 / ni
+        ref.append(math.sqrt(v))
+    esperado += ref
+    obtenido += list(ewma_p_chart(np.full(20, 3), n, p=0.1).panels[0].sigma)
+    # RF-02: plan de Dodge-Romig por LTPD = el de la búsqueda exhaustiva de menor ATI
+    mejores = []
+    for c in range(20):
+        for m in range(c + 1, 1001):
+            if stats.binom.cdf(c, m, 0.05) <= 0.10:
+                mejores.append((m + (1 - stats.binom.cdf(c, m, 0.01)) * (1000 - m), m, c))
+                break
+    _, m_ref, c_ref = min(mejores)
+    plan = dodge_romig(1000, ltpd=0.05, process_avg=0.01)
+    esperado += [m_ref, c_ref]
+    obtenido += [plan.n, plan.c]
+    # RF-03: con empates n = m + 1 en las rachas arriba/abajo
+    x = np.array([1, 2, 2, 3, 1, 1, 4, 2, 5, 5, 3, 6, 2, 2, 7], dtype=float)
+    d = np.sign(np.diff(x))
+    d = d[d != 0]
+    nn = len(d) + 1
+    r = 1 + np.sum(d[1:] != d[:-1])
+    esperado.append(float(stats.norm.cdf((r - (2 * nn - 1) / 3) / math.sqrt((16 * nn - 29) / 90))))
+    obtenido.append(run_chart(x).p_trends)
+    # RF-04: Mann-Kendall con 40 puntos y una deriva clara (kendalltau contra el índice)
+    y = np.random.default_rng(7).normal(size=40) + 0.1 * np.arange(40)
+    esperado.append(1.0 if stats.kendalltau(np.arange(40), y).pvalue < 0.05 else 0.0)
+    obtenido.append(1.0 if diagnose(y).has_trend else 0.0)
+    # RF-05: error estándar bajo H0 de Fleiss, Cohen y Everitt
+    rng = np.random.default_rng(5)
+    a = rng.choice([0, 1, 2], 60, p=[0.7, 0.2, 0.1])
+    b = np.where(rng.random(60) < 0.6, a, rng.choice([0, 1, 2], 60, p=[0.3, 0.3, 0.4]))
+    tabla = np.array([[np.sum((a == i) & (b == j)) for j in range(3)] for i in range(3)], float) / 60
+    fila, col = tabla.sum(1), tabla.sum(0)
+    po, pe = np.trace(tabla), float(fila @ col)
+    se0 = math.sqrt((pe + pe**2 - float(np.sum(fila * col * (fila + col)))) / (60 * (1 - pe) ** 2))
+    esperado.append(float(2 * stats.norm.sf(abs((po - pe) / (1 - pe) / se0))))
+    obtenido.append(_cohen_kappa(a, b, [0, 1, 2])[1])
+    # RF-12 (p = 2, n = 5): |S|·(n−1)²/|Σ| = X·Y con X ~ χ²_4 e Y ~ χ²_3 independientes; la probabilidad de cada cola en los límites es Φ(−3)
+    from scipy import integrate
+
+    g = np.random.default_rng(3).normal(size=(30, 5, 2))
+    lim = generalized_variance_chart(g, cov=np.eye(2))["|S|"]
+
+    def cola_superior(q):  # P(X·Y > q)
+        return integrate.quad(lambda y: stats.chi2.pdf(y, 3) * stats.chi2.sf(q / y, 4), 0, np.inf, epsabs=1e-14, epsrel=1e-10)[0]
+
+    esperado += [float(stats.norm.sf(3))] * 2
+    obtenido += [cola_superior(lim.ucl[0] * 16), 1.0 - cola_superior(lim.lcl[0] * 16)]
+    # RF-14: con n = 2, E|z|·… = √(2/π)
+    esperado.append(math.sqrt(2 / math.pi))
+    obtenido.append(c_mssd(2))
+    return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 
