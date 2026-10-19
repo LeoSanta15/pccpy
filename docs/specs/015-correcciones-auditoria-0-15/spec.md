@@ -56,7 +56,7 @@ La prueba de tendencias (rachas arriba/abajo) descarta las diferencias nulas per
 **Aceptación:**
 - **Dado** datos normales redondeados a la unidad, `n = 30` **cuando** se repite 20 semillas × 500 **entonces** `P(p_trends < 0,05) ≤ 0,07` (hoy 0,38; con datos continuos 0,03).
 - **Dado** datos sin empates **entonces** el resultado no cambia.
-- [NECESITA ACLARACIÓN: ¿tratamiento de empates? Se propone reducir `n` a `m + 1`. Minitab podría hacer otra cosa; no se pudo verificar.]
+- Decidido por la persona responsable: con empates, `n` pasa a `m + 1`. Minitab podría hacer otra cosa; no se pudo verificar.
 
 ### S015-RF-04 — Prueba de tendencia de `diagnose()` y `wizard()`
 
@@ -68,7 +68,7 @@ con `scipy.stats.kendalltau`, α = 0,05, bilateral), con un mínimo de observaci
 - **Dado** una deriva total de 3σ en n = 20 y 50 **entonces** la detección es ≥ 90 % y 100 % (hoy 0 %).
 - **Dado** datos iid con n = 20, 50 y 100 **entonces** la tasa de falsas alarmas es ≈ 5 % (≤ 7 %).
 - **Dado** n < 8 (mínimo propuesto) **entonces** no se evalúa la tendencia y no hay aviso falso; `wizard` con n = 2 o 3 no recomienda `run_chart` por esa causa.
-- [NECESITA ACLARACIÓN: ¿Mann-Kendall? ¿mínimo de observaciones? Cambia las recomendaciones de `diagnose()`/`wizard()`.]
+- Decidido por la persona responsable: Mann-Kendall, con un mínimo de 8 observaciones. Cambia las recomendaciones de `diagnose()`/`wizard()`.
 
 ### S015-RF-05 — p-valor del kappa de Cohen
 
@@ -78,7 +78,7 @@ El error estándar bajo H₀ es el de Fleiss, Cohen y Everitt (1969), no `√(p�
 **Aceptación:**
 - **Dado** marginales 85/15 y `n = 100` **entonces** la tasa de rechazo bajo H₀ (20 semillas × 300) es 0,05 ± 0,01 y el error estándar coincide con `statsmodels.stats.inter_rater.cohens_kappa(...).std_kappa0`.
 - **Dado** el valor de kappa **entonces** no cambia.
-- [NECESITA ACLARACIÓN: ¿adoptar el error estándar de FCE (1969)? Minitab podría usar otro; no se pudo verificar.]
+- Decidido por la persona responsable: error estándar de FCE (1969). Minitab podría usar otro; no se pudo verificar.
 
 ### Gravedad media
 
@@ -118,7 +118,7 @@ El parámetro `tolerance` no tiene efecto aunque el docstring y el README lo pro
 
 **Aceptación:**
 - **Dado** `gage_rr(..., tolerance=5.0)` **entonces** `to_frame()` y `summary()` incluyen `%Tolerancia` (= `100·6σ_GRR/T` con `study_variation = 6`) y sin `tolerance` no aparece.
-- [NECESITA ACLARACIÓN: ¿implementar `%Tolerancia` o quitar el parámetro? Se propone implementarlo.]
+- Decidido por la persona responsable: se implementa `%Tolerancia` (no se quita el parámetro).
 
 ### S015-RF-11 — %Linealidad y %Sesgo (AIAG)
 
@@ -126,15 +126,15 @@ El parámetro `tolerance` no tiene efecto aunque el docstring y el README lo pro
 
 **Aceptación:**
 - **Dado** pendiente −0,117 **entonces** `%Linealidad = 11,7 %` (hoy 84,3 %) cuando la variación del proceso se da o se estima de los datos como en AIAG.
-- [NECESITA ACLARACIÓN: ¿pasar a la definición de AIAG? No se pudo comprobar la fórmula de Minitab; implica un parámetro nuevo (variación del proceso).]
+- Decidido por la persona responsable: definición de AIAG. `%Linealidad = 100·|pendiente|` no necesita parámetro nuevo; `%Sesgo` sí (variación del proceso, opcional). No se pudo comprobar la fórmula de Minitab.
 
 ### S015-RF-12 — Carta |S| (varianza generalizada)
 
 Los límites `b1 ± k√b2` (aproximación normal, Montgomery 11.3) dan `P(|S| > LCS) ≈ 0,0197` (ARL₀ ≈ 50), unas 7 veces la nominal 0,00135 (con `k = 3`), y el LCI queda en 0.
 
 **Aceptación:**
-- **Dado** `generalized_variance_chart(..., k=3)` **entonces** o bien (a) los límites se calculan por percentiles de la distribución de `|S|` con `P(|S| > LCS) = 0,00135` (± 5 %), o bien (b) el docstring, el README y `summary()` advierten del ARL₀ real; según la decisión.
-- [NECESITA ACLARACIÓN: ¿percentiles exactos (por simulación o por la distribución de Bartlett) o solo un aviso?]
+- **Dado** `generalized_variance_chart(..., k=3)` **entonces** los límites se calculan por percentiles de la distribución de `|S|` con `P(|S| > LCS) = 0,00135` (± 5 %), y el docstring y el README describen el método.
+- Decidido por la persona responsable: percentiles exactos de la distribución de `|S|` (el método se documenta en el docstring y el README).
 
 ### Gravedad baja
 
@@ -149,13 +149,13 @@ Los límites `b1 ± k√b2` (aproximación normal, Montgomery 11.3) dan `P(|S| >
 
 ### S015-RF-14 — Estimadores y aproximaciones
 
-- **`sigma_method="mssd"`:** sesgado hacia abajo (E[σ̂]/σ = 0,962 con n = 10); se documenta el sesgo o se añade la constante de insesgamiento.
+- **`sigma_method="mssd"`:** sesgado hacia abajo (E[σ̂]/σ = 0,962 con n = 10); se divide por `c_mssd(n) = E[√(MSSD/2)]/σ`, calculada exactamente con la forma cuadrática del estadístico y contrastada con Monte Carlo.
 - **Curva OC de variables bilateral:** `Pa(p/2)²` se queda corta (0,451 frente a 0,495 ± 0,004 por Monte Carlo con n = 20, k = 1,5, p = 0,10); se calcula con la distribución correcta o se documenta la aproximación.
 - **Repetibilidad del acuerdo por atributos:** no promediar p-valores de pares (no es una prueba válida).
-- **Atípicos IQR de `diagnose()`:** marca al menos uno en el 52 % de las muestras normales de n = 100 (95 % con n = 500); se ajusta la redacción («posibles atípicos según la regla del IQR») o la regla.
+- **Atípicos IQR de `diagnose()`:** marca al menos uno en el 52 % de las muestras normales de n = 100 (95 % con n = 500); se ajusta la redacción («posibles atípicos según la regla del IQR»), sin cambiar el conteo.
 
-**Aceptación:** el comportamiento queda documentado o corregido en cada caso, con su test; `diagnose()` ya no afirma «investiga su origen» solo por la regla del IQR con n grande.
-- [NECESITA ACLARACIÓN: `mssd` — Minitab podría aplicar una constante; no se pudo verificar. ¿Documentar el sesgo o corregirlo? ¿Regla del IQR: cambiar la redacción o usar Grubbs/ESD?]
+**Aceptación:** el comportamiento queda corregido o documentado en cada caso, con su test (`'mssd'` con `E[σ̂]/σ = 1,000 ± 0,003` en 20 semillas); `diagnose()` ya no afirma «investiga su origen» solo por la regla del IQR con n grande.
+- Decidido por la persona responsable: `mssd` se **corrige** con una constante de insesgamiento `c_mssd(n)` (cambia el resultado de `'mssd'`; Minitab podría usar otra y no se pudo verificar); en el IQR de `diagnose()` se **cambia la redacción** (el conteo no cambia).
 
 ### S015-RF-15 — Documentación
 
@@ -190,11 +190,4 @@ Cambian (versión 0.16.0, a listar en «Cambios que alteran resultados»): lími
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: RF-03, tratamiento de empates de la carta de corridas.]
-- [NECESITA ACLARACIÓN: RF-04, Mann-Kendall y mínimo de observaciones para `diagnose()`/`wizard()`.]
-- [NECESITA ACLARACIÓN: RF-05, error estándar de Fleiss, Cohen y Everitt (1969) para el kappa.]
-- [NECESITA ACLARACIÓN: RF-10, implementar `%Tolerancia` o quitar `tolerance=`.]
-- [NECESITA ACLARACIÓN: RF-11, %Linealidad y %Sesgo según AIAG.]
-- [NECESITA ACLARACIÓN: RF-12, límites de |S| por percentiles exactos o solo aviso.]
-- [NECESITA ACLARACIÓN: RF-14, `mssd` y regla del IQR.]
-- [NECESITA ACLARACIÓN: ¿una sola especificación y versión 0.16.0, o separar en dos PR (alta y media/baja) con la misma versión?]
+Ninguna. Decididas por la persona responsable: empates con `m + 1` (RF-03), Mann-Kendall con mínimo de 8 observaciones (RF-04), error estándar de FCE (RF-05), `%Tolerancia` implementado (RF-10), AIAG (RF-11), percentiles exactos de `|S|` (RF-12), `mssd` corregido e IQR con otra redacción (RF-14) y una sola especificación con versión 0.16.0.

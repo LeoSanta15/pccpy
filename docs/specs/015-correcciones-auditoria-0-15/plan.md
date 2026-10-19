@@ -18,15 +18,15 @@ Cada corrección es local y sigue a su vecino; no se reescribe ningún módulo.
 | 08 | `charts/timeweighted.py` (`_series_etapas`) | La sigma de cada punto usa su `nᵢ`. |
 | 09 | `phase1.py` | `phase2()` y `from_limits` no reenvían `center` cuando hay `mu` congelado. |
 | 10, 11 | `msa.py` | `%Tolerancia`; %Linealidad y %Sesgo con la definición de AIAG y un parámetro de variación del proceso. |
-| 12 | `multivariate.py` (`generalized_variance_chart`) | Según la decisión: percentiles por simulación con semilla fija o aviso en docstring/README/`summary()`. |
+| 12 | `multivariate.py` (`generalized_variance_chart`) | Límites por percentiles de `|S|` (simulación con semilla fija, determinista y acotada en tiempo); el método se documenta. |
 | 13 | `rules.py`, `precontrol.py`, `msa.py`, `acceptance.py` | `z = ±inf` cuenta como válido para la prueba 1; `as_1d`; validaciones. |
-| 14, 15 | varios + README/docs | Documentación y los ajustes decididos. |
+| 14, 15 | `_sigma.py` + `_constants.py`, `_diagnose.py`, README/docs | `c_mssd(n)` por integración (`√q = (1/(2√π))·∫(1−e^{−sq})s^{−3/2}ds` con `E[e^{−sQ}] = Π(1+2sλⱼ)^{−1/2}`, λⱼ autovalores de la forma cuadrática); redacción del IQR; documentación. |
 
 ## Decisiones
 
 | Decisión | Alternativa descartada | Por qué |
 |---|---|---|
-| Una sola especificación, tres fases de implementación (alta, media, baja) | Una especificación por área | Un único cambio de versión 0.16.0 y una sola lista de «Cambios que alteran resultados»; pendiente de confirmar |
+| Una sola especificación, tres fases de implementación (alta, media, baja) | Una especificación por área | Un único cambio de versión 0.16.0 y una sola lista de «Cambios que alteran resultados» (decisión de la persona responsable) |
 | Mann-Kendall en `diagnose`/`wizard` | Parchear los umbrales 80/20 | La regla de umbrales no tiene potencia con n grande ni controla las falsas alarmas con n pequeño |
 | Dodge-Romig por búsqueda exhaustiva en lugar de la tabla de Dodge y Romig | Reproducir las tablas publicadas | No se tienen las tablas; la búsqueda con la definición exacta es contrastable |
 | Sin alias ni parámetros nuevos salvo los que decida la persona responsable | Opciones para el comportamiento antiguo | Los comportamientos antiguos son errores, no una opción |
@@ -40,7 +40,7 @@ kappa (`statsmodels.cohens_kappa().std_kappa0`), tendencia (`scipy.stats.kendall
 
 - Los planes de Dodge-Romig y las recomendaciones de `diagnose`/`wizard` cambian de forma visible: se avisa en el CHANGELOG con ejemplos.
 - La búsqueda exhaustiva de Dodge-Romig puede ser lenta con N grande: se acota y se mide.
-- La simulación de límites de |S| (si se elige) debe ser determinista (semilla fija) y rápida; si no, se cae al aviso.
+- La simulación de límites de |S| debe ser determinista (semilla fija) y rápida; se mide y, si es lenta, se guarda en caché por `(p, n)`.
 - Los goldens (`tests/golden/`) pueden cambiar en `diagnose`/`wizard` (tendencia): se actualizan solo las celdas afectadas y se justifican.
 
 ## Documentación y traducciones
