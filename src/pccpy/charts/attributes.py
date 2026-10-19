@@ -42,6 +42,11 @@ def _attribute_chart(code, kind, ylabel, counts, n, stages, tests, test_params,
         raise ValueError(tr("Hay conteos de defectuosos mayores que el tamaño de la muestra."))
     if code == "np" and not np.all(n_arr == n_arr[0]):
         raise ValueError(tr("La carta NP requiere tamaño de muestra constante; use la carta P."))
+    if historical is not None:
+        if code in ("p", "np") and not 0 <= historical <= 1:
+            raise ValueError(tr("La proporción de referencia 'p' debe estar entre 0 y 1."))
+        if code in ("c", "u") and not historical >= 0:
+            raise ValueError(tr("La tasa de referencia debe ser mayor o igual que 0."))
 
     def stage_fn(idx):
         d, ni = c[idx], n_arr[idx]

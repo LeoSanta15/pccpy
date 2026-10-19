@@ -1,5 +1,36 @@
 # Registro de cambios
 
+## [Sin publicar] - correcciones de la auditoría estadística 0.15
+
+Una auditoría estadística de la 0.15.7 (cuatro revisiones independientes, con referencias escritas aparte, `scipy`/`statsmodels` y simulaciones con ≥ 20 semillas) encontró errores que daban resultados incorrectos sin aviso. Esta versión los corrige y **cambia resultados existentes** (versión menor). Especificación `docs/specs/015-correcciones-auditoria-0-15`. Nada se pudo contrastar con Minitab real: ver «Notas sobre diferencias posibles con Minitab» en el README.
+
+### Cambios que alteran resultados
+- **EWMA-P y EWMA-U con `n` variable:** la varianza del estadístico sigue la recursión `Vᵢ = (1−λ)²Vᵢ₋₁ + λ²σ²(nᵢ)`. Antes los límites eran demasiado estrechos (falsas alarmas 0,152 por punto frente a 0,0027 con `n` alternando 30 y 600). Con `n` constante no cambia nada.
+- **Dodge-Romig y AOQL de Z1.4:** el ATI es `n + (1−Pa)(N−n)` (antes `Pa`) y el AOQL de un plan es el máximo exacto de la curva AOQ. Los planes por `ltpd` y por `aoql` cambian (p. ej. `dodge_romig(1000, ltpd=0.05, process_avg=0.01)`: n=132, c=3, antes n=45, c=0); el plan por `aoql` cumple el objetivo sin la holgura del 5 %; el AOQL de `acceptance_sampling_attributes(50000, 0.01)` pasa de 0,000255 a 0,000287; el LTPD de un plan a medida con `Pa(AQL) < 0,10` ya no sale `nan`.
+- **Carta de corridas con empates:** la prueba de tendencias usa `n = m + 1` (los puntos que quedan al quitar las diferencias nulas); con datos redondeados la tasa de señal bajo H₀ pasa de 0,38 a ≈ 0,05. Sin empates no cambia.
+- **Tendencia de `diagnose()` y `wizard()`:** prueba de Mann-Kendall (α = 0,05, al menos 8 observaciones) en lugar de «más del 80 % o menos del 20 % de incrementos». Con n < 8 no se declara tendencia; `has_trend`, las recomendaciones (`run_chart`) y las alertas cambian.
+- **Kappa de Cohen:** el p-valor usa el error estándar bajo H₀ de Fleiss, Cohen y Everitt (1969); el kappa no cambia. La repetibilidad del acuerdo por atributos ya no promedia p-valores de pares (queda en `nan` con más de un par de réplicas).
+- **Capacidad con huecos:** `capability_boxcox` conserva los NaN como huecos al agrupar con `subgroup_size=` (sigma dentro 0,1897 en vez de 0,3012 en el caso auditado) y la capacidad con individuales ya no cruza los huecos con el rango móvil (0,6077 en vez de 0,9527), como `imr_chart`.
+- **Último subgrupo incompleto en EWMA, CUSUM y MA:** su punto usa el `nᵢ` real (`σ/√nᵢ`; en la EWMA, la recursión de la varianza) en lugar del tamaño de subgrupo completo.
+- **`sigma_method="mssd"`:** se divide por la constante de insesgamiento `c_mssd(n)` (E[σ̂]/σ pasa de 0,962 a 1,000 con n = 10).
+- **%Linealidad y %Sesgo:** `%Linealidad = 100·|pendiente|` y `%Sesgo = 100·|sesgo medio| / variación del proceso` (AIAG, MSA 3.ª ed.; antes se dividía por `6·s_residual`, que mide el instrumento). `%Sesgo` queda en `nan` sin `process_variation=` ni `tolerance=`.
+- **Carta de varianza generalizada:** límites por percentiles de la distribución de `|S|` (0,00135 por cola con `k = 3`); antes la aproximación normal `b1 ± k√b2` daba ≈ 0,0197 por encima y un límite inferior en 0.
+- **Curva OC de planes de variables bilaterales:** integral exacta con el proceso centrado (Pa = 0,495 en el caso auditado; antes el producto de dos unilaterales daba 0,451).
+- **`diagnose()`:** el aviso de la regla del IQR dice «posible(s) valor(es) atípico(s)» (con muestras grandes la regla marca algunos aun en datos normales), sin afirmar «investiga su origen».
+
+### Añadido
+- **`gage_rr(tolerance=)` produce `%Tolerancia`** (`100·K·σ/T`): `pct_tolerance_gage`, `pct_tolerance_repeatability` y `pct_tolerance_reproducibility`, también en `to_frame()` y `summary()`. Hasta ahora el parámetro no tenía efecto.
+- **`gage_linearity(process_variation=)`** y la constante `c_mssd(n)` (`pccpy._constants`).
+- Una comprobación más en la validación (66 en total) con las referencias de las correcciones (recursión de la varianza, búsqueda exhaustiva de Dodge-Romig, rachas con `n = m + 1`, `scipy.stats.kendalltau`, error estándar de FCE, producto de χ² por integración y √(2/π)).
+- Fichas BUG-15 a BUG-24 en `docs/retrospectiva/BUG_CATALOG.md` y la clase C-10 («fórmula estadística fuera de su supuesto»).
+- Sección «Notas sobre diferencias posibles con Minitab» en `README.md` y `README_en.md`.
+
+### Corregido
+- La prueba 1 marca un punto fuera de límites degenerados (`sigma = 0`, antes se descartaba `z = ±inf`); `p_chart` y las demás cartas de atributos validan `p`/`c`/`u` de referencia.
+- `phase_one(..., center="median")`: `phase2()` ya no lanza `ValueError` (no vuelve a pasar `center` con `mu` congelado; también con archivos de Fase I guardados antes).
+- `precontrol` pasa los datos por `as_1d` (un NaN no es «verde»: se excluye con aviso); `gage_rr` lanza `ValueError` con NaN/inf o con un solo operador; `wizard()` no llama a `normaltest` con n < 8 (sin avisos de scipy).
+- Comentario de `diagnose()` que citaba Anderson-Darling (el código usa D'Agostino K²).
+
 ## [0.15.7] - metadatos de PyPI, erratas del README y nota «Otras librerías»
 
 No cambia código ni resultados: solo metadatos del paquete, texto del README y documentación.

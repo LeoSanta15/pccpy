@@ -65,6 +65,10 @@ def _to_matrix(data, parts, operators, replicates) -> np.ndarray:
             )
     else:
         raise ValueError(tr("Los datos deben ser 1-D o 3-D."))
+    if operators < 2:
+        raise ValueError(tr("Gage R&R necesita al menos 2 operadores."))
+    if not np.isfinite(arr).all():
+        raise ValueError(tr("Gage R&R no admite valores faltantes ni infinitos (NaN/inf): elimínalos o imputa antes."))
     return arr
 
 
@@ -110,6 +114,10 @@ class GageRRResult:
     ndc : int
         Número de categorías distintas: ``int(√2 · σ_parte / σ_gage)`` (truncado, mínimo 1). El manual de AIAG escribe
         ``1,41`` en lugar de ``√2``; la diferencia solo cambia el entero en casos límite.
+    tolerance : float o None
+        Tolerancia (USL − LSL) dada en ``gage_rr(tolerance=)``.
+    pct_tolerance_gage, pct_tolerance_repeatability, pct_tolerance_reproducibility : float
+        ``%Tolerancia = 100·K·σ/T`` del Gage R&R total, la repetibilidad y la reproducibilidad (``nan`` sin ``tolerance``).
     anova_table : pd.DataFrame o None
         Tabla ANOVA (solo método 'anova').
     anova_reduced : pd.DataFrame o None
@@ -141,6 +149,10 @@ class GageRRResult:
     anova_table: pd.DataFrame | None = None
     anova_reduced: pd.DataFrame | None = None
     _data: np.ndarray = field(repr=False, default=None)  # type: ignore[assignment, arg-type]
+    tolerance: float | None = None
+    pct_tolerance_gage: float = NAN
+    pct_tolerance_repeatability: float = NAN
+    pct_tolerance_reproducibility: float = NAN
 
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico; con ``stable=True`` sin filas separadoras y con claves canónicas en inglés)."""
@@ -170,6 +182,15 @@ class GageRRResult:
             ("pct_study_var", N_("%Var. estudio Gage R&R"), round(self.pct_study_var, 2)),
             ("ndc", N_("NDC (núm. categorías distintas)"), self.ndc),
         ]
+        if self.tolerance is not None:
+            rows += [
+                (None, "", ""),
+                ("tolerance", N_("Tolerancia"), self.tolerance),
+                ("pct_tolerance_gage", N_("%Tolerancia Gage R&R"), round(self.pct_tolerance_gage, 2)),
+                ("pct_tolerance_repeatability", N_("%Tolerancia repetibilidad"), round(self.pct_tolerance_repeatability, 2)),
+                ("pct_tolerance_reproducibility", N_("%Tolerancia reproducibilidad"),
+                 round(self.pct_tolerance_reproducibility, 2)),
+            ]
         return tabla_estadisticos(rows, stable)
 
     def summary(self) -> str:
@@ -190,6 +211,11 @@ class GageRRResult:
             "",
             tr("  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}").format(pct=self.pct_study_var, ndc=self.ndc),
         ]
+        if self.tolerance is not None:
+            lines.append(tr("  %Tolerancia (T = {t:.5g}): Gage R&R = {gage:.2f}%  Repetibilidad = {rep:.2f}%  "
+                            "Reproducibilidad = {repro:.2f}%").format(
+                t=self.tolerance, gage=self.pct_tolerance_gage, rep=self.pct_tolerance_repeatability,
+                repro=self.pct_tolerance_reproducibility))
         if self.anova_reduced is not None:
             lines.append(tr("  La interacción partes×operadores no es significativa: se agrupó con el error (modelo reducido)."))
         return "\n".join(lines)
@@ -504,13 +530,21 @@ def gage_rr(
         raise ValueError(tr("Gage R&R necesita al menos 2 réplicas por parte y operador para estimar la repetibilidad."))
     if not 0 <= alpha_interaction <= 1:
         raise ValueError(tr("'alpha_interaction' debe estar entre 0 y 1."))
+    if tolerance is not None and not tolerance > 0:
+        raise ValueError(tr("'tolerance' debe ser positiva."))
     arr = _to_matrix(data, parts, operators, replicates)
     if method == "anova":
-        return _gage_rr_anova(arr, study_variation, tolerance, crossed=True, alpha_interaction=alpha_interaction)
+        res = _gage_rr_anova(arr, study_variation, tolerance, crossed=True, alpha_interaction=alpha_interaction)
     elif method == "xbar_r":
-        return _gage_rr_xbar_r(arr, study_variation)
+        res = _gage_rr_xbar_r(arr, study_variation)
     else:
         raise ValueError(tr("'method' debe ser 'anova' o 'xbar_r'."))
+    if tolerance is not None:
+        res.tolerance = float(tolerance)
+        for atributo, var in (("pct_tolerance_gage", res.var_gage), ("pct_tolerance_repeatability", res.var_repeatability),
+                              ("pct_tolerance_reproducibility", res.var_reproducibility)):
+            setattr(res, atributo, 100.0 * study_variation * math.sqrt(max(var, 0.0)) / tolerance)
+    return res
 
 
 def gage_rr_nested(
@@ -792,11 +826,11 @@ class LinearityResult:
     linearity : float
         abs(slope) × rango de referencias (variación de linealidad).
     linearity_pct : float
-        Linealidad como % de la variación de estudio (si se da tolerancia).
+        ``%Linealidad = 100·|pendiente|`` (AIAG).
     avg_bias : float
         Sesgo promedio general.
     avg_bias_pct : float
-        Sesgo promedio como % de variación de estudio.
+        ``%Sesgo = 100·|sesgo medio| / variación del proceso`` (o tolerancia); ``nan`` si no se dio ninguna.
     """
 
     references: np.ndarray
@@ -813,6 +847,7 @@ class LinearityResult:
     tolerance: float | None
     _all_refs: np.ndarray = field(repr=False)
     _all_biases: np.ndarray = field(repr=False)
+    process_variation: float | None = None
 
     def to_frame(self, stable: bool = False) -> pd.DataFrame:
         """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
@@ -868,8 +903,13 @@ def gage_linearity(
     *,
     tolerance: float | None = None,
     study_variation: float = 6.0,
+    process_variation: float | None = None,
 ) -> LinearityResult:
     """Estudio de linealidad y sesgo del sistema de medición.
+
+    Definiciones de AIAG (MSA, 3.ª ed.): ``%Linealidad = 100·|pendiente|`` y ``%Sesgo = 100·|sesgo medio| / variación del
+    proceso``. La variación del proceso (``process_variation``, p. ej. 6σ del proceso) la das tú: no sale de este estudio.
+    No se comprobó si Minitab usa la misma definición.
 
     Parameters
     ----------
@@ -878,9 +918,11 @@ def gage_linearity(
     references : array-like
         Vector de valores de referencia correspondiente a cada medición.
     tolerance : float, opcional
-        LES − LEI para calcular % de variación de estudio.
+        LES − LEI. Sin ``process_variation``, el %Sesgo se expresa respecto de la tolerancia.
     study_variation : float
         Multiplicador K (por defecto 6).
+    process_variation : float, opcional
+        Variación del proceso (denominador del %Sesgo). Sin ella (ni ``tolerance``), el %Sesgo queda en ``nan``.
 
     Returns
     -------
@@ -917,10 +959,12 @@ def gage_linearity(
     ref_range = float(refs_unique.max() - refs_unique.min())
     linearity = abs(slope) * ref_range
 
-    denom = tolerance if (tolerance and tolerance > 0) else study_variation * math.sqrt(MSE)
-    lin_pct = linearity / denom * 100 if denom > 0 else NAN
+    if process_variation is not None and not process_variation > 0:
+        raise ValueError(tr("'process_variation' debe ser positiva."))
+    lin_pct = 100.0 * abs(float(slope))  # linealidad / variación del proceso = |pendiente| (AIAG)
     avg_bias = float(bias_all.mean())
-    avg_bias_pct = avg_bias / denom * 100 if denom > 0 else NAN
+    denom = process_variation if process_variation else (tolerance if (tolerance and tolerance > 0) else None)
+    avg_bias_pct = 100.0 * abs(avg_bias) / denom if denom else NAN
 
     return LinearityResult(
         references=refs_unique, biases=biases,
@@ -929,7 +973,7 @@ def gage_linearity(
         linearity=linearity, linearity_pct=lin_pct,
         avg_bias=avg_bias, avg_bias_pct=avg_bias_pct,
         tolerance=tolerance,
-        _all_refs=r, _all_biases=bias_all,
+        _all_refs=r, _all_biases=bias_all, process_variation=process_variation,
     )
 
 
@@ -1039,8 +1083,12 @@ def _cohen_kappa(a: np.ndarray, b: np.ndarray, categories) -> tuple[float, float
     col_sums = mat.sum(axis=0) / n
     pe = float(np.dot(row_sums, col_sums))
     kappa = (po - pe) / (1 - pe) if pe < 1 else 1.0
-    # Standard error for test kappa=0
-    se = math.sqrt(pe / (n * (1 - pe))) if pe < 1 and n > 0 else 1e-9
+    # Error estándar bajo H0 (kappa = 0) de Fleiss, Cohen y Everitt (1969)
+    if pe < 1 and n > 0:
+        var0 = (pe + pe**2 - float(np.sum(row_sums * col_sums * (row_sums + col_sums)))) / (n * (1 - pe) ** 2)
+        se = math.sqrt(var0) if var0 > 0 else 1e-9
+    else:
+        se = 1e-9
     z = kappa / se if se > 0 else NAN
     p_val = float(2 * stats.norm.sf(abs(z))) if not math.isnan(z) else NAN
     return float(kappa), float(p_val), float(po * 100)
@@ -1125,8 +1173,9 @@ def attribute_agreement(
                 for j in range(i + 1, len(reps)):
                     k, p, pct = _cohen_kappa(reps[i], reps[j], categories)
                     k_sum += k; p_sum += p; pct_sum += pct; cnt += 1
+            # Con más de un par de réplicas no se promedian los p-valores (no es una prueba válida): solo se da el de un par.
             kappa_within_rows.append({"operador": op, "kappa": k_sum / cnt,
-                                      "p_valor": p_sum / cnt, "% acuerdo": pct_sum / cnt})
+                                      "p_valor": p_sum if cnt == 1 else NAN, "% acuerdo": pct_sum / cnt})
             pct_within[op] = pct_sum / cnt
         else:
             kappa_within_rows.append({"operador": op, "kappa": NAN, "p_valor": NAN, "% acuerdo": NAN})

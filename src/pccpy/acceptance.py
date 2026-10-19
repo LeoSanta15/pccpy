@@ -16,7 +16,8 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 from scipy import stats
-from scipy.optimize import brentq
+from scipy.integrate import quad
+from scipy.optimize import brentq, minimize_scalar
 
 from ._data import _excel_writer
 from ._frames import renombrar, tabla_estadisticos
@@ -34,6 +35,30 @@ def _pa_binomial(n: int, c: int, p: float) -> float:
 
 def _pa_binomial_arr(n: int, c: int, p_arr: np.ndarray) -> np.ndarray:
     return stats.binom.cdf(c, n, p_arr)
+
+
+def _aoql_exacto(N: int, n: int, c: int) -> float:
+    """Máximo exacto de AOQ(p) = Pa(p)·p·(N−n)/N: rejilla gruesa y refinamiento local con ``minimize_scalar``."""
+    p_arr = np.linspace(1e-6, 0.6, 3001)
+    aoq = _pa_binomial_arr(n, c, p_arr) * p_arr * (N - n) / N
+    i = int(aoq.argmax())
+    lo, hi = p_arr[max(i - 1, 0)], p_arr[min(i + 1, len(p_arr) - 1)]
+    fino = minimize_scalar(lambda p: -_pa_binomial(n, c, p) * p * (N - n) / N, bounds=(lo, hi), method="bounded",
+                           options={"xatol": 1e-12})
+    return float(max(-fino.fun, aoq.max()))
+
+
+def _ati(N: int, n: int, c: int, process_avg: float) -> float:
+    """Inspección total media: los lotes rechazados se inspeccionan al 100 %, ATI = n + (1−Pa)(N−n)."""
+    return n + (1.0 - _pa_binomial(n, c, process_avg)) * (N - n)
+
+
+def _ltpd_exacto(n: int, c: int) -> float:
+    """p con Pa(p) = 0,10 (la curva OC decrece en p); NaN si no hay solución."""
+    try:
+        return float(brentq(lambda p: _pa_binomial(n, c, p) - 0.10, 1e-12, 1.0 - 1e-9))
+    except ValueError:
+        return float("nan")
 
 
 # ─────────────────────────────────────────────────────────── Z1.4 ─────────────
@@ -202,15 +227,11 @@ def _build_attr_plan(N: int, n: int, c: int, aql_frac: float, method: str) -> Sa
 
     alpha = 1.0 - _pa_binomial(n, c, aql_frac)
 
-    # LTPD @ beta=0.10
-    try:
-        ltpd = brentq(lambda p: _pa_binomial(n, c, p) - 0.10, aql_frac, 1.0 - 1e-9)
-    except ValueError:
-        ltpd = float("nan")
+    # LTPD @ beta=0.10 (la búsqueda parte de ~0: con Pa(AQL) < 0,10 el LTPD queda por debajo del AQL)
+    ltpd = _ltpd_exacto(n, c)
 
-    # AOQL
-    aoq_arr = pa_arr * p_arr * (N - n) / N
-    aoq_max = float(aoq_arr.max())
+    # AOQL: máximo exacto de la curva AOQ
+    aoq_max = _aoql_exacto(N, n, c)
 
     return SamplingPlanAttributes(
         N=N, n=n, c=c, aql=aql_frac * 100, alpha=alpha,
@@ -388,7 +409,8 @@ class SamplingPlanVariables:
 def _pa_variables(n: int, k: float, p: float, spec_type: str) -> float:
     """P(aceptar | p) para un plan de variables con factor k.
 
-    Aproximación normal de Montgomery (2013) sec. 15-3.
+    Unilateral: aproximación normal de Montgomery (2013) sec. 15-3. Bilateral: integral exacta con el proceso centrado
+    (ver más abajo).
     """
     if p <= 0:
         return 1.0
@@ -400,9 +422,20 @@ def _pa_variables(n: int, k: float, p: float, spec_type: str) -> float:
         nc = (zp - k) * math.sqrt(n) / math.sqrt(1.0 + k ** 2 / 2.0)
         return float(stats.norm.cdf(nc))
     else:
-        # Two-sided: approximate as product of two one-sided
-        pa1 = _pa_variables(n, k, p / 2.0, "one")
-        return float(pa1 ** 2)
+        # Bilateral con el proceso centrado y p/2 fuera de cada especificación (z = z_{p/2}): se acepta si
+        # |x̄| ≤ z − k·s, con x̄ ~ N(0, 1/n) y s² ~ χ²_{n−1}/(n−1), independientes (el producto de dos unilaterales
+        # ignora que comparten x̄ y s y se queda corto).
+        z = stats.norm.isf(p / 2.0)
+        if z <= 0:
+            return 0.0
+        gl = n - 1
+
+        def integrando(sv: float) -> float:
+            f_s = 2.0 * sv * gl * stats.chi2.pdf(gl * sv * sv, gl)  # densidad de s
+            return float((2.0 * stats.norm.cdf(math.sqrt(n) * (z - k * sv)) - 1.0) * f_s)
+
+        sup = z / k if k > 0 else 10.0
+        return float(np.clip(quad(integrando, 0.0, sup, epsabs=1e-12, epsrel=1e-10)[0], 0.0, 1.0))
 
 
 # Tabla Z1.9 simplificada: (AQL_pct, inspection_level_letter) → (n, k)
@@ -630,29 +663,32 @@ def _dodge_romig_ltpd(N: int, ltpd: float, process_avg: float) -> tuple[int, int
                 continue
         if n > N:
             continue
-        # ATI = n + Pa(process_avg) * (N - n)
-        pa_avg = _pa_binomial(n, c, process_avg)
-        ati = n + pa_avg * (N - n)
+        ati = _ati(N, n, c, process_avg)
         if ati < best_ati:
             best_ati, best_n, best_c = ati, n, c
     return best_n, best_c
 
 
 def _dodge_romig_aoql(N: int, aoql: float, process_avg: float) -> tuple[int, int]:
-    """Encuentra (n, c) tal que el AOQL real ≈ objetivo, minimizando ATI."""
-    p_arr = np.linspace(1e-6, 0.5, 500)
+    """Encuentra (n, c) con AOQL real ≤ objetivo y el menor ATI.
+
+    Para cada ``c`` el AOQL decrece con ``n``: se busca por bisección el menor ``n`` que cumple.
+    """
     best_n, best_c, best_ati = N, 0, float("inf")
     for c in range(20):
-        for n_try in range(c + 1, min(N + 1, 1000)):
-            pa_arr = _pa_binomial_arr(n_try, c, p_arr)
-            aoq_arr = pa_arr * p_arr * (N - n_try) / N
-            computed_aoql = float(aoq_arr.max())
-            if computed_aoql <= aoql * 1.05:  # within 5% tolerance
-                pa_avg = _pa_binomial(n_try, c, process_avg)
-                ati = n_try + pa_avg * (N - n_try)
-                if ati < best_ati:
-                    best_ati, best_n, best_c = ati, n_try, c
-                break
+        hi = min(N, 1000)
+        if hi <= c or _aoql_exacto(N, hi, c) > aoql:
+            continue
+        lo = c + 1
+        while lo < hi:
+            mid = (lo + hi) // 2
+            if _aoql_exacto(N, mid, c) <= aoql:
+                hi = mid
+            else:
+                lo = mid + 1
+        ati = _ati(N, lo, c, process_avg)
+        if ati < best_ati:
+            best_ati, best_n, best_c = ati, lo, c
     return best_n, best_c
 
 
@@ -707,12 +743,8 @@ def dodge_romig(
 
     p_arr = np.linspace(0, min(0.5, target * 5), 400)
     pa_arr = _pa_binomial_arr(n, c, p_arr)
-    aoq_arr = pa_arr * p_arr * (N - n) / N
-    computed_aoql = float(aoq_arr.max())
-    try:
-        computed_ltpd = brentq(lambda p: _pa_binomial(n, c, p) - 0.10, 1e-9, 1.0 - 1e-9)
-    except ValueError:
-        computed_ltpd = float("nan")
+    computed_aoql = _aoql_exacto(N, n, c)
+    computed_ltpd = _ltpd_exacto(n, c)
 
     return DodgeRomigPlan(
         N=N, n=n, c=c, plan_type=plan_type, target=target,

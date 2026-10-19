@@ -166,12 +166,17 @@ def test_gv_lineas_manuales_y_deteccion(rng):
     ch = pccpy.generalized_variance_chart(G)
     dets = np.array([np.linalg.det(np.cov(g, rowvar=False)) for g in G])
     Sbar = np.mean([np.cov(g, rowvar=False) for g in G], axis=0)
-    b1, b2 = _gv_constants(3, 8)
+    b1, _ = _gv_constants(3, 8)
     pan = ch["|S|"]
     assert pan.values == pytest.approx(dets)
     assert pan.center[0] == pytest.approx(b1 * np.linalg.det(Sbar))
-    assert pan.ucl[0] == pytest.approx(np.linalg.det(Sbar) * (b1 + 3 * np.sqrt(b2)))
-    assert pan.lcl[0] >= 0
+    # S015-RF-12: límites por percentiles de |S| = |Σ|·Πᵢ χ²_{n−i}/(n−1)^p (Bartlett), con simulación aparte
+    chi = np.random.default_rng(0)
+    prod = np.prod([chi.chisquare(8 - i, 2_000_000) for i in (1, 2, 3)], axis=0) / 7**3
+    d_bar = np.linalg.det(Sbar)
+    assert pan.ucl[0] == pytest.approx(d_bar * np.quantile(prod, 1 - 0.0013499), rel=0.03)
+    assert pan.lcl[0] == pytest.approx(d_bar * np.quantile(prod, 0.0013499), rel=0.04)
+    assert pan.lcl[0] > 0
     assert 10 in pan.flagged
     # con Sigma conocida
     ch2 = pccpy.generalized_variance_chart(G, cov=SIGMA)

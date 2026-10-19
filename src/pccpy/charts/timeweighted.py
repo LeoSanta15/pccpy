@@ -12,7 +12,9 @@ from ._engine import StagePanel, build_chart, check_method, full
 
 
 def _series_etapas(data, subgroup_size, subgroup, value=None, sigma_method=None):
-    """Devuelve (medias por punto, n por subgrupo, estimador ``estimar(idx) -> (sigma, media global)`` por etapa).
+    """Devuelve (medias por punto, n por subgrupo, estimador ``estimar(idx) -> (sigma, media global)`` por etapa, n real por punto).
+
+    El último subgrupo puede ser incompleto: el cuarto elemento da las observaciones de cada punto (para ``σ/√nᵢ``).
 
     ``sigma_method``: con individuales ``'mr'`` (por defecto), ``'median_mr'`` o ``'mssd'``; con subgrupos ``'rbar'``
     (por defecto), ``'sbar'`` o ``'pooled'``.
@@ -22,7 +24,7 @@ def _series_etapas(data, subgroup_size, subgroup, value=None, sigma_method=None)
         x = as_1d(arr)
         metodo = sigma_method or "mr"
         check_method(metodo, ("mr", "median_mr", "mssd"))
-        return x, 1, lambda idx: (sigma_individuals(x[idx], metodo, 2), float(x[idx].mean()))
+        return x, 1, lambda idx: (sigma_individuals(x[idx], metodo, 2), float(x[idx].mean())), np.ones(len(x))
     g, n_complete = to_subgroups(data, subgroup_size, subgroup, value=value)
     # Verificar subgrupos completos (el incompleto tiene NaN por diseño)
     if np.isnan(g[:n_complete]).any():
@@ -32,6 +34,7 @@ def _series_etapas(data, subgroup_size, subgroup, value=None, sigma_method=None)
     metodo = sigma_method or "rbar"
     check_method(metodo, ("rbar", "sbar", "pooled") if n > 1 else ("mr", "median_mr", "mssd"))
     means = np.nanmean(g, axis=1)
+    n_i = np.sum(~np.isnan(g), axis=1).astype(float)
 
     def estimar(idx):
         filas = idx[idx < n_complete]  # el subgrupo incompleto no entra en la estimación
@@ -39,14 +42,14 @@ def _series_etapas(data, subgroup_size, subgroup, value=None, sigma_method=None)
         sigma = sigma_subgroups(sub, metodo) if n > 1 else sigma_individuals(sub[:, 0], metodo, 2)
         return sigma, float(np.nanmean(sub))
 
-    return means, n, estimar
+    return means, n, estimar, n_i
 
 
 def _series(data, subgroup_size, subgroup, value=None):
-    """Devuelve (medias por punto, n por subgrupo, sigma estimada, media global) con el método por defecto."""
-    means, n, estimar = _series_etapas(data, subgroup_size, subgroup, value=value)
+    """Devuelve (medias por punto, n por subgrupo, sigma estimada, media global, n real por punto) con el método por defecto."""
+    means, n, estimar, n_i = _series_etapas(data, subgroup_size, subgroup, value=value)
     sigma, grand = estimar(np.arange(len(means)))
-    return means, n, sigma, grand
+    return means, n, sigma, grand, n_i
 
 
 @con_etiquetas
@@ -80,22 +83,23 @@ def ewma_chart(
     """
     if not 0 < weight <= 1:
         raise ValueError(tr("'weight' debe estar en (0, 1]."))
-    means, n, estimar = _series_etapas(data, subgroup_size, subgroup, value=value, sigma_method=sigma_method)
+    means, n, estimar, n_i = _series_etapas(data, subgroup_size, subgroup, value=value, sigma_method=sigma_method)
 
     def stage_fn(idx):
         sigma_est, grand = estimar(idx)
         s = float(sigma) if sigma is not None else sigma_est
         t0 = float(target) if target is not None else grand
-        s_x = s / np.sqrt(n)
+        var_x = s**2 / n_i[idx]  # el último subgrupo puede tener menos observaciones
         xs = means[idx]
         N = len(xs)
         z = np.empty(N)
-        prev = t0
+        sig_t = np.empty(N)
+        prev, v = t0, 0.0
         for i, xb in enumerate(xs):
             prev = weight * xb + (1 - weight) * prev
             z[i] = prev
-        i_arr = np.arange(1, N + 1)
-        sig_t = s_x * np.sqrt(weight / (2 - weight) * (1 - (1 - weight) ** (2 * i_arr)))
+            v = (1 - weight) ** 2 * v + weight**2 * var_x[i]  # con nᵢ constante da la fórmula cerrada de Montgomery
+            sig_t[i] = np.sqrt(v)
         ucl, lcl = t0 + k * sig_t, t0 - k * sig_t
         flagged = np.flatnonzero((z > ucl) | (z < lcl))
         panel = StagePanel("EWMA", z, full(t0, N), ucl, lcl, sig_t, "EWMA", "only1",
@@ -137,26 +141,26 @@ def cusum_chart(
         raise ValueError(tr("'h' debe ser > 0 y 'k' >= 0."))
     if not 0 <= headstart < h:
         raise ValueError(tr("'headstart' debe cumplir 0 <= headstart < h."))
-    means, n, estimar = _series_etapas(data, subgroup_size, subgroup, value=value, sigma_method=sigma_method)
+    means, n, estimar, n_i = _series_etapas(data, subgroup_size, subgroup, value=value, sigma_method=sigma_method)
 
     def stage_fn(idx):
         sigma_est, grand = estimar(idx)
         s = float(sigma) if sigma is not None else sigma_est
         t0 = float(target) if target is not None else grand
-        s_x = s / np.sqrt(n)
+        s_x = s / np.sqrt(n_i[idx])  # σ/√nᵢ: el último subgrupo puede ser incompleto
         xs = means[idx]
         N = len(xs)
         up, lo = np.zeros(N), np.zeros(N)
         cp = cm = float(headstart)
         for i, xb in enumerate(xs):
-            zi = (xb - t0) / s_x
+            zi = (xb - t0) / s_x[i]
             cp = max(0.0, zi - k + cp)
             cm = max(0.0, -zi - k + cm)
-            up[i], lo[i] = cp * s_x, -cm * s_x
+            up[i], lo[i] = cp * s_x[i], -cm * s_x[i]
         ucl, lcl = h * s_x, -h * s_x
         flagged = np.flatnonzero((up > ucl) | (lo < lcl))
         panel = StagePanel(
-            "CUSUM", up, full(0.0, N), full(ucl, N), full(lcl, N), full(s_x, N),
+            "CUSUM", up, full(0.0, N), ucl, lcl, s_x,
             N_("Suma acumulada"), "only1", secondary=lo, violations={1: flagged},
         )
         return [panel], {"target": t0, "sigma": s, "h": h, "k": k, "headstart": headstart, "subgroup_size": n}

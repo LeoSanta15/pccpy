@@ -904,16 +904,19 @@ def _run_auto(x: np.ndarray) -> WizardResult:
 
     n = len(x)
 
-    # Detección rápida de tendencia monotónica
-    diffs = np.diff(x)
-    pct_pos = (diffs > 0).mean()
-    if pct_pos > 0.80 or pct_pos < 0.20:
+    # Detección de tendencia (Mann-Kendall; solo con n ≥ 8)
+    from ._diagnose import _mann_kendall
+
+    if _mann_kendall(x)[0]:
         return _RESULTS["r:run"]
 
-    # Normalidad rápida (z-skewness)
-    from scipy import stats as _st
-    _, p_norm = _st.normaltest(x)
-    is_normal = p_norm > 0.05
+    # Normalidad rápida (D'Agostino K²; con n < 8 scipy no la calcula)
+    if n >= 8:
+        from scipy import stats as _st
+        _, p_norm = _st.normaltest(x)
+        is_normal = p_norm > 0.05
+    else:
+        is_normal = True
 
     # ¿Suficiente n para capacidad?
     if n >= 30 and is_normal:

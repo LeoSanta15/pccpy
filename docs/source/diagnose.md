@@ -143,8 +143,8 @@ intervalos.
 
 ### Tendencia
 
-Detección simplificada basada en el porcentaje de incrementos consecutivos:
-más del 80 % indica tendencia creciente; menos del 20 %, decreciente.
+Prueba de Mann-Kendall (τ de Kendall de los datos contra el índice, α = 0,05 bilateral); el signo de τ da la dirección
+(creciente o decreciente). Se evalúa con al menos 8 observaciones; con menos no se declara tendencia.
 
 ### Valores atípicos
 

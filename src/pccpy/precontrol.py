@@ -6,6 +6,7 @@ from dataclasses import dataclass, field
 import numpy as np
 import pandas as pd
 
+from ._data import as_1d
 from ._frames import etiquetas
 from ._i18n import N_, tr
 
@@ -163,9 +164,7 @@ def precontrol(
     """
     if lsl >= usl:
         raise ValueError(tr("lsl debe ser menor que usl."))
-    x = np.asarray(data, dtype=float).ravel()
-    if x.size < 1:
-        raise ValueError(tr("Se necesita al menos una observación."))
+    x = as_1d(data, "data")  # NaN/inf se excluyen con un aviso (R-09): un NaN no es «verde»
     center = float(target) if target is not None else (lsl + usl) / 2.0
     tol = usl - lsl
     green_lo = center - tol / 4.0

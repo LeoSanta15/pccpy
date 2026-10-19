@@ -15,11 +15,13 @@ parámetros históricos).
 """
 from __future__ import annotations
 
+import math
 from functools import lru_cache
 
 import numpy as np
 import pandas as pd
 from scipy import optimize, stats
+from scipy.signal import fftconvolve
 
 from ._i18n import N_, tr
 from ._labels import con_etiquetas
@@ -275,6 +277,34 @@ def _gv_constants(p: int, n: int):
     return float(b1), float(b2)
 
 
+@lru_cache(maxsize=64)
+def _gv_cdf_log(p: int, n: int):
+    """Rejilla (y, F(y)) de la distribución de ln(|S|·(n−1)^p/|Σ|) = Σᵢ ln χ²_{n−i} (Bartlett), i = 1…p.
+
+    Las ln χ² son independientes; su suma se obtiene por convolución numérica de las densidades (FFT) sobre una rejilla
+    fina, así que los percentiles son deterministas (sin simulación) y exactos hasta el error de la rejilla (≈ 1e-6).
+    """
+    h = 0.005
+    y = np.arange(-40.0, 10.0 + h, h)
+    pmf = np.ones(1)
+    for i in range(1, p + 1):
+        nu = n - i
+        log_pdf = nu * y / 2 - np.exp(y) / 2 - (nu / 2) * math.log(2.0) - math.lgamma(nu / 2)
+        masa = np.exp(log_pdf) * h
+        pmf = fftconvolve(pmf, masa)
+    pmf = np.clip(pmf, 0.0, None)
+    cdf = np.cumsum(pmf)
+    cdf /= cdf[-1]
+    grid = p * y[0] + h * np.arange(len(pmf)) + h / 2  # la F de cada celda se evalúa en su borde superior
+    return grid, cdf
+
+
+def _gv_percentil(p: int, n: int, prob: float) -> float:
+    """Percentil ``prob`` de |S|·(n−1)^p/|Σ| (con S de un subgrupo de tamaño n de una normal p-variada)."""
+    grid, cdf = _gv_cdf_log(p, n)
+    return float(math.exp(np.interp(prob, cdf, grid)))
+
+
 @con_etiquetas
 def generalized_variance_chart(
     data,
@@ -288,8 +318,11 @@ def generalized_variance_chart(
     """Carta de varianza generalizada ``|S|`` (dispersión multivariada).
 
     Grafica el determinante de la matriz de covarianzas de cada subgrupo, con
-    LC = ``b1|S̄|``, límites ``|S̄|(b1 ± k·√b2)`` (LCI no menor que 0) y S̄ el promedio de las
-    matrices de covarianza de los subgrupos. Con ``cov`` (Sigma conocida) se usa
+    LC = ``b1|S̄|`` (la media de ``|S|``), límites por **percentiles** de la distribución de ``|S|`` (la misma probabilidad
+    que ``±k`` sigmas de una normal: ``Φ(−k)`` en cada cola; 0,00135 con ``k = 3``) y S̄ el promedio de las matrices de
+    covarianza de los subgrupos. La distribución sale de ``|S| = |Σ|·Πᵢ χ²_{n−i}/(n−1)^p`` (Bartlett) por convolución
+    numérica de las ln χ² (sin simulación). La aproximación normal ``b1 ± k√b2`` de Montgomery (11.3) da un límite superior
+    unas 7 veces menos exigente y un límite inferior en 0. Con ``cov`` (Sigma conocida) se usa
     ``|Sigma|`` en lugar de ``|S̄|``. Requiere subgrupos de tamaño n > p.
 
     ``stages``: sin ``cov``, S̄ (y por tanto el centro y los límites) se recalcula
@@ -313,7 +346,7 @@ def generalized_variance_chart(
         if fixed_sig.shape != (p, p):
             raise ValueError(tr("'cov' debe ser {p} x {p}.").format(p=p))
         _check_cov(fixed_sig)
-    b1, b2 = _gv_constants(p, n)
+    b1, _ = _gv_constants(p, n)
 
     def stage_fn(idx):
         npts = len(idx)
@@ -325,8 +358,8 @@ def generalized_variance_chart(
             sig, known = fixed_sig, True
         det_s = float(np.linalg.det(sig))
         center = b1 * det_s
-        ucl = det_s * (b1 + k * np.sqrt(b2))
-        lcl = max(0.0, det_s * (b1 - k * np.sqrt(b2)))
+        ucl = det_s * _gv_percentil(p, n, float(stats.norm.sf(-k))) / (n - 1) ** p
+        lcl = det_s * _gv_percentil(p, n, float(stats.norm.sf(k))) / (n - 1) ** p
         sub_dets = dets[idx]
         flagged = np.flatnonzero((sub_dets > ucl) | (sub_dets < lcl))
         panel = StagePanel("|S|", sub_dets, full(center, npts), full(ucl, npts), full(lcl, npts),

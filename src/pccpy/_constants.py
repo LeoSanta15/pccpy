@@ -165,3 +165,25 @@ def cmed(n: int) -> float:
 
     valor = integrate.dblquad(g, -12.0, 12.0, lambda x: x, lambda x: 12.0, epsabs=1e-12, epsrel=1e-12)[0]
     return math.sqrt(valor)
+
+
+@cache
+def c_mssd(n: int) -> float:
+    """Constante de insesgamiento del estimador ``σ̂ = √(MSSD/2)`` con ``n`` observaciones consecutivas (``n − 1`` diferencias).
+
+    ``MSSD/2 = Q/(n − 1)`` con ``Q = Σᵢ λᵢ·zᵢ²`` (zᵢ normales estándar independientes y ``λⱼ = 1 − cos(πj/n)``, j = 1…n−1, los
+    valores propios de ``DᵀD/2``). Como ``√q = (1/(2√π))·∫₀^∞ (1 − e^{−sq})·s^{−3/2} ds`` y ``E[e^{−sQ}] = Πⱼ(1 + 2sλⱼ)^{−1/2}``,
+    ``c_mssd(n) = E[√(Q/(n−1))]`` se calcula por integración numérica (sin simulación). Con n = 10 vale ≈ 0.962.
+    """
+    n = int(n)
+    if n < 2:
+        raise ValueError(tr("El tamaño de subgrupo debe ser >= 2 (recibido: {n}).").format(n=n))
+    lam = 1.0 - np.cos(np.pi * np.arange(1, n) / n)
+
+    def f(t: float) -> float:  # con s = t²: (1 − Π(1 + 2t²λ)^{−1/2}) · t^{−2}
+        if t < 1e-6:
+            return float(lam.sum())
+        return float(-np.expm1(-0.5 * np.sum(np.log1p(2.0 * t * t * lam))) / (t * t))
+
+    valor = integrate.quad(f, 0.0, np.inf, epsabs=1e-13, epsrel=1e-12, limit=400)[0]
+    return float(valor / math.sqrt(math.pi * (n - 1)))

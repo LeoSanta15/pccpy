@@ -4,7 +4,8 @@ Los límites siguen las fórmulas de Montgomery (Introduction to Statistical
 Quality Control, 8ª ed.) y Lucas & Saccucci (1990):
 
 * **EWMA-P/U/C**: Z_i = λ·Y_i + (1−λ)·Z_{i-1}; límites *exactos* que se
-  ensanchan al inicio de la serie usando el factor √(1−(1−λ)^{2i}).
+  ensanchan al inicio de la serie y siguen la recursión de la varianza
+  V_i = (1−λ)²·V_{i-1} + λ²·σ_i² (válida con tamaño de muestra variable).
 * **CUSUM-P/U/C**: esquema estandarizado (z-scores); h y k en unidades de σ.
   Con tamaño de muestra variable (P y U), se estandariza cada punto con su
   propia desviación estándar antes de acumular.
@@ -56,10 +57,14 @@ def _ewma_attr(code: str, kind: str, ylabel: str,
         for i, yi in enumerate(y):
             prev = weight * yi + (1 - weight) * prev
             z[i] = prev
-        i_arr = np.arange(1, N + 1)
-        factor = np.sqrt(weight / (2 - weight) * (1 - (1 - weight) ** (2 * i_arr)))
-        sig_base = _sigma_attr(code, ctr, n_arr)
-        sig_t = sig_base * factor
+        # Varianza exacta con σ² distinta por punto: Vᵢ = (1−λ)²·Vᵢ₋₁ + λ²·σᵢ² (con n constante da la fórmula cerrada).
+        var_base = _sigma_attr(code, ctr, n_arr) ** 2
+        var_t = np.empty(N)
+        v = 0.0
+        for i in range(N):
+            v = (1 - weight) ** 2 * v + weight**2 * var_base[i]
+            var_t[i] = v
+        sig_t = np.sqrt(var_t)
         ucl = ctr + k * sig_t
         lcl = np.maximum(0.0, ctr - k * sig_t)
         flagged = np.flatnonzero((z > ucl) | (z < lcl))

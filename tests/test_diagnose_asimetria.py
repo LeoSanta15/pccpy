@@ -145,7 +145,9 @@ def _mixta(semilla):
 
 
 def test_yeo_johnson_se_recomienda_si_box_cox_no_aplica_y_no_hay_mejor_distribucion():
-    x = _mixta(28)  # valores negativos: Box-Cox no aplica; ninguna distribución gana a la normal por AIC
+    # valores negativos: Box-Cox no aplica; ninguna distribución gana a la normal por AIC. Se baraja: construida con los
+    # negativos primero, la serie tiene un escalón que Mann-Kendall (S015-RF-04) detecta con razón y la prueba trata de la forma.
+    x = np.random.default_rng(0).permutation(_mixta(28))
     d = pp.diagnose(x, **_specs(x))
     assert d.transform_normalizes is None and d.best_distribution is None and d.yeo_johnson_normalizes is True
     assert d.recommended_function == "capability_analysis" and "transform='yeo-johnson'" in d.recommended_snippet

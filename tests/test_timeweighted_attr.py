@@ -16,8 +16,12 @@ def _ewma_manual(y, centro, sigma, lam, k):
         prev = lam * v + (1 - lam) * prev
         z.append(prev)
     z = np.array(z)
-    i = np.arange(1, len(y) + 1)
-    s = sigma * np.sqrt(lam / (2 - lam) * (1 - (1 - lam) ** (2 * i)))
+    # varianza exacta con σ² distinta por punto: Vᵢ = (1−λ)²Vᵢ₋₁ + λ²σᵢ² (S015-RF-01; con σ constante es la fórmula cerrada)
+    v, s = 0.0, []
+    for sg in np.broadcast_to(sigma, len(y)):
+        v = (1 - lam) ** 2 * v + lam**2 * sg**2
+        s.append(np.sqrt(v))
+    s = np.array(s)
     return z, centro + k * s, np.maximum(0, centro - k * s)
 
 

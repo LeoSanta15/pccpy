@@ -24,6 +24,22 @@ def _tendencia(direccion: str) -> str:
     return {"increasing": tr("creciente"), "decreasing": tr("decreciente")}.get(direccion, direccion)
 
 
+_MIN_OBS_TENDENCIA = 8  # con menos observaciones la prueba de Mann-Kendall casi no tiene potencia
+
+
+def _mann_kendall(x: np.ndarray, alpha: float = 0.05) -> tuple[bool, str]:
+    """Prueba de Mann-Kendall (τ de Kendall contra el índice, bilateral). Devuelve (hay tendencia, dirección).
+
+    Con menos de 8 observaciones o datos constantes no se evalúa: ``(False, "")``.
+    """
+    if len(x) < _MIN_OBS_TENDENCIA or np.ptp(x) == 0:
+        return False, ""
+    tau, p = stats.kendalltau(np.arange(len(x)), x)
+    if not p < alpha:
+        return False, ""
+    return True, "increasing" if tau > 0 else "decreasing"
+
+
 @dataclass
 class DiagnoseResult:
     """Resultado del diagnóstico rápido devuelto por :func:`diagnose`."""
@@ -39,7 +55,7 @@ class DiagnoseResult:
     skewness: float
     kurtosis: float
 
-    # ── Normalidad (Anderson-Darling vía scipy) ─────────────────────────────
+    # ── Normalidad (D'Agostino-Pearson K² vía scipy) ─────────────────────────────
     normality_stat: float
     normality_p: float
     is_normal: bool
@@ -360,11 +376,8 @@ def diagnose(
         norm_stat, norm_p = stats.normaltest(x)
         is_normal = bool(norm_p > 0.05)
 
-    # ── Tendencia (Mann-Kendall simplificado: % incrementos) ────────────────
-    diffs = np.diff(x)
-    pct_inc = float((diffs > 0).mean())
-    has_trend = pct_inc > 0.80 or pct_inc < 0.20
-    trend_dir = "increasing" if pct_inc > 0.80 else ("decreasing" if pct_inc < 0.20 else "")
+    # ── Tendencia (Mann-Kendall, α = 0,05 bilateral; se evalúa con n ≥ 8) ───
+    has_trend, trend_dir = _mann_kendall(x)
 
     # ── Valores atípicos (IQR × 1.5) ───────────────────────────────────────
     q1, q3 = float(np.percentile(x, 25)), float(np.percentile(x, 75))
@@ -441,7 +454,8 @@ def diagnose(
             "Se detectó tendencia {direction}. Verifica causas asignables antes de calcular capacidad."
         ).format(direction=_tendencia(trend_dir)))
     if outlier_idx:
-        issues.append(tr("{count} valor(es) atípico(s) detectado(s). Investiga su origen.").format(count=len(outlier_idx)))
+        issues.append(tr("{count} posible(s) valor(es) atípico(s) según la regla del IQR (1.5·IQR); con muestras grandes la regla marca "
+                         "algunos aun en datos normales: revísalos antes de descartarlos.").format(count=len(outlier_idx)))
     if cp is not None and cp < 1.0:
         issues.append(tr("Cp = {cp:.2f} < 1.0: el proceso no es capaz con las especificaciones dadas.").format(cp=cp))
     if cpk is not None and cpk < 1.0:

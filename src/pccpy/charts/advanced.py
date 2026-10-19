@@ -46,16 +46,16 @@ def ma_chart(
     if int(length) != length or length < 2:
         raise ValueError(tr("'length' debe ser un entero >= 2."))
     length = int(length)
-    means, n, sigma_est, grand = _series(data, subgroup_size, subgroup, value=value)
+    means, n, sigma_est, grand, n_i = _series(data, subgroup_size, subgroup, value=value)
     s = float(sigma) if sigma is not None else sigma_est
     t0 = float(mu) if mu is not None else grand
-    s_x = s / np.sqrt(n)
+    inv_n = 1.0 / n_i  # varianza de cada media de subgrupo = σ²/nᵢ (el último subgrupo puede ser incompleto)
 
     def stage_fn(idx):
         N = len(means)
         ma = np.array([means[max(0, i - length + 1) : i + 1].mean() for i in range(N)])
         w = np.minimum(np.arange(1, N + 1), length)
-        sig_t = s_x / np.sqrt(w)
+        sig_t = np.array([s * np.sqrt(inv_n[max(0, i - length + 1) : i + 1].sum()) / w[i] for i in range(N)])
         ucl, lcl = t0 + k * sig_t, t0 - k * sig_t
         flagged = np.flatnonzero((ma > ucl) | (ma < lcl))
         panel = StagePanel("MA", ma, full(t0, N), ucl, lcl, sig_t, N_("Media móvil"), "only1",

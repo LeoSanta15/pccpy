@@ -455,7 +455,7 @@ print(chart.summary())
 |--------|-------------|----------------|
 | `'mr'` | `MR_avg / d2` | default; same as Minitab |
 | `'median_mr'` | `median(MR) / 0.9540` | more robust to outliers (span=2 only) |
-| `'mssd'` | `√(MSSD / 2)` | when there are no correlated consecutive observations |
+| `'mssd'` | `√(MSSD / 2) / c_mssd(n)` | when there are no correlated consecutive observations (`c_mssd` removes the bias: 0.962 with n = 10) |
 
 ---
 
@@ -988,7 +988,9 @@ pp.t2_chart(df)
 ### Generalized variance
 
 Complementary panel to T² for **subgrouped data**: it monitors the multivariate
-dispersion through the determinant of the sample covariance matrix `|S|`.
+dispersion through the determinant of the sample covariance matrix `|S|`. The limits are percentiles of the distribution of
+`|S|` (the same probability as `±k` sigmas of a normal: 0.00135 per tail with `k = 3`), not the normal approximation
+`b1 ± k√b2`, which gave about 7 times more false alarms above and a lower limit at 0.
 
 ```python
 pp.generalized_variance_chart(
@@ -1614,6 +1616,7 @@ print(grr.summary())
 # Repeatability: 14.3%  Reproducibility: 3.1%  %R&R: 14.6%  NDC: 9
 
 grr.pct_gage            # % study variation of the total measurement system
+grr.pct_tolerance_gage  # %Tolerance = 100·K·σ/T (only with tolerance=; also pct_tolerance_repeatability and _reproducibility)
 grr.var_repeatability   # repeatability variance
 grr.var_reproducibility # reproducibility variance
 grr.var_part            # part variance
@@ -1676,7 +1679,7 @@ Evaluates whether the bias is constant across the whole operating range of the i
 refs       = np.repeat([2, 4, 6, 8, 10], 5)    # 5 references × 5 replicates
 measurements = refs + rng.normal(0.05, 0.1, 25)
 
-lin = pp.gage_linearity(measurements, refs, tolerance=10.0)
+lin = pp.gage_linearity(measurements, refs, process_variation=6.0)   # %Linearity = 100·|slope|; %Bias relative to process_variation
 print(lin.summary())
 # Slope: 0.001  Intercept: 0.048  R²: 0.002  Linearity: 0.01%
 
@@ -1758,6 +1761,25 @@ chart.summary()     # text summary
 # --- Programmatic access to violations per test ---
 chart.panels[0].violations   # dict {test: array of indices}
 ```
+
+---
+
+## Notes on possible differences with Minitab
+
+`pccpy` follows the formulas and conventions that Minitab documents, but it has **not been compared run by run against the software** (no license). These are the places where Minitab may do something different; none could be verified:
+
+- **Johnson:** the transformation is fitted by maximum likelihood, not by the percentile method of Chou et al.
+- **Box-Cox:** lambda by maximum likelihood (`scipy.stats.boxcox`); Minitab uses another optimizer and another rounding criterion (`lam=` or `round_lambda=True` fix the value).
+- **Phase I T² with individuals:** classical covariance of the data, not the covariance of successive differences.
+- **MEWMA:** asymptotic covariance of the statistic (not the exact one at each point).
+- **Cohen's kappa:** the p-value uses the standard error under H₀ of Fleiss, Cohen and Everitt (1969). Repeatability (kappa between replicates) does not average pair p-values: with more than one pair it is `nan`.
+- **Run chart:** with ties, the trends test uses `n = m + 1` (the points left after dropping the zero differences).
+- **Trend in `diagnose()` and `wizard()`:** Mann-Kendall test (α = 0.05, at least 8 observations); Minitab has no equivalent.
+- **`sigma_method="mssd"`:** `√(MSSD/2)` divided by the unbiasedness constant `c_mssd(n)` (computed by numerical integration).
+- **Linearity and bias:** `%Linearity = 100·|slope|` and `%Bias = 100·|mean bias| / process variation`, AIAG definitions (MSA, 3rd ed.) recalled from memory.
+- **Generalized variance chart:** limits at percentiles of `|S|` (the same probability as ±k sigmas of a normal), not the normal approximation `b1 ± k√b2`.
+- **Limit width (`k`/`alpha`), median as the center line and the X̃-R chart:** we did not check whether Minitab offers them or how.
+- **Acceptance sampling:** Dodge-Romig plans minimize the ATI with the exact AOQL; the included Z1.9 table does not reproduce the standard and Z1.4 lacks the special levels.
 
 ---
 
