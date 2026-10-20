@@ -94,6 +94,12 @@ def test_s016_rf02_toda_celda_con_flecha_apunta_a_un_plan_numerado_de_su_columna
             assert fila + j in _AC_POR_DIAGONAL and _AC_POR_DIAGONAL[fila + j] == ac, (letra, aql)
 
 
+def test_s016_rf02_las_flechas_confirmadas_por_la_persona_responsable():
+    """S016-RF-02: letra A con AQL 10 % → n = 5, Ac = 1; letra F con AQL 0,40 % → plan 0/1 (confirmado sobre la captura)."""
+    assert _plan_z14("A", 10.0) == (5, 1)
+    assert _plan_z14("F", 0.40)[1] == 0
+
+
 # ── S016-RF-04: el plan no puede tener más muestra que el lote ───────────────────────────────────────────────────────
 @pytest.mark.parametrize("lote, aql", [(10, 0.01), (20, 0.01), (200, 0.01), (100, 0.015)])
 def test_s016_rf04_una_muestra_mayor_que_el_lote_es_inspeccion_al_100_por_ciento(lote, aql):
@@ -123,6 +129,32 @@ def test_s016_rf04_si_la_muestra_cabe_no_hay_aviso_ni_cambio():
 # ── S016-RF-03 y RF-05: muestreo doble ────────────────────────────────────────────────────────────────────────────────
 def _doble(lote=1000, aql=1.0, **kw):
     return pp.acceptance_sampling_attributes(lote, aql, sampling="double", **kw)
+
+
+# Tabla III-A (captura): los 8 planes con números (Ac1, Re1 de la primera muestra y Ac2, Re2 de la acumulada) caen en las
+# diagonales 17 a 24 (como los planes simples con Ac ≥ 1); la celda 0 2 / 1 2 más a la izquierda está en la letra R
+# (confirmado por la persona responsable). Las muestras n1 = n2 de las letras B a R son 2, 3, 5, …, 1250.
+_PLANES_DOBLES = [(0, 2, 1, 2), (0, 3, 3, 4), (1, 3, 4, 5), (2, 5, 6, 7), (3, 7, 8, 9), (5, 9, 12, 13), (7, 11, 18, 19), (11, 16, 26, 27)]
+# Mayor lote de cada letra B…R con el nivel III de la tabla I (la muestra acumulada 2·n1 siempre cabe en el lote)
+_LOTE_NIVEL_III = {"B": 8, "C": 15, "D": 25, "E": 50, "F": 90, "G": 150, "H": 280, "J": 500, "K": 1200, "L": 3200, "M": 10000,
+                   "N": 35000, "P": 150000, "Q": 500000, "R": 600000}
+
+
+def test_s016_rf03_las_celdas_numeradas_de_la_tabla_iii_a():
+    """S016-RF-03: cada celda con números de la tabla III-A (letras B a R, diagonales 17 a 24) coincide con la captura."""
+    comprobadas = 0
+    for i, letra in enumerate("ABCDEFGHJKLMNPQR"):
+        if letra == "A":
+            continue
+        for j, aql in enumerate(_AQL):
+            if 17 <= i + j <= 24:
+                with warnings.catch_warnings():
+                    warnings.simplefilter("error")
+                    plan = pp.acceptance_sampling_attributes(_LOTE_NIVEL_III[letra], aql, inspection_level=3, sampling="double")
+                esperado = (_TAMANOS[i - 1], _TAMANOS[i - 1]) + _PLANES_DOBLES[i + j - 17]
+                assert (plan.n1, plan.n2, plan.ac1, plan.re1, plan.ac2, plan.re2) == esperado, (letra, aql)
+                comprobadas += 1
+    assert comprobadas == 84  # 15 letras (B a R) × los AQL de 0,010 a 10 % que caen en las diagonales 17 a 24
 
 
 def test_s016_rf03_el_parametro_sampling_solo_acepta_single_o_double():

@@ -5,7 +5,7 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan
 
-- [ ] Transcribir las tablas I, II-A y III-A en `tests/` y que la persona responsable las revise celda a celda (S016-RF-01, RF-02, RF-03).
+- [x] Transcribir las tablas I, II-A y III-A en `tests/` y que la persona responsable las revise: confirmó las flechas de la II-A (letra A con AQL 10 % → n=5, Ac=1; F con AQL 0,40 % → 0/1) y que la celda `0 2 / 1 2` de la III-A está en la letra R. **Pendiente:** confirmar que es el AQL 0,025 (diagonal 17, como el Ac = 1 simple) (S016-RF-01, RF-02, RF-03).
 - [x] Test de S016-RF-01 (falla hoy: `inspection_level="S-3"` lanza `ValueError`).
 - [x] Test de S016-RF-02 (las celdas numeradas de la diagonal y que cada flecha apunte a un plan numerado de su columna). **Pasa antes del código** (protege algo que no cambia); las direcciones de las flechas quedan por revisar con la persona responsable.
 - [x] Test de S016-RF-03 (falla hoy: no existe `sampling="double"`).
