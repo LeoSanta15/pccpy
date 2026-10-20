@@ -26,7 +26,7 @@ Cada corrección es local y sigue a su vecino; no se reescribe ningún módulo.
 
 | Decisión | Alternativa descartada | Por qué |
 |---|---|---|
-| Una sola especificación, tres fases de implementación (alta, media, baja) | Una especificación por área | Un único cambio de versión 0.16.0 y una sola lista de «Cambios que alteran resultados» (decisión de la persona responsable) |
+| Una sola especificación, tres fases de implementación (alta, media, baja) | Una especificación por área | Un único cambio de versión 0.15.8 (parche por decisión de la persona responsable, aunque cambia resultados: como la 0.15.5) y una sola lista de «Cambios que alteran resultados» (decisión de la persona responsable) |
 | Mann-Kendall en `diagnose`/`wizard` | Parchear los umbrales 80/20 | La regla de umbrales no tiene potencia con n grande ni controla las falsas alarmas con n pequeño |
 | Dodge-Romig por búsqueda exhaustiva en lugar de la tabla de Dodge y Romig | Reproducir las tablas publicadas | No se tienen las tablas; la búsqueda con la definición exacta es contrastable |
 | Sin alias ni parámetros nuevos salvo los que decida la persona responsable | Opciones para el comportamiento antiguo | Los comportamientos antiguos son errores, no una opción |
