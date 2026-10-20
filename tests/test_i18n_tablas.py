@@ -119,6 +119,7 @@ def _objetos():
     atr = pccpy.acceptance_sampling_attributes(N=1000, aql=1.0)
     var = pccpy.acceptance_sampling_variables(N=1000, aql=1.0)
     dr = pccpy.dodge_romig(N=1000, ltpd=0.05, process_avg=0.01)
+    doble = pccpy.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double")
     datos = corpus._msa_datos()[0]
     cruzado = pccpy.gage_rr(datos, parts=10, operators=3, replicates=2)
     anidado = pccpy.gage_rr_nested(datos, parts=10, operators=3, replicates=2)
@@ -127,6 +128,8 @@ def _objetos():
         "oc_atr": lambda: atr.oc_curve(stable=True), "aoq_atr": lambda: atr.aoq_curve(stable=True),
         "oc_var": lambda: var.oc_curve(stable=True), "oc_dr": lambda: dr.oc_curve(stable=True),
         "aoq_dr": lambda: dr.aoq_curve(stable=True),
+        "oc_doble": lambda: doble.oc_curve(stable=True), "aoq_doble": lambda: doble.aoq_curve(stable=True),
+        "asn_doble": lambda: doble.asn_curve(stable=True),
         "pareto": lambda: pccpy.pareto(["a", "b", "a"], stable=True),
         "anova_cruzado": lambda: cruzado.anova_frame(stable=True), "anova_anidado": lambda: anidado.anova_frame(stable=True),
         "kappa_dentro": lambda: acuerdo.kappa_within_frame(stable=True),
@@ -185,4 +188,5 @@ def test_los_graficos_funcionan_con_tablas_de_cualquier_idioma():
             assert isinstance(pccpy.plot_pareto(pccpy.pareto(["a", "b", "a"])), plt.Figure)
             assert isinstance(pccpy.plot_pareto(pccpy.pareto(["a", "b", "a"], stable=True)), plt.Figure)
             assert isinstance(pccpy.acceptance_sampling_attributes(N=1000, aql=1.0).plot(), plt.Figure)
+            assert isinstance(pccpy.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double").plot(), plt.Figure)
     plt.close("all")

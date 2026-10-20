@@ -1,5 +1,21 @@
 # Registro de cambios
 
+## [Sin publicar] - Z1.4: niveles especiales S-1 a S-4, muestreo doble e inspección al 100 %
+
+Especificación `docs/specs/016-z14-niveles-especiales-y-muestreo-doble`. Las tablas I, II-A y III-A se transcribieron de capturas de la norma que aportó la persona responsable (no del texto de la norma); no se midió si Minitab devuelve los mismos planes.
+
+### Cambios que alteran resultados
+- **Un plan de Z1.4 con muestra mayor o igual que el lote** pasa a inspección al 100 % (`n = N`, con el `Ac` de la tabla) y avisa con un `UserWarning`. Antes devolvía la muestra de la tabla aunque no cupiera en el lote (por ejemplo `n = 1250` con `N = 10`, y AOQL `-0.0`): era un error. Con planes que caben en el lote no cambia nada.
+
+### Añadido
+- **`inspection_level="S-1"` a `"S-4"`** (niveles especiales de la tabla I) en `acceptance_sampling_attributes`, además de 1, 2 y 3. Cualquier otro valor lanza `ValueError`.
+- **`sampling="double"`** en `acceptance_sampling_attributes`: muestreo doble normal de la tabla III-A, que devuelve el nuevo `DoublePlanAttributes` (`n1`, `n2`, `ac1`, `re1`, `ac2`, `re2`) con la probabilidad de aceptación exacta (convolución binomial), el tamaño medio de muestra (`asn`), el AOQL exacto, `oc_curve`, `aoq_curve`, `asn_curve`, `to_frame(stable=True)`, `summary`, `plot` (`plot_sampling_double`) y `to_excel`. No hay plan doble para AQL 0,010 y 0,015 % (`ValueError`) y la letra A usa el plan de la letra B (con aviso).
+- Una comprobación más en la validación (67 en total): letra de código S-1 a S-4 contra la tabla I transcrita aparte, Pa, ASN y AOQ del plan doble por convolución binomial, y la guarda del 100 %.
+- Ficha BUG-25 en `docs/retrospectiva/BUG_CATALOG.md`.
+
+### No incluido
+- Inspección rigurosa y reducida y sus reglas de cambio, y muestreo múltiple (faltan sus tablas), y la tabla Z1.9 (sigue sin reproducir la norma).
+
 ## [Sin publicar] - tests de regresión del catálogo y guardas del flujo de publicación
 
 No cambia código de la biblioteca ni resultados: solo tests y el flujo de publicación.

@@ -1557,6 +1557,27 @@ plan.aoq_curve()# DataFrame with columns p_defectivo, AOQ (stable=True: defectiv
 plan.plot()     # OC curve + AOQ curve in one figure
 ```
 
+**Inspection levels.** `inspection_level` accepts the general levels 1, 2 and 3 and the special levels `"S-1"` to `"S-4"` of table I
+(default 2). If the table sample is equal to or larger than the lot, the standard calls for **100 % inspection**: the plan has
+`n = N` (with the table `Ac`) and a `UserWarning`.
+
+**Double sampling** (table III-A, normal inspection): a first sample `n1` is taken and, if it is not enough to decide, a second `n2`.
+
+```python
+double = pp.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double")
+print(double.summary())
+double.n1, double.n2             # sizes of the 1st and 2nd sample (the cumulative one is n1 + n2)
+double.ac1, double.re1           # acceptance and rejection with the 1st sample
+double.ac2, double.re2           # acceptance and rejection with both samples cumulated
+double.pa(0.01)                  # P(accept | p = 1 %), exact with the binomial
+double.asn(0.01)                 # average sample size: n1 + n2·P(2nd sample)
+double.oc_curve(), double.aoq_curve(), double.asn_curve()
+double.plot()                    # OC + AOQ + ASN
+```
+
+There is no double plan for AQL 0.010 and 0.015 % (`ValueError`: use `sampling="single"`) and letter A uses the plan of letter B (with a warning).
+Tightened and reduced inspection and multiple sampling are not included (their tables are missing).
+
 ### Z1.9 — Variables (ANSI/ASQ Z1.9)
 
 > ⚠️ The built-in Z1.9 table **does not reproduce the standard** and the function emits a `UserWarning`. To decide with Z1.9, pass `n=` and `k=` taken from your copy of the standard.
@@ -1779,7 +1800,7 @@ chart.panels[0].violations   # dict {test: array of indices}
 - **Linearity and bias:** `%Linearity = 100·|slope|` and `%Bias = 100·|mean bias| / process variation`, AIAG definitions (MSA, 3rd ed.) recalled from memory.
 - **Generalized variance chart:** limits at percentiles of `|S|` (the same probability as ±k sigmas of a normal), not the normal approximation `b1 ± k√b2`.
 - **Limit width (`k`/`alpha`), median as the center line and the X̃-R chart:** we did not check whether Minitab offers them or how.
-- **Acceptance sampling:** Dodge-Romig plans minimize the ATI with the exact AOQL; the included Z1.9 table does not reproduce the standard and Z1.4 lacks the special levels.
+- **Acceptance sampling:** Dodge-Romig plans minimize the ATI with the exact AOQL; the included Z1.9 table does not reproduce the standard. The Z1.4 special levels S-1 to S-4 and double sampling were transcribed from screenshots of tables I, II-A and III-A (not from the text of the standard) and were not checked against Minitab; Z1.4 does not include tightened or reduced inspection.
 
 ---
 

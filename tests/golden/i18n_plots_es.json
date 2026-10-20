@@ -739,6 +739,21 @@
   "Muestreo de aceptación — N=#  n=#  Ac=#  Re=#",
   "P(aceptar) (%)"
  ],
+ "plot_muestreo_doble": [
+  "AOQ (%)",
+  "AOQL=#%",
+  "AQL=#%",
+  "Calidad media de salida (AOQ)",
+  "Curva OC",
+  "Fracción defectiva p (%)",
+  "Fracción defectiva p (%)",
+  "Fracción defectiva p (%)",
+  "LTPD=#%",
+  "Muestreo doble de aceptación — N=#  n#=#  n#=#  Ac#/Re#=#/#  Ac#/Re#=#/#",
+  "P(aceptar) (%)",
+  "Tamaño medio de muestra",
+  "Tamaño medio de muestra (ASN)"
+ ],
  "plot_muestreo_variables": [
   "AQL=#%",
   "Curva OC — Plan variables  n=#  k=#",

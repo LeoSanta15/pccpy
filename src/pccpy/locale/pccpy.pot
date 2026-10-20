@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-19 18:50+0000\n"
+"POT-Creation-Date: 2026-10-20 19:51+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -543,6 +543,10 @@ msgid "  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}"
 msgstr ""
 
 #, python-brace-format
+msgid "  2.ª muestra n2={n2}  acumulada: Ac2={ac2}  Re2={re2}"
+msgstr ""
+
+#, python-brace-format
 msgid "  AOQL={aoql:.3g}%"
 msgstr ""
 
@@ -737,6 +741,10 @@ msgstr ""
 
 #, python-brace-format
 msgid "  Linealidad={linearity:.5g} ({pct:.2f}%)"
+msgstr ""
+
+#, python-brace-format
+msgid "  Lote N={N}  1.ª muestra n1={n1}  Ac1={ac1}  Re1={re1}"
 msgstr ""
 
 #, python-brace-format
@@ -1170,7 +1178,7 @@ msgstr ""
 msgid "'headstart' debe cumplir 0 <= headstart < h."
 msgstr ""
 
-msgid "'inspection_level' debe ser 1, 2 o 3."
+msgid "'inspection_level' debe ser 1, 2, 3 o 'S-1', 'S-2', 'S-3', 'S-4'."
 msgstr ""
 
 msgid "'k' debe ser >= 0."
@@ -1252,6 +1260,9 @@ msgstr ""
 msgid "'n' debe ser ≥ 2."
 msgstr ""
 
+msgid "'n' y 'c' solo se pueden dar con sampling='single'."
+msgstr ""
+
 msgid "'n_boot' debe ser un entero ≥ 100."
 msgstr ""
 
@@ -1304,6 +1315,9 @@ msgstr ""
 
 #, python-brace-format
 msgid "'rescale_zones' debe ser True o False; recibido: {valor!r}."
+msgstr ""
+
+msgid "'sampling' debe ser 'single' o 'double'."
 msgstr ""
 
 #, python-brace-format
@@ -1553,6 +1567,15 @@ msgstr ""
 msgid ""
 "ARL de una carta Shewhart (k = 3 y k = 2) en control y con "
 "desplazamientos de 1σ y 2σ"
+msgstr ""
+
+msgid "ASN"
+msgstr ""
+
+msgid "Ac1 (aceptación, 1.ª muestra)"
+msgstr ""
+
+msgid "Ac2 (aceptación, acumulada)"
 msgstr ""
 
 msgid "Agrupamiento"
@@ -2061,6 +2084,18 @@ msgid "El límite inferior (lsl) debe ser menor que el superior (usl)."
 msgstr ""
 
 msgid "El método 'relative' requiere datos positivos (usa ln)."
+msgstr ""
+
+#, python-brace-format, python-format
+msgid ""
+"El plan de la tabla Z1.4 pide una muestra de {n} con un lote de {N}: se "
+"inspecciona el 100 % del lote (n = N, Ac = {c})."
+msgstr ""
+
+#, python-brace-format, python-format
+msgid ""
+"El plan doble de la tabla Z1.4 pide una muestra acumulada de {n} con un "
+"lote de {N}: se inspecciona el 100 % del lote (n = N, Ac = {c})."
 msgstr ""
 
 #, python-brace-format
@@ -2586,6 +2621,11 @@ msgid ""
 "contigua."
 msgstr ""
 
+msgid ""
+"La letra de código A no tiene plan doble propio: se usa el de la letra B "
+"(la flecha de la tabla lleva al mismo plan)."
+msgstr ""
+
 msgid "La matriz de covarianzas debe ser cuadrada y simétrica."
 msgstr ""
 
@@ -2616,6 +2656,12 @@ msgid ""
 msgstr ""
 
 msgid "La suma de frecuencias debe ser positiva."
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"La tabla Z1.4 no trae plan doble para AQL {aql:g} %: usa "
+"sampling='single'."
 msgstr ""
 
 msgid ""
@@ -2892,6 +2938,10 @@ msgstr ""
 
 #, python-brace-format
 msgid "Muestreo de aceptación — {info}"
+msgstr ""
+
+#, python-brace-format
+msgid "Muestreo doble de aceptación — {info}"
 msgstr ""
 
 msgid "Mult. estudio (K)"
@@ -3181,6 +3231,10 @@ msgid "Plan Z1.4 para lote 1000, AQL 1,0 %, nivel II: n = 80 (código J), Ac = 2
 msgstr ""
 
 #, python-brace-format
+msgid "Plan de muestreo doble por atributos ({method})"
+msgstr ""
+
+#, python-brace-format
 msgid "Plan de muestreo por atributos ({method})"
 msgstr ""
 
@@ -3359,6 +3413,12 @@ msgid "Rango móvil de las medias"
 msgstr ""
 
 msgid "Rango por parte/operador"
+msgstr ""
+
+msgid "Re1 (rechazo, 1.ª muestra)"
+msgstr ""
+
+msgid "Re2 (rechazo, acumulada)"
 msgstr ""
 
 msgid "Referencia"
@@ -3553,6 +3613,12 @@ msgstr ""
 msgid "Sí, constante → NP (número de defectuosos)"
 msgstr ""
 
+msgid "Tamaño medio de muestra"
+msgstr ""
+
+msgid "Tamaño medio de muestra (ASN)"
+msgstr ""
+
 msgid "Tasa de defectos con corrección de sobredispersión (Laney U′)"
 msgstr ""
 
@@ -3718,6 +3784,12 @@ msgid "Z.Bench (general)"
 msgstr ""
 
 msgid "Z.Bench y PPM esperado globales desde la distribución normal"
+msgstr ""
+
+#, python-format
+msgid ""
+"Z1.4: niveles especiales S-1 a S-4, muestreo doble (OC, ASN y AOQ) y "
+"guarda del 100 % de inspección"
 msgstr ""
 
 msgid "Zona"
@@ -3931,6 +4003,12 @@ msgid "método"
 msgstr ""
 
 msgid "n (tamaño de muestra)"
+msgstr ""
+
+msgid "n1 (primera muestra)"
+msgstr ""
+
+msgid "n2 (segunda muestra)"
 msgstr ""
 
 #, python-brace-format

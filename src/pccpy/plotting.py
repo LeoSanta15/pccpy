@@ -426,6 +426,49 @@ def plot_tolerance(result, *, figsize=None, title: str | None = None, bins: int 
 
 
 # ---------------------------------------------------------------------- acceptance sampling
+def plot_sampling_double(result, *, figsize=None, title: str | None = None):
+    """Curvas OC, AOQ y del tamaño medio de muestra (ASN) de un plan de muestreo doble por atributos.
+
+    Devuelve la figura de matplotlib.
+    """
+    with plt.rc_context({}):
+        fig, (ax1, ax2, ax3) = plt.subplots(1, 3, figsize=figsize or (14, 4.5))
+
+        oc = result.oc_curve(stable=True)
+        p = oc["defective_fraction"].to_numpy()
+        ax1.plot(p * 100, oc["p_accept"].to_numpy() * 100, color=BLUE, lw=2)
+        ax1.axhline(95, color=GRAY, ls=":", lw=0.8)
+        ax1.axhline(10, color=GRAY, ls=":", lw=0.8)
+        ax1.axvline(result.aql, color=GREEN, ls="--", lw=1.2, label=tr("AQL={v:.3g}%").format(v=result.aql))
+        if not math.isnan(result.ltpd):
+            ax1.axvline(result.ltpd * 100, color=RED, ls="--", lw=1.2, label=tr("LTPD={v:.3g}%").format(v=result.ltpd * 100))
+        ax1.set_xlabel(tr("Fracción defectiva p (%)"))
+        ax1.set_ylabel(tr("P(aceptar) (%)"))
+        ax1.set_title(tr("Curva OC"))
+        ax1.legend(fontsize=8)
+        ax1.grid(alpha=0.25)
+
+        ax2.plot(p * 100, result.aoq_curve(stable=True)["aoq"].to_numpy() * 100, color=ORANGE, lw=2)
+        ax2.axhline(result.aoq_max * 100, color=RED, ls="--", lw=1.2, label=tr("AOQL={v:.3g}%").format(v=result.aoq_max * 100))
+        ax2.set_xlabel(tr("Fracción defectiva p (%)"))
+        ax2.set_ylabel(tr("AOQ (%)"))
+        ax2.set_title(tr("Calidad media de salida (AOQ)"))
+        ax2.legend(fontsize=8)
+        ax2.grid(alpha=0.25)
+
+        ax3.plot(p * 100, result.asn_curve(stable=True)["asn"].to_numpy(), color=GREEN, lw=2)
+        ax3.axhline(result.n1, color=GRAY, ls=":", lw=0.8)
+        ax3.set_xlabel(tr("Fracción defectiva p (%)"))
+        ax3.set_ylabel(tr("Tamaño medio de muestra (ASN)"))
+        ax3.set_title(tr("Tamaño medio de muestra"))
+        ax3.grid(alpha=0.25)
+
+        info = f"N={result.N}  n1={result.n1}  n2={result.n2}  Ac1/Re1={result.ac1}/{result.re1}  Ac2/Re2={result.ac2}/{result.re2}"
+        fig.suptitle(title or tr("Muestreo doble de aceptación — {info}").format(info=info), fontsize=10)
+        fig.tight_layout()
+    return fig
+
+
 def plot_sampling_attributes(result, *, figsize=None, title: str | None = None):
     """Curva OC y curva AOQ para un plan de muestreo por atributos.
 

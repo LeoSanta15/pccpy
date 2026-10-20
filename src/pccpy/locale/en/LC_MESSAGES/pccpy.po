@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-19 18:50+0000\n"
+"POT-Creation-Date: 2026-10-20 19:51+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -844,6 +844,10 @@ msgid "  %Var. estudio Gage R&R = {pct:.2f}%   NDC = {ndc}"
 msgstr "  %Study Var. Gage R&R = {pct:.2f}%   NDC = {ndc}"
 
 #, python-brace-format
+msgid "  2.ª muestra n2={n2}  acumulada: Ac2={ac2}  Re2={re2}"
+msgstr "  2nd sample n2={n2}  cumulative: Ac2={ac2}  Re2={re2}"
+
+#, python-brace-format
 msgid "  AOQL={aoql:.3g}%"
 msgstr "  AOQL={aoql:.3g}%"
 
@@ -1057,6 +1061,10 @@ msgstr ""
 #, python-brace-format
 msgid "  Linealidad={linearity:.5g} ({pct:.2f}%)"
 msgstr "  Linearity={linearity:.5g} ({pct:.2f}%)"
+
+#, python-brace-format
+msgid "  Lote N={N}  1.ª muestra n1={n1}  Ac1={ac1}  Re1={re1}"
+msgstr "  Lot N={N}  1st sample n1={n1}  Ac1={ac1}  Re1={re1}"
 
 #, python-brace-format
 msgid "  Lote N={N}  Muestra n={n}  Ac={c}  Re={r}"
@@ -1506,8 +1514,8 @@ msgstr "'h' must be a finite number > 0."
 msgid "'headstart' debe cumplir 0 <= headstart < h."
 msgstr "'headstart' must satisfy 0 <= headstart < h."
 
-msgid "'inspection_level' debe ser 1, 2 o 3."
-msgstr "'inspection_level' must be 1, 2 or 3."
+msgid "'inspection_level' debe ser 1, 2, 3 o 'S-1', 'S-2', 'S-3', 'S-4'."
+msgstr "'inspection_level' must be 1, 2, 3 or 'S-1', 'S-2', 'S-3', 'S-4'."
 
 msgid "'k' debe ser >= 0."
 msgstr "'k' must be >= 0."
@@ -1592,6 +1600,9 @@ msgstr "'n' must be a number or have the same length as the data ({k})."
 msgid "'n' debe ser ≥ 2."
 msgstr "'n' must be >= 2."
 
+msgid "'n' y 'c' solo se pueden dar con sampling='single'."
+msgstr "'n' and 'c' can only be given with sampling='single'."
+
 msgid "'n_boot' debe ser un entero ≥ 100."
 msgstr "'n_boot' must be an integer ≥ 100."
 
@@ -1645,6 +1656,9 @@ msgstr "'ratio' must contain only finite values > 0."
 #, python-brace-format
 msgid "'rescale_zones' debe ser True o False; recibido: {valor!r}."
 msgstr "'rescale_zones' must be True or False; received: {valor!r}."
+
+msgid "'sampling' debe ser 'single' o 'double'."
+msgstr "'sampling' must be 'single' or 'double'."
 
 #, python-brace-format
 msgid "'scale' debe ser 'original' o 'transformed' (recibido: {scale!r})."
@@ -1928,6 +1942,15 @@ msgid ""
 msgstr ""
 "ARL of a Shewhart chart (k = 3 and k = 2) in control and with shifts of "
 "1σ and 2σ"
+
+msgid "ASN"
+msgstr "ASN"
+
+msgid "Ac1 (aceptación, 1.ª muestra)"
+msgstr "Ac1 (acceptance, 1st sample)"
+
+msgid "Ac2 (aceptación, acumulada)"
+msgstr "Ac2 (acceptance, cumulative)"
 
 msgid "Agrupamiento"
 msgstr "Clustering"
@@ -2492,6 +2515,22 @@ msgstr "The lower limit (lsl) must be less than the upper limit (usl)."
 
 msgid "El método 'relative' requiere datos positivos (usa ln)."
 msgstr "The 'relative' method requires positive data (it uses ln)."
+
+#, python-brace-format, python-format
+msgid ""
+"El plan de la tabla Z1.4 pide una muestra de {n} con un lote de {N}: se "
+"inspecciona el 100 % del lote (n = N, Ac = {c})."
+msgstr ""
+"The Z1.4 table plan asks for a sample of {n} with a lot of {N}: 100 % of "
+"the lot is inspected (n = N, Ac = {c})."
+
+#, python-brace-format, python-format
+msgid ""
+"El plan doble de la tabla Z1.4 pide una muestra acumulada de {n} con un "
+"lote de {N}: se inspecciona el 100 % del lote (n = N, Ac = {c})."
+msgstr ""
+"The Z1.4 double plan asks for a cumulative sample of {n} with a lot of "
+"{N}: 100 % of the lot is inspected (n = N, Ac = {c})."
 
 #, python-brace-format
 msgid ""
@@ -3079,6 +3118,13 @@ msgid ""
 "contigua."
 msgstr "Stage {label!r} appears in separate blocks; each stage must be contiguous."
 
+msgid ""
+"La letra de código A no tiene plan doble propio: se usa el de la letra B "
+"(la flecha de la tabla lleva al mismo plan)."
+msgstr ""
+"Code letter A has no double plan of its own: the one for letter B is used"
+" (the table arrow leads to the same plan)."
+
 msgid "La matriz de covarianzas debe ser cuadrada y simétrica."
 msgstr "The covariance matrix must be square and symmetric."
 
@@ -3119,6 +3165,14 @@ msgstr ""
 
 msgid "La suma de frecuencias debe ser positiva."
 msgstr "The sum of the frequencies must be positive."
+
+#, python-brace-format
+msgid ""
+"La tabla Z1.4 no trae plan doble para AQL {aql:g} %: usa "
+"sampling='single'."
+msgstr ""
+"The Z1.4 table has no double plan for AQL {aql:g} %: use "
+"sampling='single'."
 
 msgid ""
 "La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los"
@@ -3428,6 +3482,10 @@ msgstr "Acceptance sampling by variables — ANSI/ASQ Z1.9 standard"
 msgid "Muestreo de aceptación — {info}"
 msgstr "Acceptance sampling — {info}"
 
+#, python-brace-format
+msgid "Muestreo doble de aceptación — {info}"
+msgstr "Double acceptance sampling — {info}"
+
 msgid "Mult. estudio (K)"
 msgstr "Study multiplier (K)"
 
@@ -3722,6 +3780,10 @@ msgid "Plan Z1.4 para lote 1000, AQL 1,0 %, nivel II: n = 80 (código J), Ac = 2
 msgstr "Z1.4 plan for lot 1000, AQL 1.0 %, level II: n = 80 (code J), Ac = 2"
 
 #, python-brace-format
+msgid "Plan de muestreo doble por atributos ({method})"
+msgstr "Double sampling plan by attributes ({method})"
+
+#, python-brace-format
 msgid "Plan de muestreo por atributos ({method})"
 msgstr "Attribute sampling plan ({method})"
 
@@ -3915,6 +3977,12 @@ msgstr "Moving range of the means"
 
 msgid "Rango por parte/operador"
 msgstr "Range by part/operator"
+
+msgid "Re1 (rechazo, 1.ª muestra)"
+msgstr "Re1 (rejection, 1st sample)"
+
+msgid "Re2 (rechazo, acumulada)"
+msgstr "Re2 (rejection, cumulative)"
 
 msgid "Referencia"
 msgstr "Reference"
@@ -4123,6 +4191,12 @@ msgstr "Yes → MEWMA (mean) or MCUSUM (cumulative sum)"
 msgid "Sí, constante → NP (número de defectuosos)"
 msgstr "Yes, constant → NP (number of defectives)"
 
+msgid "Tamaño medio de muestra"
+msgstr "Average sample size"
+
+msgid "Tamaño medio de muestra (ASN)"
+msgstr "Average sample size (ASN)"
+
 msgid "Tasa de defectos con corrección de sobredispersión (Laney U′)"
 msgstr "Defect rate with overdispersion correction (Laney U′)"
 
@@ -4289,6 +4363,14 @@ msgstr "Z.Bench (overall)"
 
 msgid "Z.Bench y PPM esperado globales desde la distribución normal"
 msgstr "Overall Z.Bench and expected PPM from the normal distribution"
+
+#, python-format
+msgid ""
+"Z1.4: niveles especiales S-1 a S-4, muestreo doble (OC, ASN y AOQ) y "
+"guarda del 100 % de inspección"
+msgstr ""
+"Z1.4: special levels S-1 to S-4, double sampling (OC, ASN and AOQ) and "
+"the 100 % inspection guard"
 
 msgid "Zona"
 msgstr "Zone"
@@ -4522,6 +4604,12 @@ msgstr "method"
 
 msgid "n (tamaño de muestra)"
 msgstr "n (sample size)"
+
+msgid "n1 (primera muestra)"
+msgstr "n1 (first sample)"
+
+msgid "n2 (segunda muestra)"
+msgstr "n2 (second sample)"
 
 #, python-brace-format
 msgid "n={n} insuficiente para el intervalo no paramétrico solicitado."

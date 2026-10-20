@@ -6,6 +6,7 @@ from ._probabilidad import ProbabilityResult
 from ._wizard import WidgetSession, WizardResult, wizard
 from .acceptance import (
     DodgeRomigPlan,
+    DoublePlanAttributes,
     SamplingPlanAttributes,
     SamplingPlanVariables,
     acceptance_sampling_attributes,
@@ -89,6 +90,7 @@ from .plotting import (
     plot_precontrol,
     plot_run_chart,
     plot_sampling_attributes,
+    plot_sampling_double,
     plot_sampling_variables,
     plot_tolerance,
     plot_type1,
@@ -111,6 +113,7 @@ __all__ = [
     "ControlChart",
     "DiagnoseResult",
     "DodgeRomigPlan",
+    "DoublePlanAttributes",
     "GageRRResult",
     "LinearityResult",
     "MultivariateChart",
@@ -206,6 +209,7 @@ __all__ = [
     "plot_precontrol",
     "plot_run_chart",
     "plot_sampling_attributes",
+    "plot_sampling_double",
     "plot_sampling_variables",
     "plot_tolerance",
     "plot_type1",

@@ -389,12 +389,29 @@ Requisitos de la especificación 015: S015-RF-12.
 
 ---
 
+### BUG-25 · Z1.4: plan con muestra mayor que el lote
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-25 |
+| **Síntoma** | `acceptance_sampling_attributes(10, 0.01)` devolvía `n = 1250` con un lote de 10 (y `aoq_max = -0.0`); lo mismo con `N = 20` o `N = 200` |
+| **Causa raíz** | La tabla Z1.4 manda, cuando «la muestra es igual o mayor que el lote», inspeccionar el 100 %; la función devolvía el tamaño de la tabla sin compararlo con `N` |
+| **Cómo se detectó** | Al leer el código para la especificación 016 (Z1.4 con niveles especiales y muestreo doble) |
+| **Solución aplicada** | CORREGIDO: con `n ≥ N` el plan lleva `n = N` (con el `Ac` de la tabla) y un `UserWarning`; el plan doble pone todo el lote en la primera muestra. El AOQL queda en 0 |
+| **Archivo/línea** | `src/pccpy/acceptance.py`, `acceptance_sampling_attributes` y `_plan_doble` |
+| **Test de regresión** | SÍ — `tests/test_z14_niveles_y_doble.py::test_s016_rf04_*` |
+| **¿Puede ocurrir en otras libs?** | Sí — una tabla de planes aplicada sin comprobar el tamaño del lote. |
+
+Requisito de la especificación 016: S016-RF-04.
+
+---
+
 ## TAXONOMÍA DE CLASES DE ERROR
 
 | Clase | Descripción | Cómo prevenirla | Cómo detectarla | Bugs en este proyecto |
 |---|---|---|---|---|
 | **C-01 Validación de entrada faltante** | La función acepta datos inválidos (NaN, inf, tipo incorrecto, vacío) y falla con error opaco aguas abajo | Capa de validación explícita en cada función pública; tests con entradas malformadas | `pytest` con casos borde; `mypy` para tipos | BUG-02, BUG-03, BUG-05 |
-| **C-02 Caso degenerado no considerado** | El diseño de API no contempló valores extremos válidos (sin límites, datos constantes, n<8) | Listar casos degenerados al diseñar la API; documentar en docstring | Tests parametrizados con valores límite | BUG-04, BUG-05, BUG-10 |
+| **C-02 Caso degenerado no considerado** | El diseño de API no contempló valores extremos válidos (sin límites, datos constantes, n<8) | Listar casos degenerados al diseñar la API; documentar en docstring | Tests parametrizados con valores límite | BUG-04, BUG-05, BUG-10, BUG-25 |
 | **C-03 Import opcional sin mensaje orientativo** | Dependencia opcional ausente genera `ImportError` crudo sin guía al usuario | Capturar `ImportError` de opcionales; mensaje con `pip install ...` | Test que simula ausencia con `unittest.mock` | BUG-07 |
 | **C-04 CI que no detecta el fallo** | El build/test local pasa pero CI falla por diferencia de entorno (versión Python, Node), o el pipeline de release no verifica lo que publica | Correr la matrix localmente con tox antes del PR; CI fail-fast desactivado; guarda tag==versión del wheel y `twine check` antes de publicar | Primera ejecución en CI; logs de CI | BUG-08, BUG-09, BUG-10, BUG-11, BUG-13 |
 | **C-05 Documentación/ejemplos desactualizados** | Código, comandos o ejemplos apuntan al estado anterior (nombre viejo, API vieja) | Incluir docs y `examples/` en el checklist de cada PR; ejecutar `examples/*.py` y `grep` de términos obsoletos en CI | Grep automatizado; ejecutar los ejemplos; revisión de CLAUDE.md en cada sesión | BUG-08, BUG-14, L-01, L-07 |

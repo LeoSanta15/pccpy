@@ -1556,6 +1556,27 @@ plan.aoq_curve()# DataFrame con columnas p_defectivo, AOQ (stable=True: defectiv
 plan.plot()     # curva OC + curva AOQ en una figura
 ```
 
+**Niveles de inspección.** `inspection_level` acepta los generales 1, 2 y 3 y los especiales `"S-1"` a `"S-4"` de la tabla I
+(por defecto 2). Si la muestra de la tabla es igual o mayor que el lote, la norma manda **inspeccionar el 100 %**: el plan lleva
+`n = N` (con el `Ac` de la tabla) y un `UserWarning`.
+
+**Muestreo doble** (tabla III-A, inspección normal): se toma una primera muestra `n1` y, si no basta para decidir, una segunda `n2`.
+
+```python
+doble = pp.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double")
+print(doble.summary())
+doble.n1, doble.n2               # tamaños de la 1.ª y la 2.ª muestra (la acumulada es n1 + n2)
+doble.ac1, doble.re1             # aceptación y rechazo con la 1.ª muestra
+doble.ac2, doble.re2             # aceptación y rechazo con las dos muestras acumuladas
+doble.pa(0.01)                   # P(aceptar | p = 1 %), exacta con la binomial
+doble.asn(0.01)                  # tamaño medio de muestra: n1 + n2·P(2.ª muestra)
+doble.oc_curve(), doble.aoq_curve(), doble.asn_curve()
+doble.plot()                     # OC + AOQ + ASN
+```
+
+No hay plan doble para AQL 0,010 y 0,015 % (`ValueError`: usa `sampling="single"`) y la letra A usa el plan de la letra B (con aviso).
+La inspección rigurosa y reducida y el muestreo múltiple no están incluidos (faltan sus tablas).
+
 ### Z1.9 — Variables (ANSI/ASQ Z1.9)
 
 > ⚠️ La tabla Z1.9 incluida **no reproduce la norma** y la función avisa con un `UserWarning`. Para decidir con Z1.9, pase `n=` y `k=` tomados de su ejemplar de la norma.
@@ -1778,7 +1799,7 @@ carta.panels[0].violations   # dict {prueba: array de índices}
 - **Linealidad y sesgo:** `%Linealidad = 100·|pendiente|` y `%Sesgo = 100·|sesgo medio| / variación del proceso`, definiciones de AIAG (MSA, 3.ª ed.) recordadas de memoria.
 - **Carta de varianza generalizada:** límites por percentiles de `|S|` (la misma probabilidad que ±k sigmas de una normal), no la aproximación normal `b1 ± k√b2`.
 - **Ancho de los límites (`k`/`alpha`), mediana como línea central y carta X̃-R:** no se comprobó si Minitab los ofrece ni cómo.
-- **Muestreo de aceptación:** los planes Dodge-Romig minimizan el ATI con el AOQL exacto; la tabla Z1.9 incluida no reproduce la norma y Z1.4 no trae los niveles especiales.
+- **Muestreo de aceptación:** los planes Dodge-Romig minimizan el ATI con el AOQL exacto; la tabla Z1.9 incluida no reproduce la norma. Los niveles S-1 a S-4 y el muestreo doble de Z1.4 se transcribieron de capturas de las tablas I, II-A y III-A (no del texto de la norma) y no se comprobó que coincidan con Minitab; Z1.4 no trae la inspección rigurosa ni la reducida.
 
 ---
 

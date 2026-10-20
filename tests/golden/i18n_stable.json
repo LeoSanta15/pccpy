@@ -7955,6 +7955,68 @@
   ],
   "index_name": "statistic"
  },
+ "muestreo_doble": {
+  "columns": [
+   "value"
+  ],
+  "data": [
+   [
+    1000
+   ],
+   [
+    50
+   ],
+   [
+    50
+   ],
+   [
+    0
+   ],
+   [
+    3
+   ],
+   [
+    3
+   ],
+   [
+    4
+   ],
+   [
+    1.0
+   ],
+   [
+    6.6593
+   ],
+   [
+    0.0248
+   ],
+   [
+    0.1
+   ],
+   [
+    1.7442
+   ],
+   [
+    "z1.4-double"
+   ]
+  ],
+  "index": [
+   "lot_size",
+   "sample_size_1",
+   "sample_size_2",
+   "acceptance_number_1",
+   "rejection_number_1",
+   "acceptance_number_2",
+   "rejection_number_2",
+   "aql_pct",
+   "ltpd_pct",
+   "alpha",
+   "beta",
+   "aoql_pct",
+   "method"
+  ],
+  "index_name": "statistic"
+ },
  "muestreo_variables": {
   "columns": [
    "value"

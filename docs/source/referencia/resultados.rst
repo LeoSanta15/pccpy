@@ -41,7 +41,7 @@ de referencia:
 * :class:`~pccpy.RunChartResult` — véase :doc:`run_chart_y_precontrol`.
 * :class:`~pccpy.PreControlResult` — véase :doc:`run_chart_y_precontrol`.
 * :class:`~pccpy.ToleranceResult` — véase :doc:`tolerancia`.
-* :class:`~pccpy.SamplingPlanAttributes`, :class:`~pccpy.SamplingPlanVariables`,
+* :class:`~pccpy.SamplingPlanAttributes`, :class:`~pccpy.DoublePlanAttributes`, :class:`~pccpy.SamplingPlanVariables`,
   :class:`~pccpy.DodgeRomigPlan` — véase :doc:`muestreo_aceptacion`.
 * :class:`~pccpy.GageRRResult`, :class:`~pccpy.Type1Result`,
   :class:`~pccpy.LinearityResult`, :class:`~pccpy.AttributeAgreementResult`
