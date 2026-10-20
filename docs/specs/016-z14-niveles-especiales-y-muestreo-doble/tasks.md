@@ -6,11 +6,11 @@ deben fallar por el motivo esperado.
 ## Fase 0 — Tests que fallan
 
 - [ ] Transcribir las tablas I, II-A y III-A en `tests/` y que la persona responsable las revise celda a celda (S016-RF-01, RF-02, RF-03).
-- [ ] Test de S016-RF-01 (falla hoy: `inspection_level="S-3"` lanza `ValueError`).
-- [ ] Test de S016-RF-02 (la tabla II-A completa; falla solo si hay celdas distintas: se anota el resultado).
-- [ ] Test de S016-RF-03 (falla hoy: no existe `sampling="double"`).
-- [ ] Test de S016-RF-04 (falla hoy: `N = 10` da `n = 1250`).
-- [ ] Test de S016-RF-05 (falla hoy: no existe la curva ASN).
+- [x] Test de S016-RF-01 (falla hoy: `inspection_level="S-3"` lanza `ValueError`).
+- [x] Test de S016-RF-02 (las celdas numeradas de la diagonal y que cada flecha apunte a un plan numerado de su columna). **Pasa antes del código** (protege algo que no cambia); las direcciones de las flechas quedan por revisar con la persona responsable.
+- [x] Test de S016-RF-03 (falla hoy: no existe `sampling="double"`).
+- [x] Test de S016-RF-04 (falla hoy: `N = 10` da `n = 1250`).
+- [x] Test de S016-RF-05 (falla hoy: no existe la curva ASN).
 
 ## Fase 1 — Implementación
 
