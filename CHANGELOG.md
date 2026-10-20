@@ -1,5 +1,13 @@
 # Registro de cambios
 
+## [Sin publicar] - tests de regresión del catálogo y guardas del flujo de publicación
+
+No cambia código de la biblioteca ni resultados: solo tests y el flujo de publicación.
+
+### Añadido
+- **Tests de regresión de BUG-01 (zonas en los paneles R, S y MR), BUG-07 (`openpyxl` ausente) y BUG-12 (`rcParams` intacto tras `.plot()`)** en `tests/test_regresiones_catalogo.py`; cada uno se probó por mutación (reintroducir el bug los hace fallar). Las fichas del catálogo pasan a «SÍ».
+- **`publish.yml` verifica antes de publicar** que el tag del release coincide con la versión del wheel (el fallo de BUG-13: PyPI `400 File already exists`) y corre `twine check` sobre los artefactos. Los pasos se probaron en local, pero no se han ejecutado en Actions: se verán con el próximo release.
+
 ## [0.15.8] - 2026-10-19 - correcciones de la auditoría estadística 0.15
 
 Una auditoría estadística de la 0.15.7 (cuatro revisiones independientes, con referencias escritas aparte, `scipy`/`statsmodels` y simulaciones con ≥ 20 semillas) encontró errores que daban resultados incorrectos sin aviso. Esta versión los corrige y **cambia resultados existentes**; se publica como 0.15.8 (parche) por decisión de la persona responsable, como la 0.15.5. Especificación `docs/specs/015-correcciones-auditoria-0-15`. Nada se pudo contrastar con Minitab real: ver «Notas sobre diferencias posibles con Minitab» en el README.

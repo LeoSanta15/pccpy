@@ -28,6 +28,22 @@ jobs:
       - name: Verificar artefactos
         run: ls -lh dist/
 
+      - name: Verificar que la versión del wheel coincide con el release
+        env:
+          TAG: ${{ github.event.release.tag_name }}
+        run: |
+          V=$(python -c "import glob,re;print(re.search(r'-(\d[^-]*)-py', glob.glob('dist/*.whl')[0]).group(1))")
+          if [ "${TAG#v}" != "$V" ]; then
+            echo "ERROR: el tag $TAG no coincide con la versión del wheel $V (¿falta subir la versión?)"
+            exit 1
+          fi
+          echo "OK: tag $TAG == wheel $V"
+
+      - name: Verificar metadatos con twine check
+        run: |
+          pip install twine
+          twine check dist/*
+
       - name: Guardar artefactos
         uses: actions/upload-artifact@v6
         with:
