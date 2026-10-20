@@ -21,7 +21,7 @@
 |---|---|---|
 | Tablas transcritas de las capturas, con tests que repiten la transcripción por separado | Reproducirlas con una regla (diagonales) sin comprobar | La regla ya falló una vez con Z1.4 (la validación encontró la tabla anterior mal); una transcripción revisada celda a celda es contrastable |
 | Probabilidad de aceptación del plan doble por convolución binomial | Aproximación normal | Es exacta y sencilla; se contrasta con simulación |
-| Un solo `acceptance_sampling_attributes` con `sampling=` (pendiente de la pregunta 2) | Función nueva | Misma firma, menos superficie de API |
+| Un solo `acceptance_sampling_attributes` con `sampling=` (decidido) | Función nueva | Misma firma, menos superficie de API |
 | Inspección rigurosa y reducida fuera de esta especificación | Hacerlas con la regla «normal» | No hay tablas; no se inventan |
 
 ## Validación independiente

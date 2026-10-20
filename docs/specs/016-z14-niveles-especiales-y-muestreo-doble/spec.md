@@ -82,8 +82,8 @@ Si la muestra de la tabla (o la acumulada, en el doble) es ≥ el tamaño del lo
 El plan devuelto no puede tener `n > N`.
 
 **Aceptación:**
-- **Dado** `N = 10` y AQL 0,01 **entonces** el plan indica inspección al 100 % (`n = N`), con un aviso (`UserWarning`) en español,
-  sin AOQL negativo ni `nan`.
+- **Dado** `N = 10` y AQL 0,01 **entonces** el plan indica inspección al 100 % (`n = N`, con el `Ac` de la tabla), con un aviso
+  (`UserWarning`) en español, sin AOQL negativo ni `nan`.
 - **Dado** un lote donde la muestra sí cabe **entonces** no cambia nada.
 - **Resultado que cambia:** los planes que hoy devuelven `n > N` (error: ver «Resultados existentes que cambian»).
 
@@ -103,9 +103,9 @@ estables en inglés que el plan simple.
 
 | Caso | Comportamiento esperado |
 |---|---|
-| Lote de 2 a 8 con muestreo doble (letra A) | La tabla no trae plan doble para A (el asterisco manda usar el simple o el doble de la letra B): ver pregunta 3 |
+| Lote de 2 a 8 con muestreo doble (letra A) | La tabla no trae plan doble para A: se usa el de la letra B con `UserWarning` (decidido) |
 | Lote ≤ muestra de la tabla | Inspección al 100 % con aviso (RF-04) |
-| `inspection_level="s-3"` (minúsculas) | Se acepta (se normaliza) o `ValueError` claro: ver pregunta 5 |
+| `inspection_level="s-3"` (minúsculas) | `ValueError` en español: solo `"S-1"` a `"S-4"` (decidido) |
 | `n` y `c` dados por la persona usuaria | Igual que hoy (plan a medida; no usa las tablas) |
 | AQL entre dos valores de la tabla | El más cercano, como hoy |
 
@@ -126,17 +126,15 @@ estables en inglés que el plan simple.
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: **Alcance.** ¿Esta especificación cubre solo S-1 a S-4, muestreo doble normal y la guarda del 100 %
-  (recomendado, con las tablas que hay), o esperamos a tener también las tablas de inspección rigurosa y reducida para
-  hacerlas juntas?]
-- [NECESITA ACLARACIÓN: **API del muestreo doble.** ¿Un parámetro `sampling="single"|"double"` en
-  `acceptance_sampling_attributes` (recomendado: misma firma y mismo lugar en la documentación) o una función nueva
-  `acceptance_sampling_double`? El resultado sería una clase nueva (`DoublePlanAttributes`) en ambos casos.]
-- [NECESITA ACLARACIÓN: **Letra A en doble.** La tabla manda, para esa letra, «usar el plan simple correspondiente o el
-  doble de la letra B de abajo». ¿Qué se hace con `sampling="double"` y un lote de 2 a 8? (a) usar el doble de la letra B
-  con aviso; (b) `ValueError` pidiendo muestreo simple. Recomendado: (a).]
-- [NECESITA ACLARACIÓN: **100 % de inspección.** Con una muestra que no cabe en el lote, ¿el plan devuelto es `n = N`, `c = Ac`
-  de la tabla (se acepta si hay ≤ `Ac` defectuosos, que es lo que hace el 100 % con rechazo del lote malo), o `n = N` y
-  `c = 0`? Recomendado: `n = N` con el `Ac` de la tabla y aviso.]
-- [NECESITA ACLARACIÓN: **Nombre del nivel.** ¿`"S-1"` con guion y mayúscula, como en la norma (recomendado), y se aceptan
-  también `"s1"`, `"S1"`?]
+Ninguna. Decididas por la persona responsable (con las recomendaciones de la propuesta):
+
+1. **Alcance:** esta especificación cubre S-1 a S-4, el muestreo doble normal, la tabla II-A comprobada y la guarda del 100 %.
+   La inspección rigurosa y reducida esperan sus tablas (otra especificación). Alternativa descartada: hacerlo todo junto.
+2. **API:** parámetro `sampling="single"|"double"` (por defecto `"single"`) en `acceptance_sampling_attributes`, que devuelve
+   una clase nueva `DoublePlanAttributes` con `sampling="double"`. Alternativa descartada: función nueva.
+3. **Letra A en doble:** se usa el plan doble de la letra B con un `UserWarning` en español (la tabla manda usar el simple
+   correspondiente o el doble de la letra B). Alternativa descartada: `ValueError`.
+4. **100 % de inspección:** el plan devuelto lleva `n = N` y el `Ac` de la tabla, con un `UserWarning` en español.
+   Alternativa descartada: `c = 0`.
+5. **Nombre del nivel:** solo `"S-1"` a `"S-4"` (guion y mayúscula, como en la norma); otras grafías (`"s-3"`, `"S3"`)
+   lanzan `ValueError` en español. Alternativa descartada: normalizar las grafías.
