@@ -15,7 +15,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 ## Estado actual (verificado el 2026-10-19; ver el CHANGELOG para lo no publicado)
 
 - Versión **0.15.8** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
-- **3 351 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 66 comprobaciones.
+- **3 358 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 66 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.14, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
   pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
@@ -214,8 +214,7 @@ univariadas, las duraciones = 0 en la carta T `zeros=`, spec 002, y la prueba de
 
 ## Deuda técnica detectada en la revisión del 2026-10-02
 
-- Sin test de regresión: BUG-01 (zonas en cartas R/S/MR), BUG-07 (openpyxl ausente), BUG-12 (aislamiento de `rcParams`). Recetas probadas en `BUG_CATALOG.md`.
 - Cobertura total 97 % (ningún módulo bajo 90 %). Lo menos cubierto: `_wizard.py` (94 %, ramas del widget), `acceptance.py` (96 %, búsquedas Dodge-Romig sin solución) y las rutas de `openpyxl` ausente en `_data.py`.
 - Z1.9: la tabla incluida NO reproduce la norma (planes que aceptan casi todo; `acceptance_sampling_variables` avisa). Falta sustituirla por las tablas A-2 y B-1 de ANSI/ASQ Z1.9, que no se pudieron obtener (sin acceso a la norma). Z1.4 usa ya la tabla I (niveles I/II/III) y II-A; no incluye los niveles especiales S-1 a S-4 ni inspección rigurosa/reducida ni doble/múltiple.
-- `publish.yml` no verifica que la versión del wheel coincida con el release ni corre `twine check`.
+- `publish.yml` verifica tag == versión del wheel y corre `twine check` (pasos probados en local, aún no ejecutados en Actions; se verán con el próximo release).
 - `ruff --select ...,S` falla por `assert` en `acceptance.py:692` (S101).

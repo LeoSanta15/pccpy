@@ -19,7 +19,7 @@
 | **Cómo se detectó** | Revisión visual de salida de gráficos; commit de fix en v0.4.8 |
 | **Solución aplicada** | Eliminada la condición `panel.symmetric`; matplotlib recorta naturalmente líneas por debajo del rango visible |
 | **Archivo/línea** | `src/pccpy/plotting.py` (commit `314cb86`) |
-| **Test de regresión** | NO — confirmado: ningún test cuenta líneas de zona en paneles R/S/MR. Receta probada: `fig = pp.xbar_r_chart(datos).plot(zones=True)`; `assert len([l for l in fig.axes[1].get_lines() if l.get_linestyle() == "--"]) >= 4`. Probada por mutación (desactivar el dibujo de zonas hace fallar el test) |
+| **Test de regresión** | SÍ — `tests/test_regresiones_catalogo.py::test_bug01_*` (cuenta las líneas de zona de los paneles R, S y MR). Probado por mutación: restituir la condición `panel.symmetric` los hace fallar |
 | **¿Puede ocurrir en otras libs?** | Sí — cualquier librería de visualización que añada condiciones de "simetría" para controlar trazado. |
 
 ---
@@ -109,7 +109,7 @@
 | **Cómo se detectó** | Commit `39bd66a` / v0.10.7; openpyxl es dependencia opcional |
 | **Solución aplicada** | Helper `_excel_writer()` en `_data.py` que captura `ImportError` y da instrucción explícita `pip install pccpy[excel]` |
 | **Archivo/línea** | `src/pccpy/_data.py`, función `_excel_writer()` (commit `39bd66a`) |
-| **Test de regresión** | NO — confirmado: solo `tests/test_plots.py:159` hace `importorskip("openpyxl")`. Receta probada (pasa en `main`): `monkeypatch.setitem(sys.modules, "openpyxl", None)` y `pytest.raises(ImportError, match=r"pccpy\[excel\]")` sobre `_excel_writer(tmp_path / "a.xlsx")`. NO se probó por mutación |
+| **Test de regresión** | SÍ — `tests/test_regresiones_catalogo.py::test_bug07_*` (`monkeypatch.setitem(sys.modules, "openpyxl", None)`). Probado por mutación: quitar el mensaje accionable de `_excel_writer()` los hace fallar |
 | **¿Puede ocurrir en otras libs?** | Sí — patrón universal para dependencias opcionales. |
 
 ---
@@ -184,7 +184,7 @@
 | **Cómo se detectó** | Uso en Jupyter con seaborn; commit `786fccb` |
 | **Solución aplicada** | Envolver todas las funciones `plot_*` en `plt.rc_context({})` |
 | **Archivo/línea** | `src/pccpy/plotting.py`, `src/pccpy/quality_tools.py` (commit `786fccb`) |
-| **Test de regresión** | NO — confirmado: `grep -rn "rc_context\|rcParams" tests/` vacío. Receta probada (pasa en `main`): `antes = dict(matplotlib.rcParams); fig = pp.xbar_r_chart(datos).plot(); plt.close(fig); assert dict(matplotlib.rcParams) == antes`. NO se probó por mutación |
+| **Test de regresión** | SÍ — `tests/test_regresiones_catalogo.py::test_bug12_*` (compara `dict(matplotlib.rcParams)` antes y después de `.plot()` en cartas, capacidad, Pareto y Gage R&R). Probado por mutación: tocar `rcParams` fuera de `rc_context` lo hace fallar |
 | **¿Puede ocurrir en otras libs?** | Sí — cualquier librería de visualización que no use `rc_context`. |
 
 ---
@@ -199,7 +199,7 @@
 | **Cómo se detectó** | Logs del job fallido (`mcp__github__get_job_logs`); el usuario reportó el fallo |
 | **Solución aplicada** | Commit `2be31df` (bump a 0.10.8 en ambos archivos + CHANGELOG); el usuario movió el tag y el release 0.10.8 se publicó |
 | **Archivo/línea** | `pyproject.toml:7`, `src/pccpy/__init__.py:89` |
-| **Test de regresión** | NO. Falta: (1) guarda tag==versión del wheel en `publish.yml` (probada localmente, ver R-13: exit 1 contra el commit que falló, exit 0 contra `2be31df`); (2) versión única vía `dynamic` (probado en copia). El step de YAML NO se ha ejecutado en Actions |
+| **Test de regresión** | PARCIAL — `publish.yml` ya comprueba tag == versión del wheel y corre `twine check` antes de publicar (los pasos se probaron localmente con el wheel de 0.15.8: OK con `v0.15.8`, error con `v0.15.9`; **no se han ejecutado en Actions**, solo al publicar el próximo release). `tests/test_regresiones_catalogo.py::test_bug13_*` vigila que los pasos sigan en el flujo y antes de publicar. Falta la versión única vía `dynamic` (probado en copia) |
 | **¿Puede ocurrir en otras libs?** | Sí — cualquier proyecto que etiquete a mano y mantenga la versión en más de un sitio. |
 
 ---
