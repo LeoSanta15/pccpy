@@ -3,7 +3,7 @@
 - **Estado:** implementada
 - **Identificador:** S016
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** por decidir (añade opciones y funciones; solo cambia resultados existentes el RF-04, que corrige un error)
+- **Versión objetivo:** 0.15.9 (añade opciones y funciones; solo cambia resultados existentes el RF-04, que corrige un error: se publica como parche por decisión de la persona responsable)
 
 ## Problema
 

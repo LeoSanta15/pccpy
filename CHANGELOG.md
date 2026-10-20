@@ -1,8 +1,8 @@
 # Registro de cambios
 
-## [Sin publicar] - Z1.4: niveles especiales S-1 a S-4, muestreo doble e inspección al 100 %
+## [0.15.9] - 2026-10-20 - Z1.4: niveles especiales S-1 a S-4, muestreo doble e inspección al 100 %
 
-Especificación `docs/specs/016-z14-niveles-especiales-y-muestreo-doble`. Las tablas I, II-A y III-A se transcribieron de capturas de la norma que aportó la persona responsable (no del texto de la norma); no se midió si Minitab devuelve los mismos planes.
+Especificación `docs/specs/016-z14-niveles-especiales-y-muestreo-doble`. Se publica como parche aunque corrige un resultado existente (el del 100 % de inspección), por decisión de la persona responsable, como la 0.15.8. Además, tests de regresión y guardas del flujo de publicación (al final). Las tablas I, II-A y III-A se transcribieron de capturas de la norma que aportó la persona responsable (no del texto de la norma); no se midió si Minitab devuelve los mismos planes.
 
 ### Cambios que alteran resultados
 - **Un plan de Z1.4 con muestra mayor o igual que el lote** pasa a inspección al 100 % (`n = N`, con el `Ac` de la tabla) y avisa con un `UserWarning`. Antes devolvía la muestra de la tabla aunque no cupiera en el lote (por ejemplo `n = 1250` con `N = 10`, y AOQL `-0.0`): era un error. Con planes que caben en el lote no cambia nada.
@@ -16,11 +16,10 @@ Especificación `docs/specs/016-z14-niveles-especiales-y-muestreo-doble`. Las ta
 ### No incluido
 - Inspección rigurosa y reducida y sus reglas de cambio, y muestreo múltiple (faltan sus tablas), y la tabla Z1.9 (sigue sin reproducir la norma).
 
-## [Sin publicar] - tests de regresión del catálogo y guardas del flujo de publicación
+### Tests de regresión del catálogo y guardas del flujo de publicación
 
 No cambia código de la biblioteca ni resultados: solo tests y el flujo de publicación.
 
-### Añadido
 - **Tests de regresión de BUG-01 (zonas en los paneles R, S y MR), BUG-07 (`openpyxl` ausente) y BUG-12 (`rcParams` intacto tras `.plot()`)** en `tests/test_regresiones_catalogo.py`; cada uno se probó por mutación (reintroducir el bug los hace fallar). Las fichas del catálogo pasan a «SÍ».
 - **`publish.yml` verifica antes de publicar** que el tag del release coincide con la versión del wheel (el fallo de BUG-13: PyPI `400 File already exists`) y corre `twine check` sobre los artefactos. Los pasos se probaron en local, pero no se han ejecutado en Actions: se verán con el próximo release.
 
