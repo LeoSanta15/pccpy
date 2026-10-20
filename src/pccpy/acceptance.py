@@ -10,6 +10,7 @@ Referencias
 from __future__ import annotations
 
 import math
+import numbers
 import warnings
 from dataclasses import dataclass, field
 
@@ -37,15 +38,20 @@ def _pa_binomial_arr(n: int, c: int, p_arr: np.ndarray) -> np.ndarray:
     return stats.binom.cdf(c, n, p_arr)
 
 
-def _aoql_exacto(N: int, n: int, c: int) -> float:
-    """Máximo exacto de AOQ(p) = Pa(p)·p·(N−n)/N: rejilla gruesa y refinamiento local con ``minimize_scalar``."""
+def _maximo_exacto(f) -> float:
+    """Máximo exacto de una curva ``f(p)`` vectorizada en p ∈ (0, 0,6): rejilla gruesa y refinamiento local con ``minimize_scalar``."""
     p_arr = np.linspace(1e-6, 0.6, 3001)
-    aoq = _pa_binomial_arr(n, c, p_arr) * p_arr * (N - n) / N
-    i = int(aoq.argmax())
+    vals = f(p_arr)
+    i = int(vals.argmax())
     lo, hi = p_arr[max(i - 1, 0)], p_arr[min(i + 1, len(p_arr) - 1)]
-    fino = minimize_scalar(lambda p: -_pa_binomial(n, c, p) * p * (N - n) / N, bounds=(lo, hi), method="bounded",
+    fino = minimize_scalar(lambda p: -float(f(np.array([p]))[0]), bounds=(lo, hi), method="bounded",
                            options={"xatol": 1e-12})
-    return float(max(-fino.fun, aoq.max()))
+    return float(max(-fino.fun, vals.max(), 0.0))
+
+
+def _aoql_exacto(N: int, n: int, c: int) -> float:
+    """Máximo exacto de AOQ(p) = Pa(p)·p·(N−n)/N."""
+    return _maximo_exacto(lambda p: _pa_binomial_arr(n, c, p) * p * (N - n) / N)
 
 
 def _ati(N: int, n: int, c: int, process_avg: float) -> float:
@@ -68,23 +74,35 @@ def _ltpd_exacto(n: int, c: int) -> float:
 #   501-1200, 1201-3200, 3201-10000, 10001-35000, 35001-150000, 150001-500000, >500000
 _LOTE_LIMITES = [8, 15, 25, 50, 90, 150, 280, 500, 1200, 3200, 10000, 35000, 150000, 500000]
 
-# Tabla I de Z1.4: letra de código por tamaño de lote y nivel de inspección general (I, II, III).
+# Tabla I de Z1.4: letra de código por tamaño de lote. Columnas: niveles especiales S-1 a S-4 y generales I, II y III.
+_NIVELES_ESPECIALES = ("S-1", "S-2", "S-3", "S-4")
 _LETRAS_CODIGO = ["A", "B", "C", "D", "E", "F", "G", "H", "J", "K", "L", "M", "N", "P", "Q", "R"]
-_TABLA_I = [  # una fila por tramo de lote (_LOTE_LIMITES, más ">500000"): (nivel I, nivel II, nivel III)
-    ("A", "A", "B"), ("A", "B", "C"), ("B", "C", "D"), ("C", "D", "E"), ("C", "E", "F"), ("D", "F", "G"),
-    ("E", "G", "H"), ("F", "H", "J"), ("G", "J", "K"), ("H", "K", "L"), ("J", "L", "M"), ("K", "M", "N"),
-    ("L", "N", "P"), ("M", "P", "Q"), ("N", "Q", "R"),
+_TABLA_I = [  # una fila por tramo de lote (_LOTE_LIMITES, más ">500000"): (S-1, S-2, S-3, S-4, I, II, III)
+    ("A", "A", "A", "A", "A", "A", "B"), ("A", "A", "A", "A", "A", "B", "C"), ("A", "A", "B", "B", "B", "C", "D"),
+    ("A", "B", "B", "C", "C", "D", "E"), ("B", "B", "C", "C", "C", "E", "F"), ("B", "B", "C", "D", "D", "F", "G"),
+    ("B", "C", "D", "E", "E", "G", "H"), ("B", "C", "D", "E", "F", "H", "J"), ("C", "C", "E", "F", "G", "J", "K"),
+    ("C", "D", "E", "G", "H", "K", "L"), ("C", "D", "F", "G", "J", "L", "M"), ("C", "D", "F", "H", "K", "M", "N"),
+    ("D", "E", "G", "J", "L", "N", "P"), ("D", "E", "G", "J", "M", "P", "Q"), ("D", "E", "H", "K", "N", "Q", "R"),
 ]
 
 
-def _letra_codigo(N: int, inspection_level: int = 2) -> str:
-    """Letra de código de la tabla I de Z1.4 para el tamaño de lote y el nivel general de inspección (1, 2 o 3)."""
-    if inspection_level not in (1, 2, 3):
-        raise ValueError(tr("'inspection_level' debe ser 1, 2 o 3."))
+def _columna_nivel(inspection_level) -> int:
+    """Columna de ``_TABLA_I`` del nivel: ``"S-1"`` a ``"S-4"`` (0 a 3) o 1, 2, 3 (4 a 6); otro valor lanza ``ValueError``."""
+    if isinstance(inspection_level, str) and inspection_level in _NIVELES_ESPECIALES:
+        return _NIVELES_ESPECIALES.index(inspection_level)
+    if isinstance(inspection_level, numbers.Integral) and not isinstance(inspection_level, bool) \
+            and inspection_level in (1, 2, 3):
+        return 3 + int(inspection_level)
+    raise ValueError(tr("'inspection_level' debe ser 1, 2, 3 o 'S-1', 'S-2', 'S-3', 'S-4'."))
+
+
+def _letra_codigo(N: int, inspection_level=2) -> str:
+    """Letra de código de la tabla I de Z1.4 para el tamaño de lote y el nivel de inspección (1, 2, 3, o «S-1» a «S-4»)."""
+    columna = _columna_nivel(inspection_level)
     for lim, fila in zip(_LOTE_LIMITES, _TABLA_I):
         if N <= lim:
-            return fila[inspection_level - 1]
-    return _TABLA_I[-1][inspection_level - 1]
+            return fila[columna]
+    return _TABLA_I[-1][columna]
 
 
 # Tabla II-A de Z1.4 (inspección normal, muestreo simple). Cada letra tiene un tamaño de muestra; el número de
@@ -244,11 +262,12 @@ def acceptance_sampling_attributes(
     N: int,
     aql: float,
     *,
-    inspection_level: int = 2,
+    inspection_level: int | str = 2,
     n: int | None = None,
     c: int | None = None,
-) -> SamplingPlanAttributes:
-    """Plan de muestreo de aceptación por atributos (ANSI/ASQ Z1.4).
+    sampling: str = "single",
+) -> SamplingPlanAttributes | DoublePlanAttributes:
+    """Plan de muestreo de aceptación por atributos (ANSI/ASQ Z1.4, inspección normal).
 
     Parameters
     ----------
@@ -258,34 +277,256 @@ def acceptance_sampling_attributes(
         AQL en porcentaje (p.ej. 1.0 para 1%). Valores válidos de Z1.4:
         0.010, 0.015, 0.025, 0.040, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65,
         1.0, 1.5, 2.5, 4.0, 6.5, 10.0.
-    inspection_level : int
-        Nivel de inspección general (1, 2 o 3). Por defecto 2.
+    inspection_level : int o str
+        Nivel de inspección general (1, 2 o 3; por defecto 2) o especial (``"S-1"``, ``"S-2"``, ``"S-3"``, ``"S-4"``),
+        como en la tabla I de la norma.
     n : int, opcional
-        Tamaño de muestra personalizado (omite la tabla Z1.4).
+        Tamaño de muestra personalizado (omite la tabla Z1.4; solo con ``sampling="single"``).
     c : int, opcional
         Número de aceptación personalizado.
+    sampling : {"single", "double"}
+        Muestreo simple (tabla II-A, por defecto) o doble (tabla III-A). Con ``"double"`` devuelve un
+        :class:`DoublePlanAttributes`. La tabla III-A no trae plan doble para AQL 0,010 y 0,015 % (``ValueError``); la letra A
+        usa el plan de la letra B (con aviso).
 
     Returns
     -------
-    SamplingPlanAttributes
+    SamplingPlanAttributes o DoublePlanAttributes
+
+    Notes
+    -----
+    Si la muestra de la tabla es igual o mayor que el lote, la norma manda inspeccionar el 100 %: el plan devuelto lleva
+    ``n = N`` (con el ``Ac`` de la tabla) y se avisa con un ``UserWarning``.
+
+    Solo se incluyen la inspección normal y los niveles de la tabla I; la inspección rigurosa y reducida y el muestreo
+    múltiple no están (no se tienen sus tablas).
     """
     if N < 2:
         raise ValueError(tr("N debe ser ≥ 2."))
     if not 0 < aql <= 10:
         raise ValueError(tr("'aql' debe estar en (0, 10] %."))
 
+    if sampling not in ("single", "double"):
+        raise ValueError(tr("'sampling' debe ser 'single' o 'double'."))
+    if sampling == "double" and (n is not None or c is not None):
+        raise ValueError(tr("'n' y 'c' solo se pueden dar con sampling='single'."))
+
     if n is not None and c is not None:
         aql_frac = aql / 100.0
         return _build_attr_plan(N, n, c, aql_frac, "custom")
 
     # Use Z1.4 table
-    # Letra de código según la tabla I (nivel de inspección general I, II o III)
+    # Letra de código según la tabla I (nivel de inspección general I, II o III, o especial S-1 a S-4)
     letra = _letra_codigo(N, inspection_level)
 
     aql_key = _nearest_aql(aql)
-    n_plan, c_plan = _plan_z14(letra, aql_key)
     aql_frac = aql_key / 100.0
+    if sampling == "double":
+        return _plan_doble(N, letra, aql_key)
+    n_plan, c_plan = _plan_z14(letra, aql_key)
+    if n_plan >= N:  # la norma: «If sample size equals, or exceeds, lot size, carry out 100 percent inspection»
+        warnings.warn(tr(
+            "El plan de la tabla Z1.4 pide una muestra de {n} con un lote de {N}: se inspecciona el 100 % del lote "
+            "(n = N, Ac = {c})."
+        ).format(n=n_plan, N=N, c=c_plan), UserWarning, stacklevel=2)
+        n_plan = N
     return _build_attr_plan(N, n_plan, c_plan, aql_frac, "z1.4")
+
+
+# ───────────────────────────────────────────────────── Z1.4: muestreo doble ────
+# Tabla III-A de Z1.4 (inspección normal, muestreo doble). Cada letra B a R tiene una muestra n1 = n2 (la acumulada es 2·n1:
+# 2, 3, 5, … 1250). Los 8 planes con números (Ac1/Re1 de la primera muestra y Ac2/Re2 de la acumulada, con Re2 = Ac2 + 1) caen en las
+# diagonales 17 a 24 (como los simples con Ac ≥ 1; la 0 2 / 1 2 más a la izquierda está en la letra R con AQL 0,025 %). A la
+# izquierda de la diagonal 17 la flecha baja al primer plan numerado de la columna; a la derecha de la 24 sube al último.
+_PLANES_DOBLES = [(0, 2, 1, 2), (0, 3, 3, 4), (1, 3, 4, 5), (2, 5, 6, 7), (3, 7, 8, 9), (5, 9, 12, 13), (7, 11, 18, 19),
+                  (11, 16, 26, 27)]
+
+
+def _plan_doble_z14(letra: str, aql: float) -> tuple[int, tuple[int, int, int, int]]:
+    """(n1, (ac1, re1, ac2, re2)) de la tabla III-A para una letra y un AQL, resolviendo las flechas de la norma."""
+    i, j = _LETRAS_CODIGO.index(letra), _AQL_STEPS.index(aql)
+    s = i + j
+    if s < 17:  # ↓ al plan con 0 2 / 1 2 de esta columna
+        s = 17
+    elif s > 24:  # ↑ al plan con 11 16 / 26 27
+        s = 24
+    i_ef = s - j
+    if i_ef > len(_LETRAS_CODIGO) - 1:
+        raise ValueError(tr(
+            "La tabla Z1.4 no trae plan doble para AQL {aql:g} %: usa sampling='single'."
+        ).format(aql=aql))
+    return _N_LETRA[i_ef - 1], _PLANES_DOBLES[s - 17]
+
+
+def _pa_doble(n1: int, n2: int, ac1: int, re1: int, ac2: int, p):
+    """P(aceptar) del plan doble: ``P(d1 ≤ ac1) + Σ_{d1=ac1+1}^{re1−1} P(d1)·P(d2 ≤ ac2 − d1)`` con la binomial."""
+    pa = stats.binom.cdf(ac1, n1, p)
+    for d1 in range(ac1 + 1, re1):
+        pa = pa + stats.binom.pmf(d1, n1, p) * stats.binom.cdf(ac2 - d1, n2, p)
+    return pa
+
+
+def _asn_doble(n1: int, n2: int, ac1: int, re1: int, p):
+    """Tamaño medio de muestra: ``n1 + n2·P(ac1 < d1 < re1)``."""
+    return n1 + n2 * (stats.binom.cdf(re1 - 1, n1, p) - stats.binom.cdf(ac1, n1, p))
+
+
+def _aoq_doble(N: int, n1: int, n2: int, ac1: int, re1: int, ac2: int, p):
+    """AOQ del plan doble con rechazados cribados al 100 %: ``p·[Pa₁·(N − n1) + Pa₂·(N − n1 − n2)]/N`` (Grant y Leavenworth)."""
+    pa1 = stats.binom.cdf(ac1, n1, p)
+    pa2 = _pa_doble(n1, n2, ac1, re1, ac2, p) - pa1
+    return p * (pa1 * (N - n1) + pa2 * (N - n1 - n2)) / N
+
+
+_COLUMNAS_ASN = {N_("p_defectivo"): "defective_fraction", N_("ASN"): "asn"}
+
+
+@dataclass
+class DoublePlanAttributes:
+    """Plan de muestreo doble por atributos (ANSI/ASQ Z1.4, tabla III-A, inspección normal).
+
+    Se toma una primera muestra de ``n1``: se acepta si hay ``ac1`` defectuosos o menos y se rechaza con ``re1`` o más; entre
+    ambos se toma una segunda de ``n2`` y se acepta si el total (``d1 + d2``) es ``ac2`` o menos (``re2 = ac2 + 1``).
+
+    Atributos
+    ---------
+    N : int
+        Tamaño del lote.
+    n1, n2 : int
+        Tamaños de la primera y la segunda muestra. Con inspección al 100 % (la muestra acumulada no cabe en el lote)
+        ``n1 = N`` y ``n2 = 0``.
+    ac1, re1 : int
+        Números de aceptación y de rechazo de la primera muestra.
+    ac2, re2 : int
+        Números de aceptación y de rechazo de las dos muestras acumuladas.
+    aql : float
+        AQL en %.
+    alpha : float
+        Riesgo del productor (``1 − Pa(AQL)``).
+    beta : float
+        Riesgo del consumidor (``Pa(LTPD) = 0,10``).
+    ltpd : float
+        LTPD real del plan (fracción).
+    aoq_max : float
+        AOQL (máximo exacto de la curva AOQ).
+    method : str
+        ``'z1.4-double'``.
+    """
+
+    N: int
+    n1: int
+    n2: int
+    ac1: int
+    re1: int
+    ac2: int
+    re2: int
+    aql: float
+    alpha: float
+    beta: float
+    ltpd: float
+    aoq_max: float
+    method: str
+    _p_arr: np.ndarray = field(repr=False)
+
+    def pa(self, p):
+        """Probabilidad de aceptar para la fracción defectiva ``p`` (exacta, con la binomial)."""
+        return _pa_doble(self.n1, self.n2, self.ac1, self.re1, self.ac2, p)
+
+    def asn(self, p):
+        """Tamaño medio de muestra para la fracción defectiva ``p``: ``n1 + n2·P(ac1 < d1 < re1)``."""
+        return _asn_doble(self.n1, self.n2, self.ac1, self.re1, p)
+
+    def aoq(self, p):
+        """Calidad media de salida para la fracción defectiva entrante ``p``."""
+        return _aoq_doble(self.N, self.n1, self.n2, self.ac1, self.re1, self.ac2, p)
+
+    def oc_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva OC (``stable=True``: columnas ``defective_fraction`` y ``p_accept``)."""
+        return renombrar(pd.DataFrame({"p_defectivo": self._p_arr, "P(aceptar)": self.pa(self._p_arr)}), _COLUMNAS_OC, stable)
+
+    def aoq_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva AOQ (``stable=True``: columnas ``defective_fraction`` y ``aoq``)."""
+        return renombrar(pd.DataFrame({"p_defectivo": self._p_arr, "AOQ": self.aoq(self._p_arr)}), _COLUMNAS_AOQ, stable)
+
+    def asn_curve(self, stable: bool = False) -> pd.DataFrame:
+        """Curva del tamaño medio de muestra (``stable=True``: columnas ``defective_fraction`` y ``asn``)."""
+        return renombrar(pd.DataFrame({"p_defectivo": self._p_arr, "ASN": self.asn(self._p_arr)}), _COLUMNAS_ASN, stable)
+
+    def to_frame(self, stable: bool = False) -> pd.DataFrame:
+        """Tabla resumen (una fila por estadístico; con ``stable=True`` claves canónicas en inglés)."""
+        rows = [
+            ("lot_size", N_("N (tamaño de lote)"), self.N),
+            ("sample_size_1", N_("n1 (primera muestra)"), self.n1),
+            ("sample_size_2", N_("n2 (segunda muestra)"), self.n2),
+            ("acceptance_number_1", N_("Ac1 (aceptación, 1.ª muestra)"), self.ac1),
+            ("rejection_number_1", N_("Re1 (rechazo, 1.ª muestra)"), self.re1),
+            ("acceptance_number_2", N_("Ac2 (aceptación, acumulada)"), self.ac2),
+            ("rejection_number_2", N_("Re2 (rechazo, acumulada)"), self.re2),
+            ("aql_pct", N_("AQL (%)"), round(self.aql, 4)),
+            ("ltpd_pct", N_("LTPD (%)"), round(self.ltpd * 100, 4)),
+            ("alpha", N_("α (riesgo productor)"), round(self.alpha, 5)),
+            ("beta", N_("β (riesgo consumidor = 0.10)"), round(self.beta, 5)),
+            ("aoql_pct", N_("AOQL (%)"), round(self.aoq_max * 100, 4)),
+            ("method", N_("Método"), self.method),
+        ]
+        return tabla_estadisticos(rows, stable)
+
+    def summary(self) -> str:
+        return "\n".join([
+            tr("Plan de muestreo doble por atributos ({method})").format(method=self.method),
+            tr("  Lote N={N}  1.ª muestra n1={n1}  Ac1={ac1}  Re1={re1}").format(N=self.N, n1=self.n1, ac1=self.ac1, re1=self.re1),
+            tr("  2.ª muestra n2={n2}  acumulada: Ac2={ac2}  Re2={re2}").format(n2=self.n2, ac2=self.ac2, re2=self.re2),
+            tr("  AQL={aql:.3g}%  α={alpha:.4f}  LTPD={ltpd:.3g}%  β=0.10").format(
+                aql=self.aql, alpha=self.alpha, ltpd=self.ltpd * 100),
+            tr("  AOQL={aoql:.3g}%").format(aoql=self.aoq_max * 100),
+        ])
+
+    def to_excel(self, path) -> None:
+        """Exporta el plan a un archivo Excel (.xlsx). Requiere ``openpyxl`` (``pip install openpyxl``)."""
+        with _excel_writer(path) as writer:
+            self.to_frame().to_excel(writer, sheet_name=tr("Plan"))
+
+    def __str__(self) -> str:  # pragma: no cover
+        return self.summary()
+
+    def plot(self, **kwargs):
+        """Curvas OC, AOQ y ASN."""
+        from .plotting import plot_sampling_double
+        return plot_sampling_double(self, **kwargs)
+
+    def save_plot(self, path: str, *, dpi: int = 150, **kwargs) -> None:
+        """Guarda el gráfico en un archivo (PNG, SVG, PDF, …)."""
+        import matplotlib.pyplot as plt
+        fig = self.plot(**kwargs)
+        fig.savefig(path, dpi=dpi, bbox_inches="tight")
+        plt.close(fig)
+
+
+def _plan_doble(N: int, letra: str, aql: float) -> DoublePlanAttributes:
+    """Plan doble de la tabla III-A para la letra y el AQL, con las guardas de la letra A y del 100 % de inspección."""
+    if letra == "A":
+        warnings.warn(tr(
+            "La letra de código A no tiene plan doble propio: se usa el de la letra B (la flecha de la tabla lleva al mismo plan)."
+        ), UserWarning, stacklevel=3)
+    n1, (ac1, re1, ac2, re2) = _plan_doble_z14(letra, aql)
+    n2 = n1
+    if 2 * n1 >= N:  # la muestra acumulada no cabe: se inspecciona todo el lote en la primera muestra
+        warnings.warn(tr(
+            "El plan doble de la tabla Z1.4 pide una muestra acumulada de {n} con un lote de {N}: se inspecciona el 100 % del lote "
+            "(n = N, Ac = {c})."
+        ).format(n=2 * n1, N=N, c=ac2), UserWarning, stacklevel=3)
+        n1, n2, ac1, re1 = N, 0, ac2, ac2 + 1
+    aql_frac = aql / 100.0
+    pa_aql = float(_pa_doble(n1, n2, ac1, re1, ac2, aql_frac))
+    try:
+        ltpd = float(brentq(lambda p: float(_pa_doble(n1, n2, ac1, re1, ac2, p)) - 0.10, 1e-12, 1.0 - 1e-9))
+    except ValueError:
+        ltpd = float("nan")
+    aoql = _maximo_exacto(lambda p: _aoq_doble(N, n1, n2, ac1, re1, ac2, p))
+    p_arr = np.linspace(0, min(1.0, max(0.5, aql_frac * 10)), 400)
+    return DoublePlanAttributes(
+        N=N, n1=n1, n2=n2, ac1=ac1, re1=re1, ac2=ac2, re2=re2, aql=aql, alpha=1.0 - pa_aql, beta=0.10, ltpd=ltpd,
+        aoq_max=aoql, method="z1.4-double", _p_arr=p_arr)
 
 
 # ─────────────────────────────────────────────────────────── Z1.9 ─────────────

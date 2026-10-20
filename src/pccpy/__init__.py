@@ -6,6 +6,7 @@ from ._probabilidad import ProbabilityResult
 from ._wizard import WidgetSession, WizardResult, wizard
 from .acceptance import (
     DodgeRomigPlan,
+    DoublePlanAttributes,
     SamplingPlanAttributes,
     SamplingPlanVariables,
     acceptance_sampling_attributes,
@@ -111,6 +112,7 @@ __all__ = [
     "ControlChart",
     "DiagnoseResult",
     "DodgeRomigPlan",
+    "DoublePlanAttributes",
     "GageRRResult",
     "LinearityResult",
     "MultivariateChart",

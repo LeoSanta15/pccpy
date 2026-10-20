@@ -14,11 +14,11 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S016-RF-01: tabla I con S-1 a S-4.
-- [ ] S016-RF-02: corregir `_plan_z14` donde difiera de la tabla.
-- [ ] S016-RF-03: tabla III-A y `DoublePlanAttributes`.
-- [ ] S016-RF-04: guarda del 100 % con aviso.
-- [ ] S016-RF-05: curvas OC, AOQ y ASN, `to_frame`, `summary` y `plot`.
+- [x] S016-RF-01: tabla I con S-1 a S-4.
+- [x] S016-RF-02: corregir `_plan_z14` donde difiera de la tabla.
+- [x] S016-RF-03: tabla III-A y `DoublePlanAttributes`.
+- [x] S016-RF-04: guarda del 100 % con aviso.
+- [x] S016-RF-05: curvas OC, AOQ y ASN, `to_frame`, `summary` y `plot`.
 
 ## Fase 2 — Verificación y cierre
 

@@ -169,14 +169,24 @@ def test_s016_rf03_el_simple_sigue_siendo_el_valor_por_defecto():
 
 def test_s016_rf03_estructura_del_plan_doble():
     """S016-RF-03: n2 = n1 (acumulado 2·n1), re1 > ac1, re2 = ac2 + 1 y ac2 > ac1; las muestras son las de la tabla."""
-    for aql in _AQL:
+    for aql in _AQL[2:]:
         for lote in (12, 40, 120, 300, 1000, 3000, 20000):
             with warnings.catch_warnings():
                 warnings.simplefilter("ignore")
                 plan = _doble(lote, aql)
-            assert plan.n2 == plan.n1 and plan.n1 in _TAMANOS
-            assert plan.re1 > plan.ac1 >= 0
-            assert plan.re2 == plan.ac2 + 1 and plan.ac2 > plan.ac1
+            assert plan.re2 == plan.ac2 + 1
+            if plan.n2 > 0:
+                assert plan.n2 == plan.n1 and plan.n1 in _TAMANOS
+                assert plan.re1 > plan.ac1 >= 0 and plan.ac2 > plan.ac1
+            else:  # inspección al 100 %: todo el lote en la primera muestra
+                assert plan.n1 == lote and plan.ac1 == plan.ac2
+
+
+@pytest.mark.parametrize("aql", [0.010, 0.015])
+def test_s016_rf03_sin_plan_doble_para_los_aql_mas_bajos(aql):
+    """S016-RF-03: con AQL 0,010 y 0,015 % la tabla III-A no trae plan doble (la estrella manda usar el simple): ValueError."""
+    with pytest.raises(ValueError, match="single"):
+        _doble(1000, aql)
 
 
 def _pa_doble(plan, p):
@@ -236,30 +246,35 @@ def test_s016_rf05_curvas_y_tablas_del_plan_doble():
 
 
 def test_s016_rf05_el_aoql_del_plan_doble_es_el_maximo_exacto():
-    """S016-RF-05: AOQL = máx_p Pa(p)·p·(N − n_efectivo)/N con la binomial, escrito aparte (n_efectivo = n1)."""
+    """S016-RF-05: AOQ(p) = p·[Pa₁·(N − n1) + Pa₂·(N − n1 − n2)]/N (Grant y Leavenworth), con la binomial escrita aparte."""
     plan = _doble()
     ps = np.linspace(1e-6, 0.5, 20001)
-    aoq = np.array([_pa_doble(plan, p) * p for p in ps]) * (plan.N - plan.n1) / plan.N
+    pa1 = stats.binom.cdf(plan.ac1, plan.n1, ps)
+    pa2 = np.zeros_like(ps)
+    for d1 in range(plan.ac1 + 1, plan.re1):
+        pa2 += stats.binom.pmf(d1, plan.n1, ps) * stats.binom.cdf(plan.ac2 - d1, plan.n2, ps)
+    aoq = ps * (pa1 * (plan.N - plan.n1) + pa2 * (plan.N - plan.n1 - plan.n2)) / plan.N
     assert plan.aoq_max == pytest.approx(aoq.max(), rel=2e-3)
 
 
 def test_s016_rf03_la_letra_a_usa_el_plan_doble_de_la_letra_b_con_aviso():
     """S016-RF-03: lote de 2 a 8 con muestreo doble → plan de la letra B y UserWarning (decidido)."""
-    with pytest.warns(UserWarning):
-        plan_a = _doble(5, 1.0)
+    with pytest.warns(UserWarning, match="B"):
+        plan_a = _doble(7, 10.0)
     with warnings.catch_warnings():
-        warnings.simplefilter("ignore")
-        plan_b = _doble(12, 1.0)  # lote de 9 a 15: letra B, nivel II
+        warnings.simplefilter("error")
+        plan_b = _doble(12, 10.0)  # lote de 9 a 15: letra B, nivel II (sin aviso)
     assert (plan_a.n1, plan_a.n2, plan_a.ac1, plan_a.re1, plan_a.ac2, plan_a.re2) == (
         plan_b.n1, plan_b.n2, plan_b.ac1, plan_b.re1, plan_b.ac2, plan_b.re2)
 
 
 def test_s016_rf04_el_doble_que_no_cabe_en_el_lote_es_inspeccion_al_100_por_ciento():
-    """S016-RF-04: con muestra acumulada ≥ lote (2·n1 ≥ N), el plan doble inspecciona todo el lote y avisa."""
+    """S016-RF-04: con muestra acumulada ≥ lote (2·n1 ≥ N) se inspecciona todo el lote en la primera muestra y se avisa."""
     with pytest.warns(UserWarning, match="100"):
-        plan = _doble(10, 0.01)
-    assert plan.n1 + plan.n2 <= 10 or (plan.n1 == 10 and plan.n2 == 0)
-    assert not math.isnan(plan.aoq_max) and plan.aoq_max >= 0
+        plan = _doble(10, 1.0)
+    assert (plan.n1, plan.n2) == (10, 0)
+    assert plan.ac1 == plan.ac2 and plan.re2 == plan.ac2 + 1
+    assert plan.aoq_max >= 0 and not math.isnan(plan.aoq_max)
 
 
 def test_s016_rf03_niveles_especiales_con_muestreo_doble():
