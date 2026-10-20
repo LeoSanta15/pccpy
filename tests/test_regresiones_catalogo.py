@@ -43,15 +43,22 @@ def test_bug01_la_carta_de_rango_movil_dibuja_las_zonas():
         plt.close(fig)
 
 
+def _sin_openpyxl(monkeypatch):
+    """Simula que ``openpyxl`` no está instalado, también sus submódulos ya importados por otros tests (``from openpyxl.workbook …``)."""
+    for nombre in [n for n in sys.modules if n == "openpyxl" or n.startswith("openpyxl.")]:
+        monkeypatch.setitem(sys.modules, nombre, None)
+    monkeypatch.setitem(sys.modules, "openpyxl", None)
+
+
 def test_bug07_exportar_a_excel_sin_openpyxl_da_instrucciones(monkeypatch, tmp_path):
     """BUG-07: sin ``openpyxl`` el error dice cómo instalarlo (``pip install pccpy[excel]``), no un ``ImportError`` opaco."""
-    monkeypatch.setitem(sys.modules, "openpyxl", None)
+    _sin_openpyxl(monkeypatch)
     with pytest.raises(ImportError, match=r"pccpy\[excel\]"):
         _excel_writer(tmp_path / "a.xlsx")
 
 
 def test_bug07_to_excel_de_un_resultado_sin_openpyxl(monkeypatch, tmp_path):
-    monkeypatch.setitem(sys.modules, "openpyxl", None)
+    _sin_openpyxl(monkeypatch)
     resultado = pp.capability_analysis(np.random.default_rng(2).normal(10, 1, 50), 6, 14)
     with pytest.raises(ImportError, match=r"pip install openpyxl"):
         resultado.to_excel(tmp_path / "salida.xlsx")
