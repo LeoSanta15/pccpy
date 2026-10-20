@@ -41,15 +41,37 @@ El plan dice: toma 80 muestras; acepta si encuentras ≤ 2 defectuosas.
 |-----------|------|----------------|-------------|
 | `N` | `int` | — | Tamaño del lote. |
 | `aql` | `float` | — | AQL en porcentaje (p.ej. `1.0` para 1 %). |
-| `inspection_level` | `int` | `2` | Nivel de inspección general (1, 2 o 3), con la letra de código de la tabla I de Z1.4. |
+| `inspection_level` | `int` o `str` | `2` | Nivel de inspección general (1, 2 o 3) o especial (`"S-1"` a `"S-4"`), con la letra de código de la tabla I de Z1.4. |
 | `n` | `int` | `None` | Tamaño de muestra fijo (anula la tabla). |
 | `c` | `int` | `None` | Número de aceptación fijo (anula la tabla). |
+| `sampling` | `str` | `"single"` | `"single"` (tabla II-A) o `"double"` (tabla III-A: devuelve un `DoublePlanAttributes`). |
 
 ### Gráfico
 
 ```python
 plan.plot()   # Curva OC + curva AOQ
 ```
+
+### Inspección al 100 %
+
+Si la muestra de la tabla es igual o mayor que el lote, la norma manda inspeccionar todo el lote. El plan devuelto lleva `n = N` (con
+el `Ac` de la tabla) y se avisa con un `UserWarning`; antes devolvía la muestra de la tabla aunque no cupiera en el lote (un error).
+
+### Muestreo doble
+
+Con `sampling="double"` se usa la tabla III-A (inspección normal): una primera muestra `n1` y, si no basta para decidir, una segunda `n2`.
+Se acepta con la primera si hay `ac1` defectuosos o menos, se rechaza con `re1` o más y, entre ambos, se toma la segunda y se acepta si el total
+es `ac2` o menos (`re2 = ac2 + 1`).
+
+```python
+doble = pp.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double")
+doble.pa(0.01)    # probabilidad de aceptación exacta, con la binomial
+doble.asn(0.01)   # tamaño medio de muestra: n1 + n2·P(ac1 < d1 < re1)
+doble.plot()      # OC + AOQ + ASN
+```
+
+No hay plan doble para AQL 0,010 y 0,015 % (`ValueError`) y la letra A usa el plan de la letra B (con aviso). La inspección rigurosa y
+reducida y el muestreo múltiple no están incluidos. Las tablas I, II-A y III-A se transcribieron de capturas de la norma, no de su texto.
 
 ---
 

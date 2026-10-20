@@ -8122,6 +8122,71 @@
   },
   "summary": "Plan de muestreo por atributos (z1.4)\n  Lote N=1000  Muestra n=80  Ac=2  Re=3\n  AQL=1%  α=0.0466  LTPD=6.52%  β=0.10\n  AOQL=1.57%"
  },
+ "muestreo_doble": {
+  "frame": {
+   "columns": [
+    "valor"
+   ],
+   "data": [
+    [
+     1000
+    ],
+    [
+     50
+    ],
+    [
+     50
+    ],
+    [
+     0
+    ],
+    [
+     3
+    ],
+    [
+     3
+    ],
+    [
+     4
+    ],
+    [
+     1.0
+    ],
+    [
+     6.6593
+    ],
+    [
+     0.0248
+    ],
+    [
+     0.1
+    ],
+    [
+     1.7442
+    ],
+    [
+     "z1.4-double"
+    ]
+   ],
+   "index": [
+    "N (tamaño de lote)",
+    "n1 (primera muestra)",
+    "n2 (segunda muestra)",
+    "Ac1 (aceptación, 1.ª muestra)",
+    "Re1 (rechazo, 1.ª muestra)",
+    "Ac2 (aceptación, acumulada)",
+    "Re2 (rechazo, acumulada)",
+    "AQL (%)",
+    "LTPD (%)",
+    "α (riesgo productor)",
+    "β (riesgo consumidor = 0.10)",
+    "AOQL (%)",
+    "Método"
+   ],
+   "index_name": "estadístico"
+  },
+  "summary": "Plan de muestreo doble por atributos (z1.4-double)\n  Lote N=1000  1.ª muestra n1=50  Ac1=0  Re1=3\n  2.ª muestra n2=50  acumulada: Ac2=3  Re2=4\n  AQL=1%  α=0.0248  LTPD=6.66%  β=0.10\n  AOQL=1.74%"
+ },
  "muestreo_variables": {
   "frame": {
    "columns": [

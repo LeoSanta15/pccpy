@@ -1256,6 +1256,44 @@ def _auditoria_015():
     return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
 
 
+@_comprobacion("z14-niveles-doble", N_("Z1.4: niveles especiales S-1 a S-4, muestreo doble (OC, ASN y AOQ) y guarda del 100 % de inspección"),
+               "Tabla I de la norma (transcrita de una captura aportada por la persona responsable, no verificada contra el texto), convolución "
+               "binomial con scipy.stats.binom para Pa, ASN y AOQ, y la definición de AOQ de Grant y Leavenworth; especificación 016", 1e-9,
+               relative=True)
+def _z14_niveles_doble():
+    from scipy import stats
+
+    from . import acceptance_sampling_attributes
+
+    esperado, obtenido = [], []
+    # tabla I: letra de código de una malla de lotes con los niveles S-1 a S-4 (columnas de la tabla transcritas aparte)
+    s_niveles = {
+        "S-1": "AAAABBBBCCCCDDD", "S-2": "AAABBBCCCDDDEEE", "S-3": "AABBCCDDEEFFGGH", "S-4": "AABCCDEEFGGHJJK",
+    }
+    lotes = [8, 15, 25, 50, 90, 150, 280, 500, 1200, 3200, 10000, 35000, 150000, 500000, 10**6]
+    from .acceptance import _letra_codigo
+    for nivel, letras in s_niveles.items():
+        for lote, letra in zip(lotes, letras):
+            esperado.append(ord(letra))
+            obtenido.append(ord(_letra_codigo(lote, nivel)))
+    # plan doble: Pa, ASN y AOQ por convolución binomial
+    plan = acceptance_sampling_attributes(1000, 1.0, sampling="double")
+    for p in (0.002, 0.01, 0.03, 0.08):
+        pa1 = stats.binom.cdf(plan.ac1, plan.n1, p)
+        pa2 = sum(stats.binom.pmf(d1, plan.n1, p) * stats.binom.cdf(plan.ac2 - d1, plan.n2, p) for d1 in range(plan.ac1 + 1, plan.re1))
+        continuar = stats.binom.cdf(plan.re1 - 1, plan.n1, p) - stats.binom.cdf(plan.ac1, plan.n1, p)
+        esperado += [pa1 + pa2, plan.n1 + plan.n2 * continuar,
+                     p * (pa1 * (plan.N - plan.n1) + pa2 * (plan.N - plan.n1 - plan.n2)) / plan.N]
+        obtenido += [plan.pa(p), plan.asn(p), plan.aoq(p)]
+    # un lote de 10 con AQL 0,01 %: la tabla pide 1250 → se inspecciona el 100 % (n = N)
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        completo = acceptance_sampling_attributes(10, 0.01)
+    esperado += [10, 0]
+    obtenido += [completo.n, completo.aoq_max]
+    return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 

@@ -144,6 +144,7 @@ def entradas() -> dict:
 
     # muestreo de aceptación
     d["muestreo_atributos"] = lambda: pp.acceptance_sampling_attributes(N=1000, aql=1.0)
+    d["muestreo_doble"] = lambda: pp.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double")
     d["muestreo_variables"] = lambda: pp.acceptance_sampling_variables(N=1000, aql=1.0)
     d["dodge_romig_ltpd"] = lambda: pp.dodge_romig(N=1000, ltpd=0.05, process_avg=0.01)
     d["dodge_romig_aoql"] = lambda: pp.dodge_romig(N=1000, aoql=0.02, process_avg=0.01)
@@ -249,7 +250,9 @@ def tablas_sueltas(con_excel: bool = True) -> dict:
         atr = pp.acceptance_sampling_attributes(N=1000, aql=1.0)
         var = pp.acceptance_sampling_variables(N=1000, aql=1.0)
         dr = pp.dodge_romig(N=1000, ltpd=0.05, process_avg=0.01)
+        doble = pp.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double")
         d["oc_atributos"], d["aoq_atributos"] = atr.oc_curve(), atr.aoq_curve()
+        d["oc_doble"], d["aoq_doble"], d["asn_doble"] = doble.oc_curve(), doble.aoq_curve(), doble.asn_curve()
         d["oc_variables"] = var.oc_curve()
         d["oc_dodge_romig"], d["aoq_dodge_romig"] = dr.oc_curve(), dr.aoq_curve()
         cruzado = pp.gage_rr(_msa_datos()[0], parts=10, operators=3, replicates=2, tolerance=20.0)
@@ -259,7 +262,7 @@ def tablas_sueltas(con_excel: bool = True) -> dict:
         d["kappa_dentro"], d["kappa_vs_referencia"] = acuerdo.kappa_within_frame(), acuerdo.kappa_vs_reference_frame()
         with tempfile.TemporaryDirectory() as tmp:
             hojas = (("gage_rr", cruzado), ("gage_rr_anidado", anidado), ("acuerdo", acuerdo),
-                     ("muestreo_atributos", atr), ("muestreo_variables", var), ("dodge_romig", dr))
+                     ("muestreo_atributos", atr), ("muestreo_doble", doble), ("muestreo_variables", var), ("dodge_romig", dr))
             for nombre, res in hojas if con_excel else ():  # las hojas de Excel necesitan openpyxl (extra opcional)
                 ruta = f"{tmp}/{nombre}.xlsx"
                 res.to_excel(ruta)

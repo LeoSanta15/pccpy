@@ -19,6 +19,9 @@ Por atributos — Z1.4
 .. autofunction:: pccpy.plot_sampling_attributes
 .. autoclass:: pccpy.SamplingPlanAttributes
    :members:
+.. autofunction:: pccpy.plot_sampling_double
+.. autoclass:: pccpy.DoublePlanAttributes
+   :members:
 
 Por variables — Z1.9
 ---------------------

@@ -1,6 +1,6 @@
 # 016 — Z1.4: niveles especiales S-1 a S-4, muestreo doble y plan que no cabe en el lote
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S016
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** por decidir (añade opciones y funciones; solo cambia resultados existentes el RF-04, que corrige un error)

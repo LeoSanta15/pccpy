@@ -22,9 +22,9 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Verificación y cierre
 
-- [ ] Comprobación en `run_validation()` (S016-RF-01 a RF-03).
-- [ ] Regenerar `tests/golden/` y revisar el diff línea a línea.
-- [ ] Fichas en `BUG_CATALOG.md` (RF-04 y, si procede, RF-02).
-- [ ] Documentación, README (es/en), traducciones y CHANGELOG.
-- [ ] `make check` en verde.
-- [ ] Estado de la especificación → `implementada`.
+- [x] Comprobación en `run_validation()` (S016-RF-01 a RF-03).
+- [x] Regenerar `tests/golden/` y revisar el diff línea a línea.
+- [x] Fichas en `BUG_CATALOG.md` (RF-04 y, si procede, RF-02).
+- [x] Documentación, README (es/en), traducciones y CHANGELOG.
+- [x] `make check` en verde.
+- [x] Estado de la especificación → `implementada`.
