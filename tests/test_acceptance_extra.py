@@ -92,10 +92,11 @@ def test_variables_bilateral_con_proceso_centrado_coincide_con_monte_carlo():
 
 
 def test_variables_niveles_de_inspeccion():
-    assert pp.acceptance_sampling_variables(N=1000, aql=1.0, inspection_level=1).method == "z1.9"
-    # la tabla Z1.9 incluida es simplificada: una combinación que no trae se rechaza con un mensaje claro
-    with pytest.raises(ValueError, match="no disponible"):
-        pp.acceptance_sampling_variables(N=1000, aql=1.0, inspection_level=3)
+    assert pp.acceptance_sampling_variables(N=1000, aql=1.0, inspection_level=1).method == "mil-std-414"
+    # el nivel I da una muestra menor que el V (letras F y L en la tabla A-2 para un lote de 1 000)
+    n1 = pp.acceptance_sampling_variables(N=1000, aql=1.0, inspection_level=1).n
+    n5 = pp.acceptance_sampling_variables(N=1000, aql=1.0, inspection_level=5).n
+    assert n1 < n5
 
 
 def test_dodge_romig_validaciones():
@@ -152,10 +153,12 @@ def test_letra_r_para_lotes_muy_grandes():
     assert (plan.n, plan.c) == (2000, 21)
 
 
-def test_tabla_z19_avisa_que_no_es_la_norma():
-    with pytest.warns(UserWarning, match="Z1.9"):
-        pp.acceptance_sampling_variables(N=500, aql=1.0)
+def test_tabla_mil_std_414_no_avisa_de_aproximacion():
     import warnings
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        pp.acceptance_sampling_variables(N=500, aql=1.0)
 
     with warnings.catch_warnings():
         warnings.simplefilter("error")

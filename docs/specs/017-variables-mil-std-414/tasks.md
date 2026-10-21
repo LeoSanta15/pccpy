@@ -15,12 +15,12 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S017-RF-01: tabla A-2 y letra de código.
-- [ ] S017-RF-02: tabla B-1 y resolución de flechas.
-- [ ] S017-RF-03: inspección rigurosa.
-- [ ] S017-RF-04: Forma 1 de `evaluate`.
-- [ ] S017-RF-05: guarda del 100 %.
-- [ ] S017-RF-06: parámetro `standard` y retirada de la tabla aproximada.
+- [x] S017-RF-01: tabla A-2 y letra de código.
+- [x] S017-RF-02: tabla B-1 y resolución de flechas.
+- [x] S017-RF-03: inspección rigurosa.
+- [x] S017-RF-04: Forma 1 de `evaluate`.
+- [x] S017-RF-05: guarda del 100 %.
+- [x] S017-RF-06: parámetro `standard` y retirada de la tabla aproximada.
 
 ## Fase 2 — Verificación y cierre
 
