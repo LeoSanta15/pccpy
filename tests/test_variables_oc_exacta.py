@@ -64,6 +64,13 @@ def test_s018_rf01_pa_coincide_con_la_simulacion(n, k, p):
     assert abs(_plan(n, k).pa(p) - simulada) < 3 * error
 
 
+@pytest.mark.parametrize("n, k, p", [(3, 1.12, 0.025), (10, 1.41, 0.025), (35, 1.89, 0.01), (75, 2.0, 0.1), (200, 1.5, 0.3)])
+def test_s018_rf01_pa_coincide_con_la_t_no_central(n, k, p):
+    """S018-RF-01: tercera referencia, `scipy.stats.nct.sf` (tolerancia 1e-5: en scipy 1.9 se desvía hasta ~3e-6)."""
+    esperado = stats.nct.sf(k * math.sqrt(n), n - 1, stats.norm.isf(p) * math.sqrt(n))
+    assert _plan(n, k).pa(p) == pytest.approx(esperado, abs=1e-5)
+
+
 def test_s018_rf01_la_tabla_de_mil_std_414_usa_la_pa_exacta():
     """S018-RF-01: el plan de la tabla (n = 35, k = 1,89) da `Pa(1 %)` = 0,94167 (integral), no 0,93902 (aproximación)."""
     plan = pp.acceptance_sampling_variables(1000, 1.0)
@@ -128,6 +135,22 @@ def test_s018_rf03_n_igual_a_2_coincide_con_la_integral():
     """S018-RF-03: con n = 2 (un grado de libertad) `pa` coincide con la integral independiente."""
     for p in (0.001, 0.05, 0.3):
         assert _plan(2, 1.0).pa(p) == pytest.approx(_pa_integral(2, 1.0, p), rel=1e-9)
+
+
+@pytest.mark.parametrize("n, k", [(2, 1.5), (3, 4.0), (10, 4.0), (35, 2.5)])
+def test_s018_rf03_p_muy_pequena_coincide_con_la_integral(n, k):
+    """S018-RF-03: con p = 1e-12 no se pierde precisión (`1 − p` redondea; hay que usar la cola superior directamente)."""
+    assert _plan(n, k).pa(1e-12) == pytest.approx(_pa_integral(n, k, 1e-12), rel=1e-9)
+
+
+def test_s018_rf03_oc_curve_es_rapida():
+    """S018-RF-03: `oc_curve()` (300 puntos) tarda menos de 2 s (la integral con `quad` tardaba ~10 s)."""
+    import time
+
+    plan = pp.acceptance_sampling_variables(1000, 1.0)
+    inicio = time.perf_counter()
+    plan.oc_curve()
+    assert time.perf_counter() - inicio < 2.0
 
 
 def test_s018_rf03_k_cero_da_al_menos_un_medio():
