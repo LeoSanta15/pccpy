@@ -1,6 +1,6 @@
 # 018 — Curva OC exacta de los planes por variables (distribución t no central)
 
-- **Estado:** borrador
+- **Estado:** implementada
 - **Identificador:** S018
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.16.1 (cambia resultados existentes: `pa`, `alpha`, `ltpd` y `oc_curve` de los planes unilaterales; se publica como parche por decisión de la persona responsable, como la 0.15.8 y la 0.15.9)
@@ -100,6 +100,6 @@ Cambian `pa`, `oc_curve`, `alpha`, `ltpd`, el gráfico OC y `summary()` de **tod
 
 Ninguna. Decididas por la persona responsable (con las recomendaciones de la propuesta):
 
-1. **Cálculo:** `scipy.stats.nct.sf` directamente. Si el CI en scipy 1.9 (versiones mínimas) mostrara diferencias con la integral, se vuelve a la integral para todo. Alternativa descartada: la integral en todos los casos (más lenta).
+1. **Cálculo:** `scipy.stats.nct.sf` directamente; si el CI en scipy 1.9 (versiones mínimas) mostraba diferencias con la integral, se volvía a la integral. **Resultado:** el CI de `versiones-minimas` mostró en scipy 1.9 desviaciones de hasta ~3·10⁻⁶ (y 0 donde debía dar ~10⁻⁹), así que se usa la integral, con cuadratura de Gauss-Legendre vectorizada (400 nodos sobre `s`) en vez de `quad`, para que `oc_curve` (300 puntos) tarde ~0,05 s en vez de ~10 s; `nct.sf` queda solo como tercera referencia en los tests (tolerancia 1e-5). Alternativa descartada: `quad` en cada punto (lenta).
 2. **Versión:** 0.16.1 (parche), aunque cambian `alpha`, `ltpd` y la curva de todos los planes unilaterales; así lo decide la persona responsable (la recomendación era 0.17.0). Se avisa igualmente en «Cambios que alteran resultados» del CHANGELOG. Alternativa descartada: versión menor 0.17.0.
 3. **OC bilateral con el proceso descentrado:** fuera de alcance (hoy no existe y requiere parametrizar la media). Alternativa descartada: añadirla aquí con un argumento `shift=`.

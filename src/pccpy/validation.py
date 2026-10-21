@@ -1324,6 +1324,37 @@ def _variables_414():
     return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
 
 
+@_comprobacion("variables-oc-exacta", N_("Curva OC de los planes por variables unilaterales: Pa exacta (t no central) contra la integral numérica y alpha del plan de la tabla"),
+               "Integral numérica ∫ Φ(√n·(z_p − k·s)) f_s(s) ds con la densidad de s escrita aparte (scipy.integrate.quad), no la fórmula "
+               "de la t no central; no se contrastó con las tablas OC publicadas (Lieberman y Resnikoff, 1955); especificación 018", 1e-9,
+               relative=True)
+def _variables_oc_exacta():
+    import math
+
+    from scipy import stats
+    from scipy.integrate import quad
+
+    from . import acceptance_sampling_variables
+
+    def integral(n, k, p):
+        zp, gl = stats.norm.isf(p), n - 1
+
+        def integrando(s):
+            return stats.norm.cdf(math.sqrt(n) * (zp - k * s)) * 2.0 * s * gl * stats.chi2.pdf(gl * s * s, gl)
+
+        return quad(integrando, 0.0, np.inf, epsabs=1e-13, epsrel=1e-11, limit=200)[0]
+
+    esperado, obtenido = [], []
+    for n, k, p in [(3, 1.12, 0.025), (5, 1.65, 0.0065), (10, 1.41, 0.025), (35, 1.89, 0.01), (35, 1.89, 0.05), (100, 2.0, 0.01), (2, 1.0, 0.05)]:
+        plan = acceptance_sampling_variables(1000, 1.0, n=n, k=k)
+        esperado.append(integral(n, k, p))
+        obtenido.append(plan.pa(p))
+    plan = acceptance_sampling_variables(1000, 1.0)          # n = 35, k = 1,89
+    esperado.append(1.0 - integral(35, 1.89, 0.01))
+    obtenido.append(plan.alpha)
+    return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 

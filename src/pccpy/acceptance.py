@@ -13,6 +13,7 @@ import math
 import numbers
 import warnings
 from dataclasses import dataclass, field
+from functools import lru_cache
 
 import numpy as np
 import pandas as pd
@@ -564,7 +565,7 @@ class SamplingPlanVariables:
     method: str
 
     def pa(self, p: float) -> float:
-        """P(aceptar | fracción defectiva p) — aproximación normal."""
+        """P(aceptar | fracción defectiva p) — exacta (t no central) en el caso unilateral."""
         return _pa_variables(self.n, self.k, p, self.spec_type)
 
     def oc_curve(self, stable: bool = False) -> pd.DataFrame:
@@ -647,21 +648,38 @@ class SamplingPlanVariables:
         return result
 
 
+@lru_cache(maxsize=128)
+def _nodos_s(n: int) -> tuple[np.ndarray, np.ndarray]:
+    """Nodos y pesos de Gauss-Legendre (400) para integrar sobre la desviación estándar muestral de n observaciones.
+
+    El peso incluye la densidad de ``s`` (``gl·s²/σ² ~ χ²`` con ``gl = n − 1``). Se prefiere a ``scipy.stats.nct.sf``,
+    que en scipy 1.9 se desvía hasta ~3·10⁻⁶ de la integral y devuelve 0 donde debería dar ~10⁻⁹.
+    """
+    gl = n - 1
+    bajo = math.sqrt(float(stats.chi2.ppf(1e-16, gl)) / gl)
+    alto = math.sqrt(float(stats.chi2.isf(1e-16, gl)) / gl)
+    x, w = np.polynomial.legendre.leggauss(400)
+    nodos = 0.5 * (alto - bajo) * x + 0.5 * (alto + bajo)
+    densidad = 2.0 * nodos * gl * stats.chi2.pdf(gl * nodos ** 2, gl)
+    return nodos, 0.5 * (alto - bajo) * w * densidad
+
+
 def _pa_variables(n: int, k: float, p: float, spec_type: str) -> float:
     """P(aceptar | p) para un plan de variables con factor k.
 
-    Unilateral: aproximación normal de Montgomery (2013) sec. 15-3. Bilateral: integral exacta con el proceso centrado
-    (ver más abajo).
+    Unilateral: exacta (distribución t no central, ``Pa = P(t'_{n−1}(z_{1−p}·√n) ≥ k·√n)``), calculada por
+    cuadratura sobre ``s`` (con la regla ``(U − x̄)/s ≥ k``, normalidad e independencia). Bilateral: integral exacta con el
+    proceso centrado (ver más abajo).
     """
     if p <= 0:
         return 1.0
     if p >= 1:
         return 0.0
-    zp = stats.norm.ppf(1.0 - p)
+    zp = stats.norm.isf(p)
     if spec_type == "one":
-        # Pa ≈ Phi(zp - k*sqrt(n) / sqrt(1 + k^2/2))
-        nc = (zp - k) * math.sqrt(n) / math.sqrt(1.0 + k ** 2 / 2.0)
-        return float(stats.norm.cdf(nc))
+        # P(√n·(U − x̄)/s ≥ k√n) con √n·(U − x̄)/s ~ t no central (n − 1 gl, no centralidad z_p·√n): se integra sobre s
+        s, peso = _nodos_s(n)
+        return float(np.clip(np.dot(peso, stats.norm.cdf(math.sqrt(n) * (zp - k * s))), 0.0, 1.0))
     else:
         # Bilateral con el proceso centrado y p/2 fuera de cada especificación (z = z_{p/2}): se acepta si
         # |x̄| ≤ z − k·s, con x̄ ~ N(0, 1/n) y s² ~ χ²_{n−1}/(n−1), independientes (el producto de dos unilaterales

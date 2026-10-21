@@ -1594,7 +1594,7 @@ dec = plan_v.evaluate(sample, usl=11.0)
 print(dec)
 # {'xbar': 10.49, 's': 0.19, 'Q_usl': 2.68, 'accept': True}
 
-plan_v.oc_curve()   # OC curve of the plan
+plan_v.oc_curve()   # exact OC curve of the one-sided plan (noncentral t; assumes normal data)
 ```
 
 ### Dodge-Romig

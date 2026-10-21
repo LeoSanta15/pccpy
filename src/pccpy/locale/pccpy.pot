@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-21 22:15+0000\n"
+"POT-Creation-Date: 2026-10-21 23:20+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1934,6 +1934,11 @@ msgid "Curtosis"
 msgstr ""
 
 msgid "Curva OC"
+msgstr ""
+
+msgid ""
+"Curva OC de los planes por variables unilaterales: Pa exacta (t no "
+"central) contra la integral numérica y alpha del plan de la tabla"
 msgstr ""
 
 #, python-brace-format

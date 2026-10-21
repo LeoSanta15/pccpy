@@ -1,5 +1,18 @@
 # Registro de cambios
 
+## [Sin publicar] - Curva OC exacta de los planes por variables
+
+Especificación `docs/specs/018-curva-oc-exacta-variables`. Se publica como parche (0.16.1) aunque cambia resultados existentes, por decisión de la persona responsable, como la 0.15.8 y la 0.15.9. La referencia es una integral numérica escrita aparte y simulación con 20 semillas; no se contrastó con las tablas OC publicadas (Lieberman y Resnikoff, 1955), que no se pudieron consultar.
+
+### Cambios que alteran resultados
+- **La probabilidad de aceptación de los planes por variables unilaterales** (`pa`, `oc_curve`, `alpha`, `ltpd`, el gráfico OC y `summary()`) es exacta (distribución t no central, calculada por cuadratura sobre la desviación estándar muestral, con error ~1e-13) en lugar de la aproximación normal de Montgomery. `scipy.stats.nct.sf` se descartó porque en scipy 1.9 se desvía hasta ~3·10⁻⁶ de la integral. Diferencias de 0,0005 a 0,018 en la `Pa` en los ejemplos medidos (mayores con muestras pequeñas). Ejemplo, `acceptance_sampling_variables(1000, 1.0)` (n=35, k=1,89): `alpha` 0,0610 → 0,0583 y `ltpd` 6,32 % → 6,50 %. No cambian `n`, `k`, la letra de código, `evaluate` ni la OC bilateral (que ya era exacta con el proceso centrado).
+
+### Añadido
+- Una comprobación más en la validación (69 en total): `Pa` de siete planes y `alpha` del plan de la tabla contra la integral numérica independiente.
+
+### No incluido
+- OC bilateral con el proceso descentrado, y las tablas OC publicadas como referencia.
+
 ## [0.16.0] - 2026-10-21 - Variables: planes de MIL-STD-414 (tablas A-2 y B-1)
 
 Especificación `docs/specs/017-variables-mil-std-414`. Las tablas A-2 y B-1 se transcribieron de capturas de MIL-STD-414 (11 de junio de 1957) que aportó la persona responsable, no del texto de la norma; **no es ANSI/ASQ Z1.9** (sus tablas siguen sin estar disponibles) y no se midió si Minitab devuelve los mismos planes.
