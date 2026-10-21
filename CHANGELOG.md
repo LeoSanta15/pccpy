@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - Curva OC exacta de los planes por variables
+## [0.16.1] - 2026-10-21 - Curva OC exacta de los planes por variables
 
 Especificación `docs/specs/018-curva-oc-exacta-variables`. Se publica como parche (0.16.1) aunque cambia resultados existentes, por decisión de la persona responsable, como la 0.15.8 y la 0.15.9. La referencia es una integral numérica escrita aparte y simulación con 20 semillas; no se contrastó con las tablas OC publicadas (Lieberman y Resnikoff, 1955), que no se pudieron consultar.
 
