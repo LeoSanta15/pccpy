@@ -1,9 +1,9 @@
-"""Muestreo de aceptación: Z1.4 (atributos), Z1.9 (variables) y Dodge-Romig.
+"""Muestreo de aceptación: Z1.4 (atributos), MIL-STD-414 (variables) y Dodge-Romig.
 
 Referencias
 -----------
 * ANSI/ASQ Z1.4-2008: Sampling Procedures and Tables for Inspection by Attributes.
-* ANSI/ASQ Z1.9-2008: Sampling Procedures and Tables for Inspection by Variables.
+* MIL-STD-414 (11 de junio de 1957): Sampling Procedures and Tables for Inspection by Variables for Percent Defective.
 * Dodge, H.F. & Romig, H.G. (1959). Sampling Inspection Tables. Wiley.
 * Montgomery, D.C. (2013). *Introduction to Statistical Quality Control*, 7th ed.
 """
@@ -529,10 +529,10 @@ def _plan_doble(N: int, letra: str, aql: float) -> DoublePlanAttributes:
         aoq_max=aoql, method="z1.4-double", _p_arr=p_arr)
 
 
-# ─────────────────────────────────────────────────────────── Z1.9 ─────────────
+# ─────────────────────────────────────────────────────── MIL-STD-414 ─────────
 @dataclass
 class SamplingPlanVariables:
-    """Plan de muestreo de aceptación por variables (ANSI/ASQ Z1.9 / método k).
+    """Plan de muestreo de aceptación por variables (MIL-STD-414 / método k).
 
     Atributos
     ---------
@@ -551,7 +551,7 @@ class SamplingPlanVariables:
     ltpd : float
         LTPD (p en % a beta=0.10).
     method : str
-        ``'z1.9'`` o ``'custom'``.
+        ``'mil-std-414'`` o ``'custom'``.
     """
 
     N: int
@@ -679,31 +679,61 @@ def _pa_variables(n: int, k: float, p: float, spec_type: str) -> float:
         return float(np.clip(quad(integrando, 0.0, sup, epsabs=1e-12, epsrel=1e-10)[0], 0.0, 1.0))
 
 
-# Tabla Z1.9 simplificada: (AQL_pct, inspection_level_letter) → (n, k)
-# Nivel de inspección II normal, una especificación (one-sided)
-_Z19_TABLE: dict[tuple[float, str], tuple[int, float]] = {
-    # AQL%, letter → (n, k)
-    (0.10, "B"): (3, 1.12), (0.10, "C"): (3, 1.12), (0.10, "D"): (4, 1.17),
-    (0.10, "E"): (5, 1.24), (0.10, "F"): (7, 1.33), (0.10, "G"): (10, 1.41),
-    (0.10, "H"): (15, 1.50), (0.10, "J"): (20, 1.57), (0.10, "K"): (25, 1.62),
-    (0.25, "B"): (3, 0.958), (0.25, "C"): (3, 0.958), (0.25, "D"): (4, 0.992),
-    (0.25, "E"): (5, 1.03), (0.25, "F"): (7, 1.09), (0.25, "G"): (10, 1.16),
-    (0.25, "H"): (15, 1.24), (0.25, "J"): (20, 1.30), (0.25, "K"): (25, 1.35),
-    (0.65, "B"): (3, 0.663), (0.65, "C"): (3, 0.663), (0.65, "D"): (4, 0.692),
-    (0.65, "E"): (5, 0.736), (0.65, "F"): (7, 0.810), (0.65, "G"): (10, 0.874),
-    (0.65, "H"): (15, 0.955), (0.65, "J"): (20, 1.01), (0.65, "K"): (25, 1.05),
-    (1.00, "B"): (3, 0.493), (1.00, "C"): (3, 0.493), (1.00, "D"): (4, 0.516),
-    (1.00, "E"): (5, 0.566), (1.00, "F"): (7, 0.646), (1.00, "G"): (10, 0.716),
-    (1.00, "H"): (15, 0.797), (1.00, "J"): (20, 0.851), (1.00, "K"): (25, 0.893),
-    (2.50, "B"): (3, 0.120), (2.50, "C"): (3, 0.120), (2.50, "D"): (4, 0.152),
-    (2.50, "E"): (5, 0.197), (2.50, "F"): (7, 0.280), (2.50, "G"): (10, 0.356),
-    (2.50, "H"): (15, 0.437), (2.50, "J"): (20, 0.489), (2.50, "K"): (25, 0.529),
-    (4.00, "B"): (3, -0.051), (4.00, "C"): (3, -0.051), (4.00, "D"): (4, -0.031),
-    (4.00, "E"): (5, 0.011), (4.00, "F"): (7, 0.100), (4.00, "G"): (10, 0.173),
-    (4.00, "H"): (15, 0.250), (4.00, "J"): (20, 0.303), (4.00, "K"): (25, 0.342),
-}
+# Tabla A-2 de MIL-STD-414 (11 de junio de 1957): (lote hasta, letras de los niveles de inspección I a V).
+# Transcrita de capturas de la norma, no de su texto.
+_TABLA_A2_414: tuple[tuple[int, str], ...] = (
+    (8, "BBBBC"), (15, "BBBBD"), (25, "BBBCE"), (40, "BBBDF"), (65, "BBCEG"), (110, "BBDFH"), (180, "BCEGI"),
+    (300, "BDFHJ"), (500, "CEGIK"), (800, "DFHJL"), (1300, "EGIKL"), (3200, "FHJLM"), (8000, "GILMN"),
+    (22000, "HJMNO"), (110000, "IKNOP"), (550000, "IKOPQ"), (10 ** 12, "IKPQQ"),
+)
 
-_AQL_Z19 = [0.10, 0.25, 0.65, 1.0, 2.5, 4.0]
+# Tabla B-1 de MIL-STD-414: letra → (n, k por AQL de ``_AQL_414``). ``None`` = flecha: primer plan por debajo en la misma
+# columna (tanto n como k). Inspección normal, método de la desviación estándar, especificación unilateral, Forma 1.
+_AQL_414 = (0.04, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.00, 1.50, 2.50, 4.00, 6.50, 10.00, 15.00)
+_TABLA_B1_414: dict[str, tuple[int, tuple[float | None, ...]]] = {
+    "B": (3, (None, None, None, None, None, None, None, None, None, 1.12, .958, .765, .566, .341)),
+    "C": (4, (None, None, None, None, None, None, None, 1.45, 1.34, 1.17, 1.01, .814, .617, .393)),
+    "D": (5, (None, None, None, None, None, None, 1.65, 1.53, 1.40, 1.24, 1.07, .874, .675, .455)),
+    "E": (7, (None, None, None, None, 2.00, 1.88, 1.75, 1.62, 1.50, 1.33, 1.15, .955, .755, .536)),
+    "F": (10, (None, None, None, 2.24, 2.11, 1.98, 1.84, 1.72, 1.58, 1.41, 1.23, 1.03, .828, .611)),
+    "G": (15, (2.64, 2.53, 2.42, 2.32, 2.20, 2.06, 1.91, 1.79, 1.65, 1.47, 1.30, 1.09, .886, .664)),
+    "H": (20, (2.69, 2.58, 2.47, 2.36, 2.24, 2.11, 1.96, 1.82, 1.69, 1.51, 1.33, 1.12, .917, .695)),
+    "I": (25, (2.72, 2.61, 2.50, 2.40, 2.26, 2.14, 1.98, 1.85, 1.72, 1.53, 1.35, 1.14, .936, .712)),
+    "J": (30, (2.73, 2.61, 2.51, 2.41, 2.28, 2.15, 2.00, 1.86, 1.73, 1.55, 1.36, 1.15, .946, .723)),
+    "K": (35, (2.77, 2.65, 2.54, 2.45, 2.31, 2.18, 2.03, 1.89, 1.76, 1.57, 1.39, 1.18, .969, .745)),
+    "L": (40, (2.77, 2.66, 2.55, 2.44, 2.31, 2.18, 2.03, 1.89, 1.76, 1.58, 1.39, 1.18, .971, .746)),
+    "M": (50, (2.83, 2.71, 2.60, 2.50, 2.35, 2.22, 2.08, 1.93, 1.80, 1.61, 1.42, 1.21, 1.00, .774)),
+    "N": (75, (2.90, 2.77, 2.66, 2.55, 2.41, 2.27, 2.12, 1.98, 1.84, 1.65, 1.46, 1.24, 1.03, .804)),
+    "O": (100, (2.92, 2.80, 2.69, 2.58, 2.43, 2.29, 2.14, 2.00, 1.86, 1.67, 1.48, 1.26, 1.05, .819)),
+    "P": (150, (2.96, 2.84, 2.73, 2.61, 2.47, 2.33, 2.18, 2.03, 1.89, 1.70, 1.51, 1.29, 1.07, .841)),
+    "Q": (200, (2.97, 2.85, 2.73, 2.62, 2.47, 2.33, 2.18, 2.04, 1.89, 1.70, 1.51, 1.29, 1.07, .845)),
+}
+_LETRAS_414 = tuple(_TABLA_B1_414)
+
+
+def _letra_codigo_414(N: int, nivel: int) -> str:
+    """Letra de código de la tabla A-2 para el tamaño de lote y el nivel de inspección (1 a 5 = I a V)."""
+    letras = next(letras for hasta, letras in _TABLA_A2_414 if N <= hasta)  # el último tramo no tiene límite
+    return letras[nivel - 1]
+
+
+def _plan_414(letra: str, aql: float, inspeccion: str) -> tuple[int, float]:
+    """(n, k) de la tabla B-1 para la letra y el AQL; resuelve las flechas y desplaza la columna si es rigurosa."""
+    columna = next((i for i, a in enumerate(_AQL_414) if math.isclose(a, aql, rel_tol=1e-9)), None)
+    if columna is None:
+        raise ValueError(tr(
+            "El AQL {aql}% no está en la tabla B-1 de MIL-STD-414. Valores disponibles: {valores}."
+        ).format(aql=aql, valores=", ".join(f"{a:g}" for a in _AQL_414)))
+    if inspeccion == "tightened":
+        if columna == 0:
+            raise ValueError(tr(
+                "La inspección rigurosa de MIL-STD-414 no tiene plan con AQL 0.04%; use un AQL de 0.065% a 15%."))
+        columna -= 1
+    i = _LETRAS_414.index(letra)
+    while _TABLA_B1_414[_LETRAS_414[i]][1][columna] is None:
+        i += 1
+    n, ks = _TABLA_B1_414[_LETRAS_414[i]]
+    return n, float(ks[columna])  # type: ignore[arg-type]
 
 
 def acceptance_sampling_variables(
@@ -711,41 +741,62 @@ def acceptance_sampling_variables(
     aql: float,
     *,
     spec_type: str = "one",
-    inspection_level: int = 2,
+    inspection_level: int = 4,
+    inspection: str = "normal",
     n: int | None = None,
     k: float | None = None,
+    standard: str = "mil-std-414",
 ) -> SamplingPlanVariables:
-    """Plan de muestreo de aceptación por variables (ANSI/ASQ Z1.9).
+    """Plan de muestreo de aceptación por variables (MIL-STD-414, método de la desviación estándar, Forma 1).
+
+    Los planes salen de las tablas A-2 y B-1 de MIL-STD-414 (11 de junio de 1957), transcritas de capturas de la norma.
+    No es ANSI/ASQ Z1.9 (sus tablas no están disponibles) y no se midió su equivalencia con Minitab.
 
     Parameters
     ----------
     N : int
-        Tamaño del lote.
+        Tamaño del lote (la tabla A-2 empieza en 3).
     aql : float
-        AQL en porcentaje. Valores Z1.9: 0.10, 0.25, 0.65, 1.0, 2.5, 4.0.
+        AQL en porcentaje. Valores de la tabla: 0.04, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.00, 1.50, 2.50, 4.00,
+        6.50, 10.00 y 15.00.
     spec_type : str
-        ``'one'`` (una especificación, unilateral) o ``'two'`` (bilateral).
+        ``'one'`` (unilateral). ``'two'`` solo con ``n=`` y ``k=`` (la Forma 1 no cubre la doble especificación).
     inspection_level : int
-        Nivel de inspección general (1, 2 o 3). Por defecto 2.
+        Nivel de inspección de 1 a 5 (I a V de la tabla A-2). Por defecto 4.
+    inspection : str
+        ``'normal'`` o ``'tightened'`` (rigurosa: la columna del AQL inmediatamente inferior).
     n : int, opcional
-        Tamaño de muestra personalizado.
+        Tamaño de muestra personalizado (con ``k``).
     k : float, opcional
-        Factor k personalizado.
+        Factor k personalizado (con ``n``).
+    standard : str
+        ``'mil-std-414'``. ``'z1.9'`` lanza ``ValueError`` (sin sus tablas).
 
     Returns
     -------
     SamplingPlanVariables
+
+    Notes
+    -----
+    Si el ``n`` de la tabla es igual o mayor que ``N``, se inspecciona todo el lote (``n = N``) con un aviso.
     """
+    if standard == "z1.9":
+        raise ValueError(tr(
+            "Las tablas de ANSI/ASQ Z1.9 no están disponibles. Use standard='mil-std-414' o dé su plan con n= y k=."))
+    if standard != "mil-std-414":
+        raise ValueError(tr("'standard' debe ser 'mil-std-414'."))
     if N < 2:
         raise ValueError(tr("N debe ser ≥ 2."))
-    if not 0 < aql <= 10:
-        raise ValueError(tr("'aql' debe estar en (0, 10] %."))
     if spec_type not in ("one", "two"):
         raise ValueError(tr("'spec_type' debe ser 'one' o 'two'."))
+    if (n is None) != (k is None):
+        raise ValueError(tr("Indique 'n' y 'k' juntos, o ninguno de los dos."))
 
-    aql_frac = aql / 100.0
+    if not 0 < aql <= 100:
+        raise ValueError(tr("'aql' debe estar en (0, 100] %."))
 
     if n is not None and k is not None:
+        aql_frac = aql / 100.0
         alpha = 1.0 - _pa_variables(n, k, aql_frac, spec_type)
         try:
             ltpd = brentq(lambda p: _pa_variables(n, k, p, spec_type) - 0.10, aql_frac, 0.9999)
@@ -754,37 +805,35 @@ def acceptance_sampling_variables(
         return SamplingPlanVariables(N=N, n=n, k=k, aql=aql, spec_type=spec_type,
                                      alpha=alpha, ltpd=ltpd, method="custom")
 
-    # Z1.9 table lookup
-    letra = _letra_codigo(N)
-    letters = _LETRAS_CODIGO
-    idx = letters.index(letra)
-    if inspection_level == 1:
-        idx = max(0, idx - 2)
-    elif inspection_level == 3:
-        idx = min(len(letters) - 1, idx + 2)
-    letra = letters[idx]
-
-    aql_key = min(_AQL_Z19, key=lambda a: abs(a - aql))
-    key = (aql_key, letra)
-    if key not in _Z19_TABLE:
+    if spec_type == "two":
         raise ValueError(tr(
-            "Combinación AQL={aql_key}% y letra={letra} no disponible en la tabla Z1.9."
-        ).format(aql_key=aql_key, letra=letra))
+            "La Forma 1 de MIL-STD-414 no cubre la doble especificación (no hay tablas de la Forma 2): "
+            "dé su plan con n= y k=."))
+    if inspection not in ("normal", "tightened"):
+        raise ValueError(tr("'inspection' debe ser 'normal' o 'tightened'."))
+    if isinstance(inspection_level, bool) or not isinstance(inspection_level, (int, np.integer)) \
+            or not 1 <= inspection_level <= 5:
+        raise ValueError(tr("El nivel de inspección debe ser un entero de 1 a 5 (I a V de la tabla A-2)."))
+    if N < 3:
+        raise ValueError(tr("La tabla A-2 de MIL-STD-414 empieza en lotes de 3 unidades."))
 
-    n_plan, k_plan = _Z19_TABLE[key]
-    warnings.warn(
-        tr("La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los planes que da pueden aceptar "
-           "casi cualquier lote). Use los valores n y k de su ejemplar de ANSI/ASQ Z1.9 con n= y k=."),
-        UserWarning, stacklevel=2)
-    alpha = 1.0 - _pa_variables(n_plan, k_plan, aql_key / 100.0, spec_type)
+    letra = _letra_codigo_414(N, int(inspection_level))
+    n_plan, k_plan = _plan_414(letra, aql, inspection)
+    if n_plan >= N:
+        warnings.warn(
+            tr("El plan de la tabla MIL-STD-414 pide una muestra de {n} con un lote de {N}: se inspecciona el 100 % "
+               "del lote (n = N) y se conserva el k de la tabla.").format(n=n_plan, N=N),
+            UserWarning, stacklevel=2)
+        n_plan = N
+    aql_frac = aql / 100.0
+    alpha = 1.0 - _pa_variables(n_plan, k_plan, aql_frac, spec_type)
     try:
-        ltpd = brentq(lambda p: _pa_variables(n_plan, k_plan, p, spec_type) - 0.10,
-                      aql_key / 100.0, 0.9999)
+        ltpd = brentq(lambda p: _pa_variables(n_plan, k_plan, p, spec_type) - 0.10, aql_frac, 0.9999)
     except ValueError:
         ltpd = float("nan")
 
-    return SamplingPlanVariables(N=N, n=n_plan, k=k_plan, aql=aql_key, spec_type=spec_type,
-                                 alpha=alpha, ltpd=ltpd, method="z1.9")
+    return SamplingPlanVariables(N=N, n=n_plan, k=k_plan, aql=aql, spec_type=spec_type,
+                                 alpha=alpha, ltpd=ltpd, method="mil-std-414")
 
 
 # ─────────────────────────────────────────────────── Dodge-Romig ──────────────

@@ -15,7 +15,7 @@ usuario (docstrings, errores, salidas) está **en español**.
 ## Estado actual (verificado el 2026-10-20; ver el CHANGELOG para lo no publicado)
 
 - Versión **0.15.9** (`pyproject.toml` y `src/pccpy/__init__.py`; ver R-05).
-- **3 649 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 67 comprobaciones.
+- **3 649 pruebas** pasando, **97 %** de cobertura global, Python `>=3.9`; `run_validation()` da 68 comprobaciones.
 - Repo: `LeoSanta15/pccpy`. Publicado en PyPI vía Trusted Publisher (OIDC).
 - CI: `.github/workflows/tests.yml` (tests 3.9–3.14, `versiones-minimas` = numpy 1.22 / scipy 1.9 /
   pandas 1.4 / matplotlib 3.5 en Python 3.9, calidad = ruff + mypy + catálogos + especificaciones,
@@ -65,7 +65,7 @@ que no se negocian en `docs/specs/CONSTITUCION.md`.
 - **Cambia resultados → versión menor; no → parche**, y se avisa en «Cambios que alteran resultados» del CHANGELOG.
 - **Las traducciones al inglés se escriben, pero siguen pendientes de revisión experta en SPC.**
 - **Tras abrir un PR se vigila** (CI y comentarios) hasta que se fusione.
-- **Lo que no se pudo verificar se dice** (p. ej. el comportamiento de Minitab, las tablas de Z1.9 y Z1.4, la tabla de Dixon
+- **Lo que no se pudo verificar se dice** (p. ej. el comportamiento de Minitab, las tablas de MIL-STD-414, Z1.9 y Z1.4, la tabla de Dixon
   recordada de memoria); no se afirma equivalencia con Minitab sin haberla medido.
 
 ## Definición de "terminado"
@@ -215,6 +215,6 @@ univariadas, las duraciones = 0 en la carta T `zeros=`, spec 002, y la prueba de
 ## Deuda técnica detectada en la revisión del 2026-10-02
 
 - Cobertura total 97 % (ningún módulo bajo 90 %). Lo menos cubierto: `_wizard.py` (94 %, ramas del widget), `acceptance.py` (96 %, búsquedas Dodge-Romig sin solución) y las rutas de `openpyxl` ausente en `_data.py`.
-- Z1.9: la tabla incluida NO reproduce la norma (planes que aceptan casi todo; `acceptance_sampling_variables` avisa). Falta sustituirla por las tablas A-2 y B-1 de ANSI/ASQ Z1.9, que no se pudieron obtener (sin acceso a la norma). Z1.4 usa la tabla I (niveles I/II/III y S-1 a S-4), la II-A y el muestreo doble de la III-A (transcritas de capturas, no del texto de la norma); no incluye la inspección rigurosa/reducida ni el muestreo múltiple (faltan sus tablas).
+- Variables: `acceptance_sampling_variables` usa las tablas A-2 y B-1 de **MIL-STD-414** (1957; transcritas de capturas, no del texto; spec 017) y NO es ANSI/ASQ Z1.9 (`standard="z1.9"` lanza `ValueError`). Faltan las tablas de Z1.9, la Forma 2, la inspección reducida, el método del rango y la curva OC exacta (t no central). Que el nivel IV sea el normal se recuerda de memoria. Z1.4 usa la tabla I (niveles I/II/III y S-1 a S-4), la II-A y el muestreo doble de la III-A (transcritas de capturas, no del texto de la norma); no incluye la inspección rigurosa/reducida ni el muestreo múltiple (faltan sus tablas).
 - `publish.yml` verifica tag == versión del wheel y corre `twine check` (pasos probados en local, aún no ejecutados en Actions; se verán con el próximo release).
 - `ruff --select ...,S` falla por `assert` en `acceptance.py:692` (S101).

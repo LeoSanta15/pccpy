@@ -1,5 +1,24 @@
 # Registro de cambios
 
+## [Sin publicar] - Variables: planes de MIL-STD-414 (tablas A-2 y B-1)
+
+Especificación `docs/specs/017-variables-mil-std-414`. Las tablas A-2 y B-1 se transcribieron de capturas de MIL-STD-414 (11 de junio de 1957) que aportó la persona responsable, no del texto de la norma; **no es ANSI/ASQ Z1.9** (sus tablas siguen sin estar disponibles) y no se midió si Minitab devuelve los mismos planes.
+
+### Cambios que alteran resultados
+- **Todos los planes de `acceptance_sampling_variables` que salen de la tabla** (no los dados con `n=` y `k=`): antes, una tabla «Z1.9» aproximada que no reproducía la norma; ahora, MIL-STD-414. Ejemplo, `N=1000`, `aql=1.0`: antes `n=20`, `k=0.851`, α=0, LTPD 30,3 %; ahora `n=35`, `k=1.89`, α=0,061, LTPD 6,32 %. El nivel por defecto pasa de 2 a **4** (niveles 1 a 5 = I a V de la tabla A-2, sin el desplazamiento de ±2 sobre la letra de Z1.4) y el método del resultado pasa de `"z1.9"` a `"mil-std-414"`.
+- **AQL fuera de la tabla:** `ValueError` (antes se tomaba el más cercano de 0,10 a 4,0 %). Los AQL son 0,04; 0,065; 0,10; 0,15; 0,25; 0,40; 0,65; 1,00; 1,50; 2,50; 4,00; 6,50; 10,00 y 15,00 %. `aql` se valida en (0, 100] (antes (0, 10]).
+- **`spec_type="two"` sin `n=` y `k=`** lanza `ValueError` (la Forma 1 no cubre la doble especificación y no hay tablas de la Forma 2). Con `n=` y `k=` funciona como antes. Pasar `n=` sin `k=` (o al revés) lanza `ValueError` (antes se ignoraba).
+- **Un plan con muestra igual o mayor que el lote** pasa a inspección al 100 % (`n = N`, con el `k` de la tabla) y avisa con un `UserWarning`, como Z1.4.
+- Desaparece el aviso de «aproximación» y la tabla `_Z19_TABLE`.
+
+### Añadido
+- **`inspection="tightened"`** (inspección rigurosa: la columna del AQL inmediatamente inferior de la tabla B-1; sin plan con AQL 0,04 %) y **`standard="mil-std-414"`** (`"z1.9"` lanza `ValueError` que propone MIL-STD-414 o `n=` y `k=`).
+- Una comprobación más en la validación (68 en total): letras de A-2, celdas de B-1 (con flecha), rigurosa y guarda del 100 %.
+- Ficha BUG-26 en `docs/retrospectiva/BUG_CATALOG.md`.
+
+### No incluido
+- ANSI/ASQ Z1.9 (sin sus tablas), Forma 2, inspección reducida, método del rango, variabilidad conocida y curva OC exacta (t no central; se mantiene la aproximación normal).
+
 ## [0.15.9] - 2026-10-20 - Z1.4: niveles especiales S-1 a S-4, muestreo doble e inspección al 100 %
 
 Especificación `docs/specs/016-z14-niveles-especiales-y-muestreo-doble`. Se publica como parche aunque corrige un resultado existente (el del 100 % de inspección), por decisión de la persona responsable, como la 0.15.8. Además, tests de regresión y guardas del flujo de publicación (al final). Las tablas I, II-A y III-A se transcribieron de capturas de la norma que aportó la persona responsable (no del texto de la norma); no se midió si Minitab devuelve los mismos planes.

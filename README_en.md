@@ -1578,17 +1578,16 @@ double.plot()                    # OC + AOQ + ASN
 There is no double plan for AQL 0.010 and 0.015 % (`ValueError`: use `sampling="single"`) and letter A uses the plan of letter B (with a warning).
 Tightened and reduced inspection and multiple sampling are not included (their tables are missing).
 
-### Z1.9 — Variables (ANSI/ASQ Z1.9)
+### MIL-STD-414 — Variables
 
-> ⚠️ The built-in Z1.9 table **does not reproduce the standard** and the function emits a `UserWarning`. To decide with Z1.9, pass `n=` and `k=` taken from your copy of the standard.
+> ⚠️ Plans come from tables A-2 and B-1 of **MIL-STD-414** (1957; standard-deviation method, single specification limit, Form 1), transcribed from screenshots of the standard, not from its text. **It is not ANSI/ASQ Z1.9** (`standard="z1.9"` raises `ValueError`: its tables are not available) and it was not checked against Minitab. Inspection levels 1 to 5 (I to V; default 4), `inspection="tightened"` for tightened inspection; Form 2, reduced inspection and two-sided specifications (only with `n=` and `k=`) are not included.
 
 Requires the characteristic to be normally distributed; it uses the mean and standard deviation
 to estimate the fraction defective through the quality statistic Q:
 
 ```python
-plan_v = pp.acceptance_sampling_variables(N=1000, aql=1.0, spec_type="one")
-# spec_type='one'  → one-sided specification (only USL or only LSL)
-# spec_type='two'  → two-sided specification
+plan_v = pp.acceptance_sampling_variables(N=1000, aql=1.0)   # letter K (level IV): n = 35, k = 1.89
+# AQLs of table B-1: 0.04, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.00, 1.50, 2.50, 4.00, 6.50, 10.00, 15.00
 
 sample = rng.normal(10.5, 0.2, plan_v.n)
 dec = plan_v.evaluate(sample, usl=11.0)
@@ -1800,7 +1799,7 @@ chart.panels[0].violations   # dict {test: array of indices}
 - **Linearity and bias:** `%Linearity = 100·|slope|` and `%Bias = 100·|mean bias| / process variation`, AIAG definitions (MSA, 3rd ed.) recalled from memory.
 - **Generalized variance chart:** limits at percentiles of `|S|` (the same probability as ±k sigmas of a normal), not the normal approximation `b1 ± k√b2`.
 - **Limit width (`k`/`alpha`), median as the center line and the X̃-R chart:** we did not check whether Minitab offers them or how.
-- **Acceptance sampling:** Dodge-Romig plans minimize the ATI with the exact AOQL; the included Z1.9 table does not reproduce the standard. The Z1.4 special levels S-1 to S-4 and double sampling were transcribed from screenshots of tables I, II-A and III-A (not from the text of the standard) and were not checked against Minitab; Z1.4 does not include tightened or reduced inspection.
+- **Acceptance sampling:** Dodge-Romig plans minimize the ATI with the exact AOQL; the variables plans are those of MIL-STD-414 (screenshots of tables A-2 and B-1; not Z1.9). The Z1.4 special levels S-1 to S-4 and double sampling were transcribed from screenshots of tables I, II-A and III-A (not from the text of the standard) and were not checked against Minitab; Z1.4 does not include tightened or reduced inspection.
 
 ---
 

@@ -4,7 +4,7 @@ Muestreo de aceptación
 pccpy implementa los tres planes de muestreo más utilizados en la industria:
 
 * **ANSI/ASQ Z1.4** (atributos): plan n/c basado en la tabla estándar.
-* **ANSI/ASQ Z1.9** (variables): plan n/k (método del factor de aceptabilidad).
+* **MIL-STD-414** (variables): plan n/k (método del factor de aceptabilidad; tablas A-2 y B-1).
 * **Dodge-Romig** (atributos): minimiza el número promedio de inspección
   total (ATI) para un LTPD o AOQL objetivo.
 
@@ -23,8 +23,8 @@ Por atributos — Z1.4
 .. autoclass:: pccpy.DoublePlanAttributes
    :members:
 
-Por variables — Z1.9
----------------------
+Por variables — MIL-STD-414
+---------------------------
 
 .. autofunction:: pccpy.acceptance_sampling_variables
 .. autofunction:: pccpy.plot_sampling_variables

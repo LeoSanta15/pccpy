@@ -1577,17 +1577,16 @@ doble.plot()                     # OC + AOQ + ASN
 No hay plan doble para AQL 0,010 y 0,015 % (`ValueError`: usa `sampling="single"`) y la letra A usa el plan de la letra B (con aviso).
 La inspección rigurosa y reducida y el muestreo múltiple no están incluidos (faltan sus tablas).
 
-### Z1.9 — Variables (ANSI/ASQ Z1.9)
+### MIL-STD-414 — Variables
 
-> ⚠️ La tabla Z1.9 incluida **no reproduce la norma** y la función avisa con un `UserWarning`. Para decidir con Z1.9, pase `n=` y `k=` tomados de su ejemplar de la norma.
+> ⚠️ Los planes salen de las tablas A-2 y B-1 de **MIL-STD-414** (1957; método de la desviación estándar, especificación unilateral, Forma 1), transcritas de capturas de la norma, no de su texto. **No es ANSI/ASQ Z1.9** (`standard="z1.9"` lanza `ValueError`: sus tablas no están disponibles) y no se comprobó que coincida con Minitab. Niveles de inspección 1 a 5 (I a V; por defecto 4), `inspection="tightened"` para la rigurosa; la Forma 2, la inspección reducida y la doble especificación (solo con `n=` y `k=`) no están incluidas.
 
 Requiere que la característica se distribuya normalmente; usa la media y la desviación
 para estimar la fracción defectuosa mediante el estadístico de calidad Q:
 
 ```python
-plan_v = pp.acceptance_sampling_variables(N=1000, aql=1.0, spec_type="one")
-# spec_type='one'  → especificación unilateral (solo USL o solo LSL)
-# spec_type='two'  → especificación bilateral
+plan_v = pp.acceptance_sampling_variables(N=1000, aql=1.0)   # letra K (nivel IV): n = 35, k = 1.89
+# AQL de la tabla B-1: 0.04, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.00, 1.50, 2.50, 4.00, 6.50, 10.00, 15.00
 
 muestra = rng.normal(10.5, 0.2, plan_v.n)
 dec = plan_v.evaluate(muestra, usl=11.0)
@@ -1799,7 +1798,7 @@ carta.panels[0].violations   # dict {prueba: array de índices}
 - **Linealidad y sesgo:** `%Linealidad = 100·|pendiente|` y `%Sesgo = 100·|sesgo medio| / variación del proceso`, definiciones de AIAG (MSA, 3.ª ed.) recordadas de memoria.
 - **Carta de varianza generalizada:** límites por percentiles de `|S|` (la misma probabilidad que ±k sigmas de una normal), no la aproximación normal `b1 ± k√b2`.
 - **Ancho de los límites (`k`/`alpha`), mediana como línea central y carta X̃-R:** no se comprobó si Minitab los ofrece ni cómo.
-- **Muestreo de aceptación:** los planes Dodge-Romig minimizan el ATI con el AOQL exacto; la tabla Z1.9 incluida no reproduce la norma. Los niveles S-1 a S-4 y el muestreo doble de Z1.4 se transcribieron de capturas de las tablas I, II-A y III-A (no del texto de la norma) y no se comprobó que coincidan con Minitab; Z1.4 no trae la inspección rigurosa ni la reducida.
+- **Muestreo de aceptación:** los planes Dodge-Romig minimizan el ATI con el AOQL exacto; los planes por variables son los de MIL-STD-414 (capturas de las tablas A-2 y B-1; no es Z1.9). Los niveles S-1 a S-4 y el muestreo doble de Z1.4 se transcribieron de capturas de las tablas I, II-A y III-A (no del texto de la norma) y no se comprobó que coincidan con Minitab; Z1.4 no trae la inspección rigurosa ni la reducida.
 
 ---
 

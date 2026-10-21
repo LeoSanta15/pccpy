@@ -139,7 +139,7 @@
    "¿Cómo se mide la característica de calidad?",
    [
     "Por atributos (conforme / no conforme) → norma Z1.4",
-    "Por variables (medición continua)      → norma Z1.9",
+    "Por variables (medición continua)      → norma MIL-STD-414",
     "Minimizar inspección total (Dodge-Romig)"
    ]
   ],
@@ -365,7 +365,7 @@
   },
   "r:z19": {
    "snippet": "import pccpy as pp\nplan = pp.acceptance_sampling_variables(N=tamaño_lote, aql=aql,\n                                        spec_type='one')\nmuestra = ...   # array con las mediciones\ndec = plan.evaluate(muestra, usl=usl)\nprint(dec)      # {'xbar': ..., 's': ..., 'accept': True/False}",
-   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : acceptance_sampling_variables\n  Razón                : Muestreo de aceptación por variables — norma ANSI/ASQ Z1.9\n  Alternativas         : acceptance_sampling_attributes\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    plan = pp.acceptance_sampling_variables(N=tamaño_lote, aql=aql,\n                                            spec_type='one')\n    muestra = ...   # array con las mediciones\n    dec = plan.evaluate(muestra, usl=usl)\n    print(dec)      # {'xbar': ..., 's': ..., 'accept': True/False}\n════════════════════════════════════════════════════════"
+   "summary": "════════════════════════════════════════════════════════\n  Análisis recomendado : acceptance_sampling_variables\n  Razón                : Muestreo de aceptación por variables — norma MIL-STD-414\n  Alternativas         : acceptance_sampling_attributes\n────────────────────────────────────────────────────────\n  Código:\n\n    import pccpy as pp\n    plan = pp.acceptance_sampling_variables(N=tamaño_lote, aql=aql,\n                                            spec_type='one')\n    muestra = ...   # array con las mediciones\n    dec = plan.evaluate(muestra, usl=usl)\n    print(dec)      # {'xbar': ..., 's': ..., 'accept': True/False}\n════════════════════════════════════════════════════════"
   },
   "r:zmr": {
    "snippet": "import pccpy as pp\ncarta = pp.zmr_chart(medidas, partes)\ncarta.plot()",

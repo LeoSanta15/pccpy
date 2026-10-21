@@ -141,8 +141,8 @@ plan = pp.acceptance_sampling_attributes(N=1000, aql=1.0)
 print(plan.summary())   # n, Ac, Re, LTPD, AOQL
 plan.plot()             # curva OC + curva AOQ
 
-# Z1.9 por variables: lote N=500, AQL=1%, especificación unilateral
-plan_v = pp.acceptance_sampling_variables(N=500, aql=1.0, spec_type='one')
+# MIL-STD-414 por variables: lote N=500, AQL=1%, especificación unilateral
+plan_v = pp.acceptance_sampling_variables(N=500, aql=1.0)
 # Evaluar una muestra real
 muestra = rng.normal(10.5, 0.2, plan_v.n)
 decision = plan_v.evaluate(muestra, usl=11.0)
@@ -346,7 +346,7 @@ carta.save_plot("carta_sinzonas.png", zones=False)
 - **Capacidad del proceso** (incluyendo DPMO y nivel sigma):
   {doc}`referencia/capacidad`.
 - **Intervalos de tolerancia**: {doc}`referencia/tolerancia`.
-- **Muestreo de aceptación** (Z1.4, Z1.9, Dodge-Romig):
+- **Muestreo de aceptación** (Z1.4, MIL-STD-414, Dodge-Romig):
   {doc}`referencia/muestreo_aceptacion`.
 - **MSA / Gage R&R** (cruzado, anidado, Tipo 1, linealidad, atributos):
   {doc}`referencia/msa`.
