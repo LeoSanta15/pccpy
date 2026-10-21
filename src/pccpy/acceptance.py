@@ -713,10 +713,8 @@ _LETRAS_414 = tuple(_TABLA_B1_414)
 
 def _letra_codigo_414(N: int, nivel: int) -> str:
     """Letra de código de la tabla A-2 para el tamaño de lote y el nivel de inspección (1 a 5 = I a V)."""
-    for hasta, letras in _TABLA_A2_414:
-        if N <= hasta:
-            return letras[nivel - 1]
-    raise AssertionError("inalcanzable: el último tramo no tiene límite")  # pragma: no cover
+    letras = next(letras for hasta, letras in _TABLA_A2_414 if N <= hasta)  # el último tramo no tiene límite
+    return letras[nivel - 1]
 
 
 def _plan_414(letra: str, aql: float, inspeccion: str) -> tuple[int, float]:
