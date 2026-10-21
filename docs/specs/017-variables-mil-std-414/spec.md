@@ -21,6 +21,7 @@ y III con los tramos reagrupados), y los AQL disponibles difieren. No se afirma 
 ## Fuera de alcance
 
 - **ANSI/ASQ Z1.9:** sin sus tablas; se hará en otra especificación cuando se aporten.
+- **Curva OC exacta** (distribución t no central) en lugar de la aproximación normal: se hace aparte, para que el cambio por las tablas se revise solo (decidido).
 - **Forma 2** (estimar el porcentaje no conforme y compararlo con un máximo `M`), inspección **reducida**, método del **rango**, variabilidad **conocida** y las reglas de cambio:
   sin sus tablas.
 - Afirmar equivalencia con Minitab o con Z1.9: no se midió.
@@ -35,8 +36,8 @@ La letra sale de la tabla A-2 (17 tramos de lote × niveles de inspección I a V
 dependencia de `_letra_codigo` de Z1.4.
 
 **Aceptación:**
-- **Dado** cada tramo de lote y nivel **entonces** la letra coincide con la tabla A-2 del anexo (los dos extremos de cada tramo y un punto interior).
-- **Dado** un nivel inexistente **entonces** `ValueError` en español.
+- **Dado** cada tramo de lote y nivel (enteros 1 a 5, con `4` por defecto) **entonces** la letra coincide con la tabla A-2 del anexo (los dos extremos de cada tramo y un punto interior).
+- **Dado** un nivel inexistente (0, 6, `"IV"`, `None`) **entonces** `ValueError` en español.
 - **Referencia independiente:** la tabla A-2 de la captura, transcrita en un test aparte del código y revisada por la persona responsable.
 
 ### S017-RF-02 — Planes `(n, k)` de la tabla B-1, inspección normal
@@ -80,47 +81,40 @@ aproximada `_Z19_TABLE` y su aviso.
 **Aceptación:**
 - **Dado** `standard="z1.9"` **entonces** `ValueError` con ese mensaje.
 - **Dado** cualquier llamada sin `n=` y `k=` **entonces** el resultado sale de las tablas de MIL-STD-414 (el nombre del método del resultado es `"mil-std-414"`).
-
-### S017-RF-07 (opcional, pregunta 4) — Curva OC exacta (t no central)
-
-`SamplingPlanVariables.pa(p)` unilateral con σ desconocida usa la distribución t no central en lugar de la aproximación normal.
-
-**Aceptación:** `pa(p)` coincide con una simulación de 20 semillas × 20 000 lotes (tolerancia 0,005) y con `scipy.stats.nct` calculado aparte.
+- **Dado** un AQL que no está en la tabla (o `spec_type="two"`) **entonces** `ValueError` en español.
 
 ## Casos borde
 
 | Caso | Comportamiento esperado |
 |---|---|
-| AQL que no está en la tabla | Pregunta 3 |
+| AQL que no está en la tabla | `ValueError` en español (los AQL son valores preferidos; decidido) |
 | Celda con flecha | Primer plan numerado por debajo, misma columna |
 | `n` de la tabla ≥ `N` | Inspección al 100 % con aviso (RF-05) |
-| `spec_type="two"` | Pregunta 2 (la Forma 1 no cubre doble especificación con un solo AQL) |
+| `spec_type="two"` | `ValueError` en español que explica que la Forma 1 no cubre la doble especificación (sin tablas de la Forma 2; decidido) |
 | `n=` sin `k=` (o al revés) | `ValueError` en español |
 | Letra B a Q, nivel I a V | Todas las combinaciones de A-2 tienen plan |
 
 ## Resultados existentes que cambian
 
 Cambian **todos los planes de `acceptance_sampling_variables` que salen de la tabla** (no los que se dan con `n=` y `k=`): `n`, `k`, `alpha` y `ltpd` serán distintos, el nivel por defecto y el
-significado de `inspection_level` cambian (hoy 1, 2 y 3 con un desplazamiento de la letra de Z1.4) y desaparece el aviso de aproximación. Con RF-07, también `pa`, `alpha` y `ltpd` de los planes
-unilaterales. Se listan en «Cambios que alteran resultados» del CHANGELOG con el valor anterior y el nuevo.
+significado de `inspection_level` cambian (hoy 1, 2 y 3 con un desplazamiento de la letra de Z1.4) y desaparece el aviso de aproximación. Se listan en «Cambios que alteran resultados» del CHANGELOG con el valor anterior y el nuevo.
 
 ## No verificable sin la fuente
 
 - Todo se contrasta con **capturas** de las tablas A-2 y B-1 de MIL-STD-414, no con el texto del documento: una lectura errónea de una celda pasaría desapercibida. Dos celdas dudosas de la copia se confirmaron con
   la persona responsable (B-1, letra I con AQL 0,25: **2,26**, no 3,26; A-2, último nivel de «550 001 o más»: **Q**).
 - No se midió si Minitab devuelve los mismos planes, ni si los valores de MIL-STD-414 coinciden con los de ANSI/ASQ Z1.9.
-- Que el nivel de inspección por defecto sea el IV (pregunta 1) se recuerda de memoria; debe confirmarse con el texto de la norma.
+- Que el nivel de inspección por defecto sea el IV se recuerda de memoria; debe confirmarse con el texto de la norma.
 
 ## Preguntas abiertas
 
-- [NECESITA ACLARACIÓN: **Nivel por defecto y nombres.** MIL-STD-414 usa los niveles I a V y, por lo que recuerdo, el IV como nivel normal (a confirmar con su texto). ¿Se aceptan enteros 1 a 5
-  (recomendado, como los enteros de Z1.4) con `4` por defecto? Hoy el defecto es 2 con otro significado.]
-- [NECESITA ACLARACIÓN: **Doble especificación.** La Forma 1 no cubre una doble especificación con un solo AQL combinado (eso es la Forma 2, sin tablas). ¿`spec_type="two"` lanza `ValueError`
-  que lo explica (recomendado) o aplica la Forma 1 a cada lado por separado con un aviso?]
-- [NECESITA ACLARACIÓN: **AQL fuera de la tabla.** Hoy se usa el más cercano y el AQL admitido es (0, 10]; la tabla llega a 15 %. ¿Se mantiene «el más cercano» (ampliando el límite a 15) o un AQL que no
-  está en la tabla lanza `ValueError` (recomendado: son valores preferidos)?]
-- [NECESITA ACLARACIÓN: **Curva OC exacta.** ¿RF-07 entra en esta especificación o se deja aparte (recomendado) para que el cambio por las tablas se revise solo?]
-- [NECESITA ACLARACIÓN: **Rechazo de `standard="z1.9"`.** ¿Se acepta lanzar `ValueError` (recomendado, honesto: no hay tablas de Z1.9) o se mantiene `"z1.9"` como alias de MIL-STD-414 con un aviso?]
+Ninguna. Decididas por la persona responsable (con las recomendaciones de la propuesta):
+
+1. **Niveles:** enteros 1 a 5 (los niveles I a V de la norma), con `4` por defecto. Que el IV sea el nivel normal se recuerda de memoria y debe confirmarse con el texto de MIL-STD-414.
+2. **Doble especificación:** `spec_type="two"` lanza `ValueError` que explica que la Forma 1 no la cubre (la Forma 2 no tiene tablas). Alternativa descartada: aplicar la Forma 1 a cada lado con aviso.
+3. **AQL fuera de la tabla:** `ValueError` (son valores preferidos). Alternativa descartada: el más cercano.
+4. **Curva OC exacta:** fuera de esta especificación (se hace aparte). Alternativa descartada: incluirla como RF-07.
+5. **`standard="z1.9"`:** `ValueError` honesto (no hay tablas de Z1.9). Alternativa descartada: alias de MIL-STD-414 con aviso.
 
 ## Anexo — tablas transcritas (para revisar celda a celda)
 

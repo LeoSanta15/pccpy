@@ -11,8 +11,7 @@ deben fallar por el motivo esperado.
 - [ ] Test de S017-RF-03 (falla hoy: no existe `inspection="tightened"`).
 - [ ] Test de S017-RF-04 (la Forma 1: pasa antes del código porque protege lo que no cambia).
 - [ ] Test de S017-RF-05 (falla hoy: `n` mayor que el lote).
-- [ ] Test de S017-RF-06 (falla hoy: no existe `standard`).
-- [ ] Test de S017-RF-07 si entra (falla hoy: `pa` es la aproximación normal).
+- [ ] Test de S017-RF-06 (falla hoy: no existe `standard`; incluye los `ValueError` de `"z1.9"`, del AQL fuera de la tabla y de `spec_type="two"`).
 
 ## Fase 1 — Implementación
 
@@ -22,7 +21,6 @@ deben fallar por el motivo esperado.
 - [ ] S017-RF-04: Forma 1 de `evaluate`.
 - [ ] S017-RF-05: guarda del 100 %.
 - [ ] S017-RF-06: parámetro `standard` y retirada de la tabla aproximada.
-- [ ] S017-RF-07 si entra: OC con la t no central.
 
 ## Fase 2 — Verificación y cierre
 

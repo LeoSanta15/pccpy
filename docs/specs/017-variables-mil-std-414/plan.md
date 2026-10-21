@@ -13,7 +13,6 @@
 | 04 | `acceptance.py` | `SamplingPlanVariables.evaluate` conserva la Forma 1 |
 | 05 | `acceptance.py` | Guarda del 100 % igual que Z1.4 |
 | 06 | `acceptance.py` | Parámetro `standard`; `"z1.9"` lanza `ValueError`; `method="mil-std-414"` en el resultado |
-| 07 | `acceptance.py` | (opcional) `_pa_variables` unilateral con `scipy.stats.nct` |
 
 ## Decisiones
 
@@ -27,7 +26,7 @@
 ## Validación independiente
 
 Comprobación nueva en `run_validation()` (`variables-414`): letra de código y `(n, k)` de una malla de lotes, niveles y AQL contra las tablas transcritas aparte (y la rigurosa por el desplazamiento), y la coherencia
-estructural de B-1 (`k` decrece al subir el AQL y crece con `n`). Si RF-07 entra, `pa(p)` unilateral contra `scipy.stats.nct` (tolerancia 1e-9) y una simulación de semilla fija.
+estructural de B-1 (`k` decrece al subir el AQL y crece con `n`).
 
 ## Riesgos
 
