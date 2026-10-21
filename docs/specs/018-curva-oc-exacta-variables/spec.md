@@ -98,6 +98,8 @@ Cambian `pa`, `oc_curve`, `alpha`, `ltpd`, el gráfico OC y `summary()` de **tod
 
 ## Preguntas abiertas
 
-1. [NECESITA ACLARACIÓN: ¿Se calcula con `scipy.stats.nct.sf` directamente, o con la integral (la misma que ya usa el caso bilateral)? **Recomendación:** `nct.sf` — es una línea, más rápida (la integral tardó 10 s para 280 puntos en la medida) y coincide con la integral a 4·10⁻¹⁴ en scipy 1.18; si el CI en scipy 1.9 mostrara diferencias, se vuelve a la integral para todo. Alternativa descartada: la integral en todos los casos, más lenta.]
-2. [NECESITA ACLARACIÓN: ¿La versión es 0.17.0 (menor, cambia resultados) o un parche 0.16.1 como las 0.15.8 y 0.15.9? **Recomendación:** 0.17.0: cambian valores de `alpha`, `ltpd` y la curva de todos los planes unilaterales, sin que corrija un error de la tabla.]
-3. [NECESITA ACLARACIÓN: ¿Se deja fuera la OC bilateral con el proceso descentrado? **Recomendación:** sí, fuera de alcance; hoy no existe y requiere una parametrización de la media. Alternativa descartada: añadirla aquí con un argumento `shift=`.]
+Ninguna. Decididas por la persona responsable (con las recomendaciones de la propuesta):
+
+1. **Cálculo:** `scipy.stats.nct.sf` directamente. Si el CI en scipy 1.9 (versiones mínimas) mostrara diferencias con la integral, se vuelve a la integral para todo. Alternativa descartada: la integral en todos los casos (más lenta).
+2. **Versión:** 0.17.0 (menor): cambian `alpha`, `ltpd` y la curva de todos los planes unilaterales sin que corrija un error de la tabla. Alternativa descartada: parche 0.16.1.
+3. **OC bilateral con el proceso descentrado:** fuera de alcance (hoy no existe y requiere parametrizar la media). Alternativa descartada: añadirla aquí con un argumento `shift=`.
