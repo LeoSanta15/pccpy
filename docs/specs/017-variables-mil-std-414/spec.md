@@ -3,7 +3,7 @@
 - **Estado:** implementada
 - **Identificador:** S017
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** por decidir (cambia resultados existentes: los planes de la tabla aproximada actual; versión menor salvo decisión contraria)
+- **Versión objetivo:** 0.16.0 (cambia resultados existentes: los planes de la tabla aproximada anterior; versión menor)
 
 ## Problema
 

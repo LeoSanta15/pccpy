@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - Variables: planes de MIL-STD-414 (tablas A-2 y B-1)
+## [0.16.0] - 2026-10-21 - Variables: planes de MIL-STD-414 (tablas A-2 y B-1)
 
 Especificación `docs/specs/017-variables-mil-std-414`. Las tablas A-2 y B-1 se transcribieron de capturas de MIL-STD-414 (11 de junio de 1957) que aportó la persona responsable, no del texto de la norma; **no es ANSI/ASQ Z1.9** (sus tablas siguen sin estar disponibles) y no se midió si Minitab devuelve los mismos planes.
 
