@@ -5,13 +5,13 @@ deben fallar por el motivo esperado.
 
 ## Fase 0 — Tests que fallan
 
-- [ ] Transcribir las tablas A-2 y B-1 del anexo en `tests/` y que la persona responsable las revise celda a celda (S017-RF-01, S017-RF-02, S017-RF-03).
-- [ ] Test de S017-RF-01 (falla hoy: la letra sale de la tabla I de Z1.4).
-- [ ] Test de S017-RF-02 (falla hoy: los planes de `_Z19_TABLE` no son los de la norma).
-- [ ] Test de S017-RF-03 (falla hoy: no existe `inspection="tightened"`).
-- [ ] Test de S017-RF-04 (la Forma 1: pasa antes del código porque protege lo que no cambia).
-- [ ] Test de S017-RF-05 (falla hoy: `n` mayor que el lote).
-- [ ] Test de S017-RF-06 (falla hoy: no existe `standard`; incluye los `ValueError` de `"z1.9"`, del AQL fuera de la tabla y de `spec_type="two"`).
+- [x] Transcribir las tablas A-2 y B-1 del anexo en `tests/` y que la persona responsable las revise celda a celda (S017-RF-01, S017-RF-02, S017-RF-03).
+- [x] Test de S017-RF-01 (falla hoy: la letra sale de la tabla I de Z1.4).
+- [x] Test de S017-RF-02 (falla hoy: los planes de `_Z19_TABLE` no son los de la norma).
+- [x] Test de S017-RF-03 (falla hoy: no existe `inspection="tightened"`).
+- [x] Test de S017-RF-04 (la Forma 1: pasa antes del código porque protege lo que no cambia).
+- [x] Test de S017-RF-05 (falla hoy: `n` mayor que el lote).
+- [x] Test de S017-RF-06 (falla hoy: no existe `standard`; incluye los `ValueError` de `"z1.9"`, del AQL fuera de la tabla y de `spec_type="two"`).
 
 ## Fase 1 — Implementación
 
