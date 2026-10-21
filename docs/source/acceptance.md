@@ -123,6 +123,8 @@ print(decision)
 plan.plot()   # Curva OC
 ```
 
+La probabilidad de aceptación de un plan unilateral es exacta (distribución t no central: `Pa = P(t'(n−1; z·√n) ≥ k·√n)`), con datos normales e independientes. La curva OC bilateral supone el proceso centrado entre los límites.
+
 ---
 
 ## Dodge-Romig

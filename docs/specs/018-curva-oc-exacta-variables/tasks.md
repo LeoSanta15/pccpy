@@ -20,8 +20,8 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Verificación y cierre
 
-- [ ] Comprobación `variables-oc-exacta` en `run_validation()` (S018-RF-01 y S018-RF-02).
-- [ ] Regenerar `tests/golden/` (solo `oc_variables`, `muestreo_variables`) y revisar el diff línea a línea.
-- [ ] Documentación, README (es/en), traducciones y CHANGELOG.
-- [ ] `make check` en verde.
-- [ ] Estado de la especificación → `implementada`.
+- [x] Comprobación `variables-oc-exacta` en `run_validation()` (S018-RF-01 y S018-RF-02).
+- [x] Regenerar `tests/golden/` (solo `oc_variables`, `muestreo_variables`) y revisar el diff línea a línea.
+- [x] Documentación, README (es/en), traducciones y CHANGELOG.
+- [x] `make check` en verde.
+- [x] Estado de la especificación → `implementada`.

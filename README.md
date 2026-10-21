@@ -1593,7 +1593,7 @@ dec = plan_v.evaluate(muestra, usl=11.0)
 print(dec)
 # {'xbar': 10.49, 's': 0.19, 'Q_usl': 2.68, 'accept': True}
 
-plan_v.oc_curve()   # curva OC del plan
+plan_v.oc_curve()   # curva OC exacta del plan unilateral (t no central; supone datos normales)
 ```
 
 ### Dodge-Romig

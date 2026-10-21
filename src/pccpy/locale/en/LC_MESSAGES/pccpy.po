@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-21 22:15+0000\n"
+"POT-Creation-Date: 2026-10-21 23:20+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -2354,6 +2354,13 @@ msgstr "Kurtosis"
 
 msgid "Curva OC"
 msgstr "OC curve"
+
+msgid ""
+"Curva OC de los planes por variables unilaterales: Pa exacta (t no "
+"central) contra la integral numérica y alpha del plan de la tabla"
+msgstr ""
+"OC curve of one-sided plans by variables: exact Pa (noncentral t) against"
+" the numerical integral and alpha of the table plan"
 
 #, python-brace-format
 msgid "Curva OC — Plan variables  n={n}  k={k:.4f}"
