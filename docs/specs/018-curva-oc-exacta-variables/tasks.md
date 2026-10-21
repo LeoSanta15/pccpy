@@ -13,10 +13,10 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] S018-RF-01: `_pa_variables` unilateral con `nct.sf` y docstrings.
-- [ ] S018-RF-02: verificar `alpha` y `ltpd` (sin cambio de código).
-- [ ] S018-RF-03: extremos sin avisos.
-- [ ] S018-RF-04: verificar que la rama bilateral no cambió.
+- [x] S018-RF-01: `_pa_variables` unilateral con `nct.sf` y docstrings.
+- [x] S018-RF-02: verificar `alpha` y `ltpd` (sin cambio de código).
+- [x] S018-RF-03: extremos sin avisos.
+- [x] S018-RF-04: verificar que la rama bilateral no cambió.
 
 ## Fase 2 — Verificación y cierre
 

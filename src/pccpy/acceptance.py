@@ -564,7 +564,7 @@ class SamplingPlanVariables:
     method: str
 
     def pa(self, p: float) -> float:
-        """P(aceptar | fracción defectiva p) — aproximación normal."""
+        """P(aceptar | fracción defectiva p) — exacta (t no central) en el caso unilateral."""
         return _pa_variables(self.n, self.k, p, self.spec_type)
 
     def oc_curve(self, stable: bool = False) -> pd.DataFrame:
@@ -650,8 +650,8 @@ class SamplingPlanVariables:
 def _pa_variables(n: int, k: float, p: float, spec_type: str) -> float:
     """P(aceptar | p) para un plan de variables con factor k.
 
-    Unilateral: aproximación normal de Montgomery (2013) sec. 15-3. Bilateral: integral exacta con el proceso centrado
-    (ver más abajo).
+    Unilateral: exacta con la distribución t no central, ``Pa = P(t'_{n−1}(z_{1−p}·√n) ≥ k·√n)`` (con la regla
+    ``(U − x̄)/s ≥ k``, normalidad e independencia). Bilateral: integral exacta con el proceso centrado (ver más abajo).
     """
     if p <= 0:
         return 1.0
@@ -659,9 +659,8 @@ def _pa_variables(n: int, k: float, p: float, spec_type: str) -> float:
         return 0.0
     zp = stats.norm.ppf(1.0 - p)
     if spec_type == "one":
-        # Pa ≈ Phi(zp - k*sqrt(n) / sqrt(1 + k^2/2))
-        nc = (zp - k) * math.sqrt(n) / math.sqrt(1.0 + k ** 2 / 2.0)
-        return float(stats.norm.cdf(nc))
+        # √n·(U − x̄)/s ~ t no central con n − 1 grados de libertad y no centralidad z_p·√n
+        return float(stats.nct.sf(k * math.sqrt(n), n - 1, zp * math.sqrt(n)))
     else:
         # Bilateral con el proceso centrado y p/2 fuera de cada especificación (z = z_{p/2}): se acepta si
         # |x̄| ≤ z − k·s, con x̄ ~ N(0, 1/n) y s² ~ χ²_{n−1}/(n−1), independientes (el producto de dos unilaterales
