@@ -1,6 +1,6 @@
 # 018 — Curva OC exacta de los planes por variables (distribución t no central)
 
-- **Estado:** borrador
+- **Estado:** aprobada
 - **Identificador:** S018
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.16.1 (cambia resultados existentes: `pa`, `alpha`, `ltpd` y `oc_curve` de los planes unilaterales; se publica como parche por decisión de la persona responsable, como la 0.15.8 y la 0.15.9)
