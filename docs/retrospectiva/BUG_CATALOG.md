@@ -406,6 +406,23 @@ Requisito de la especificación 016: S016-RF-04.
 
 ---
 
+### BUG-26 · Variables: tabla «Z1.9» aproximada que no reproducía la norma
+
+| Campo | Detalle |
+|---|---|
+| **ID** | BUG-26 |
+| **Síntoma** | `acceptance_sampling_variables(1000, 1.0)` daba `n = 20`, `k = 0.851` y un LTPD de 30 % (aceptaba casi cualquier lote); la letra de código salía de la tabla I de Z1.4 con un desplazamiento de ±2 y solo había 6 AQL |
+| **Causa raíz** | La tabla `_Z19_TABLE` se escribió «simplificada» sin la fuente (no se tenía acceso a la norma); la función avisaba pero entregaba el plan igualmente |
+| **Cómo se detectó** | Auditoría de la 0.15 (valor de LTPD y α incoherentes) y, después, al recibir las tablas A-2 y B-1 de MIL-STD-414 (no eran las de Z1.9) |
+| **Solución aplicada** | CORREGIDO: los planes salen de las tablas A-2 y B-1 de MIL-STD-414 con flechas resueltas, inspección rigurosa y guarda del 100 %; `standard="z1.9"` lanza `ValueError` porque las tablas de Z1.9 no están disponibles; se retira `_Z19_TABLE` |
+| **Archivo/línea** | `src/pccpy/acceptance.py`, `acceptance_sampling_variables`, `_letra_codigo_414`, `_plan_414` |
+| **Test de regresión** | SÍ — `tests/test_variables_mil_std_414.py` (cada celda de A-2 y de B-1 contra una transcripción aparte) |
+| **¿Puede ocurrir en otras libs?** | Sí — una tabla de una norma reconstruida de memoria o «simplificada» y presentada con el nombre de la norma. |
+
+Requisitos de la especificación 017: S017-RF-01 a S017-RF-06.
+
+---
+
 ## TAXONOMÍA DE CLASES DE ERROR
 
 | Clase | Descripción | Cómo prevenirla | Cómo detectarla | Bugs en este proyecto |

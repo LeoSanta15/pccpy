@@ -8188,38 +8188,11 @@
   "summary": "Plan de muestreo doble por atributos (z1.4-double)\n  Lote N=1000  1.ª muestra n1=50  Ac1=0  Re1=3\n  2.ª muestra n2=50  acumulada: Ac2=3  Re2=4\n  AQL=1%  α=0.0248  LTPD=6.66%  β=0.10\n  AOQL=1.74%"
  },
  "muestreo_variables": {
+  "summary": "Plan de muestreo por variables (mil-std-414)\n  Lote N=1000  Muestra n=35  k=1.8900\n  AQL=1%  α=0.0610  LTPD=6.32%  β=0.10\n  Especificación: one",
   "frame": {
+   "index_name": "estadístico",
    "columns": [
     "valor"
-   ],
-   "data": [
-    [
-     1000
-    ],
-    [
-     20
-    ],
-    [
-     0.851
-    ],
-    [
-     1.0
-    ],
-    [
-     30.2734
-    ],
-    [
-     0.0
-    ],
-    [
-     0.1
-    ],
-    [
-     "one"
-    ],
-    [
-     "z1.9"
-    ]
    ],
    "index": [
     "N (tamaño de lote)",
@@ -8232,9 +8205,36 @@
     "Tipo de especificación",
     "Método"
    ],
-   "index_name": "estadístico"
-  },
-  "summary": "Plan de muestreo por variables (z1.9)\n  Lote N=1000  Muestra n=20  k=0.8510\n  AQL=1%  α=0.0000  LTPD=30.3%  β=0.10\n  Especificación: one"
+   "data": [
+    [
+     1000
+    ],
+    [
+     35
+    ],
+    [
+     1.89
+    ],
+    [
+     1.0
+    ],
+    [
+     6.3203
+    ],
+    [
+     0.06098
+    ],
+    [
+     0.1
+    ],
+    [
+     "one"
+    ],
+    [
+     "mil-std-414"
+    ]
+   ]
+  }
  },
  "normalidad_anderson": {
   "str": "Anderson-Darling: estadístico = 0.2779, valor p = 0.637 (n = 50)"

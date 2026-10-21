@@ -111,7 +111,7 @@ procedimiento de Minitab a la función equivalente en pccpy.
 | Minitab | pccpy | Notas |
 |---------|-------|-------|
 | By Attributes (Z1.4) | `acceptance_sampling_attributes(N, aql)` | |
-| By Variables (Z1.9) | `acceptance_sampling_variables(N, aql)` | |
+| By Variables (Z1.9) | `acceptance_sampling_variables(N, aql)` | Usa MIL-STD-414, no Z1.9: sin sus tablas no se afirma que los planes coincidan con los de Minitab |
 | Dodge-Romig | `dodge_romig(N, ltpd=…)` o `dodge_romig(N, aoql=…)` | |
 
 ---

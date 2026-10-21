@@ -1,9 +1,9 @@
-"""Muestreo de aceptación: Z1.4 (atributos), Z1.9 (variables) y Dodge-Romig.
+"""Muestreo de aceptación: Z1.4 (atributos), MIL-STD-414 (variables) y Dodge-Romig.
 
 Referencias
 -----------
 * ANSI/ASQ Z1.4-2008: Sampling Procedures and Tables for Inspection by Attributes.
-* ANSI/ASQ Z1.9-2008: Sampling Procedures and Tables for Inspection by Variables.
+* MIL-STD-414 (11 de junio de 1957): Sampling Procedures and Tables for Inspection by Variables for Percent Defective.
 * Dodge, H.F. & Romig, H.G. (1959). Sampling Inspection Tables. Wiley.
 * Montgomery, D.C. (2013). *Introduction to Statistical Quality Control*, 7th ed.
 """

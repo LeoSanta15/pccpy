@@ -1294,6 +1294,36 @@ def _z14_niveles_doble():
     return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
 
 
+@_comprobacion("variables-414", N_("MIL-STD-414: letra de la tabla A-2, plan (n, k) de la tabla B-1 con flechas, inspección rigurosa y guarda del 100 %"),
+               "Celdas de las tablas A-2 y B-1 leídas aparte de una captura aportada por la persona responsable (no verificadas contra el texto de "
+               "la norma ni contra Minitab); especificación 017", 0.0)
+def _variables_414():
+    from . import acceptance_sampling_variables
+
+    # (lote, nivel, AQL, inspección) → (n, k) de la tabla
+    casos = [
+        (1000, 4, 1.00, "normal", 35, 1.89),      # A-2: letra K
+        (5000, 4, 0.65, "normal", 50, 2.08),      # letra M
+        (200, 4, 0.15, "normal", 20, 2.36),       # letra H
+        (100, 4, 0.04, "normal", 15, 2.64),       # letra F: flecha → primer plan por debajo (G)
+        (1000, 4, 1.00, "tightened", 35, 2.03),   # rigurosa: columna normal 0,65
+        (700000, 5, 15.0, "normal", 200, 0.845),  # letra Q
+        (50, 1, 2.50, "normal", 3, 1.12),         # letra B
+    ]
+    esperado, obtenido = [], []
+    for lote, nivel, aql, insp, n, k in casos:
+        plan = acceptance_sampling_variables(lote, aql, inspection_level=nivel, inspection=insp)
+        esperado += [n, k]
+        obtenido += [plan.n, plan.k]
+    # un lote de 8 con AQL 0,04 %: la flecha lleva a n = 15 > 8 → se inspecciona el 100 % (n = N) con el k de la tabla
+    with warnings.catch_warnings():
+        warnings.simplefilter("ignore")
+        completo = acceptance_sampling_variables(8, 0.04)
+    esperado += [8, 2.64]
+    obtenido += [completo.n, completo.k]
+    return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
+
+
 def run_validation(ids=None) -> ValidationReport:
     """Ejecuta las comprobaciones de validación y devuelve el informe.
 

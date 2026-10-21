@@ -7,7 +7,7 @@ aceptar o rechazar un lote de producción basándose en una muestra.
 | Función | Norma | Criterio |
 |---------|-------|----------|
 | `acceptance_sampling_attributes` | ANSI/ASQ Z1.4 | Por atributos (defectos contados) |
-| `acceptance_sampling_variables` | ANSI/ASQ Z1.9 | Por variables (medición continua) |
+| `acceptance_sampling_variables` | MIL-STD-414 | Por variables (medición continua) |
 | `dodge_romig` | Dodge-Romig | LTPD o AOQL fijo |
 
 ---
@@ -75,15 +75,18 @@ reducida y el muestreo múltiple no están incluidos. Las tablas I, II-A y III-A
 
 ---
 
-## Por variables — Z1.9
+## Por variables — MIL-STD-414
 
-Usa la media y desviación estándar de la muestra para estimar la fracción no
-conforme y compararla con el AQL.
+Usa la media y desviación estándar de la muestra para decidir con el método del factor de aceptabilidad `k`: se acepta
+si `Q = (U − x̄)/s ≥ k` (o `(x̄ − L)/s ≥ k`). Los planes salen de las tablas A-2 (letra de código por tamaño de lote y
+nivel de inspección I a V) y B-1 (`n` y `k` por letra y AQL) de **MIL-STD-414 (11 de junio de 1957)**, método de la
+desviación estándar, especificación unilateral, Forma 1.
 
 ```{warning}
-La tabla Z1.9 incluida **no reproduce la norma** (sus planes pueden aceptar casi cualquier lote) y la función avisa
-con un `UserWarning`. Para decidir con Z1.9, tome `n` y `k` de su ejemplar de la norma y páselos con `n=` y `k=`:
-`pp.acceptance_sampling_variables(N=500, aql=1.0, n=20, k=1.7)`.
+No es ANSI/ASQ Z1.9: sus tablas no están disponibles (`standard="z1.9"` lanza `ValueError`). Las tablas de MIL-STD-414 se
+transcribieron de capturas de la norma, no de su texto, y no se comprobó que coincidan con Minitab ni con Z1.9. La Forma 2,
+la inspección reducida, el método del rango y la doble especificación no están incluidos: para una doble especificación dé
+su plan con `n=` y `k=`. Si el `n` de la tabla es igual o mayor que el lote, se inspecciona todo el lote (`n = N`) con un aviso.
 ```
 
 ### Uso básico
@@ -92,13 +95,13 @@ con un `UserWarning`. Para decidir con Z1.9, tome `n` y `k` de su ejemplar de la
 import numpy as np
 
 rng = np.random.default_rng(0)
-plan = pp.acceptance_sampling_variables(N=500, aql=1.0, spec_type='one')
+plan = pp.acceptance_sampling_variables(N=500, aql=1.0)   # letra I (nivel IV): n = 25, k = 1.85
 
 # Evaluar una muestra real
 muestra = rng.normal(10.5, 0.2, plan.n)
 decision = plan.evaluate(muestra, usl=11.0)
 print(decision)
-# {'xbar': 10.503, 's': 0.198, 'Q_usl': 2.512, 'k': 1.653, 'accept': True}
+# {'xbar': ..., 's': ..., 'Q_usl': ..., 'accept': True, 'criterion': 'Q=... ≥ k=1.8500'}
 ```
 
 ### Parámetros
@@ -106,11 +109,13 @@ print(decision)
 | Parámetro | Tipo | Predeterminado | Descripción |
 |-----------|------|----------------|-------------|
 | `N` | `int` | — | Tamaño del lote. |
-| `aql` | `float` | — | AQL en porcentaje. |
-| `spec_type` | `str` | `'one'` | `'one'` (unilateral) o `'two'` (bilateral). |
-| `inspection_level` | `int` | `2` | Nivel de inspección. |
+| `aql` | `float` | — | AQL en %: 0.04, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.00, 1.50, 2.50, 4.00, 6.50, 10.00 o 15.00. |
+| `spec_type` | `str` | `'one'` | `'one'` (unilateral); `'two'` solo con `n=` y `k=`. |
+| `inspection_level` | `int` | `4` | Nivel de inspección de 1 a 5 (I a V de la tabla A-2). |
+| `inspection` | `str` | `'normal'` | `'normal'` o `'tightened'` (rigurosa: la columna del AQL inmediatamente inferior). |
 | `n` | `int` | `None` | Tamaño de muestra fijo. |
 | `k` | `float` | `None` | Constante k fija. |
+| `standard` | `str` | `'mil-std-414'` | Norma de las tablas; `'z1.9'` lanza `ValueError`. |
 
 ### Gráfico
 

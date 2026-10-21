@@ -439,12 +439,12 @@ carta = pp.imr_chart(x)
 
 ---
 
-### `ValueError: Combinación AQL=X% y letra=Y no disponible en la tabla Z1.9`
+### `ValueError: El AQL X% no está en la tabla B-1 de MIL-STD-414`
 
-Las tablas Z1.9 (muestreo por variables) no cubren todas las combinaciones de
-AQL y tamaño de lote. Prueba:
-- Reducir el tamaño del lote N
-- Cambiar el nivel de inspección: `inspection_level=1`
+El muestreo por variables solo usa los AQL de la tabla B-1 (0.04, 0.065, 0.10, 0.15, 0.25, 0.40, 0.65, 1.00, 1.50, 2.50,
+4.00, 6.50, 10.00 y 15.00 %); no se toma el más cercano. Prueba:
+- Usar uno de esos AQL
+- Dar tu propio plan: `acceptance_sampling_variables(N, aql, n=…, k=…)`
 - Usar muestreo por atributos: `acceptance_sampling_attributes(N, aql)`
 
 ---

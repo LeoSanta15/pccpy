@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pccpy VERSION\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2026-10-20 19:51+0000\n"
+"POT-Creation-Date: 2026-10-21 22:15+0000\n"
 "PO-Revision-Date: 2026-10-04 20:48+0000\n"
 "Last-Translator: pccpy <https://github.com/LeoSanta15/pccpy/issues>\n"
 "Language: en\n"
@@ -1428,6 +1428,9 @@ msgstr "'alpha_interaction' must be between 0 and 1."
 msgid "'aoql' debe estar en (0, 1)."
 msgstr "'aoql' must be in (0, 1)."
 
+msgid "'aql' debe estar en (0, 100] %."
+msgstr "'aql' must be in (0, 100] %."
+
 msgid "'aql' debe estar en (0, 10] %."
 msgstr "'aql' must be in (0, 10] %."
 
@@ -1513,6 +1516,9 @@ msgstr "'h' must be a finite number > 0."
 
 msgid "'headstart' debe cumplir 0 <= headstart < h."
 msgstr "'headstart' must satisfy 0 <= headstart < h."
+
+msgid "'inspection' debe ser 'normal' o 'tightened'."
+msgstr "'inspection' must be 'normal' or 'tightened'."
 
 msgid "'inspection_level' debe ser 1, 2, 3 o 'S-1', 'S-2', 'S-3', 'S-4'."
 msgstr "'inspection_level' must be 1, 2, 3 or 'S-1', 'S-2', 'S-3', 'S-4'."
@@ -1706,6 +1712,9 @@ msgid ""
 msgstr ""
 "'stages' must have one label per plotted point ({n_points}); received: "
 "{shape}."
+
+msgid "'standard' debe ser 'mil-std-414'."
+msgstr "'standard' must be 'mil-std-414'."
 
 msgid "'statistic' debe devolver siempre el mismo número de valores."
 msgstr "'statistic' must always return the same number of values."
@@ -2174,12 +2183,6 @@ msgstr "Chi-square (constant rate)"
 msgid "Cobertura (p)"
 msgstr "Coverage (p)"
 
-#, python-brace-format
-msgid "Combinación AQL={aql_key}% y letra={letra} no disponible en la tabla Z1.9."
-msgstr ""
-"AQL={aql_key}% and letter={letra} combination not available in the Z1.9 "
-"table."
-
 msgid ""
 "Componentes de varianza del Gage R&R cruzado (ANOVA de dos factores con "
 "interacción)"
@@ -2507,6 +2510,14 @@ msgstr "EWMA for subgrouped data with high sensitivity"
 msgid "EWMA/CUSUM/MA requieren subgrupos de igual tamaño (sin valores faltantes)."
 msgstr "EWMA/CUSUM/MA require subgroups of equal size (no missing values)."
 
+#, python-brace-format
+msgid ""
+"El AQL {aql}% no está en la tabla B-1 de MIL-STD-414. Valores "
+"disponibles: {valores}."
+msgstr ""
+"The AQL {aql}% is not in table B-1 of MIL-STD-414. Available values: "
+"{valores}."
+
 msgid "El idioma no puede estar vacío."
 msgstr "The language cannot be empty."
 
@@ -2516,13 +2527,28 @@ msgstr "The lower limit (lsl) must be less than the upper limit (usl)."
 msgid "El método 'relative' requiere datos positivos (usa ln)."
 msgstr "The 'relative' method requires positive data (it uses ln)."
 
+msgid ""
+"El nivel de inspección debe ser un entero de 1 a 5 (I a V de la tabla "
+"A-2)."
+msgstr "The inspection level must be an integer from 1 to 5 (I to V of table A-2)."
+
+#, python-brace-format, python-format
+msgid ""
+"El plan de la tabla MIL-STD-414 pide una muestra de {n} con un lote de "
+"{N}: se inspecciona el 100 % del lote (n = N) y se conserva el k de la "
+"tabla."
+msgstr ""
+"The MIL-STD-414 table plan asks for a sample of {n} with a lot of {N}: "
+"100 percent of the lot is inspected (n = N) and the k of the table is "
+"kept."
+
 #, python-brace-format, python-format
 msgid ""
 "El plan de la tabla Z1.4 pide una muestra de {n} con un lote de {N}: se "
 "inspecciona el 100 % del lote (n = N, Ac = {c})."
 msgstr ""
-"The Z1.4 table plan asks for a sample of {n} with a lot of {N}: 100 % of "
-"the lot is inspected (n = N, Ac = {c})."
+"The Z1.4 table plan asks for a sample of {n} with a lot of {N}: 100 "
+"percent of the lot is inspected (n = N, Ac = {c})."
 
 #, python-brace-format, python-format
 msgid ""
@@ -2530,7 +2556,7 @@ msgid ""
 "lote de {N}: se inspecciona el 100 % del lote (n = N, Ac = {c})."
 msgstr ""
 "The Z1.4 double plan asks for a cumulative sample of {n} with a lot of "
-"{N}: 100 % of the lot is inspected (n = N, Ac = {c})."
+"{N}: 100 percent of the lot is inspected (n = N, Ac = {c})."
 
 #, python-brace-format
 msgid ""
@@ -2850,6 +2876,9 @@ msgstr "Give 'k' or 'alpha', not both."
 msgid "Indique 'mu' y 'cov' juntos (parámetros históricos) o ninguno."
 msgstr "Give 'mu' and 'cov' together (historical parameters) or neither."
 
+msgid "Indique 'n' y 'k' juntos, o ninguno de los dos."
+msgstr "Give 'n' and 'k' together, or neither."
+
 msgid "Informe de validación de pccpy"
 msgstr "pccpy validation report"
 
@@ -3046,6 +3075,13 @@ msgstr "Phase I did not converge: {reason}."
 msgid "La Fase I no está soportada para esta carta; usa {charts}."
 msgstr "Phase I is not supported for this chart; use {charts}."
 
+msgid ""
+"La Forma 1 de MIL-STD-414 no cubre la doble especificación (no hay tablas"
+" de la Forma 2): dé su plan con n= y k=."
+msgstr ""
+"Form 1 of MIL-STD-414 does not cover two-sided specifications (there are "
+"no Form 2 tables): give your plan with n= and k=."
+
 msgid "La carta NP requiere tamaño de muestra constante; use la carta P."
 msgstr "The NP chart requires a constant sample size; use the P chart."
 
@@ -3119,6 +3155,13 @@ msgid ""
 msgstr "Stage {label!r} appears in separate blocks; each stage must be contiguous."
 
 msgid ""
+"La inspección rigurosa de MIL-STD-414 no tiene plan con AQL 0.04%; use un"
+" AQL de 0.065% a 15%."
+msgstr ""
+"MIL-STD-414 tightened inspection has no plan with AQL 0.04%; use an AQL "
+"from 0.065% to 15%."
+
+msgid ""
 "La letra de código A no tiene plan doble propio: se usa el de la letra B "
 "(la flecha de la tabla lleva al mismo plan)."
 msgstr ""
@@ -3166,6 +3209,9 @@ msgstr ""
 msgid "La suma de frecuencias debe ser positiva."
 msgstr "The sum of the frequencies must be positive."
 
+msgid "La tabla A-2 de MIL-STD-414 empieza en lotes de 3 unidades."
+msgstr "Table A-2 of MIL-STD-414 starts at lots of 3 units."
+
 #, python-brace-format
 msgid ""
 "La tabla Z1.4 no trae plan doble para AQL {aql:g} %: usa "
@@ -3173,15 +3219,6 @@ msgid ""
 msgstr ""
 "The Z1.4 table has no double plan for AQL {aql:g} %: use "
 "sampling='single'."
-
-msgid ""
-"La tabla Z1.9 incluida es una aproximación que no reproduce la norma (los"
-" planes que da pueden aceptar casi cualquier lote). Use los valores n y k"
-" de su ejemplar de ANSI/ASQ Z1.9 con n= y k=."
-msgstr ""
-"The built-in Z1.9 table is an approximation that does not reproduce the "
-"standard (the plans it gives may accept almost any lot). Use the n and k "
-"values from your copy of ANSI/ASQ Z1.9 with n= and k=."
 
 msgid "La tasa de referencia debe ser mayor o igual que 0."
 msgstr "The reference rate must be greater than or equal to 0."
@@ -3261,6 +3298,13 @@ msgstr ""
 "The references are published tables, formulas written separately with "
 "NumPy/SciPy, or simulations with a fixed seed. This is not a comparison "
 "with Minitab."
+
+msgid ""
+"Las tablas de ANSI/ASQ Z1.9 no están disponibles. Use standard='mil-"
+"std-414' o dé su plan con n= y k=."
+msgstr ""
+"The ANSI/ASQ Z1.9 tables are not available. Use standard='mil-std-414' or"
+" give your plan with n= and k=."
 
 msgid ""
 "Letras de código de la tabla I de Z1.4 (niveles de inspección I, II y "
@@ -3400,6 +3444,13 @@ msgstr "MEWMA — better for gradual sustained shifts"
 msgid "MEWMA — sensibilidad alta a desplazamientos multivariados sostenidos"
 msgstr "MEWMA — high sensitivity to sustained multivariate shifts"
 
+msgid ""
+"MIL-STD-414: letra de la tabla A-2, plan (n, k) de la tabla B-1 con "
+"flechas, inspección rigurosa y guarda del 100 %"
+msgstr ""
+"MIL-STD-414: table A-2 letter, table B-1 (n, k) plan with arrows, "
+"tightened inspection and the 100 % guard"
+
 msgid "MR_prom"
 msgstr "MR_avg"
 
@@ -3475,8 +3526,8 @@ msgstr "Acceptance sampling"
 msgid "Muestreo de aceptación por atributos — norma ANSI/ASQ Z1.4"
 msgstr "Acceptance sampling by attributes — ANSI/ASQ Z1.4 standard"
 
-msgid "Muestreo de aceptación por variables — norma ANSI/ASQ Z1.9"
-msgstr "Acceptance sampling by variables — ANSI/ASQ Z1.9 standard"
+msgid "Muestreo de aceptación por variables — norma MIL-STD-414"
+msgstr "Acceptance sampling by variables — MIL-STD-414 standard"
 
 #, python-brace-format
 msgid "Muestreo de aceptación — {info}"
@@ -3800,8 +3851,8 @@ msgstr "Below"
 msgid "Por encima de"
 msgstr "Above"
 
-msgid "Por variables (medición continua)      → norma Z1.9"
-msgstr "By variables (continuous measurement)    → Z1.9 standard"
+msgid "Por variables (medición continua)      → norma MIL-STD-414"
+msgstr "By variables (continuous measurement)    → MIL-STD-414 standard"
 
 msgid "Porcentaje"
 msgstr "Percent"
@@ -5063,4 +5114,27 @@ msgstr "✔ Recommended analysis: <code style='font-size:13px'>{function}</code>
 
 #~ msgid "{count} valor(es) atípico(s) detectado(s). Investiga su origen."
 #~ msgstr "{count} outlier(s) detected. Investigate their origin."
+
+#~ msgid ""
+#~ "Combinación AQL={aql_key}% y letra={letra} no"
+#~ " disponible en la tabla Z1.9."
+#~ msgstr ""
+#~ "AQL={aql_key}% and letter={letra} combination "
+#~ "not available in the Z1.9 table."
+
+#~ msgid ""
+#~ "La tabla Z1.9 incluida es una "
+#~ "aproximación que no reproduce la norma"
+#~ " (los planes que da pueden aceptar"
+#~ " casi cualquier lote). Use los "
+#~ "valores n y k de su ejemplar "
+#~ "de ANSI/ASQ Z1.9 con n= y k=."
+#~ msgstr ""
+#~ "The built-in Z1.9 table is an "
+#~ "approximation that does not reproduce "
+#~ "the standard (the plans it gives "
+#~ "may accept almost any lot). Use "
+#~ "the n and k values from your "
+#~ "copy of ANSI/ASQ Z1.9 with n= and"
+#~ " k=."
 

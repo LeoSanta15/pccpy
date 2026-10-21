@@ -231,7 +231,7 @@ _TREE: dict[str, tuple[str, list[tuple[str, str]]]] = {
         N_("¿Cómo se mide la característica de calidad?"),
         [
             (N_("Por atributos (conforme / no conforme) → norma Z1.4"),  "r:z14"),
-            (N_("Por variables (medición continua)      → norma Z1.9"),  "r:z19"),
+            (N_("Por variables (medición continua)      → norma MIL-STD-414"),  "r:z19"),
             (N_("Minimizar inspección total (Dodge-Romig)"),              "muestreo_dr"),
         ],
     ),
@@ -690,7 +690,7 @@ _RESULTS: dict[str, WizardResult] = {
     ),
     "r:z19": _r(
         "acceptance_sampling_variables",
-        N_("Muestreo de aceptación por variables — norma ANSI/ASQ Z1.9"),
+        N_("Muestreo de aceptación por variables — norma MIL-STD-414"),
         {},
         alts=["acceptance_sampling_attributes"],
         code=N_("""

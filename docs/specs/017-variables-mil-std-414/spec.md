@@ -1,6 +1,6 @@
 # 017 — Planes de muestreo por variables: MIL-STD-414 (la «Z1.9 real» queda pendiente)
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S017
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** por decidir (cambia resultados existentes: los planes de la tabla aproximada actual; versión menor salvo decisión contraria)
