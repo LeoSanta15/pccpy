@@ -13,7 +13,7 @@ deben fallar por el motivo esperado.
 
 - [ ] S019-RF-01: kappa indefinido.
 - [ ] S019-RF-02: p-valor unilateral.
-- [ ] S019-RF-03: EV con `d2` (según la pregunta 2).
+- [ ] S019-RF-03: EV con `d2` (opción C).
 
 ## Fase 2 — Verificación y cierre
 

@@ -3,7 +3,7 @@
 - **Estado:** borrador
 - **Identificador:** S019
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** por decidir (cambia resultados existentes: p-valores de kappa y EV del Xbar-R; la regla de `CLAUDE.md` dice versión menor; ver pregunta 4)
+- **Versión objetivo:** 0.17.0 (cambia resultados existentes: p-valores de kappa y EV del Xbar-R; versión menor)
 
 ## Problema
 
@@ -89,7 +89,9 @@ Se listan en «Cambios que alteran resultados» del CHANGELOG con el valor anter
 
 ## Preguntas abiertas
 
-1. [NECESITA ACLARACIÓN: ¿El p-valor del kappa pasa a unilateral (`P(Z ≥ z)`, como recuerda la auditoría que hace Minitab) o se deja bilateral? **Recomendación:** unilateral, porque la hipótesis de interés es «el acuerdo es mejor que el azar» y alinea con lo que recuerdo de Minitab; se anota en «Notas sobre diferencias posibles con Minitab» que no se pudo verificar. Alternativa descartada: añadir `alternative="greater"|"two-sided"` (más superficie; si prefieres elegir, se hace en otra spec).]
-2. [NECESITA ACLARACIÓN: ¿La EV del Xbar-R usa siempre `d2(r)` (A), siempre `d2*` como hoy (B) o `d2` con más de 15 combinaciones y `d2*` con 15 o menos (C, como la nota del manual, recordada)? **Recomendación:** C: reproduce `K1` del manual en los estudios normales (≥ 30 combinaciones) y conserva la corrección de muestra pequeña. Inconveniente: un salto de ~0,9 % entre 15 y 16 combinaciones. Alternativa A: sin salto, pero la EV sube hasta 4,6 % con 6 combinaciones.]
-3. [NECESITA ACLARACIÓN: ¿También `κ = nan` en `_fleiss_kappa` con `Pe = 1`? **Recomendación:** sí, por la misma razón (0/0); hoy devuelve 1,0.]
-4. [NECESITA ACLARACIÓN: ¿Versión menor (0.17.0) o parche (0.16.2)? **Recomendación:** 0.17.0: cambian p-valores y la EV sin corregir un error de tabla, y la regla de `CLAUDE.md` dice «cambia resultados → versión menor»; los parches 0.15.8, 0.15.9 y 0.16.1 fueron excepciones tuyas y la auditoría las señala como riesgosas para quien fija `~=0.16.0`.]
+Ninguna. Decididas por la persona responsable (con las recomendaciones de la propuesta):
+
+1. **p-valor del kappa:** unilateral (`P(Z ≥ z)`, H₁: κ > 0). Se anota en «Notas sobre diferencias posibles con Minitab» que no se pudo verificar que Minitab informe `P(vs > 0)`. Alternativa descartada: `alternative="greater"|"two-sided"` (más superficie).
+2. **EV del Xbar-R:** opción C: `d2(r)` con más de 15 combinaciones parte×operador y `d2*(r, p·o)` con 15 o menos (como la nota del manual, recordada). Se documenta el salto de ~0,9 % entre 15 y 16. Alternativas descartadas: siempre `d2` (A; la EV sube hasta 4,6 % con 6 combinaciones) y siempre `d2*` (B; como hoy).
+3. **Fleiss:** `κ = nan` con `Pe = 1`, igual que Cohen.
+4. **Versión:** 0.17.0 (menor): cambian los p-valores del kappa y la EV del Xbar-R sin corregir un error de tabla. Alternativa descartada: parche 0.16.2.
