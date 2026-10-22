@@ -414,16 +414,18 @@ def _gage_rr_anova(data: np.ndarray, study_variation: float,
 def _gage_rr_xbar_r(data: np.ndarray, study_variation: float) -> GageRRResult:
     """Gage R&R por el método Xbar-R (AIAG MSA, 4.ª ed.).
 
-    ``EV = R̄ / d2*(r, p·o)``; ``AV = sqrt((R_operadores / d2*(o, 1))² − EV²/(p·r))`` (K2 del manual) y
-    ``PV = R_partes / d2*(p, 1)`` (K3 del manual, sin restar nada). ``d2*`` en :func:`pccpy._constants.d2_star`.
+    ``EV = R̄ / d2(r)`` con más de 15 combinaciones parte×operador (la ``K1`` tabulada del manual, que supone ``g > 15``)
+    y ``EV = R̄ / d2*(r, p·o)`` con 15 o menos (corrección de muestra pequeña; hay un salto de ~0,9 % entre 15 y 16);
+    ``AV = sqrt((R_operadores / d2*(o, 1))² − EV²/(p·r))`` (K2 del manual) y ``PV = R_partes / d2*(p, 1)`` (K3 del
+    manual, sin restar nada). ``d2*`` en :func:`pccpy._constants.d2_star`.
     """
-    from ._constants import d2_star
+    from ._constants import d2, d2_star
     p, o, r = data.shape
 
     # Repetibilidad (EV): rango medio dentro de cada celda parte × operador
     ranges = data.max(axis=2) - data.min(axis=2)  # (p, o)
     Rbar = ranges.mean()
-    sigma_ev = Rbar / d2_star(r, p * o)
+    sigma_ev = Rbar / (d2(r) if p * o > 15 else d2_star(r, p * o))
     var_err = sigma_ev ** 2
 
     # Reproducibilidad (AV): rango de las medias de operadores, corregido por la repetibilidad
@@ -987,7 +989,8 @@ class AttributeAgreementResult:
     kappa_within : pd.DataFrame
         Kappa de cada operador consigo mismo (repetibilidad).
     kappa_vs_reference : pd.DataFrame
-        Kappa de cada operador vs referencia.
+        Kappa de cada operador vs referencia. El p-valor es unilateral (H₁: κ > 0) con el error estándar bajo H₀ de
+        Fleiss, Cohen y Everitt (1969); es ``nan``, igual que κ, si los dos evaluadores usan una sola categoría.
     kappa_overall : float
         Kappa global de todos los operadores vs referencia.
     fleiss_kappa : float
@@ -1082,15 +1085,15 @@ def _cohen_kappa(a: np.ndarray, b: np.ndarray, categories) -> tuple[float, float
     row_sums = mat.sum(axis=1) / n
     col_sums = mat.sum(axis=0) / n
     pe = float(np.dot(row_sums, col_sums))
-    kappa = (po - pe) / (1 - pe) if pe < 1 else 1.0
+    if pe >= 1 - 1e-12:
+        # una sola categoría en ambos evaluadores: kappa = 0/0 no está definido (el acuerdo sí: 100 %)
+        return NAN, NAN, float(po * 100)
+    kappa = (po - pe) / (1 - pe)
     # Error estándar bajo H0 (kappa = 0) de Fleiss, Cohen y Everitt (1969)
-    if pe < 1 and n > 0:
-        var0 = (pe + pe**2 - float(np.sum(row_sums * col_sums * (row_sums + col_sums)))) / (n * (1 - pe) ** 2)
-        se = math.sqrt(var0) if var0 > 0 else 1e-9
-    else:
-        se = 1e-9
-    z = kappa / se if se > 0 else NAN
-    p_val = float(2 * stats.norm.sf(abs(z))) if not math.isnan(z) else NAN
+    var0 = (pe + pe**2 - float(np.sum(row_sums * col_sums * (row_sums + col_sums)))) / (n * (1 - pe) ** 2)
+    se = math.sqrt(var0) if var0 > 0 else 1e-9
+    # Prueba unilateral H1: kappa > 0 (la hipótesis de interés es que el acuerdo supera al azar)
+    p_val = float(stats.norm.sf(kappa / se))
     return float(kappa), float(p_val), float(po * 100)
 
 
@@ -1108,7 +1111,7 @@ def _fleiss_kappa(ratings: pd.DataFrame, categories) -> float:
     pi_arr = ((counts ** 2).sum(axis=1) - k) / (k * (k - 1)) if k > 1 else np.ones(n)
     P_bar = pi_arr.mean()
     Pe = float((pj ** 2).sum())
-    return (P_bar - Pe) / (1 - Pe) if Pe < 1 else 1.0
+    return (P_bar - Pe) / (1 - Pe) if Pe < 1 - 1e-12 else NAN
 
 
 def attribute_agreement(

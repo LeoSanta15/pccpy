@@ -1,5 +1,21 @@
 # Registro de cambios
 
+## [Sin publicar] - Kappa unilateral e indefinido con una categoría; EV del Gage R&R Xbar-R con d2
+
+Especificación `docs/specs/019-kappa-unilateral-y-ev-xbar-r`, a partir de la segunda auditoría (sobre la 0.16.1). Que Minitab informe `P(vs > 0)` y los `K1` del manual de AIAG (0,8862 y 0,5908) se recuerdan y no se pudieron consultar; no se midió si Minitab usa `d2` o `d2*` en el Xbar-R.
+
+### Cambios que alteran resultados
+- **P-valor del kappa de Cohen unilateral** (H₁: κ > 0): `kappa_within` y `kappa_vs_reference` pasan a `norm.sf(κ/SE₀)` con el error estándar de Fleiss, Cohen y Everitt. Con `κ > 0` el p-valor se reduce a la mitad (p. ej. 3 operadores, 60 piezas: κ = 0,700, `p` 5,05·10⁻⁸ → 2,53·10⁻⁸); con `κ < 0` sale `> 0,5`. El valor de κ no cambia. Con marginales 85/15 y n = 100 la prueba z unilateral rechaza el 6,75 % al 5 % (con 50/50, 4,7 %): es un límite de la aproximación normal.
+- **Kappa con una sola categoría** (`pₑ = 1`, p. ej. un operador que siempre dice «bueno» frente a una referencia siempre «bueno»): κ y p pasan de `1,0` y `0,0` a `nan`; el acuerdo sigue en 100 %. Igual para el kappa de Fleiss.
+- **Gage R&R por Xbar-R, con más de 15 combinaciones parte×operador:** la repetibilidad (EV) usa `K1 = 1/d2(r)` en lugar de `1/d2*(r, p·o)`: la EV sube ≈ 0,5–1 % (10 partes × 3 operadores: `K1` 0,8779 → 0,8862 con 2 ensayos y 0,5881 → 0,5908 con 3) y el AV baja algo; con 15 o menos no cambia. Hay un salto de ~0,9 % entre 15 y 16 combinaciones. `K2`, `K3` y el ANOVA no cambian.
+
+### Añadido
+- Dos comprobaciones más en la validación (71 en total): `kappa-unilateral` (p-valor contra `norm.sf` con el error estándar escrito aparte, y κ indefinido con una categoría) y `k1-xbar-r` (EV con `d2(r)` por integración numérica y `d2*` con 15 combinaciones).
+
+### No incluido
+- Parámetro `alternative=` para elegir p unilateral o bilateral; p-valor para el kappa de Fleiss.
+- La nota de la binomial en la OC por atributos (cambio de docstring aparte).
+
 ## [0.16.1] - 2026-10-21 - Curva OC exacta de los planes por variables
 
 Especificación `docs/specs/018-curva-oc-exacta-variables`. Se publica como parche (0.16.1) aunque cambia resultados existentes, por decisión de la persona responsable, como la 0.15.8 y la 0.15.9. La referencia es una integral numérica escrita aparte y simulación con 20 semillas; no se contrastó con las tablas OC publicadas (Lieberman y Resnikoff, 1955), que no se pudieron consultar.

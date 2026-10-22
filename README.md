@@ -1791,7 +1791,8 @@ carta.panels[0].violations   # dict {prueba: array de índices}
 - **Box-Cox:** lambda por máxima verosimilitud (`scipy.stats.boxcox`); Minitab usa otro optimizador y otro criterio de redondeo (`lam=` o `round_lambda=True` fijan el valor).
 - **T² de Fase I con individuales:** covarianza clásica de los datos, no la de las diferencias sucesivas.
 - **MEWMA:** covarianza asintótica del estadístico (no la exacta de cada punto).
-- **Kappa de Cohen:** el p-valor usa el error estándar bajo H₀ de Fleiss, Cohen y Everitt (1969). La repetibilidad (kappa entre réplicas) no promedia p-valores de pares: con más de un par queda en `nan`.
+- **Kappa de Cohen:** el p-valor es **unilateral** (H₁: κ > 0) y usa el error estándar bajo H₀ de Fleiss, Cohen y Everitt (1969); que Minitab informe `P(vs > 0)` con ese error estándar se recuerda y no se pudo verificar. Con marginales muy asimétricos y pocas piezas la prueba z rechaza de más (85/15 y n = 100: 6,75 % al 5 %). Si los dos evaluadores usan una sola categoría, κ y el p-valor son `nan` (0/0). La repetibilidad (kappa entre réplicas) no promedia p-valores de pares: con más de un par queda en `nan`.
+- **Gage R&R por Xbar-R:** la repetibilidad (EV) usa `K1 = 1/d2(r)` (0,8862 con 2 ensayos y 0,5908 con 3, los del manual de AIAG, recordados y no consultados) con más de 15 combinaciones parte×operador, y `d2*` con 15 o menos; hay un salto de ~0,9 % entre 15 y 16. `K2` y `K3` usan `d2*`. No se midió si Minitab usa `d2` o `d2*` en ese método.
 - **Carta de corridas:** con empates, la prueba de tendencias usa `n = m + 1` (los puntos que quedan al quitar las diferencias nulas).
 - **Tendencia de `diagnose()` y `wizard()`:** prueba de Mann-Kendall (α = 0,05, con al menos 8 observaciones); Minitab no tiene una equivalente.
 - **`sigma_method="mssd"`:** `√(MSSD/2)` dividido por la constante de insesgamiento `c_mssd(n)` (calculada por integración numérica).

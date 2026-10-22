@@ -178,10 +178,10 @@ def test_constantes_k_de_aiag_con_d2_estrella():
 
 
 def test_gage_rr_xbar_r_sigue_aiag():
-    from pccpy._constants import d2_star
+    from pccpy._constants import d2, d2_star
     d = np.random.default_rng(9).normal(50, 2, (10, 3, 2)) + np.random.default_rng(10).normal(0, 3, (10, 1, 1))
     p, o, r = d.shape
-    ev = (d.max(axis=2) - d.min(axis=2)).mean() / d2_star(r, p * o)
+    ev = (d.max(axis=2) - d.min(axis=2)).mean() / (d2(r) if p * o > 15 else d2_star(r, p * o))   # S019-RF-03
     om, pm = d.mean(axis=(0, 2)), d.mean(axis=(1, 2))
     av = math.sqrt(max((np.ptp(om) / d2_star(o, 1)) ** 2 - ev**2 / (p * r), 0.0))
     pv = np.ptp(pm) / d2_star(p, 1)

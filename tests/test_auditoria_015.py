@@ -235,7 +235,7 @@ def test_s015_rf05_error_estandar_de_fleiss_cohen_everitt():
         k_ref, se0 = _kappa_fce(_tabla(a, b, cats))
         k, p, _ = _cohen_kappa(a, b, cats)
         assert k == pytest.approx(k_ref, rel=1e-12)
-        assert p == pytest.approx(2 * stats.norm.sf(abs(k_ref / se0)), rel=1e-9)
+        assert p == pytest.approx(stats.norm.sf(k_ref / se0), rel=1e-9)   # unilateral desde la 019 (S019-RF-02)
 
 
 def test_s015_rf05_coincide_con_statsmodels():
@@ -249,7 +249,7 @@ def test_s015_rf05_coincide_con_statsmodels():
     b = np.where(rng.random(80) < 0.5, a, rng.choice(cats, 80))
     r = sm.cohens_kappa(_tabla(a, b, cats))
     _, p, _ = _cohen_kappa(a, b, cats)
-    assert p == pytest.approx(2 * stats.norm.sf(abs(r.kappa / r.std_kappa0)), rel=1e-6)
+    assert p == pytest.approx(stats.norm.sf(r.kappa / r.std_kappa0), rel=1e-6)   # unilateral desde la 019 (S019-RF-02)
 
 
 def test_s015_rf05_tasa_de_rechazo_bajo_h0():
@@ -264,7 +264,8 @@ def test_s015_rf05_tasa_de_rechazo_bajo_h0():
         for _ in range(300):
             a = rng.choice(cats, 100, p=[0.85, 0.15])
             b = rng.choice(cats, 100, p=[0.85, 0.15])
-            rech += _cohen_kappa(a, b, cats)[1] < 0.05
+            p = _cohen_kappa(a, b, cats)[1]
+            rech += (p < 0.025) or (p > 0.975)   # prueba bilateral al 5 % a partir del p unilateral (S019-RF-02)
         tasas.append(rech / 300)
     assert np.mean(tasas) == pytest.approx(0.05, abs=0.01)
 

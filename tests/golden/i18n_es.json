@@ -3248,52 +3248,52 @@
      ""
     ],
     [
-     0.205497
+     0.209407
     ],
     [
-     0.041551
+     0.041355
     ],
     [
      0.0
     ],
     [
-     0.041551
+     0.041355
     ],
     [
-     0.247048
+     0.250762
     ],
     [
      2.474032
     ],
     [
-     2.72108
+     2.724794
     ],
     [
      ""
     ],
     [
-     9.08
+     9.2
     ],
     [
-     7.55
+     7.69
     ],
     [
-     1.53
+     1.52
     ],
     [
-     90.92
+     90.8
     ],
     [
      ""
     ],
     [
-     2.982235
+     3.004571
     ],
     [
-     9.897418
+     9.904171
     ],
     [
-     30.13
+     30.34
     ],
     [
      4
@@ -3305,13 +3305,13 @@
      20.0
     ],
     [
-     14.91
+     15.02
     ],
     [
-     13.6
+     13.73
     ],
     [
-     6.12
+     6.1
     ]
    ],
    "index": [
@@ -3346,7 +3346,7 @@
    ],
    "index_name": "estadístico"
   },
-  "summary": "Gage R&R (xbar_r) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.20550     7.55%\n  Reproducibilidad       0.04155     1.53%\n    Operador             0.04155\n    Interacción          0.00000\n  Gage R&R               0.24705     9.08%\n  Parte a parte          2.47403    90.92%\n  Total                  2.72108  100.00%\n\n  %Var. estudio Gage R&R = 30.13%   NDC = 4\n  %Tolerancia (T = 20): Gage R&R = 14.91%  Repetibilidad = 13.60%  Reproducibilidad = 6.12%"
+  "summary": "Gage R&R (xbar_r) — 10 partes × 3 operadores × 2 réplicas\n  K = 6.0  (variación de estudio = K·σ)\n\n  Fuente              Var          %Contribución\n  Repetibilidad          0.20941     7.69%\n  Reproducibilidad       0.04136     1.52%\n    Operador             0.04136\n    Interacción          0.00000\n  Gage R&R               0.25076     9.20%\n  Parte a parte          2.47403    90.80%\n  Total                  2.72479  100.00%\n\n  %Var. estudio Gage R&R = 30.34%   NDC = 4\n  %Tolerancia (T = 20): Gage R&R = 15.02%  Repetibilidad = 13.73%  Reproducibilidad = 6.10%"
  },
  "gage_tipo1": {
   "frame": {
