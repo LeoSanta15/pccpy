@@ -1237,7 +1237,7 @@ def _auditoria_015():
     fila, col = tabla.sum(1), tabla.sum(0)
     po, pe = np.trace(tabla), float(fila @ col)
     se0 = math.sqrt((pe + pe**2 - float(np.sum(fila * col * (fila + col)))) / (60 * (1 - pe) ** 2))
-    esperado.append(float(2 * stats.norm.sf(abs((po - pe) / (1 - pe) / se0))))
+    esperado.append(float(stats.norm.sf((po - pe) / (1 - pe) / se0)))   # unilateral desde la 019 (S019-RF-02)
     obtenido.append(_cohen_kappa(a, b, [0, 1, 2])[1])
     # RF-12 (p = 2, n = 5): |S|·(n−1)²/|Σ| = X·Y con X ~ χ²_4 e Y ~ χ²_3 independientes; la probabilidad de cada cola en los límites es Φ(−3)
     from scipy import integrate
@@ -1352,6 +1352,62 @@ def _variables_oc_exacta():
     plan = acceptance_sampling_variables(1000, 1.0)          # n = 35, k = 1,89
     esperado.append(1.0 - integral(35, 1.89, 0.01))
     obtenido.append(plan.alpha)
+    return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
+
+
+@_comprobacion("kappa-unilateral", N_("Kappa de Cohen: p-valor unilateral (κ > 0) con el error estándar de Fleiss, Cohen y Everitt, y κ indefinido con una sola categoría"),
+               "Definición κ = (po − pe)/(1 − pe), error estándar bajo H0 de Fleiss, Cohen y Everitt (1969) escrito aparte y scipy.stats.norm.sf; "
+               "no se contrastó con Minitab (que informe P(vs > 0) se recuerda y no se pudo verificar); especificación 019", 1e-9, relative=True)
+def _kappa_unilateral():
+    from scipy import stats
+
+    from .msa import _cohen_kappa
+
+    esperado, obtenido = [], []
+    rng = np.random.default_rng(11)
+    for _ in range(3):
+        a = rng.choice([0, 1, 2], 80, p=[0.6, 0.3, 0.1])
+        b = np.where(rng.random(80) < 0.5, a, rng.choice([0, 1, 2], 80))
+        tabla = np.array([[np.sum((a == i) & (b == j)) for j in range(3)] for i in range(3)], float) / 80
+        fila, col = tabla.sum(1), tabla.sum(0)
+        po, pe = np.trace(tabla), float(fila @ col)
+        se0 = math.sqrt((pe + pe**2 - float(np.sum(fila * col * (fila + col)))) / (80 * (1 - pe) ** 2))
+        k, p, _ = _cohen_kappa(a, b, [0, 1, 2])
+        esperado += [(po - pe) / (1 - pe), float(stats.norm.sf((po - pe) / (1 - pe) / se0))]
+        obtenido += [k, p]
+    # una sola categoría en los dos evaluadores: κ = 0/0 (indefinido); se comprueba con 1 − isnan
+    k, p, _ = _cohen_kappa(np.zeros(10, int), np.zeros(10, int), [0, 1])
+    esperado += [1.0, 1.0]
+    obtenido += [float(np.isnan(k)), float(np.isnan(p))]
+    return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
+
+
+@_comprobacion("k1-xbar-r", N_("Gage R&R Xbar-R: la EV usa K1 = 1/d2(r) con más de 15 combinaciones parte×operador y d2* con 15 o menos"),
+               "d2(2) = 2/√π y d2(3) por integración numérica de la media del rango de normales (scipy.integrate.quad); d2* = √(d2² + d3²/g) con "
+               "d2(2)² = 4/π y d3(2)² = 2 − 4/π; los K1 del manual de AIAG (0,8862 y 0,5908) se recuerdan y no se pudieron consultar; especificación 019", 1e-9, relative=True)
+def _k1_xbar_r():
+    from scipy import stats
+    from scipy.integrate import quad
+
+    from . import gage_rr
+
+    def d2_ref(m):
+        return quad(lambda x: 1.0 - stats.norm.cdf(x) ** m - stats.norm.sf(x) ** m, -np.inf, np.inf, epsabs=1e-13)[0]
+
+    def estudio(p, o, r):
+        rng = np.random.default_rng(5)
+        return 50 + rng.normal(0, 3, (p, 1, 1)) + rng.normal(0, 0.5, (1, o, 1)) + rng.normal(0, 1.0, (p, o, r))
+
+    esperado, obtenido = [], []
+    for p, o, r in [(10, 3, 2), (10, 3, 3)]:                  # 30 combinaciones: d2(r)
+        d = estudio(p, o, r)
+        rbar = float((d.max(axis=2) - d.min(axis=2)).mean())
+        esperado.append((rbar / d2_ref(r)) ** 2)
+        obtenido.append(gage_rr(d, p, o, r, method="xbar_r").var_repeatability)
+    d = estudio(3, 5, 2)                                       # 15 combinaciones: d2*(2, 15)
+    rbar = float((d.max(axis=2) - d.min(axis=2)).mean())
+    esperado.append((rbar / math.sqrt(4 / math.pi + (2 - 4 / math.pi) / 15)) ** 2)
+    obtenido.append(gage_rr(d, 3, 5, 2, method="xbar_r").var_repeatability)
     return np.array(esperado, dtype=float), np.array(obtenido, dtype=float)
 
 

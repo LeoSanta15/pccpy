@@ -1,6 +1,6 @@
 # 019 — Kappa: p-valor unilateral y caso degenerado; EV del Gage R&R Xbar-R con `d2`
 
-- **Estado:** aprobada
+- **Estado:** implementada
 - **Identificador:** S019
 - **Responsable de aprobarla:** LeoSanta15
 - **Versión objetivo:** 0.17.0 (cambia resultados existentes: p-valores de kappa y EV del Xbar-R; versión menor)

@@ -18,8 +18,8 @@ deben fallar por el motivo esperado.
 
 ## Fase 2 — Verificación y cierre
 
-- [ ] Comprobaciones `kappa-unilateral` y `k1-xbar-r` en `run_validation()` (S019-RF-01, S019-RF-02 y S019-RF-03).
-- [ ] Regenerar `tests/golden/` (kappa y Gage R&R Xbar-R) y revisar el diff línea a línea.
-- [ ] Documentación, README (es/en, nota de Minitab), traducciones y CHANGELOG.
-- [ ] `make check` en verde.
-- [ ] Estado de la especificación → `implementada`.
+- [x] Comprobaciones `kappa-unilateral` y `k1-xbar-r` en `run_validation()` (S019-RF-01, S019-RF-02 y S019-RF-03).
+- [x] Regenerar `tests/golden/` (kappa y Gage R&R Xbar-R) y revisar el diff línea a línea.
+- [x] Documentación, README (es/en, nota de Minitab), traducciones y CHANGELOG.
+- [x] `make check` en verde.
+- [x] Estado de la especificación → `implementada`.

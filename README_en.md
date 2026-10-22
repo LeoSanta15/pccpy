@@ -1792,7 +1792,8 @@ chart.panels[0].violations   # dict {test: array of indices}
 - **Box-Cox:** lambda by maximum likelihood (`scipy.stats.boxcox`); Minitab uses another optimizer and another rounding criterion (`lam=` or `round_lambda=True` fix the value).
 - **Phase I T² with individuals:** classical covariance of the data, not the covariance of successive differences.
 - **MEWMA:** asymptotic covariance of the statistic (not the exact one at each point).
-- **Cohen's kappa:** the p-value uses the standard error under H₀ of Fleiss, Cohen and Everitt (1969). Repeatability (kappa between replicates) does not average pair p-values: with more than one pair it is `nan`.
+- **Cohen's kappa:** the p-value is **one-sided** (H₁: κ > 0) and uses the standard error under H₀ of Fleiss, Cohen and Everitt (1969); that Minitab reports `P(vs > 0)` with that standard error is recalled and could not be verified. With very skewed marginals and few items the z test rejects too often (85/15 and n = 100: 6.75 % at 5 %). If both raters use a single category, κ and the p-value are `nan` (0/0). Repeatability (kappa between replicates) does not average pair p-values: with more than one pair it is `nan`.
+- **Gage R&R by Xbar-R:** repeatability (EV) uses `K1 = 1/d2(r)` (0.8862 with 2 trials and 0.5908 with 3, the AIAG manual values, recalled and not consulted) with more than 15 part×operator combinations, and `d2*` with 15 or fewer; there is a jump of ~0.9 % between 15 and 16. `K2` and `K3` use `d2*`. Whether Minitab uses `d2` or `d2*` in this method was not measured.
 - **Run chart:** with ties, the trends test uses `n = m + 1` (the points left after dropping the zero differences).
 - **Trend in `diagnose()` and `wizard()`:** Mann-Kendall test (α = 0.05, at least 8 observations); Minitab has no equivalent.
 - **`sigma_method="mssd"`:** `√(MSSD/2)` divided by the unbiasedness constant `c_mssd(n)` (computed by numerical integration).
