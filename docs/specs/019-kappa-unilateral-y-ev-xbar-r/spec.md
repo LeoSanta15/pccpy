@@ -3,7 +3,7 @@
 - **Estado:** implementada
 - **Identificador:** S019
 - **Responsable de aprobarla:** LeoSanta15
-- **Versión objetivo:** 0.17.0 (cambia resultados existentes: p-valores de kappa y EV del Xbar-R; versión menor)
+- **Versión objetivo:** 0.16.2 (cambia resultados existentes: p-valores de kappa y EV del Xbar-R; se publica como parche por decisión de la persona responsable, como la 0.16.1; la recomendación era 0.17.0)
 
 ## Problema
 
@@ -94,4 +94,4 @@ Ninguna. Decididas por la persona responsable (con las recomendaciones de la pro
 1. **p-valor del kappa:** unilateral (`P(Z ≥ z)`, H₁: κ > 0). Se anota en «Notas sobre diferencias posibles con Minitab» que no se pudo verificar que Minitab informe `P(vs > 0)`. Alternativa descartada: `alternative="greater"|"two-sided"` (más superficie).
 2. **EV del Xbar-R:** opción C: `d2(r)` con más de 15 combinaciones parte×operador y `d2*(r, p·o)` con 15 o menos (como la nota del manual, recordada). Se documenta el salto de ~0,9 % entre 15 y 16. Alternativas descartadas: siempre `d2` (A; la EV sube hasta 4,6 % con 6 combinaciones) y siempre `d2*` (B; como hoy).
 3. **Fleiss:** `κ = nan` con `Pe = 1`, igual que Cohen.
-4. **Versión:** 0.17.0 (menor): cambian los p-valores del kappa y la EV del Xbar-R sin corregir un error de tabla. Alternativa descartada: parche 0.16.2.
+4. **Versión:** decidida como 0.17.0 (menor) y, al preparar la versión, cambiada por la persona responsable a **0.16.2** (parche), como la 0.16.1, aunque cambian los p-valores del kappa y la EV del Xbar-R sin corregir un error de tabla. Se avisa igualmente en «Cambios que alteran resultados» del CHANGELOG. Alternativa descartada: versión menor 0.17.0.
