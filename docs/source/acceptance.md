@@ -10,6 +10,11 @@ aceptar o rechazar un lote de producción basándose en una muestra.
 | `acceptance_sampling_variables` | MIL-STD-414 | Por variables (medición continua) |
 | `dodge_romig` | Dodge-Romig | LTPD o AOQL fijo |
 
+La curva OC de los planes por atributos (y los planes de Dodge-Romig) usa la distribución **binomial** (curva tipo B: el lote sale
+de un proceso con fracción defectiva `p`), como las tablas de las normas. Para un lote finito aislado (tipo A) lo exacto es la
+hipergeométrica, que da una probabilidad de aceptación algo menor (`N = 1000`, `n = 132`, `c = 3` y 5 % defectuosos: binomial 0,0992
+frente a hipergeométrica 0,0838).
+
 ---
 
 ## Por atributos — Z1.4
@@ -65,7 +70,7 @@ es `ac2` o menos (`re2 = ac2 + 1`).
 
 ```python
 doble = pp.acceptance_sampling_attributes(N=1000, aql=1.0, sampling="double")
-doble.pa(0.01)    # probabilidad de aceptación exacta, con la binomial
+doble.pa(0.01)    # probabilidad de aceptación con la binomial (curva tipo B)
 doble.asn(0.01)   # tamaño medio de muestra: n1 + n2·P(ac1 < d1 < re1)
 doble.plot()      # OC + AOQ + ASN
 ```
