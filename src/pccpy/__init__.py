@@ -102,7 +102,7 @@ from .results import ControlChart, MultivariateChart, Panel
 from .tolerance import ToleranceResult, tolerance_interval, tolerance_interval_summary
 from .transforms import Transformation, fit_transformation
 
-__version__ = "0.17.0"
+__version__ = "0.16.2"
 
 __all__ = [
     "AttributeAgreementResult",
