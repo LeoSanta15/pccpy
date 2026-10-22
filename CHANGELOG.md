@@ -1,6 +1,6 @@
 # Registro de cambios
 
-## [Sin publicar] - Kappa unilateral e indefinido con una categoría; EV del Gage R&R Xbar-R con d2
+## [0.17.0] - 2026-10-22 - Kappa unilateral e indefinido con una categoría; EV del Gage R&R Xbar-R con d2
 
 Especificación `docs/specs/019-kappa-unilateral-y-ev-xbar-r`, a partir de la segunda auditoría (sobre la 0.16.1). Que Minitab informe `P(vs > 0)` y los `K1` del manual de AIAG (0,8862 y 0,5908) se recuerdan y no se pudieron consultar; no se midió si Minitab usa `d2` o `d2*` en el Xbar-R.
 
