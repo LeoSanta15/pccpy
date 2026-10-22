@@ -1568,7 +1568,7 @@ print(doble.summary())
 doble.n1, doble.n2               # tamaños de la 1.ª y la 2.ª muestra (la acumulada es n1 + n2)
 doble.ac1, doble.re1             # aceptación y rechazo con la 1.ª muestra
 doble.ac2, doble.re2             # aceptación y rechazo con las dos muestras acumuladas
-doble.pa(0.01)                   # P(aceptar | p = 1 %), exacta con la binomial
+doble.pa(0.01)                   # P(aceptar | p = 1 %), con la binomial (curva OC tipo B)
 doble.asn(0.01)                  # tamaño medio de muestra: n1 + n2·P(2.ª muestra)
 doble.oc_curve(), doble.aoq_curve(), doble.asn_curve()
 doble.plot()                     # OC + AOQ + ASN
@@ -1799,7 +1799,7 @@ carta.panels[0].violations   # dict {prueba: array de índices}
 - **Linealidad y sesgo:** `%Linealidad = 100·|pendiente|` y `%Sesgo = 100·|sesgo medio| / variación del proceso`, definiciones de AIAG (MSA, 3.ª ed.) recordadas de memoria.
 - **Carta de varianza generalizada:** límites por percentiles de `|S|` (la misma probabilidad que ±k sigmas de una normal), no la aproximación normal `b1 ± k√b2`.
 - **Ancho de los límites (`k`/`alpha`), mediana como línea central y carta X̃-R:** no se comprobó si Minitab los ofrece ni cómo.
-- **Muestreo de aceptación:** los planes Dodge-Romig minimizan el ATI con el AOQL exacto; los planes por variables son los de MIL-STD-414 (capturas de las tablas A-2 y B-1; no es Z1.9). Los niveles S-1 a S-4 y el muestreo doble de Z1.4 se transcribieron de capturas de las tablas I, II-A y III-A (no del texto de la norma) y no se comprobó que coincidan con Minitab; Z1.4 no trae la inspección rigurosa ni la reducida.
+- **Muestreo de aceptación:** la curva OC por atributos y los planes Dodge-Romig usan la binomial (curva tipo B), no la hipergeométrica de un lote finito aislado (tipo A), que da una `Pa` algo menor (`N = 1000`, `n = 132`, `c = 3` y 5 % defectuosos: 0,0992 frente a 0,0838); los planes Dodge-Romig minimizan el ATI con el AOQL exacto; los planes por variables son los de MIL-STD-414 (capturas de las tablas A-2 y B-1; no es Z1.9). Los niveles S-1 a S-4 y el muestreo doble de Z1.4 se transcribieron de capturas de las tablas I, II-A y III-A (no del texto de la norma) y no se comprobó que coincidan con Minitab; Z1.4 no trae la inspección rigurosa ni la reducida.
 
 ---
 

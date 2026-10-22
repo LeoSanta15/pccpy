@@ -1,5 +1,12 @@
 # Registro de cambios
 
+## [Sin publicar] - Documentación de la curva OC por atributos
+
+Solo documentación (docstrings, guía de muestreo y README en español e inglés); no cambia resultados.
+
+### Documentación
+- La curva OC por atributos (`pa`, `alpha`, `ltpd`, AOQ) y los planes de Dodge-Romig usan la distribución **binomial** (curva tipo B), no la hipergeométrica de un lote finito aislado (tipo A), que da una `Pa` algo menor (`N = 1000`, `n = 132`, `c = 3` y 5 % defectuosos: 0,0992 frente a 0,0838). Estaba descrito como «exacta»; se aclara el modelo. Surgió de la segunda auditoría (sobre la 0.16.1).
+
 ## [0.16.2] - 2026-10-22 - Kappa unilateral e indefinido con una categoría; EV del Gage R&R Xbar-R con d2
 
 Especificación `docs/specs/019-kappa-unilateral-y-ev-xbar-r`, a partir de la segunda auditoría (sobre la 0.16.1). Que Minitab informe `P(vs > 0)` y los `K1` del manual de AIAG (0,8862 y 0,5908) se recuerdan y no se pudieron consultar; no se midió si Minitab usa `d2` o `d2*` en el Xbar-R.

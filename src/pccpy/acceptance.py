@@ -174,7 +174,7 @@ class SamplingPlanAttributes:
     _pa_arr: np.ndarray = field(repr=False)
 
     def pa(self, p: float) -> float:
-        """Probabilidad de aceptar para fracción defectiva p."""
+        """Probabilidad de aceptar para fracción defectiva p (binomial, curva OC tipo B)."""
         return _pa_binomial(self.n, self.c, p)
 
     def oc_curve(self, stable: bool = False) -> pd.DataFrame:
@@ -298,6 +298,11 @@ def acceptance_sampling_attributes(
     -----
     Si la muestra de la tabla es igual o mayor que el lote, la norma manda inspeccionar el 100 %: el plan devuelto lleva
     ``n = N`` (con el ``Ac`` de la tabla) y se avisa con un ``UserWarning``.
+
+    La curva OC (``pa``, ``alpha``, ``ltpd``, AOQ) usa la distribución **binomial** (curva tipo B: el lote sale de un
+    proceso con fracción defectiva ``p``), como las tablas de Z1.4 y de Dodge-Romig. Para un lote finito aislado (curva
+    tipo A) lo exacto es la hipergeométrica, que da una ``Pa`` algo menor (``N = 1000``, ``n = 132``, ``c = 3`` y 5 %
+    defectuosos: binomial 0,0992 frente a hipergeométrica 0,0838).
 
     Solo se incluyen la inspección normal y los niveles de la tabla I; la inspección rigurosa y reducida y el muestreo
     múltiple no están (no se tienen sus tablas).
@@ -430,7 +435,7 @@ class DoublePlanAttributes:
     _p_arr: np.ndarray = field(repr=False)
 
     def pa(self, p):
-        """Probabilidad de aceptar para la fracción defectiva ``p`` (exacta, con la binomial)."""
+        """Probabilidad de aceptar para la fracción defectiva ``p`` (con la binomial, curva OC tipo B)."""
         return _pa_doble(self.n1, self.n2, self.ac1, self.re1, self.ac2, p)
 
     def asn(self, p):
@@ -1027,6 +1032,12 @@ def dodge_romig(
     Returns
     -------
     DodgeRomigPlan
+
+    Notes
+    -----
+    La probabilidad de aceptación (LTPD, AOQL y ATI) se calcula con la distribución **binomial** (curva OC tipo B), no
+    con la hipergeométrica de un lote finito aislado (tipo A), que daría una ``Pa`` algo menor y, con ella, planes algo
+    distintos (``N = 1000``, ``n = 132``, ``c = 3`` y 5 % defectuosos: binomial 0,0992 frente a hipergeométrica 0,0838).
     """
     if (ltpd is None) == (aoql is None):
         raise ValueError(tr("Especifica exactamente uno de 'ltpd' o 'aoql'."))

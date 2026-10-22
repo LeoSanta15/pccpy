@@ -1569,7 +1569,7 @@ print(double.summary())
 double.n1, double.n2             # sizes of the 1st and 2nd sample (the cumulative one is n1 + n2)
 double.ac1, double.re1           # acceptance and rejection with the 1st sample
 double.ac2, double.re2           # acceptance and rejection with both samples cumulated
-double.pa(0.01)                  # P(accept | p = 1 %), exact with the binomial
+double.pa(0.01)                  # P(accept | p = 1 %), with the binomial (type B OC curve)
 double.asn(0.01)                 # average sample size: n1 + n2·P(2nd sample)
 double.oc_curve(), double.aoq_curve(), double.asn_curve()
 double.plot()                    # OC + AOQ + ASN
@@ -1800,7 +1800,7 @@ chart.panels[0].violations   # dict {test: array of indices}
 - **Linearity and bias:** `%Linearity = 100·|slope|` and `%Bias = 100·|mean bias| / process variation`, AIAG definitions (MSA, 3rd ed.) recalled from memory.
 - **Generalized variance chart:** limits at percentiles of `|S|` (the same probability as ±k sigmas of a normal), not the normal approximation `b1 ± k√b2`.
 - **Limit width (`k`/`alpha`), median as the center line and the X̃-R chart:** we did not check whether Minitab offers them or how.
-- **Acceptance sampling:** Dodge-Romig plans minimize the ATI with the exact AOQL; the variables plans are those of MIL-STD-414 (screenshots of tables A-2 and B-1; not Z1.9). The Z1.4 special levels S-1 to S-4 and double sampling were transcribed from screenshots of tables I, II-A and III-A (not from the text of the standard) and were not checked against Minitab; Z1.4 does not include tightened or reduced inspection.
+- **Acceptance sampling:** the OC curve by attributes and the Dodge-Romig plans use the binomial (type B curve), not the hypergeometric of an isolated finite lot (type A), which gives a slightly lower `Pa` (`N = 1000`, `n = 132`, `c = 3` and 5 % defective: 0.0992 versus 0.0838); Dodge-Romig plans minimize the ATI with the exact AOQL; the variables plans are those of MIL-STD-414 (screenshots of tables A-2 and B-1; not Z1.9). The Z1.4 special levels S-1 to S-4 and double sampling were transcribed from screenshots of tables I, II-A and III-A (not from the text of the standard) and were not checked against Minitab; Z1.4 does not include tightened or reduced inspection.
 
 ---
 
