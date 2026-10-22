@@ -50,7 +50,7 @@ La auditoría que originó la spec 006 había recomendado `d2*` para la EV; la n
 **Aceptación:**
 - **Dado** `κ > 0` **entonces** `p_unilateral = p_bilateral_anterior / 2` y coincide con `norm.sf(κ/SE₀)` con `SE₀` de `statsmodels.stats.inter_rater.cohens_kappa(...).std_kappa0`.
 - **Dado** `κ < 0` **entonces** `p > 0,5` (un `κ` negativo nunca es significativo a favor de la concordancia).
-- **Dado** marginales 85/15, `n = 100`, 20 semillas × 300 muestras bajo H₀ **entonces** la tasa de rechazo al 5 % unilateral es 0,05 ± 0,01.
+- **Dado** marginales 50/50, `n = 100`, 20 semillas × 300 muestras bajo H₀ **entonces** la tasa de rechazo al 5 % unilateral es 0,05 ± 0,01 (medida 0,047). Con marginales 85/15 y `n = 100` la prueba z unilateral rechaza de más (medida 0,0675; con `n = 400`, 0,054): es un límite de la aproximación normal para un `κ` asimétrico, no un error, y se documenta (corregido tras medirlo en la Fase 1; la versión aprobada pedía 0,05 ± 0,01 también con 85/15, que solo se cumple con el p-valor bilateral).
 - **Referencia independiente:** `statsmodels` (`std_kappa0`) y la simulación bajo H₀.
 
 ### S019-RF-03 — EV del Xbar-R con `d2`

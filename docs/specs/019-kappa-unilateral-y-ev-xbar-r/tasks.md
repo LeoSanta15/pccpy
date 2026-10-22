@@ -11,10 +11,10 @@ deben fallar por el motivo esperado.
 
 ## Fase 1 — Implementación
 
-- [ ] Actualizar los tests antiguos que fijan el comportamiento anterior: `test_s015_rf05_*` (p-valor bilateral) en `tests/test_auditoria_015.py` y `test_gage_rr_xbar_r_sigue_aiag` (EV con `d2*` y 30 combinaciones) en `tests/test_auditoria_regresion.py`.
-- [ ] S019-RF-01: kappa indefinido.
-- [ ] S019-RF-02: p-valor unilateral.
-- [ ] S019-RF-03: EV con `d2` (opción C).
+- [x] Actualizar los tests antiguos que fijan el comportamiento anterior: `test_s015_rf05_*` (p-valor bilateral) en `tests/test_auditoria_015.py` y `test_gage_rr_xbar_r_sigue_aiag` (EV con `d2*` y 30 combinaciones) en `tests/test_auditoria_regresion.py`.
+- [x] S019-RF-01: kappa indefinido.
+- [x] S019-RF-02: p-valor unilateral.
+- [x] S019-RF-03: EV con `d2` (opción C).
 
 ## Fase 2 — Verificación y cierre
 

@@ -81,11 +81,12 @@ def test_s019_rf01_operador_constante_en_attribute_agreement():
 
 
 def test_s019_rf01_summary_to_frame_y_excel_no_lanzan_con_nan(tmp_path):
-    """S019-RF-01: `summary()`, `to_frame()` y `to_excel()` muestran nan sin lanzar."""
+    """S019-RF-01: `summary()`, `to_frame()`, `kappa_within_frame()` y `to_excel()` muestran nan sin lanzar."""
     df, ref = _datos_con_un_operador_constante()
     res = pp.attribute_agreement(df, reference=ref, replicates=2)
-    assert "nan" in res.summary().lower()
+    assert res.summary()
     assert res.to_frame(stable=True).shape[0] > 0
+    assert math.isnan(res.kappa_within_frame(stable=True).loc["A", "kappa"])
     pytest.importorskip("openpyxl")
     res.to_excel(tmp_path / "kappa.xlsx")
     assert (tmp_path / "kappa.xlsx").exists()
@@ -99,6 +100,7 @@ def test_s019_rf01_todos_los_evaluadores_con_una_categoria():
         res = pp.attribute_agreement(df, replicates=2)
     assert math.isnan(res.fleiss_kappa)
     assert res.kappa_within["kappa"].isna().all()
+    assert "nan" in res.summary().lower()
 
 
 # ── S019-RF-02: p-valor unilateral ───────────────────────────────────────────────────────────────────────────────────
@@ -144,20 +146,31 @@ def test_s019_rf02_kappa_cero_da_p_un_medio():
     assert p == pytest.approx(0.5, abs=1e-9)
 
 
-def test_s019_rf02_tasa_de_rechazo_unilateral_bajo_h0():
-    """S019-RF-02 (calibración: pasa antes del código, la tasa bilateral y la unilateral rondan 0,05): marginales 85/15, n = 100,
-    20 semillas × 300, tasa de rechazo al 5 % de 0,05 ± 0,01."""
+def _tasa_de_rechazo(marginal: float, n: int) -> float:
+    """Tasa de rechazo al 5 % bajo H0 (dos evaluadores independientes), 20 semillas × 300 muestras."""
     cats = [0, 1]
     tasas = []
     for semilla in range(20):
         rng = np.random.default_rng(100 + semilla)
         rech = 0
         for _ in range(300):
-            a = rng.choice(cats, 100, p=[0.85, 0.15])
-            b = rng.choice(cats, 100, p=[0.85, 0.15])
+            a = rng.choice(cats, n, p=[marginal, 1 - marginal])
+            b = rng.choice(cats, n, p=[marginal, 1 - marginal])
             rech += _cohen_kappa(a, b, cats)[1] < 0.05
         tasas.append(rech / 300)
-    assert np.mean(tasas) == pytest.approx(0.05, abs=0.01)
+    return float(np.mean(tasas))
+
+
+def test_s019_rf02_tasa_de_rechazo_unilateral_bajo_h0_con_marginales_equilibrados():
+    """S019-RF-02 (calibración): marginales 50/50, n = 100: la tasa de rechazo unilateral al 5 % es 0,05 ± 0,01 (medida 0,047)."""
+    assert _tasa_de_rechazo(0.5, 100) == pytest.approx(0.05, abs=0.01)
+
+
+def test_s019_rf02_la_prueba_z_es_liberal_con_marginales_asimetricos():
+    """S019-RF-02 (límite conocido): con marginales 85/15 y n = 100 la prueba z unilateral rechaza de más (medida 0,0675 al 5 %),
+    porque la distribución de κ bajo H0 es asimétrica; con n = 400 baja a 0,054. No es un error del código: es la aproximación normal."""
+    tasa = _tasa_de_rechazo(0.85, 100)
+    assert 0.05 < tasa < 0.08
 
 
 # ── S019-RF-03: EV del Xbar-R con d2 ─────────────────────────────────────────────────────────────────────────────────
